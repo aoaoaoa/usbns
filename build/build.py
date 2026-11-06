@@ -4,6 +4,8 @@ from data import ISSUE, VOICES, ARTICLES
 SUB = "A U.S. Bah\u00e1\u2019\u00ed News publication"
 
 def esc(s): return html.escape(s, quote=False) if s else ""
+def qesc(s):
+    return re.sub(r"\u201c([^\u201d]+)\u201d", r'<i class="qt">\u201c\1\u201d</i>', esc(s))
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
 os.makedirs(OUT, exist_ok=True)
@@ -14,12 +16,12 @@ def body_html(blocks, qa_style="dl"):
     out = []
     for b in blocks:
         k = b[0]
-        if k == "p": out.append(f"<p>{esc(b[1])}</p>")
+        if k == "p": out.append(f"<p>{qesc(b[1])}</p>")
         elif k == "h": out.append(f"<h3>{esc(b[1])}</h3>")
         elif k == "q": out.append(f'<blockquote class="pull"><p>{esc(b[1])}</p><cite>{esc(b[2])}</cite></blockquote>')
         elif k == "note": out.append(f'<p class="note">{esc(b[1])}</p>')
         elif k == "qa": out.append(f'<p class="qa">{esc(b[1])}</p>')
-        elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {esc(b[2])}</p>')
+        elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {qesc(b[2])}</p>')
         elif k == "pair": out.append('<figure class="photo pair">' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in b[1:]) + '</figure>')
         elif k == "img":
             w = b[3] if len(b) > 3 else None
