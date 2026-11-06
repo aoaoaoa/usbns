@@ -151,7 +151,7 @@ dict(
         ("qa","What has the Faith taught you about the importance of beauty and art?"),
         ("a","Mansour","It can sometimes feel like no one cares about art – that being an artist is non-essential work. Going to Bahá'í Holy Places helped me realize that art and beauty are some of the most essential things."),
         ("a","Paleczny","When I think about what has given me a sense of certitude about the Bahá'í Faith, it's not only what's written in the Writings. It is the actual beauty of the Writings that gives me a sense of knowing."),
-        ("band",{"tone":"wall","label":"Los Angeles Design Weekend","items":[
+        ("band",{"tone":"wall","items":[
             ("ta-cover.jpg","The 183 B.E. calendar, subtitled “A Year of Answers,” co-designed with Natal and published by Studio Kam Kam.","w1"),
             ("ta-mashiyyat.jpg","Mashíyyat (Will), the sixteenth month: September 27 to October 15, opening with its Feast.","w2"),
             ("ta-framed.jpg","A framed photograph by Mansour, hung on the exhibition's pink wall.","w3"),
