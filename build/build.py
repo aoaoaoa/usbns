@@ -150,7 +150,7 @@ def chart_html(c):
             dots = "".join(f'<circle cx="{170 + k*26}" cy="{y+18}" r="9" class="cdot"/>' for k in range(count))
             parts.append(f'<g class="hit"{pop(f"{lab}: {count}", story)}><rect x="0" y="{y}" width="{W}" height="{rowh}" class="ghost"/><text x="156" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text>{dots}<text x="{170 + count*26 + 4}" y="{y+23}" class="cv">{count}</text></g>')
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
-    hint = '<p class="tap">Tap or hover the marks for the story behind each number.</p>' if 'data-pb=' in svg else ""
+    hint = ""
     return f'<figure class="chart{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}{hint}</figure>'
 
 def concept_html(c):
