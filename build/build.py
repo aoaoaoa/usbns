@@ -309,7 +309,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* stories */
 .story{{padding-block:clamp(48px,8vw,112px) 0}}
 .plate{{margin:0 0 clamp(28px,4vw,48px);background:var(--cream);border:1px solid var(--rule)}}
-.plate img{{display:block;width:100%;height:auto;max-height:78vh;object-fit:cover}}
+.plate img{{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;background:var(--cream)}}
 .plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
@@ -425,7 +425,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
     <p class="sub">{SUB}</p>
-    <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Curated edition</a></span>' if member else '<span><a href="member/">Full edition</a></span>'}</div>
+    <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Curated edition</a></span>' if member else ''}</div>
   </div>
   <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
