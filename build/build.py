@@ -87,7 +87,7 @@ html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
-.wrap{{max-width:1320px;margin:0 auto;{GUT}}}
+.wrap{{max-width:1040px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
 /* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
 .terraces{{position:fixed;top:0;right:0;bottom:0;width:30%;z-index:0;pointer-events:none;opacity:.32;filter:blur(44px) saturate(.85)}}
@@ -117,7 +117,7 @@ main,.head{{position:relative;z-index:1}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}}
-.head .in{{max-width:1320px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
+.head .in{{max-width:1040px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
 .head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
 .head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
 .head nav{{display:flex;margin-left:auto}}
@@ -238,7 +238,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* voices */
 .voice{{background:var(--band);color:#f7f2ea;margin-top:clamp(48px,8vw,112px)}}
 .voice+.wrap .story{{padding-top:clamp(48px,8vw,112px)}}
-.vin{{max-width:1320px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
+.vin{{max-width:1040px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
 .voice p{{font-family:var(--text);font-style:italic;font-weight:300;font-size:clamp(22px,2.6vw,34px);line-height:1.3;max-width:34ch;margin:0 0 18px;text-wrap:pretty}}
 .voice cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}}
 .colophon{{padding-block:clamp(48px,8vw,96px);font-family:var(--ui);font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6;border-top:1px solid var(--rule);margin-top:clamp(48px,8vw,112px)}}
