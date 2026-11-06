@@ -34,6 +34,7 @@ def body_html(blocks):
         elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
         elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
+        elif k == "chart": out.append(chart_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div><b>{esc(x)}</b><span>{esc(y)}</span></div>' for x,y in b[1]) + "</div>")
         elif k == "img":
             w = b[3] if len(b) > 3 else None
@@ -41,6 +42,40 @@ def body_html(blocks):
             st = f' style="--w:{w}px"' if w else ""
             out.append(f'<figure class="{cls}"{st}><img src="img/{b[1]}" alt="{esc(b[2])}" loading="lazy"><figcaption>{esc(b[2])}</figcaption></figure>')
     return "\n".join(out)
+
+def chart_html(c):
+    """Small inline SVG charts drawn to scale from the record's numbers."""
+    def money(v): return f"${v:,.0f}"
+    fmt = money if c.get("fmt") == "money" else (lambda v: f"{v:,}")
+    title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
+    if c["kind"] == "bars":
+        data = c["data"]; mx = max(v for _, v in data); n = len(data); rowh = 34; W = 600; labw = 150; barw = W - labw - 110
+        rows = []
+        for i, (lab, v) in enumerate(data):
+            y = i * rowh; w = max(2, round(barw * v / mx))
+            rows.append(f'<text x="{labw-10}" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text><rect x="{labw}" y="{y+6}" width="{w}" height="22" class="cb"/><text x="{labw+w+8}" y="{y+22}" class="cv">{fmt(v)}</text>')
+        svg = f'<svg viewBox="0 0 {W} {n*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(rows)}</svg>'
+    elif c["kind"] == "progress":
+        data = c["data"]; mx = c["max"]; W = 600; H = 92
+        parts = [f'<rect x="0" y="40" width="{W}" height="14" class="ctrack"/>']
+        for i, (lab, v) in enumerate(data):
+            x = round(W * v / mx)
+            parts.append(f'<rect x="0" y="40" width="{x}" height="14" class="cb" style="opacity:{.35 + .3*i}"/>')
+            parts.append(f'<line x1="{x}" y1="30" x2="{x}" y2="62" class="ctick"/><text x="{x+ (4 if i<2 else 0)}" y="{22 if i%2==0 else 80}" text-anchor="{"start" if i<2 else "middle"}" class="cl"><tspan class="cv">{v}</tspan> {esc(lab)}</text>')
+        parts.append(f'<text x="{W}" y="80" text-anchor="end" class="cn2">{esc(c["maxlabel"])}</text>')
+        svg = f'<svg viewBox="0 -4 {W} {H}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    elif c["kind"] == "bands":
+        rows = c["rows"]; W = 600; labw = 160; rowh = 44; mx = max(v for _, bs in rows for _, v in bs)
+        parts = []
+        for r, (lab, bands) in enumerate(rows):
+            y = r * rowh; parts.append(f'<text x="{labw-10}" y="{y+20}" text-anchor="end" class="cl">{esc(lab)}</text>')
+            x = labw
+            for j, (bl, v) in enumerate(bands):
+                w = max(6, round((W - labw) * v / (mx + 6)))
+                parts.append(f'<rect x="{x}" y="{y+6}" width="{w}" height="22" class="cb" style="opacity:{1 - j*.3}"/><text x="{x+w/2}" y="{y+22}" text-anchor="middle" class="cvin">{v}</text><text x="{x+w/2}" y="{y+40}" text-anchor="middle" class="cn2">{esc(bl)}</text>')
+                x += w + 6
+        svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh+4}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    return f'<figure class="chart">{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -89,14 +124,14 @@ def build_tab(member=False):
     if member:
         from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
         L = LETTER
-        lead = f'''<article class="story letter" id="{L["slug"]}" style="--accent:#1b5e6b">
+        lead = f'''<article class="story letter members" id="{L["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(L["kicker"])}</p><h2>{esc(L["title"])}</h2><p class="dek">{esc(L["dek"])}</p></header>
   <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">Pages {L["pages"]}</p></aside>
   <div class="prose"><p class="salute">{esc(L["salutation"])}</p>{first_para_dropcap(body_html(L["body"]))}<p class="sign">{esc(L["closing"][0])}<br><b>{esc(L["closing"][1])}</b></p></div>
 </article>'''
         def dept_open(d, tint):
             dek = f'<p class="dek">{esc(d["dek"])}</p>' if d.get("dek") else ""
-            return f'''<article class="story dept" id="{d["slug"]}" style="--accent:{tint}">
+            return f'''<article class="story dept members" id="{d["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>{dek}</header>
   <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">Pages {d["pages"]}</p></aside>'''
         huq = dept_open(HUQUQ, "#3b3f7a") + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
@@ -115,12 +150,13 @@ def build_tab(member=False):
         bk = "".join(f'<li><h4>{esc(t)}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+"</p>") if price else ""}</li>' for t,sub,desc,price in B["items"])
         books = dept_open(B, "#8a3a1e") + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h4>{esc(n["title"])}</h4><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
-        notices = f'''<article class="story dept" id="notices" style="--accent:#1b5e6b"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = f'<h2 class="reg" id="departments">Departments</h2>' + huq + abide + fund + rhythm + books + notices
+        notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
+        depts = f'<h2 class="reg members" id="members">For members<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
+        lead = ""
         D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
-        dindex = '<h2 style="margin-top:36px">Departments</h2><ol class="index">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
+        dindex = '<h2 style="margin-top:36px;color:var(--mem)">For members</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
-        dhead = f'<a href="#letter" style="--tint:#1b5e6b"><span>Letter</span><i class="fill"></i></a>' + "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#departments" class="more" style="--tint:#8a8378"><span>Departments</span><i class="fill"></i></a>'
+        dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
     title = esc(ISSUE["title"]) + (" Member Edition" if member else "")
     return f'''<title>{title}</title>
@@ -129,17 +165,17 @@ def build_tab(member=False):
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
-  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#fdfcf9; --tabon:#f5f1e8; --barrule:#d9d2c4; --tabon-white:#ffffff;
+  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#fdfcf9; --tabon:#f5f1e8; --barrule:#d9d2c4; --tabon-white:#ffffff; --mem:#5b4a8a;
   --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
 }}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}}}
-:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;--mem:#b3a3e0;color-scheme:dark}}}}
+:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;--mem:#b3a3e0;color-scheme:dark}}
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
-.wrap{{max-width:1040px;margin:0 auto;{GUT}}}
+.wrap{{max-width:1120px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
 /* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
 .terraces{{position:fixed;top:0;right:0;bottom:0;width:30%;z-index:0;pointer-events:none;opacity:.32;filter:blur(44px) saturate(.85)}}
@@ -166,6 +202,22 @@ main,.head{{position:relative;z-index:1}}
 .story>.blooms{{position:absolute;z-index:0}}
 @media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
+/* charts */
+.prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
+.chart .ct{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
+.chart .cn{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:8px 0 0}}
+.chart svg{{display:block;overflow:visible}}
+.chart .cb{{fill:var(--accent)}} .chart .ctrack{{fill:var(--rule)}} .chart .ctick{{stroke:var(--ink);stroke-width:1.5}}
+.chart .cl{{font-family:var(--ui);font-size:12px;fill:var(--mute)}} .chart .cv{{font-family:var(--disp);font-weight:700;font-size:13px;fill:var(--ink);font-variant-numeric:tabular-nums}}
+.chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}} .chart .cn2{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}}
+/* member-only areas */
+.story.members{{--accent:var(--mem)}}
+.members .margin::before{{content:"Members";display:inline-block;font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mem);border:1px solid var(--mem);border-radius:999px;padding:3px 8px;margin-bottom:12px}}
+.reg.members{{border-top-color:var(--mem);color:var(--mem)}}
+.reg.members small{{display:block;font-family:var(--ui);font-weight:400;font-size:14px;letter-spacing:.02em;color:var(--mute);margin-top:8px}}
+.head nav a.mem{{background:color-mix(in oklab,var(--mem) 10%,var(--bar))}}
+.head nav a.mem.on{{background:color-mix(in oklab,var(--mem) 16%,var(--tabon))}}
+.index.mem a .t::after{{content:"Members";font-family:var(--ui);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mem);margin-left:10px;vertical-align:middle}}
 /* departments and letter */
 .kicker-top{{font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}}
 .reg{{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:clamp(34px,5vw,64px);letter-spacing:-.035em;margin:clamp(64px,10vw,140px) 0 0;padding-top:28px;border-top:3px solid var(--ink)}}
@@ -220,7 +272,7 @@ main,.head{{position:relative;z-index:1}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}}
-.head .in{{max-width:1040px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
+.head .in{{max-width:1120px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
 .head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
 .head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
 .head nav{{display:flex;margin-left:auto}}
@@ -268,7 +320,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate figcaption{{font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:10px 14px}}
 .numeral{{font-family:var(--disp);font-weight:800;font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.06em}}
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
-.story{{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,66ch) minmax(0,1fr);column-gap:clamp(24px,4vw,64px)}}
+.story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
 .story>.plate,.story>.numeral{{grid-column:1/-1}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead>*{{position:relative;z-index:1}}
@@ -322,8 +374,8 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 #comic .prose p{{font-size:1.1em;line-height:1.5}}
 .prose p.first::first-letter{{font-family:var(--disp);font-weight:700;font-size:4.2em;float:left;line-height:.8;padding:.06em .1em 0 0;color:var(--accent)}}
 .prose h3{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:3.2em 0 1em;color:var(--accent);padding-top:1.2em;border-top:1px solid var(--rule)}}
-.prose .pull{{grid-column:1;grid-row:span 2;margin:.4em 0 2em;padding:0 0 0 18px;border-left:3px solid var(--accent);align-self:start}}
-.prose .pull p{{font-family:var(--disp);font-weight:500;font-size:clamp(20px,1.9vw,26px);line-height:1.22;letter-spacing:-.015em;margin:0 0 10px}}
+.prose .pull{{grid-column:1;grid-row:span 2;margin:.4em 0 2em;padding:0 0 0 18px;border-left:3px solid var(--accent);align-self:start;max-width:26ch}}
+.prose .pull p{{font-family:var(--disp);font-weight:500;font-size:clamp(20px,1.9vw,26px);line-height:1.24;letter-spacing:-.015em;margin:0 0 10px;text-wrap:pretty}}
 .prose .pull cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}}
 .prose .photo{{grid-column:1/-1;margin:2.4em 0;display:grid;grid-template-columns:subgrid;column-gap:inherit;align-items:end}}
 .prose .photo>img{{grid-column:1/-1}}
@@ -342,7 +394,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* voices */
 .voice{{background:var(--band);color:#f7f2ea;margin-top:clamp(48px,8vw,112px)}}
 .voice+.wrap .story{{padding-top:clamp(48px,8vw,112px)}}
-.vin{{max-width:1040px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
+.vin{{max-width:1120px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
 .voice p{{font-family:var(--text);font-style:italic;font-weight:600;font-size:clamp(24px,2.8vw,38px);line-height:1.36;letter-spacing:-.01em;max-width:30ch;margin:0 0 26px;text-wrap:pretty;font-variation-settings:"opsz" 72;position:relative;padding-left:clamp(28px,4vw,56px)}}
 .voice p::before{{content:"\u201C";position:absolute;left:0;top:-.08em;font-family:var(--text);font-style:italic;font-weight:600;font-size:2.4em;line-height:1;opacity:.35}}
 .voice cite{{display:flex;align-items:center;gap:12px;font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:.85;padding-left:clamp(28px,4vw,56px)}}
@@ -405,11 +457,13 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
   var cur=null;
   function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
-  function progress(){{if(!cur)return;var a=links.filter(function(l){{return l.getAttribute('href')==='#'+cur.id}})[0];if(!a)return;
+  var alias={{abiding:'huquq',fund:'huquq',rhythm:'huquq',books:'huquq',notices:'huquq'}};
+  function tabFor(id){{return links.filter(function(l){{return l.getAttribute('href')==='#'+(alias[id]||id)}})[0];}}
+  function progress(){{if(!cur)return;var a=tabFor(cur.id);if(!a)return;
     var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}}
   if('IntersectionObserver' in window){{
     var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
-      links.forEach(function(a){{var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
     secs.forEach(function(x){{io.observe(x)}});
   }}
   addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
@@ -697,11 +751,13 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   var ind=document.querySelector('.tabs .ind'), inn=document.querySelector('.tabs .in');
   var cur=null;
   function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
-  function progress(){{if(!cur)return;var a=links.filter(function(l){{return l.getAttribute('href')==='#'+cur.id}})[0];if(!a)return;
+  var alias={{abiding:'huquq',fund:'huquq',rhythm:'huquq',books:'huquq',notices:'huquq'}};
+  function tabFor(id){{return links.filter(function(l){{return l.getAttribute('href')==='#'+(alias[id]||id)}})[0];}}
+  function progress(){{if(!cur)return;var a=tabFor(cur.id);if(!a)return;
     var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}}
   if('IntersectionObserver' in window){{
     var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
-      links.forEach(function(a){{var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
     secs.forEach(function(x){{io.observe(x)}});
   }}
   addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.tabs nav a.on'))}});

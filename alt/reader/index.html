@@ -281,11 +281,13 @@ a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
   var ind=document.querySelector('.tabs .ind'), inn=document.querySelector('.tabs .in');
   var cur=null;
   function place(a){if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}
-  function progress(){if(!cur)return;var a=links.filter(function(l){return l.getAttribute('href')==='#'+cur.id})[0];if(!a)return;
+  var alias={abiding:'huquq',fund:'huquq',rhythm:'huquq',books:'huquq',notices:'huquq'};
+  function tabFor(id){return links.filter(function(l){return l.getAttribute('href')==='#'+(alias[id]||id)})[0];}
+  function progress(){if(!cur)return;var a=tabFor(cur.id);if(!a)return;
     var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;cur=e.target;
-      links.forEach(function(a){var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);});progress();});},{rootMargin:'-30% 0px -60% 0px'});
+      var t=tabFor(e.target.id);links.forEach(function(a){var on=a===t;a.classList.toggle('on',on);if(on)place(a);});progress();});},{rootMargin:'-30% 0px -60% 0px'});
     secs.forEach(function(x){io.observe(x)});
   }
   addEventListener('scroll',progress,{passive:true}); addEventListener('resize',function(){place(document.querySelector('.tabs nav a.on'))});
