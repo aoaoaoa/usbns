@@ -5,7 +5,7 @@ SUB = "A U.S. Bah\u00e1\u2019\u00ed News publication"
 
 def esc(s): return html.escape(s, quote=False) if s else ""
 def qesc(s):
-    return re.sub(r"\u201c([^\u201d]+)\u201d", r'<i class="qt">\u201c\1\u201d</i>', esc(s))
+    return re.sub("\u201c([^\u201d]+)\u201d", lambda m: '<i class="qt">\u201c' + m.group(1) + '\u201d</i>', esc(s))
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "out")
 os.makedirs(OUT, exist_ok=True)
