@@ -26,9 +26,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bar nav a:hover,.bar nav a:focus-visible{color:var(--gold)}
 .wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 /* cover */
-.cover{padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px clamp(32px,5vw,80px);align-items:end}
-.cover .img{background:var(--card);border:1px solid var(--rule);padding:12px}
-.cover .img img{display:block;width:100%;height:auto}
+.cover{padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(32px,5vw,64px)}
+.cover .img{background:var(--card);border:1px solid var(--rule);padding:clamp(12px,1.6vw,22px);width:fit-content;max-width:100%;margin:0 auto}
+.cover .img .mat{border:1px solid color-mix(in oklab,var(--gold) 45%,transparent);padding:1px}
+.cover .img img{display:block;width:auto;max-width:100%;height:auto;max-height:94vh}
+.cover .img figcaption{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--dim);padding:12px 2px 0}
+.cover .img figcaption b{color:var(--gold);font-weight:500}
 .cover h1{font-family:var(--disp);font-weight:400;font-size:clamp(52px,8vw,120px);line-height:.92;letter-spacing:-.02em;margin:0 0 20px;font-variation-settings:"opsz" 96}
 .cover h1 em{font-style:italic;font-weight:500}
 .cover .meta{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim);display:grid;gap:4px;margin-bottom:28px}
@@ -67,7 +70,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .colophon{max-width:1280px;margin:clamp(56px,9vw,128px) auto 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim)}
 a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-@media (max-width:860px){.cover{grid-template-columns:1fr} .plate .img.two{grid-template-columns:1fr}}
+@media (max-width:860px){.plate .img.two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -81,7 +84,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <cite>The Universal House of Justice</cite>
     <p class="about"><b>About this issue.</b> This issue explores the many ways creative expression can contribute to the transformation of individuals and communities, from music and visual art to the creative practices woven into grassroots efforts. The stories that follow offer glimpses of communities drawing on imagination, art and spiritual insights to contribute to the betterment of humanity.</p>
   </div>
-  <figure class="img" style="margin:0"><img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></figure>
+  <figure class="img"><div class="mat"><img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><b>Cover</b><span>Painting by Juliet Bogan</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <div class="wrap"><section class="chapter" id="gregory">
   <div class="plate">

@@ -70,15 +70,15 @@ body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
 .wrap{{max-width:1180px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
 /* cover */
-.cover{{position:relative;min-height:92vh;overflow:hidden;background:#7fa0b8}}
-.cover img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}}
-.cover .mast{{position:relative;z-index:1;color:#fbf6ec;padding-block:clamp(28px,5vw,64px) clamp(120px,24vw,260px);text-shadow:0 1px 24px rgba(40,30,20,.35)}}
+.cover{{padding-block:clamp(28px,5vw,64px) 0}}
 .cover .mast .the{{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);margin:0 0 -.2em .1em}}
 .cover h1{{font-family:var(--disp);font-size:clamp(56px,11vw,150px);line-height:.95;margin:0;letter-spacing:-.015em;font-weight:400}}
 .cover .sub{{font-family:var(--disp);font-size:clamp(18px,2.2vw,28px);margin:14px 0 0 .1em;font-style:italic}}
-.cover .line{{margin-top:28px}}
-.cover .line{{display:flex;flex-wrap:wrap;gap:8px 32px;margin-top:18px;font-family:var(--ui);font-size:13px;letter-spacing:.06em}}
-.cover .credit{{position:absolute;right:0;bottom:0;z-index:1;color:#fbf6ec;font-family:var(--ui);font-size:11px;letter-spacing:.08em;padding:10px max(16px,env(safe-area-inset-right,0px));background:linear-gradient(to top,rgba(20,30,20,.45),transparent)}}
+.cover .line{{display:flex;flex-wrap:wrap;gap:8px 32px;margin-top:24px;font-family:var(--ui);font-size:13px;letter-spacing:.06em;color:var(--mute)}}
+.painting{{margin:clamp(28px,4vw,48px) auto 0;width:fit-content;max-width:100%;border:1px solid var(--rule);background:var(--cream);padding:clamp(10px,1.4vw,18px)}}
+.painting .mat{{border:1px solid var(--rule)}}
+.painting img{{display:block;width:auto;max-width:100%;height:auto;max-height:96vh}}
+.painting figcaption{{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:12px 2px 0}}
 /* front matter */
 .front{{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px clamp(32px,6vw,96px);padding-block:clamp(40px,7vw,96px);border-bottom:1px solid var(--rule)}}
 .front h2{{font-family:var(--disp);font-size:clamp(32px,4vw,52px);font-weight:400;margin:0 0 20px;letter-spacing:-.01em}}
@@ -132,15 +132,14 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<header class="cover">
-  <img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky">
-  <div class="wrap mast">
+<header class="cover wrap">
+  <div class="mast">
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
     <p class="sub">{SUB}</p>
     <div class="line"><span>{esc(ISSUE["date"])}</span><span>{esc(ISSUE["url"])}</span></div>
   </div>
-  <p class="credit">Cover painting by {esc(ISSUE["cover_artist"])}</p>
+  <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <main>
 <div class="wrap">
@@ -211,9 +210,12 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .bar nav a:hover,.bar nav a:focus-visible{{color:var(--gold)}}
 .wrap{{max-width:1280px;margin:0 auto;{GUT}}}
 /* cover */
-.cover{{padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px clamp(32px,5vw,80px);align-items:end}}
-.cover .img{{background:var(--card);border:1px solid var(--rule);padding:12px}}
-.cover .img img{{display:block;width:100%;height:auto}}
+.cover{{padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(32px,5vw,64px)}}
+.cover .img{{background:var(--card);border:1px solid var(--rule);padding:clamp(12px,1.6vw,22px);width:fit-content;max-width:100%;margin:0 auto}}
+.cover .img .mat{{border:1px solid color-mix(in oklab,var(--gold) 45%,transparent);padding:1px}}
+.cover .img img{{display:block;width:auto;max-width:100%;height:auto;max-height:94vh}}
+.cover .img figcaption{{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--dim);padding:12px 2px 0}}
+.cover .img figcaption b{{color:var(--gold);font-weight:500}}
 .cover h1{{font-family:var(--disp);font-weight:400;font-size:clamp(52px,8vw,120px);line-height:.92;letter-spacing:-.02em;margin:0 0 20px;font-variation-settings:"opsz" 96}}
 .cover h1 em{{font-style:italic;font-weight:500}}
 .cover .meta{{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim);display:grid;gap:4px;margin-bottom:28px}}
@@ -252,7 +254,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .colophon{{max-width:1280px;margin:clamp(56px,9vw,128px) auto 0;{GUT}padding-block:40px 64px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--dim)}}
 a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
-@media (max-width:860px){{.cover{{grid-template-columns:1fr}} .plate .img.two{{grid-template-columns:1fr}}}}
+@media (max-width:860px){{.plate .img.two{{grid-template-columns:1fr}}}}
 </style>
 <div class="bar"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav>{nav}</nav></div></div>
 <main id="top">
@@ -264,7 +266,7 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
     <cite>{esc(ISSUE["epigraph_src"])}</cite>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
   </div>
-  <figure class="img" style="margin:0"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></figure>
+  <figure class="img"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><b>Cover</b><span>Painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <div class="wrap">{"".join(chapters)}</div>
 <footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue. Plate 3 reproduces the printed opener with its title as set in the magazine.</footer>
@@ -324,11 +326,13 @@ body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font
 .rail .epi{{font-size:14px;line-height:1.5;color:var(--mute);font-style:italic;margin:auto 0 0}}
 .rail .epi cite{{display:block;font-style:normal;font-family:var(--disp);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}}
 .pages{{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:16px}}
-.cover{{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,42%);gap:32px;align-items:end;padding-block:clamp(32px,5vw,72px) clamp(28px,4vw,56px);border-bottom:1px solid var(--rule);max-width:1100px;margin:0 auto}}
+.cover{{display:grid;grid-template-columns:minmax(0,1fr);gap:36px;padding-block:clamp(32px,5vw,72px) clamp(28px,4vw,56px);border-bottom:1px solid var(--rule);max-width:1100px;margin:0 auto}}
 .cover h1{{font-family:var(--disp);font-weight:800;font-size:clamp(44px,6.6vw,96px);line-height:.92;letter-spacing:-.035em;margin:0 0 20px;font-variation-settings:"opsz" 96;text-wrap:balance}}
 .cover .about{{max-width:50ch;font-size:16px;color:var(--mute);margin:0}}
 .cover .about b{{color:var(--fg);font-weight:600}}
-.cover figure{{margin:0}} .cover img{{display:block;width:100%;height:auto;border-radius:4px}}
+.cover figure{{margin:0 auto;width:fit-content;max-width:100%;border:1px solid var(--rule);padding:clamp(10px,1.4vw,18px);background:var(--rail);border-radius:6px}}
+.cover figure .mat{{border:1px solid var(--rule);border-radius:3px;overflow:hidden}}
+.cover img{{display:block;width:auto;max-width:100%;height:auto;max-height:92vh}}
 .cover figcaption{{font-family:var(--disp);font-size:12px;color:var(--mute);margin-top:8px;letter-spacing:.02em}}
 .story{{max-width:1100px;margin:0 auto;padding-block:clamp(56px,8vw,112px) 0}}
 .story+.story{{border-top:1px solid var(--rule);margin-top:clamp(56px,8vw,112px)}}
@@ -365,7 +369,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   .rail nav a .pg{{display:none}} .rail nav a .sw{{height:14px;width:8px}}
   .rail .epi{{display:none}}
   .pages{{padding-left:max(16px,env(safe-area-inset-left,0px))}}
-  .cover{{grid-template-columns:1fr}} .inset.two{{grid-template-columns:1fr}}
+  .inset.two{{grid-template-columns:1fr}}
 }}
 </style>
 <div class="app">
@@ -380,7 +384,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
     <h1>Six features from the arts issue</h1>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
   </div>
-  <figure><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"><figcaption>Cover painting by {esc(ISSUE["cover_artist"])}</figcaption></figure>
+  <figure><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption>Cover painting by {esc(ISSUE["cover_artist"])} · Oil on canvas</figcaption></figure>
 </header>
 {"".join(arts)}
 <footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue.</footer>

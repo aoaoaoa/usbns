@@ -31,11 +31,13 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-
 .rail .epi{font-size:14px;line-height:1.5;color:var(--mute);font-style:italic;margin:auto 0 0}
 .rail .epi cite{display:block;font-style:normal;font-family:var(--disp);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
 .pages{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:16px}
-.cover{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,42%);gap:32px;align-items:end;padding-block:clamp(32px,5vw,72px) clamp(28px,4vw,56px);border-bottom:1px solid var(--rule);max-width:1100px;margin:0 auto}
+.cover{display:grid;grid-template-columns:minmax(0,1fr);gap:36px;padding-block:clamp(32px,5vw,72px) clamp(28px,4vw,56px);border-bottom:1px solid var(--rule);max-width:1100px;margin:0 auto}
 .cover h1{font-family:var(--disp);font-weight:800;font-size:clamp(44px,6.6vw,96px);line-height:.92;letter-spacing:-.035em;margin:0 0 20px;font-variation-settings:"opsz" 96;text-wrap:balance}
 .cover .about{max-width:50ch;font-size:16px;color:var(--mute);margin:0}
 .cover .about b{color:var(--fg);font-weight:600}
-.cover figure{margin:0} .cover img{display:block;width:100%;height:auto;border-radius:4px}
+.cover figure{margin:0 auto;width:fit-content;max-width:100%;border:1px solid var(--rule);padding:clamp(10px,1.4vw,18px);background:var(--rail);border-radius:6px}
+.cover figure .mat{border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.cover img{display:block;width:auto;max-width:100%;height:auto;max-height:92vh}
 .cover figcaption{font-family:var(--disp);font-size:12px;color:var(--mute);margin-top:8px;letter-spacing:.02em}
 .story{max-width:1100px;margin:0 auto;padding-block:clamp(56px,8vw,112px) 0}
 .story+.story{border-top:1px solid var(--rule);margin-top:clamp(56px,8vw,112px)}
@@ -72,7 +74,7 @@ a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
   .rail nav a .pg{display:none} .rail nav a .sw{height:14px;width:8px}
   .rail .epi{display:none}
   .pages{padding-left:max(16px,env(safe-area-inset-left,0px))}
-  .cover{grid-template-columns:1fr} .inset.two{grid-template-columns:1fr}
+  .inset.two{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -89,7 +91,7 @@ a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
     <h1>Six features from the arts issue</h1>
     <p class="about"><b>About this issue.</b> This issue explores the many ways creative expression can contribute to the transformation of individuals and communities, from music and visual art to the creative practices woven into grassroots efforts. The stories that follow offer glimpses of communities drawing on imagination, art and spiritual insights to contribute to the betterment of humanity.</p>
   </div>
-  <figure><img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"><figcaption>Cover painting by Juliet Bogan</figcaption></figure>
+  <figure><div class="mat"><img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption>Cover painting by Juliet Bogan · Oil on canvas</figcaption></figure>
 </header>
 <article class="story" id="gregory" style="--tint:#e8532a">
   <header class="shead">

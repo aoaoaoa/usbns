@@ -20,15 +20,15 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);f
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 .ui{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
 /* cover */
-.cover{position:relative;min-height:92vh;overflow:hidden;background:#7fa0b8}
-.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
-.cover .mast{position:relative;z-index:1;color:#fbf6ec;padding-block:clamp(28px,5vw,64px) clamp(120px,24vw,260px);text-shadow:0 1px 24px rgba(40,30,20,.35)}
+.cover{padding-block:clamp(28px,5vw,64px) 0}
 .cover .mast .the{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);margin:0 0 -.2em .1em}
 .cover h1{font-family:var(--disp);font-size:clamp(56px,11vw,150px);line-height:.95;margin:0;letter-spacing:-.015em;font-weight:400}
 .cover .sub{font-family:var(--disp);font-size:clamp(18px,2.2vw,28px);margin:14px 0 0 .1em;font-style:italic}
-.cover .line{margin-top:28px}
-.cover .line{display:flex;flex-wrap:wrap;gap:8px 32px;margin-top:18px;font-family:var(--ui);font-size:13px;letter-spacing:.06em}
-.cover .credit{position:absolute;right:0;bottom:0;z-index:1;color:#fbf6ec;font-family:var(--ui);font-size:11px;letter-spacing:.08em;padding:10px max(16px,env(safe-area-inset-right,0px));background:linear-gradient(to top,rgba(20,30,20,.45),transparent)}
+.cover .line{display:flex;flex-wrap:wrap;gap:8px 32px;margin-top:24px;font-family:var(--ui);font-size:13px;letter-spacing:.06em;color:var(--mute)}
+.painting{margin:clamp(28px,4vw,48px) auto 0;width:fit-content;max-width:100%;border:1px solid var(--rule);background:var(--cream);padding:clamp(10px,1.4vw,18px)}
+.painting .mat{border:1px solid var(--rule)}
+.painting img{display:block;width:auto;max-width:100%;height:auto;max-height:96vh}
+.painting figcaption{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:12px 2px 0}
 /* front matter */
 .front{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px clamp(32px,6vw,96px);padding-block:clamp(40px,7vw,96px);border-bottom:1px solid var(--rule)}
 .front h2{font-family:var(--disp);font-size:clamp(32px,4vw,52px);font-weight:400;margin:0 0 20px;letter-spacing:-.01em}
@@ -84,15 +84,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 </head>
 <body>
-<header class="cover">
-  <img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky">
-  <div class="wrap mast">
+<header class="cover wrap">
+  <div class="mast">
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
     <p class="sub">A U.S. Bahá’í News Service</p>
     <div class="line"><span>October / November / December 2026</span><span>www.bahai.us/stories</span></div>
   </div>
-  <p class="credit">Cover painting by Juliet Bogan</p>
+  <figure class="painting"><div class="mat"><img src="../img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by Juliet Bogan</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <main>
 <div class="wrap">
