@@ -85,7 +85,7 @@ body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
 .front{{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px clamp(32px,6vw,96px);padding-block:clamp(40px,7vw,96px);border-bottom:1px solid var(--rule)}}
 .front h2{{font-family:var(--disp);font-size:clamp(32px,4vw,52px);font-weight:400;margin:0 0 20px;letter-spacing:-.01em}}
 .index{{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}}
-.index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-size:19px;line-height:1.3}}
+.index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--disp);font-style:italic;font-size:22px;line-height:1.25}}
 .index a:hover .t,.index a:focus-visible .t{{color:var(--accent)}}
 .index .pg{{font-family:var(--ui);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}}
 .epi p{{font-family:var(--disp);font-size:clamp(22px,2.4vw,30px);line-height:1.3;margin:0 0 12px;text-wrap:pretty}}
@@ -213,8 +213,8 @@ body{{margin:0;background:var(--wall);color:var(--fg);font-family:var(--text);fo
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}}
 .bar .in{{max-width:1280px;margin:0 auto;{GUT}display:flex;gap:24px;align-items:center;min-height:52px;overflow-x:auto;scrollbar-width:none}}
 .bar .brand{{font-family:var(--disp);font-size:18px;white-space:nowrap;color:var(--fg);text-decoration:none;flex:none}}
-.bar nav{{display:flex;gap:18px;margin-left:auto}}
-.bar nav a{{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim);text-decoration:none;white-space:nowrap;padding:6px 0}}
+.bar nav{{display:flex;gap:26px;margin-left:auto}}
+.bar nav a{{font-family:var(--disp);font-style:italic;font-size:17px;letter-spacing:.01em;color:var(--dim);text-decoration:none;white-space:nowrap;padding:6px 0;font-variation-settings:"opsz" 24}}
 .bar nav a:hover,.bar nav a:focus-visible{{color:var(--gold)}}
 .wrap{{max-width:1280px;margin:0 auto;{GUT}}}
 /* cover */
@@ -331,10 +331,10 @@ body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font
 .rail .brand{{font-family:var(--disp);font-weight:700;font-size:22px;line-height:1.05;letter-spacing:-.02em;margin:0}}
 .rail .brand small{{display:block;font-weight:400;font-size:12px;letter-spacing:.02em;color:var(--mute);margin-top:8px}}
 .rail nav{{display:flex;flex-direction:column}}
-.rail nav a{{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--disp);font-size:15px;font-weight:500}}
+.rail nav a{{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:19px;font-weight:400;font-variation-settings:"opsz" 36;letter-spacing:-.005em}}
 .rail nav a:last-child{{border-bottom:1px solid var(--rule)}}
 .rail nav a .sw{{width:10px;height:22px;background:var(--tint);border-radius:2px}}
-.rail nav a .pg{{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
+.rail nav a .pg{{font-family:var(--disp);font-style:normal;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
 .rail nav a:hover .t,.rail nav a:focus-visible .t{{text-decoration:underline;text-underline-offset:.2em}}
 .rail .epi{{font-size:14px;line-height:1.5;color:var(--mute);font-style:italic;margin:auto 0 0}}
 .rail .epi cite{{display:block;font-style:normal;font-family:var(--disp);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}}

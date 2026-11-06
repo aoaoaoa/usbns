@@ -21,8 +21,8 @@ body{margin:0;background:var(--wall);color:var(--fg);font-family:var(--text);fon
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}
 .bar .in{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:24px;align-items:center;min-height:52px;overflow-x:auto;scrollbar-width:none}
 .bar .brand{font-family:var(--disp);font-size:18px;white-space:nowrap;color:var(--fg);text-decoration:none;flex:none}
-.bar nav{display:flex;gap:18px;margin-left:auto}
-.bar nav a{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--dim);text-decoration:none;white-space:nowrap;padding:6px 0}
+.bar nav{display:flex;gap:26px;margin-left:auto}
+.bar nav a{font-family:var(--disp);font-style:italic;font-size:17px;letter-spacing:.01em;color:var(--dim);text-decoration:none;white-space:nowrap;padding:6px 0;font-variation-settings:"opsz" 24}
 .bar nav a:hover,.bar nav a:focus-visible{color:var(--gold)}
 .wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 /* cover */
@@ -79,7 +79,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </style>
 </head>
 <body>
-<div class="bar"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav><a href="#gregory">Louis Gregory</a><a href="#newyorkers">New Yorkers</a><a href="#twoartists">Two artists</a><a href="#abs">ABS at 50</a><a href="#endeavor">A common endeavor</a><a href="#comic">(comic)</a></nav></div></div>
+<div class="bar"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav><a href="#gregory">Louis Gregory</a><a href="#newyorkers">New Yorkers</a><a href="#twoartists">Two artists</a><a href="#abs">ABS at 50</a><a href="#endeavor">A common endeavor</a><a href="#comic">Comic</a></nav></div></div>
 <main id="top">
 <header class="cover wrap">
   <div>

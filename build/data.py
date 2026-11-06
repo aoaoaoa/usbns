@@ -212,7 +212,7 @@ dict(
     slug="comic",
     kicker="Adventures in pioneering",
     title="Sparkling spirits in Indianapolis",
-    short="(comic)",
+    short="Comic",
     byline="Story by Cher Gupta, as told to Joyce Litoff. Illustrated by Aria Ghalili.",
     art="comic-1.jpg", art_alt="Comic page: youth in the Westlake neighborhood of Indianapolis plan a car wash", art_credit="Illustrated by Aria Ghalili",
     art2="comic-2.jpg", art2_alt="Comic page: the youth consult about supplies and payments, wash ten cars in two hours, and celebrate",
