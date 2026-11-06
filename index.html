@@ -10,11 +10,11 @@
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{
-  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#f0ece2; --tabon:#faf8f2; --barrule:#ddd6c8; --tabon-white:#ffffff;
+  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#fdfcf9; --tabon:#f5f1e8; --barrule:#d9d2c4; --tabon-white:#ffffff;
   --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#131110;--tabon:#1b1814;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#131110;--tabon:#1b1814;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -49,7 +49,7 @@ main,.head{position:relative;z-index:1}
 @media (max-width:980px){.terraces,.blooms,.torn{display:none}}
 /* running head */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
-.head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}
+.head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}
 .head .in{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}
 .head .brand{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}
 .head .brand small{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}
