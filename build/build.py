@@ -401,7 +401,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:transparent;stroke:transparent}}
 .chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
 .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5;opacity:.7}} .chart .ghostline{{fill:none;stroke:transparent;stroke-width:22}} .chart .cjoin{{stroke:var(--accent);stroke-width:16;stroke-linecap:round}}
-.chart g.hit:hover .cpanel{{stroke:var(--rule)}} .chart g.hit:hover .cstrand{{opacity:1}}
+.chart g.hit:hover .cstrand{{opacity:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
 .chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
