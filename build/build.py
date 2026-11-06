@@ -236,6 +236,17 @@ def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
 
 # ------------------------------------------------------------------ TAB (the published site)
+def listen(a):
+    """A 'Listen to this story' player for a feature with an audio reading."""
+    if not a.get("audio"): return ""
+    by = f'<p class="lby">Read by {esc(a["audio_reader"])}</p>' if a.get("audio_reader") else ""
+    return f'''<div class="listen" data-src="{a["audio"]}">
+      <button class="lp" type="button" aria-label="Play: listen to this story"><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg><svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg></button>
+      <span class="lt">Listen to this story</span>
+      <span class="lm"><span class="ltime">Audio reading</span><button class="lspd" type="button" aria-label="Playback speed">1×</button></span>
+      <div class="lbar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i><b></b></div>{by}
+    </div>'''
+
 def build_tab(member=False):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
@@ -267,6 +278,7 @@ def build_tab(member=False):
     <p class="kicker">{esc(a["kicker"])}</p>
     {by}
     <p class="pp">Pages {a["pages"]}</p>
+    {listen(a)}
   </aside>
   <div class="prose">{first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
@@ -558,6 +570,24 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .by::before{{content:"By ";}}
 .by.nob::before{{content:""}}
 .pp{{margin-top:10px!important;font-variant-numeric:tabular-nums}}
+/* listen */
+.listen{{margin-top:22px;text-transform:none;letter-spacing:0;font-family:var(--ui);color:var(--ink);display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;max-width:26ch}}
+.listen .lp{{grid-row:1/3;width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}}
+.listen .lp svg{{width:16px;height:16px;fill:currentColor}} .listen .lp .ic-pause{{display:none}}
+.listen.playing .lp .ic-play{{display:none}} .listen.playing .lp .ic-pause{{display:block}}
+.listen .lp:focus-visible{{outline:2px solid var(--ink);outline-offset:3px}}
+.listen .lt{{font-size:13.5px;font-weight:600;line-height:1.2}}
+.listen .lm{{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
+.listen .lbar{{grid-column:1/-1;position:relative;height:18px;cursor:pointer;margin-top:4px}}
+.listen .lbar::before{{content:"";position:absolute;left:0;right:0;top:8px;height:2px;background:var(--rule)}}
+.listen .lbar i{{position:absolute;left:0;top:8px;height:2px;width:var(--p,0%);background:var(--accent)}}
+.listen .lbar b{{position:absolute;top:4px;left:calc(var(--p,0%) - 5px);width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:0;transition:opacity .15s}}
+.listen:hover .lbar b,.listen.playing .lbar b,.listen .lbar:focus-visible b{{opacity:1}}
+.listen .lbar:focus-visible{{outline:2px solid var(--accent);outline-offset:2px}}
+.listen .lspd{{border:1px solid var(--rule);background:none;border-radius:999px;font:600 11px var(--ui);color:var(--mute);padding:2px 7px;cursor:pointer}}
+.listen.na .lp{{background:var(--rule);cursor:default}} .listen.na .lbar,.listen.na .lspd{{display:none}}
+.listen .lby{{grid-column:1/-1;font-size:11.5px;color:var(--mute);margin:2px 0 0}}
+@media (max-width:980px){{.listen{{margin:6px 0 0;max-width:none;width:100%}}}}
 .prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:19.5px;line-height:1.6;font-variation-settings:"opsz" 18}}
 .prose>*{{grid-column:2;min-width:0}}
 .prose p{{margin:0 0 1.25em;text-wrap:pretty}}
@@ -688,6 +718,28 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&(e.key==='Enter'||e.key===' ')){{e.preventDefault();show(el,true);}}}});
   document.addEventListener('focusin',function(e){{var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&!pinned)show(el);}});
   addEventListener('scroll',function(){{if(cur)place(cur)}},{{passive:true}}); addEventListener('resize',function(){{if(cur)place(cur)}});
+}})();
+
+(function(){{
+  var players=[].slice.call(document.querySelectorAll('.listen')); if(!players.length)return;
+  var cur=null, fmt=function(t){{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}};
+  players.forEach(function(el){{
+    var au=new Audio(); au.preload='none'; var src=el.dataset.src, btn=el.querySelector('.lp'), time=el.querySelector('.ltime'), bar=el.querySelector('.lbar'), spd=el.querySelector('.lspd'), speeds=[1,1.25,1.5,0.85], si=0, probed=false;
+    function na(){{el.classList.add('na');el.classList.remove('playing');time.textContent='Reading coming soon';btn.disabled=true;btn.setAttribute('aria-label','Audio reading coming soon');}}
+    function probe(){{if(probed)return;probed=true;au.src=src;au.preload='metadata';au.load();}}
+    au.addEventListener('error',na);
+    au.addEventListener('loadedmetadata',function(){{time.textContent=fmt(au.duration);}});
+    au.addEventListener('timeupdate',function(){{var p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));time.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}});
+    au.addEventListener('play',function(){{el.classList.add('playing');btn.setAttribute('aria-label','Pause');}});
+    au.addEventListener('pause',function(){{el.classList.remove('playing');btn.setAttribute('aria-label','Play: listen to this story');}});
+    au.addEventListener('ended',function(){{au.currentTime=0;}});
+    btn.addEventListener('click',function(){{probe();if(au.paused){{if(cur&&cur!==au)cur.pause();cur=au;var p=au.play();if(p&&p.catch)p.catch(function(){{}});}}else au.pause();}});
+    spd.addEventListener('click',function(){{si=(si+1)%speeds.length;au.playbackRate=speeds[si];spd.textContent=speeds[si]+'×';}});
+    function seek(x){{var r=bar.getBoundingClientRect();if(au.duration)au.currentTime=Math.max(0,Math.min(1,(x-r.left)/r.width))*au.duration;}}
+    bar.addEventListener('click',function(e){{probe();seek(e.clientX);}});
+    bar.addEventListener('keydown',function(e){{if(!au.duration)return;if(e.key==='ArrowRight'){{au.currentTime=Math.min(au.duration,au.currentTime+10);e.preventDefault();}}if(e.key==='ArrowLeft'){{au.currentTime=Math.max(0,au.currentTime-10);e.preventDefault();}}}});
+    if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{if(es[0].isIntersecting){{probe();io.disconnect();}}}},{{rootMargin:'400px'}});io.observe(el);}}else probe();
+  }});
 }})();
 </script>
 '''

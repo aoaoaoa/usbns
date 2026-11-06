@@ -33,6 +33,7 @@ VOICES = [
 ARTICLES = [
 dict(
     slug="gregory",
+    audio="audio/gregory.mp3", audio_reader=None,
     kicker="Race amity",
     title="The Louis Gregory Bahá'í Institute continues legacy of race amity work",
     short="Louis Gregory",
@@ -79,6 +80,7 @@ dict(
     ]),
 dict(
     slug="newyorkers",
+    audio="audio/newyorkers.mp3", audio_reader=None,
     kicker="Community",
     title="New Yorkers create more unified communities through the arts",
     short="New Yorkers",
@@ -106,6 +108,7 @@ dict(
     ]),
 dict(
     slug="twoartists",
+    audio="audio/twoartists.mp3", audio_reader=None,
     kicker="In conversation",
     title="Two artists reimagine the role of art through a spiritual framework",
     short="Two artists",
@@ -148,6 +151,7 @@ dict(
     ]),
 dict(
     slug="abs",
+    audio="audio/abs.mp3", audio_reader=None,
     kicker="Scholarship",
     title="Association for Bahá'í Studies at 50",
     dek="Scholarship and knowledge in service to the common good",
@@ -219,6 +223,7 @@ dict(
     ]),
 dict(
     slug="endeavor",
+    audio="audio/endeavor.mp3", audio_reader=None,
     kicker="Across America",
     title="Communities engage in a common endeavor",
     short="A common endeavor",
@@ -267,6 +272,7 @@ dict(
     ]),
 dict(
     slug="comic",
+    audio="audio/comic.mp3", audio_reader=None,
     kicker="Adventures in pioneering",
     title="Sparkling spirits in Indianapolis",
     short="Comic",
