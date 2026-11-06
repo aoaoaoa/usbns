@@ -29,7 +29,10 @@ def body_html(blocks):
         elif k == "note": out.append(f'<p class="note">{esc(b[1])}</p>')
         elif k == "qa": out.append(f'<p class="qa">{esc(b[1])}</p>')
         elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {qesc(b[2])}</p>')
-        elif k == "pair": out.append('<figure class="photo pair">' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in b[1:]) + '</figure>')
+        elif k == "pair":
+            w = next((x for x in b[1:] if isinstance(x, int)), None)
+            st = f' style="max-width:{w}px"' if w else ""
+            out.append(f'<figure class="photo pair{" capped" if w else ""}"{st}>' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in (x for x in b[1:] if isinstance(x, tuple))) + '</figure>')
         elif k == "ext": out.append(f'<blockquote class="ext"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
@@ -147,7 +150,12 @@ def build_tab(member=False):
   <blockquote class="passage prayer"><p>{esc(R["prayer"][0])}</p><cite>{esc(R["prayer"][1])}</cite></blockquote>
 </div></article>'''
         B = BOOKS
-        bk = "".join(f'<li><h4>{esc(t)}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+"</p>") if price else ""}</li>' for t,sub,desc,price in B["items"])
+        def book(it):
+            t, sub, desc, price = it[:4]; url = it[4] if len(it) > 4 else None
+            h = f'<a href="{url}" target="_blank" rel="noopener">{esc(t)}</a>' if url else esc(t)
+            buy = f' <a class="buy" href="{url}" target="_blank" rel="noopener">View at the Bahá\'í Bookstore</a>' if url else ""
+            return f'<li><h4>{h}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
+        bk = "".join(book(it) for it in B["items"])
         books = dept_open(B, "#8a3a1e") + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h4>{esc(n["title"])}</h4><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
@@ -251,6 +259,9 @@ main,.head{{position:relative;z-index:1}}
 .shelf .sub{{font-family:var(--ui);font-size:12.5px;color:var(--mute);margin:0 0 8px}}
 .shelf .books p{{font-size:15px;line-height:1.5;margin:0 0 8px}}
 .shelf .price{{font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--accent)}}
+.shelf h4 a{{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%}}
+.shelf h4 a:hover,.shelf h4 a:focus-visible{{color:var(--accent)}}
+.shelf .buy{{display:block;margin-top:4px;font-weight:500;color:var(--accent)}}
 .notices{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:28px}}
 .dept .prose:has(.notices){{grid-column:2/4;display:block;max-width:none}}
 .notices li{{border-top:3px solid var(--accent);padding-top:14px}}
@@ -384,6 +395,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo.small>figcaption{{margin-top:10px}}
 .prose .photo.pair{{grid-column:1/-1;grid-template-columns:1fr 1fr;gap:20px;align-items:start}}
 .prose .photo.pair>div{{grid-column:auto}}
+.prose .photo.pair.capped{{grid-column:2/4}}
 .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
 .prose .photo img{{display:block;width:100%;height:auto;border:1px solid var(--rule)}}
