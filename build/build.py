@@ -424,8 +424,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
-    <p class="sub">{SUB}{" · Full edition" if member else " · Curated edition"}</p>
-    <div class="line"><span>{esc(ISSUE["date"])}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Curated edition</a></span>' if member else '<span><a href="member/">Full edition</a></span>'}</div>
+    <p class="sub">{SUB}</p>
+    <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Curated edition</a></span>' if member else '<span><a href="member/">Full edition</a></span>'}</div>
   </div>
   <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
