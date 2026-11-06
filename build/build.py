@@ -237,15 +237,26 @@ def first_para_dropcap(h):
 
 # ------------------------------------------------------------------ TAB (the published site)
 def listen(a):
-    """A 'Listen to this story' player for a feature with an audio reading."""
+    """Launcher for a feature's audio reading; playback runs in the docked player."""
     if not a.get("audio"): return ""
-    by = f'<p class="lby">Read by {esc(a["audio_reader"])}</p>' if a.get("audio_reader") else ""
-    return f'''<div class="listen" data-src="{a["audio"]}">
-      <button class="lp" type="button" aria-label="Play: listen to this story"><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg><svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg></button>
-      <span class="lt">Listen to this story</span>
-      <span class="lm"><span class="ltime">Audio reading</span><button class="lspd" type="button" aria-label="Playback speed">1×</button></span>
-      <div class="lbar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i><b></b></div>{by}
-    </div>'''
+    by = f'<span class="lby">Read by {esc(a["audio_reader"])}</span>' if a.get("audio_reader") else ""
+    return f'''<button class="listen" type="button" data-src="{a["audio"]}" data-title="{esc(a["title"])}" aria-label="Listen to this story">
+      <span class="lp"><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg><svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg></span>
+      <span class="lt">Listen to this story</span><span class="ltime">Audio reading</span>{by}
+    </button>'''
+
+DOCK = '''<div class="dock" id="dock" role="region" aria-label="Audio player" hidden>
+  <div class="dk">
+    <button class="dp" type="button" aria-label="Pause"><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg><svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg></button>
+    <button class="ds" type="button" aria-label="Playback speed">1×</button>
+    <button class="dj" type="button" data-j="-15" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
+    <button class="dj" type="button" data-j="15" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
+    <a class="dt" href="#"></a>
+    <span class="dtime">0:00 / 0:00</span>
+    <div class="dbar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i><b></b></div>
+    <button class="dx" type="button" aria-label="Close player"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
+  </div>
+</div>'''
 
 def build_tab(member=False):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
@@ -572,24 +583,46 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .by::before{{content:"By ";}}
 .by.nob::before{{content:""}}
 .pp{{margin-top:10px!important;font-variant-numeric:tabular-nums}}
-/* listen */
-.listen{{margin-top:22px;text-transform:none;letter-spacing:0;font-family:var(--ui);color:var(--ink);display:grid;grid-template-columns:44px 1fr;gap:4px 12px;align-items:center;max-width:26ch}}
-.listen .lp{{grid-row:1/3;width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}}
-.listen .lp svg{{width:16px;height:16px;fill:currentColor}} .listen .lp .ic-pause{{display:none}}
-.listen.playing .lp .ic-play{{display:none}} .listen.playing .lp .ic-pause{{display:block}}
-.listen .lp:focus-visible{{outline:2px solid var(--ink);outline-offset:3px}}
+/* listen: launcher in the margin, player docked at the foot */
+.listen{{margin-top:22px;font:inherit;font-family:var(--ui);text-transform:none;letter-spacing:0;color:var(--ink);background:none;border:0;padding:0;cursor:pointer;text-align:left;display:grid;grid-template-columns:44px 1fr;gap:2px 12px;align-items:center;max-width:26ch}}
+.listen .lp{{grid-row:1/4;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;transition:transform .15s}}
+.listen:hover .lp{{transform:scale(1.06)}}
+.listen svg{{width:16px;height:16px;fill:currentColor}} .listen .ic-pause{{display:none}}
+.listen.playing .ic-play{{display:none}} .listen.playing .ic-pause{{display:block}}
+.listen:focus-visible{{outline:2px solid var(--accent);outline-offset:4px;border-radius:24px}}
 .listen .lt{{font-size:13.5px;font-weight:600;line-height:1.2}}
-.listen .lm{{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.listen .lbar{{grid-column:1/-1;position:relative;height:18px;cursor:pointer;margin-top:4px}}
-.listen .lbar::before{{content:"";position:absolute;left:0;right:0;top:8px;height:2px;background:var(--rule)}}
-.listen .lbar i{{position:absolute;left:0;top:8px;height:2px;width:var(--p,0%);background:var(--accent)}}
-.listen .lbar b{{position:absolute;top:4px;left:calc(var(--p,0%) - 5px);width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:0;transition:opacity .15s}}
-.listen:hover .lbar b,.listen.playing .lbar b,.listen .lbar:focus-visible b{{opacity:1}}
-.listen .lbar:focus-visible{{outline:2px solid var(--accent);outline-offset:2px}}
-.listen .lspd{{border:1px solid var(--rule);background:none;border-radius:999px;font:600 11px var(--ui);color:var(--mute);padding:2px 7px;cursor:pointer}}
-.listen.na .lp{{background:var(--rule);cursor:default}} .listen.na .lbar,.listen.na .lspd{{display:none}}
-.listen .lby{{grid-column:1/-1;font-size:11.5px;color:var(--mute);margin:2px 0 0}}
-@media (max-width:980px){{.listen{{margin:6px 0 0;max-width:none;width:100%}}}}
+.listen .ltime,.listen .lby{{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
+.listen.na{{cursor:default}} .listen.na .lp{{background:var(--rule);transform:none}}
+@media (max-width:980px){{.listen{{margin:6px 0 0;max-width:none}}}}
+.dock{{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none;font-family:var(--ui);color:var(--ink)}}
+.dock[hidden]{{display:block;visibility:hidden}}
+.dock .dk{{pointer-events:auto;max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px 10px;padding:8px 10px 8px 8px;background:color-mix(in oklab,var(--bar) 95%,transparent);backdrop-filter:blur(12px);border:1px solid var(--barrule);border-top:2px solid var(--accent);border-radius:14px;box-shadow:0 8px 30px rgba(20,16,10,.14);transform:translateY(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}}
+.dock.on .dk{{transform:none}}
+.dock button{{border:0;background:none;color:inherit;cursor:pointer;padding:0;display:grid;place-items:center;flex:none}}
+.dock button:focus-visible,.dock .dbar:focus-visible,.dock .dt:focus-visible{{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}}
+.dock svg{{fill:currentColor}}
+.dock .dp{{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff}} .dock .dp svg{{width:16px;height:16px}}
+.dock .ic-play{{display:none}} .dock.paused .ic-play{{display:block}} .dock.paused .ic-pause{{display:none}}
+.dock .ds{{min-width:42px;height:30px;font:600 12.5px var(--ui);border:1px solid var(--rule)!important;border-radius:999px;font-variant-numeric:tabular-nums}}
+.dock .dj{{width:34px;height:34px;border-radius:50%}} .dock .dj:hover,.dock .dx:hover,.dock .ds:hover{{background:var(--tabon)}}
+.dock .dj svg{{width:24px;height:24px}} .dock .dj text{{font:700 6.5px var(--ui);fill:currentColor}}
+.dock .dt{{flex:0 1 auto;min-width:0;font-size:13.5px;font-weight:600;color:inherit;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:4px}}
+.dock .dt:hover{{color:var(--accent)}}
+.dock .dtime{{flex:none;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
+.dock .dbar{{flex:1 1 120px;position:relative;height:22px;cursor:pointer;min-width:80px}}
+.dock .dbar::before{{content:"";position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:var(--rule)}}
+.dock .dbar i{{position:absolute;left:0;top:9px;height:4px;border-radius:2px;width:var(--p,0%);background:var(--accent)}}
+.dock .dbar b{{position:absolute;top:5px;left:calc(var(--p,0%) - 6px);width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bar)}}
+.dock .dx{{width:34px;height:34px;border-radius:50%}} .dock .dx svg{{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}}
+html.docked body{{padding-bottom:84px}}
+@media (max-width:700px){{
+ .dock .dk{{flex-wrap:wrap;padding:8px 8px 6px}}
+ .dock .dt{{order:-1;flex:1 1 100%;margin:0 0 2px 4px;font-size:13px}}
+ .dock .dbar{{order:9;flex:1 1 100%}}
+ .dock .dtime{{margin-left:auto}}
+ html.docked body{{padding-bottom:128px}}
+}}
+@media (prefers-reduced-motion:reduce){{.dock .dk{{transition:none}}}}
 .prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:19.5px;line-height:1.6;font-variation-settings:"opsz" 18}}
 .prose>*{{grid-column:2;min-width:0}}
 .prose p{{margin:0 0 1.25em;text-wrap:pretty}}
@@ -676,6 +709,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <footer class="colophon">{esc(ISSUE["publisher"])}</footer>
 </div>
 </main>
+{DOCK}
 <script>
 (function(){{
   var links=[].slice.call(document.querySelectorAll('.head nav a'));
@@ -723,25 +757,43 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 }})();
 
 (function(){{
-  var players=[].slice.call(document.querySelectorAll('.listen')); if(!players.length)return;
-  var cur=null, fmt=function(t){{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}};
-  players.forEach(function(el){{
-    var au=new Audio(); au.preload='none'; var src=el.dataset.src, btn=el.querySelector('.lp'), time=el.querySelector('.ltime'), bar=el.querySelector('.lbar'), spd=el.querySelector('.lspd'), speeds=[1,1.25,1.5,0.85], si=0, probed=false;
-    function na(){{el.classList.add('na');el.classList.remove('playing');time.textContent='Reading coming soon';btn.disabled=true;btn.setAttribute('aria-label','Audio reading coming soon');}}
-    function probe(){{if(probed)return;probed=true;au.src=src;au.preload='metadata';au.load();}}
-    au.addEventListener('error',na);
-    au.addEventListener('loadedmetadata',function(){{time.textContent=fmt(au.duration);}});
-    au.addEventListener('timeupdate',function(){{var p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));time.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}});
-    au.addEventListener('play',function(){{el.classList.add('playing');btn.setAttribute('aria-label','Pause');}});
-    au.addEventListener('pause',function(){{el.classList.remove('playing');btn.setAttribute('aria-label','Play: listen to this story');}});
-    au.addEventListener('ended',function(){{au.currentTime=0;}});
-    btn.addEventListener('click',function(){{probe();if(au.paused){{if(cur&&cur!==au)cur.pause();cur=au;var p=au.play();if(p&&p.catch)p.catch(function(){{}});}}else au.pause();}});
-    spd.addEventListener('click',function(){{si=(si+1)%speeds.length;au.playbackRate=speeds[si];spd.textContent=speeds[si]+'×';}});
-    function seek(x){{var r=bar.getBoundingClientRect();if(au.duration)au.currentTime=Math.max(0,Math.min(1,(x-r.left)/r.width))*au.duration;}}
-    bar.addEventListener('click',function(e){{probe();seek(e.clientX);}});
-    bar.addEventListener('keydown',function(e){{if(!au.duration)return;if(e.key==='ArrowRight'){{au.currentTime=Math.min(au.duration,au.currentTime+10);e.preventDefault();}}if(e.key==='ArrowLeft'){{au.currentTime=Math.max(0,au.currentTime-10);e.preventDefault();}}}});
+  var L=[].slice.call(document.querySelectorAll('.listen')); if(!L.length)return;
+  var dock=document.getElementById('dock'), dk=dock.querySelector('.dk'), dp=dock.querySelector('.dp'), ds=dock.querySelector('.ds'), dt=dock.querySelector('.dt'), dtime=dock.querySelector('.dtime'), bar=dock.querySelector('.dbar'), dx=dock.querySelector('.dx');
+  var speeds=[1,1.25,1.5,2,0.85], si=0, cur=null;
+  var fmt=function(t){{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}};
+  function sync(){{if(!cur)return;var au=cur.au,p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));bar.setAttribute('aria-valuetext',fmt(au.currentTime)+' of '+fmt(au.duration));dtime.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}}
+  function state(){{var pl=cur&&!cur.au.paused;dock.classList.toggle('paused',!pl);dp.setAttribute('aria-label',pl?'Pause':'Play');L.forEach(function(x){{x.classList.toggle('playing',!!(cur&&x===cur.el&&pl));}});}}
+  function open(p){{
+    if(cur&&cur!==p)cur.au.pause();
+    cur=p; var st=getComputedStyle(p.el).getPropertyValue('--accent'); if(st)dock.style.setProperty('--accent',st.trim());
+    dt.textContent=p.el.dataset.title; dt.href='#'+(p.el.closest('.story')||{{}}).id;
+    p.au.playbackRate=speeds[si];
+    dock.hidden=false; document.documentElement.classList.add('docked'); requestAnimationFrame(function(){{dock.classList.add('on');}});
+    sync();
+  }}
+  L.forEach(function(el){{
+    var au=new Audio(); au.preload='none'; var p={{el:el,au:au}}, probed=false, t=el.querySelector('.ltime');
+    function probe(){{if(probed)return;probed=true;au.src=el.dataset.src;au.preload='metadata';au.load();}}
+    au.addEventListener('error',function(){{el.classList.add('na');t.textContent='Reading coming soon';el.setAttribute('aria-label','Audio reading coming soon');if(cur===p)close();}});
+    au.addEventListener('loadedmetadata',function(){{t.textContent=fmt(au.duration);if(cur===p)sync();}});
+    au.addEventListener('timeupdate',function(){{if(cur===p)sync();}});
+    ['play','pause'].forEach(function(e){{au.addEventListener(e,state);}});
+    au.addEventListener('ended',function(){{au.currentTime=0;state();}});
+    el.addEventListener('click',function(){{if(el.classList.contains('na'))return;probe();if(cur===p&&!au.paused){{au.pause();return;}}open(p);var r=au.play();if(r&&r.catch)r.catch(function(){{}});}});
     if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{if(es[0].isIntersecting){{probe();io.disconnect();}}}},{{rootMargin:'400px'}});io.observe(el);}}else probe();
   }});
+  function close(){{if(cur)cur.au.pause();dock.classList.remove('on');document.documentElement.classList.remove('docked');setTimeout(function(){{if(!dock.classList.contains('on'))dock.hidden=true;}},360);state();}}
+  dp.addEventListener('click',function(){{if(!cur)return;if(cur.au.paused){{var r=cur.au.play();if(r&&r.catch)r.catch(function(){{}});}}else cur.au.pause();}});
+  ds.addEventListener('click',function(){{si=(si+1)%speeds.length;ds.textContent=speeds[si]+'×';if(cur)cur.au.playbackRate=speeds[si];}});
+  [].forEach.call(dock.querySelectorAll('.dj'),function(b){{b.addEventListener('click',function(){{if(!cur||!cur.au.duration)return;cur.au.currentTime=Math.max(0,Math.min(cur.au.duration,cur.au.currentTime+ +b.dataset.j));sync();}});}});
+  dx.addEventListener('click',close);
+  function seek(x){{if(!cur||!cur.au.duration)return;var r=bar.getBoundingClientRect();cur.au.currentTime=Math.max(0,Math.min(1,(x-r.left)/r.width))*cur.au.duration;sync();}}
+  var drag=false;
+  bar.addEventListener('pointerdown',function(e){{drag=true;bar.setPointerCapture(e.pointerId);seek(e.clientX);}});
+  bar.addEventListener('pointermove',function(e){{if(drag)seek(e.clientX);}});
+  bar.addEventListener('pointerup',function(){{drag=false;}});
+  bar.addEventListener('keydown',function(e){{if(!cur||!cur.au.duration)return;var d={{ArrowRight:10,ArrowLeft:-10,Home:-1e9,End:1e9}}[e.key];if(d===undefined)return;e.preventDefault();cur.au.currentTime=Math.max(0,Math.min(cur.au.duration,cur.au.currentTime+d));sync();}});
+  document.addEventListener('keydown',function(e){{if(e.key==='Escape'&&dock.classList.contains('on')&&dock.contains(document.activeElement))close();}});
 }})();
 </script>
 '''
