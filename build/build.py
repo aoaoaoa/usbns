@@ -618,9 +618,9 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ov .t1{{left:2%;top:5%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
 .ov .t1 i{{font-style:italic}}
 .ov .t2{{left:36%;top:17%;font-family:"Pinyon Script",cursive;font-size:17cqw}}
-.ov .t3{{right:8%;top:32%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
+.ov .t3{{right:8%;top:29%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
 .ov .byl{{left:9%;top:58%;font-family:"Bodoni Moda",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
-.ov .sub{{right:1.5%;top:47%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
+.ov .sub{{right:1.5%;top:50%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
 @media (prefers-reduced-motion:no-preference){{.ov span{{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
 @keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
 
