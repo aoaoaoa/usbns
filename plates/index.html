@@ -44,6 +44,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .plate{background:var(--card);border:1px solid var(--rule);padding:clamp(10px,1.5vw,20px)}
 .plate .img{background:#000;display:grid;place-items:center}
 .plate .img img{display:block;width:100%;height:auto;max-height:80vh;object-fit:contain}
+.plate .img.capped{padding:clamp(16px,3vw,48px) 0}
+.plate .img.capped img{max-width:var(--aw)}
 .plate .img.bare{background:var(--card);padding:clamp(16px,3vw,48px)}
 .plate .img.bare img{max-width:1100px}
 .plate .img.two{grid-template-columns:1fr 1fr;gap:2px;background:var(--rule)}
@@ -95,7 +97,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </header>
 <div class="wrap"><section class="chapter" id="gregory">
   <div class="plate">
-    <div class="img"><img src="../img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"></div>
+    <div class="img" style="--aw:0px"><img src="../img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"></div>
     <div class="cap"><span class="n">Plate 1</span><span>Collage illustration from the issue</span><span>pp. 20–23</span></div>
   </div>
   <header class="chead">
@@ -129,7 +131,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <p>Gregory also taught the Faith through correspondence. Gregory “had friends whom he wrote in all age groups and students in every colored college and university in the land. He always answered every letter…”</p></div>
 </section><section class="chapter" id="newyorkers">
   <div class="plate">
-    <div class="img bare"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"></div>
+    <div class="img bare" style="--aw:0px"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"></div>
     <div class="cap"><span class="n">Plate 2</span><span>Photograph, Crown Heights, Brooklyn</span><span>pp. 24–26</span></div>
   </div>
   <header class="chead">
@@ -143,7 +145,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <p>Sobhani says, “People entered our home with such zeal. Before the screening started, we took a moment to admire the room filled with an array of people. The diversity was so rich – it alone made the night worthwhile.” After chatting over dinner and experiencing the films, participants shared what resonated with them and “how they wanted to show up for children,” says Guaman. Inspired, the group shared a prayer for the children in their lives and community.</p>
 <figure class="photo"><img src="../img/ny-film.jpg" alt="Community members watch a film during a devotional gathering at Felicia Sobhani's home." loading="lazy"><figcaption>Community members watch a film during a devotional gathering at Felicia Sobhani's home.</figcaption></figure>
 <p>Across the bridge in Crown Heights, Brooklyn, Juliet Bogan decided to put brush to canvas at a local park. Bogan enjoys oil painting, and brought her supplies to express creativity in the open air. Aware that children might ask to join, she also brought along washable children's paints, a pad of paper and extra brushes.</p>
-<figure class="photo small" style="--w:720px"><img src="../img/ny-park.jpg" alt="Painting with children at the plaza in Crown Heights, Brooklyn." loading="lazy"><figcaption>Painting with children at the plaza in Crown Heights, Brooklyn.</figcaption></figure>
+<figure class="photo small" style="--w:520px"><img src="../img/ny-park.jpg" alt="Painting with children at the plaza in Crown Heights, Brooklyn." loading="lazy"><figcaption>Painting with children at the plaza in Crown Heights, Brooklyn.</figcaption></figure>
 <blockquote class="pull"><p>And paint I most certainly did not! The arts are magnetic.</p><cite>Juliet Bogan</cite></blockquote>
 <p>As she prepared to paint, more than half a dozen children and their parents gathered around her. Using three nearby tables, Bogan spent the afternoon guiding the expanding group of children and getting to know the families. Since then, the classes are held weekly in this same plaza. Friends from the neighborhood, many of them youth, are now supporting the effort. As a result, relationships among a growing group of families living in the complex adjacent to the park are developing.</p>
 <figure class="photo"><img src="../img/ny-table.jpg" alt="The painting table at the plaza in Crown Heights: a watercolor set, children's brushes, and the portrait captioned I am kind, loving, and friendly." loading="lazy"><figcaption>The painting table at the plaza in Crown Heights: a watercolor set, children's brushes, and the portrait captioned I am kind, loving, and friendly.</figcaption></figure>
@@ -156,7 +158,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <p>These artists found their passions a catalyst for new connections. Sobhani says, “It was a night of genuine friendship, with everyone meeting someone new.” Her friend Jan, an elderly neighbor at the inaugural film gathering, said, “We need more of this.”</p></div>
 </section><section class="chapter" id="twoartists">
   <div class="plate">
-    <div class="img"><img src="../img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"></div>
+    <div class="img" style="--aw:0px"><img src="../img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"></div>
     <div class="cap"><span class="n">Plate 3</span><span>Photograph from the issue, with the printed title</span><span>pp. 27–29</span></div>
   </div>
   <header class="chead">
@@ -221,7 +223,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <p>Traditional research, she explained, can begin with someone entering a community from a university setting with a question already defined. Drawing on the work of PAR scholars, she noted that participatory approaches instead recognize that people living within a community possess knowledge of their own experience that cannot simply be substituted by outside expertise. The Bahá'í principle of the oneness of humanity carries this idea further. Muraleedharan described how it can soften assumptions of a fixed division between the researcher and those being researched.</p>
 <blockquote class="pull"><p>There's no insider/outsider when it comes to doing research with a community. Rather, one sees themselves as part of that community, and the challenges they face as their own challenges.</p><cite>Valentina Muraleedharan</cite></blockquote>
 <p>Universal participation, meanwhile, has implications for the meaning of justice in research. A just process cannot be considered solely in terms of the eventual findings or benefits. It also raises questions about who helps identify the problem, formulate the questions, interpret experience and determine what action should follow. “Who is participating in that research becomes really important to achieving a just outcome and a just process,” Muraleedharan said. Research approached in this way can become part of building a community's capacity to understand and respond to its own reality, rather than merely producing knowledge about it.</p>
-<figure class="photo small" style="--w:420px"><img src="../img/abs-podium.jpg" alt="A seminar presentation at the conference." loading="lazy"><figcaption>A seminar presentation at the conference.</figcaption></figure>
+<figure class="photo small" style="--w:300px"><img src="../img/abs-podium.jpg" alt="A seminar presentation at the conference." loading="lazy"><figcaption>A seminar presentation at the conference.</figcaption></figure>
 <h3>From individual health to the health of a social body</h3>
 <p>The principle of oneness has also influenced the direction of Jasmine Miller-Kleinhenz's work in population health. Miller-Kleinhenz, a molecular biologist and member of the executive committee, initially worked on developing treatments for an aggressive form of breast cancer that appeared disproportionately among certain populations of women. Common explanations often pointed to ancestry or characteristics presumed to be inherent in those populations. Yet, she said, the scientific evidence did not adequately support such assumptions.</p>
 <p>Reflecting on the Bahá'í conception of humanity as one family prompted another line of inquiry: What conditions were these women living within, and might those conditions themselves leave a biological imprint? Her research began moving outward from the molecular processes within individual bodies to the social and physical environments in which people live, examining access to nutritious food, quality education, green space, and other social conditions, and considering how environments shaped by collective decisions can become embodied in an individual's health outcomes.</p>
@@ -238,7 +240,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <p>Underlying this widening participation in ABS forums, Todd Smith suggested, is a posture of humility: participants diligently pursuing this work while also seeing themselves as being “on the same path of service where everybody has something to contribute.”</p></div>
 </section><section class="chapter" id="endeavor">
   <div class="plate">
-    <div class="img"><img src="../img/endeavor.jpg" alt="A wave-shaped collage of photographs of people smiling at gatherings, on a ground of mustard, cream and teal"></div>
+    <div class="img capped" style="--aw:880px"><img src="../img/endeavor.jpg" alt="A wave-shaped collage of photographs of people smiling at gatherings, on a ground of mustard, cream and teal"></div>
     <div class="cap"><span class="n">Plate 5</span><span>Collage from the issue</span><span>pp. 12–15</span></div>
   </div>
   <header class="chead">
@@ -253,7 +255,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 <h3>Pima County, Arizona: Multifaith gathering</h3>
 <p>In August, the Bahá'ís of Santa Cruz and South Pima County, Arizona, invited local faith communities to gather for a conversation around the themes of “A Common Endeavor.” Presentation copies of the message and invitations were mailed to 17 faith communities in the cluster. Fifteen members from three faith groups, Baptist, Presbyterian and the Unity Church, joined an equal number of Bahá'ís at the event.</p>
 <p>The opening presentation tied the Bahá'í ideals and values in “A Common Endeavor” to America's foundational documents: The Declaration of Independence, the U.S. Constitution, the Bill of Rights and specific amendments. Discussion of spiritual renewal ensued, emphasizing movement from the individual to faith communities to the wider community and nation. The “Oneness” video, a few closing remarks, and a reading of The Prayer for America rounded out the program.</p>
-<figure class="photo"><img src="../img/ce-sarasota.jpg" alt="Arizona: after the showing of the “A Common Endeavor” video, Glenn Nerbak gives a historical overview of the values expressed in the message." loading="lazy"><figcaption>Arizona: after the showing of the “A Common Endeavor” video, Glenn Nerbak gives a historical overview of the values expressed in the message.</figcaption></figure>
+<figure class="photo small" style="--w:640px"><img src="../img/ce-sarasota.jpg" alt="Arizona: after the showing of the “A Common Endeavor” video, Glenn Nerbak gives a historical overview of the values expressed in the message." loading="lazy"><figcaption>Arizona: after the showing of the “A Common Endeavor” video, Glenn Nerbak gives a historical overview of the values expressed in the message.</figcaption></figure>
 <h3>Rutland, Vermont: Sharing at the Rotary Club</h3>
 <p>In August, Alis Headlam, a Bahá'í, shared themes from “A Common Endeavor” with the Rutland City Rotary Club at its weekly meeting. A high level of participation was facilitated by an interactive slideshow, which invited people to take turns reading aloud and commenting on each section.</p>
 <p>A Rotary Club member who organizes donations and service for a local food assistance program raised a concern. The program serves more than 400 people a week and provides more than 2,000 meals a month. He wondered how to bring those being served into conversations and offering solutions, so that they might better recognize their own role in the community. A long-term consultative project, following the process of study, consultation, action and reflection was suggested. One attendee said the presentation made him think about how a simple smile or a wave had the potential to help people feel more welcome in the community.</p>

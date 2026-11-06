@@ -42,7 +42,8 @@ def build_folio():
                 art = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
-                art = f'''<figure class="{cls}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
+                if a.get("art_width"): cls += " capped"
+                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
         else:
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -116,6 +117,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .story{{padding-block:clamp(48px,8vw,112px) 0}}
 .plate{{margin:0 0 clamp(28px,4vw,48px);background:var(--cream);border:1px solid var(--rule)}}
 .plate img{{display:block;width:100%;height:auto;max-height:78vh;object-fit:cover}}
+.plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
 .plate.bare figcaption{{padding-left:0}}
@@ -230,7 +232,7 @@ def build_plates():
             if a["slug"] == "comic":
                 plate = f'<div class="img two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"></div>'
             else:
-                plate = f'<div class="img{" bare" if a.get("art_transparent") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
+                plate = f'<div class="img{" bare" if a.get("art_transparent") else ""}{" capped" if a.get("art_width") else ""}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
         else:
             plate = '<div class="img type"><span>50</span></div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -288,6 +290,8 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate{{background:var(--card);border:1px solid var(--rule);padding:clamp(10px,1.5vw,20px)}}
 .plate .img{{background:#000;display:grid;place-items:center}}
 .plate .img img{{display:block;width:100%;height:auto;max-height:80vh;object-fit:contain}}
+.plate .img.capped{{padding:clamp(16px,3vw,48px) 0}}
+.plate .img.capped img{{max-width:var(--aw)}}
 .plate .img.bare{{background:var(--card);padding:clamp(16px,3vw,48px)}}
 .plate .img.bare img{{max-width:1100px}}
 .plate .img.two{{grid-template-columns:1fr 1fr;gap:2px;background:var(--rule)}}
@@ -350,7 +354,7 @@ def build_reader():
             if a["slug"] == "comic":
                 art = f'<figure class="inset two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
             else:
-                art = f'<figure class="inset{" bare" if a.get("art_transparent") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
+                art = f'<figure class="inset{" bare" if a.get("art_transparent") else ""}" style="max-width:{a.get("art_width") or 860}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
         else:
             art = ""
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
