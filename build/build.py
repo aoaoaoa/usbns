@@ -48,7 +48,8 @@ def build_folio():
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = f'<p class="by">{esc(a["byline"])}</p>' if a.get("byline") else ""
-        secs.append(f'''<article class="story" id="{a["slug"]}">
+        blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
+        secs.append(f'''<article class="story" id="{a["slug"]}">{blooms}
   {art}
   <header class="shead">
     <h2>{esc(a["title"])}</h2>
@@ -81,6 +82,30 @@ def build_folio():
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .wrap{{max-width:1180px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
+/* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
+.terraces{{position:fixed;top:0;right:0;bottom:0;width:30%;z-index:0;pointer-events:none;opacity:.32;filter:blur(44px) saturate(.85)}}
+.terraces i{{position:absolute;left:-20%;right:-20%;height:34%;border-radius:50% 50% 40% 40%/60% 60% 40% 40%;animation:drift 28s ease-in-out infinite alternate}}
+.terraces i:nth-child(1){{top:-12%;background:linear-gradient(90deg,#d9742a,#e9a21f);animation-duration:32s}}
+.terraces i:nth-child(2){{top:22%;background:#5f8f3a;animation-delay:-8s}}
+.terraces i:nth-child(3){{top:50%;background:#2f6a4a;animation-delay:-16s;animation-duration:36s}}
+.terraces i:nth-child(4){{top:78%;background:#b7d35a;animation-delay:-4s}}
+@keyframes drift{{from{{transform:translate(-3%,0) rotate(-1.2deg)}}to{{transform:translate(3%,-2%) rotate(1.2deg)}}}}
+main,.head{{position:relative;z-index:1}}
+.mast{{position:relative}}
+.stroke{{position:absolute;left:-2%;top:38%;width:min(760px,80%);height:90px;z-index:-1;pointer-events:none}}
+.stroke path{{fill:none;stroke:#b7d35a;stroke-width:34;stroke-linecap:round;opacity:.5;stroke-dasharray:900;stroke-dashoffset:900;animation:paint 2.6s cubic-bezier(.5,0,.2,1) .4s forwards}}
+.stroke path+path{{stroke:#e9a21f;stroke-width:22;animation-delay:1.1s;opacity:.45}}
+@keyframes paint{{to{{stroke-dashoffset:0}}}}
+.story{{position:relative}}
+.blooms{{position:absolute;left:0;top:34%;width:22%;height:46%;z-index:0;pointer-events:none;filter:blur(30px);opacity:.42}}
+.blooms i{{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply;animation:bloom 22s ease-in-out infinite alternate}}
+.blooms i:nth-child(1){{left:0;top:0;background:#f05a7e}}
+.blooms i:nth-child(2){{left:30%;top:32%;background:#2448c8;animation-delay:-7s;animation-duration:27s}}
+.blooms i:nth-child(3){{left:5%;top:60%;background:#f3c623;animation-delay:-13s}}
+@keyframes bloom{{from{{transform:scale(.9)}}to{{transform:scale(1.15) translate(6%,-6%)}}}}
+.story>*{{position:relative;z-index:1}}
+@media (prefers-reduced-motion:reduce){{.terraces i,.blooms i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}}}
+@media (max-width:980px){{.terraces,.blooms{{display:none}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}}
@@ -184,8 +209,10 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 }}
 </style>
 <div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav aria-label="Features">{head}</nav></div></div>
+<div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
+    <svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
     <p class="sub">{SUB}</p>
@@ -237,12 +264,14 @@ def build_plates():
             plate = '<div class="img type"><span>50</span></div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = f'<p class="by">{esc(a["byline"])}</p>' if a.get("byline") else ""
+        pal = {"gregory":("#f26b2b","#2448c8","#f05a7e","#f3c623"),"newyorkers":("#2448c8","#f05a7e","#f3c623","#5f8f3a"),"twoartists":("#b07a4a","#e9a21f","#2f6a4a","#f26b2b"),"abs":("#c9462c","#1b5e6b","#e9a21f","#2448c8"),"endeavor":("#e9a21f","#1b5e6b","#9ec3cc","#f26b2b"),"comic":("#f3c623","#2448c8","#f26b2b","#5f8f3a")}[a["slug"]]
+        torn = f'<div class="torn" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
         chapters.append(f'''<section class="chapter" id="{a["slug"]}">
   <div class="plate">
     {plate}
     <div class="cap"><span class="n">Plate {n}</span><span>{esc(a["art_credit"] or "Set in type")}</span><span>pp. {a["pages"]}</span></div>
   </div>
-  <header class="chead">
+  <header class="chead">{torn}
     <p class="kicker">{esc(a["kicker"])}</p>
     <h2>{esc(a["title"])}</h2>
     {dek}{by}
@@ -300,7 +329,20 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate .img.type span{{font-family:var(--disp);font-style:italic;font-size:clamp(180px,32vw,440px);line-height:.8;color:var(--gold);font-variation-settings:"opsz" 96}}
 .cap{{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--dim);padding:12px 2px 0}}
 .cap .n{{color:var(--gold)}}
-.chead{{max-width:1000px;margin:clamp(32px,5vw,64px) auto 0}}
+/* motion: torn paper behind each headline, in the story's palette, settling slowly; cover letters lean from the cursor. */
+.chead{{max-width:1000px;margin:clamp(32px,5vw,64px) auto 0;position:relative}}
+.chead>*{{position:relative;z-index:1}}
+.torn{{position:absolute;inset:-10% -4% -10% 40%;z-index:0!important;pointer-events:none;opacity:.22}}
+.torn i{{position:absolute;animation:settle 20s ease-in-out infinite alternate}}
+.torn i:nth-child(1){{right:6%;top:-6%;width:44%;height:70%;background:var(--a);clip-path:polygon(4% 0,96% 6%,100% 60%,88% 100%,10% 94%,0 40%);animation-delay:-3s}}
+.torn i:nth-child(2){{right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}}
+.torn i:nth-child(3){{right:0;bottom:-4%;width:26%;height:46%;background:var(--c);clip-path:polygon(10% 0,100% 10%,90% 100%,0 86%);animation-delay:-14s}}
+.torn i:nth-child(4){{right:48%;top:0;width:16%;aspect-ratio:1;height:auto;background:var(--d);border-radius:50%;animation-duration:16s}}
+@keyframes settle{{from{{transform:translate(0,0) rotate(0)}}to{{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}}}
+.cover h1 span{{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}}
+.cover h1 span.sp{{width:.22em}}
+@media (prefers-reduced-motion:reduce){{.torn i{{animation:none}}.cover h1 span{{transition:none}}}}
+@media (max-width:860px){{.torn{{display:none}}}}
 .kicker{{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 18px}}
 .chead h2{{font-family:var(--disp);font-style:italic;font-weight:400;font-size:clamp(40px,6.4vw,92px);line-height:.98;letter-spacing:-.02em;margin:0 0 20px;text-wrap:balance;font-variation-settings:"opsz" 96}}
 .dek{{font-size:clamp(20px,2vw,26px);font-weight:300;margin:0 0 10px;color:var(--dim)}}
@@ -342,6 +384,20 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 <div class="wrap">{"".join(chapters)}</div>
 <footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue. Plate 3 reproduces the printed opener with its title as set in the magazine.</footer>
 </main>
+<script>
+(function(){{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
+  var h=document.querySelector('.cover h1'); if(!h)return;
+  var out=[]; h.childNodes.forEach(function(n){{
+    var tag=n.nodeType===1?n.tagName.toLowerCase():null; var txt=n.textContent;
+    txt.split('').forEach(function(ch){{var s=document.createElement('span');if(ch===' '){{s.className='sp';s.innerHTML='&nbsp;'}}else s.textContent=ch; if(tag){{var w=document.createElement(tag);w.appendChild(s);out.push(w)}}else out.push(s);}});
+  }});
+  h.textContent=''; out.forEach(function(x){{h.appendChild(x)}});
+  var spans=[].slice.call(h.querySelectorAll('span'));
+  h.addEventListener('mousemove',function(e){{spans.forEach(function(s){{var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/180));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-4)+'px)';}});}});
+  h.addEventListener('mouseleave',function(){{spans.forEach(function(s){{s.style.transform=''}});}});
+}})();
+</script>
 '''
 
 # ------------------------------------------------------------------ V3 READER
@@ -369,7 +425,7 @@ def build_reader():
   {art}
   <div class="prose">{body_html(a["body"])}</div>
 </article>''')
-    rail = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span></a>' for a in ARTICLES)
+    rail = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Reader</title>
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..600;1,7..72,300..600&display=swap">
@@ -392,6 +448,13 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .tabs nav{{display:flex;margin-left:auto}}
 .tabs nav a{{display:flex;align-items:flex-end;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--fg);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
 .tabs nav a span{{padding-bottom:12px}}
+/* motion: the current tab's underline fills as the story is read; a thin dark line slides between tabs. */
+.tabs nav a .fill{{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--fg);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}}
+.tabs nav a{{position:relative}}
+.tabs nav a.on .fill{{width:var(--p,0%)}}
+.tabs .ind{{position:absolute;bottom:-1px;height:2px;background:var(--fg);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}}
+.tabs .in{{position:relative}}
+@media (prefers-reduced-motion:reduce){{.tabs nav a .fill,.tabs .ind{{transition:none}}}}
 .tabs nav a.on{{background:var(--bg)}}
 .tabs nav a:hover,.tabs nav a:focus-visible{{background:var(--bg)}}
 .pages{{{GUT}}}
@@ -443,7 +506,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   .inset.two{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{rail}</nav></div></div>
+<div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{rail}</nav><span class="ind" aria-hidden="true"></span></div></div>
 <main class="pages" id="top">
 <header class="cover">
   <div>
@@ -459,10 +522,17 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
 (function(){{
   var links=[].slice.call(document.querySelectorAll('.tabs nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
-  if(!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;
-    links.forEach(function(a){{a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)}});}});}},{{rootMargin:'-30% 0px -60% 0px'}});
-  secs.forEach(function(x){{io.observe(x)}});
+  var ind=document.querySelector('.tabs .ind'), inn=document.querySelector('.tabs .in');
+  var cur=null;
+  function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
+  function progress(){{if(!cur)return;var a=links.filter(function(l){{return l.getAttribute('href')==='#'+cur.id}})[0];if(!a)return;
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}}
+  if('IntersectionObserver' in window){{
+    var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
+      links.forEach(function(a){{var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+    secs.forEach(function(x){{io.observe(x)}});
+  }}
+  addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.tabs nav a.on'))}});
 }})();
 </script>
 '''

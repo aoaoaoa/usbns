@@ -54,7 +54,20 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .plate .img.type span{font-family:var(--disp);font-style:italic;font-size:clamp(180px,32vw,440px);line-height:.8;color:var(--gold);font-variation-settings:"opsz" 96}
 .cap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--dim);padding:12px 2px 0}
 .cap .n{color:var(--gold)}
-.chead{max-width:1000px;margin:clamp(32px,5vw,64px) auto 0}
+/* motion: torn paper behind each headline, in the story's palette, settling slowly; cover letters lean from the cursor. */
+.chead{max-width:1000px;margin:clamp(32px,5vw,64px) auto 0;position:relative}
+.chead>*{position:relative;z-index:1}
+.torn{position:absolute;inset:-10% -4% -10% 40%;z-index:0!important;pointer-events:none;opacity:.22}
+.torn i{position:absolute;animation:settle 20s ease-in-out infinite alternate}
+.torn i:nth-child(1){right:6%;top:-6%;width:44%;height:70%;background:var(--a);clip-path:polygon(4% 0,96% 6%,100% 60%,88% 100%,10% 94%,0 40%);animation-delay:-3s}
+.torn i:nth-child(2){right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}
+.torn i:nth-child(3){right:0;bottom:-4%;width:26%;height:46%;background:var(--c);clip-path:polygon(10% 0,100% 10%,90% 100%,0 86%);animation-delay:-14s}
+.torn i:nth-child(4){right:48%;top:0;width:16%;aspect-ratio:1;height:auto;background:var(--d);border-radius:50%;animation-duration:16s}
+@keyframes settle{from{transform:translate(0,0) rotate(0)}to{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}
+.cover h1 span{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.cover h1 span.sp{width:.22em}
+@media (prefers-reduced-motion:reduce){.torn i{animation:none}.cover h1 span{transition:none}}
+@media (max-width:860px){.torn{display:none}}
 .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 18px}
 .chead h2{font-family:var(--disp);font-style:italic;font-weight:400;font-size:clamp(40px,6.4vw,92px);line-height:.98;letter-spacing:-.02em;margin:0 0 20px;text-wrap:balance;font-variation-settings:"opsz" 96}
 .dek{font-size:clamp(20px,2vw,26px);font-weight:300;margin:0 0 10px;color:var(--dim)}
@@ -100,7 +113,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img" style="--aw:0px"><img src="../img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"></div>
     <div class="cap"><span class="n">Plate 1</span><span>Collage illustration from the issue</span><span>pp. 20–23</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#f26b2b;--b:#2448c8;--c:#f05a7e;--d:#f3c623"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">Race amity</p>
     <h2>The Louis Gregory Bahá'í Institute continues legacy of race amity work</h2>
     <p class="by">Linda Ahdieh Grant</p>
@@ -134,7 +147,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img bare" style="--aw:0px"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"></div>
     <div class="cap"><span class="n">Plate 2</span><span>Photograph, Crown Heights, Brooklyn</span><span>pp. 24–26</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#2448c8;--b:#f05a7e;--c:#f3c623;--d:#5f8f3a"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">Community</p>
     <h2>New Yorkers create more unified communities through the arts</h2>
     <p class="by">Michelle Goering</p>
@@ -161,7 +174,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img" style="--aw:0px"><img src="../img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"></div>
     <div class="cap"><span class="n">Plate 3</span><span>Photograph from the issue, with the printed title</span><span>pp. 27–29</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#b07a4a;--b:#e9a21f;--c:#2f6a4a;--d:#f26b2b"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">In conversation</p>
     <h2>Two artists reimagine the role of art through a spiritual framework</h2>
     <p class="by">Neena Rouhani</p>
@@ -196,7 +209,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img type"><span>50</span></div>
     <div class="cap"><span class="n">Plate 4</span><span>Set in type</span><span>pp. 16–19</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#c9462c;--b:#1b5e6b;--c:#e9a21f;--d:#2448c8"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">Scholarship</p>
     <h2>Association for Bahá'í Studies at 50</h2>
     <p class="dek">Scholarship and knowledge in service to the common good</p><p class="by">Adapted from the Bahá'í World News Service</p>
@@ -243,7 +256,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img capped" style="--aw:880px"><img src="../img/endeavor.jpg" alt="A wave-shaped collage of photographs of people smiling at gatherings, on a ground of mustard, cream and teal"></div>
     <div class="cap"><span class="n">Plate 5</span><span>Collage from the issue</span><span>pp. 12–15</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#e9a21f;--b:#1b5e6b;--c:#9ec3cc;--d:#f26b2b"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">Across America</p>
     <h2>Communities engage in a common endeavor</h2>
     
@@ -276,7 +289,7 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     <div class="img two"><img src="../img/comic-1.jpg" alt="Comic page: youth in the Westlake neighborhood of Indianapolis plan a car wash"><img src="../img/comic-2.jpg" alt="Comic page: the youth consult about supplies and payments, wash ten cars in two hours, and celebrate"></div>
     <div class="cap"><span class="n">Plate 6</span><span>Illustrated by Aria Ghalili</span><span>pp. 34–35</span></div>
   </div>
-  <header class="chead">
+  <header class="chead"><div class="torn" aria-hidden="true" style="--a:#f3c623;--b:#2448c8;--c:#f26b2b;--d:#5f8f3a"><i></i><i></i><i></i><i></i></div>
     <p class="kicker">Adventures in pioneering</p>
     <h2>Sparkling spirits in Indianapolis</h2>
     <p class="by">Story by Cher Gupta, as told to Joyce Litoff. Illustrated by Aria Ghalili.</p>
@@ -287,6 +300,20 @@ a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </section></div>
 <footer class="colophon">Published by the National Spiritual Assembly of the Bahá'ís of the United States, 1233 Central St., Evanston, IL 60201. Entire contents copyright © 2026 by the National Spiritual Assembly of the Bahá'ís of the United States. World rights reserved.<br>Feature texts transcribed from the printed issue. Plate 3 reproduces the printed opener with its title as set in the magazine.</footer>
 </main>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
+  var h=document.querySelector('.cover h1'); if(!h)return;
+  var out=[]; h.childNodes.forEach(function(n){
+    var tag=n.nodeType===1?n.tagName.toLowerCase():null; var txt=n.textContent;
+    txt.split('').forEach(function(ch){var s=document.createElement('span');if(ch===' '){s.className='sp';s.innerHTML='&nbsp;'}else s.textContent=ch; if(tag){var w=document.createElement(tag);w.appendChild(s);out.push(w)}else out.push(s);});
+  });
+  h.textContent=''; out.forEach(function(x){h.appendChild(x)});
+  var spans=[].slice.call(h.querySelectorAll('span'));
+  h.addEventListener('mousemove',function(e){spans.forEach(function(s){var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/180));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-4)+'px)';});});
+  h.addEventListener('mouseleave',function(){spans.forEach(function(s){s.style.transform=''});});
+})();
+</script>
 
 </body>
 </html>

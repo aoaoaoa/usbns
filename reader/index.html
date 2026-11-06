@@ -26,6 +26,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tabs nav{display:flex;margin-left:auto}
 .tabs nav a{display:flex;align-items:flex-end;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--fg);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
 .tabs nav a span{padding-bottom:12px}
+/* motion: the current tab's underline fills as the story is read; a thin dark line slides between tabs. */
+.tabs nav a .fill{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--fg);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.tabs nav a{position:relative}
+.tabs nav a.on .fill{width:var(--p,0%)}
+.tabs .ind{position:absolute;bottom:-1px;height:2px;background:var(--fg);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
+.tabs .in{position:relative}
+@media (prefers-reduced-motion:reduce){.tabs nav a .fill,.tabs .ind{transition:none}}
 .tabs nav a.on{background:var(--bg)}
 .tabs nav a:hover,.tabs nav a:focus-visible{background:var(--bg)}
 .pages{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
@@ -79,7 +86,7 @@ a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 </style>
 </head>
 <body>
-<div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>A U.S. Bahá’í News Service publication</small></a><nav aria-label="Features"><a href="#gregory" style="--tint:#e8532a"><span>Louis Gregory</span></a><a href="#newyorkers" style="--tint:#f05a7e"><span>New Yorkers</span></a><a href="#twoartists" style="--tint:#b07a4a"><span>Two artists</span></a><a href="#abs" style="--tint:#c9462c"><span>ABS at 50</span></a><a href="#endeavor" style="--tint:#1b5e6b"><span>A common endeavor</span></a><a href="#comic" style="--tint:#e9a21f"><span>Comic</span></a></nav></div></div>
+<div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>A U.S. Bahá’í News Service publication</small></a><nav aria-label="Features"><a href="#gregory" style="--tint:#e8532a"><span>Louis Gregory</span><i class="fill"></i></a><a href="#newyorkers" style="--tint:#f05a7e"><span>New Yorkers</span><i class="fill"></i></a><a href="#twoartists" style="--tint:#b07a4a"><span>Two artists</span><i class="fill"></i></a><a href="#abs" style="--tint:#c9462c"><span>ABS at 50</span><i class="fill"></i></a><a href="#endeavor" style="--tint:#1b5e6b"><span>A common endeavor</span><i class="fill"></i></a><a href="#comic" style="--tint:#e9a21f"><span>Comic</span><i class="fill"></i></a></nav><span class="ind" aria-hidden="true"></span></div></div>
 <main class="pages" id="top">
 <header class="cover">
   <div>
@@ -272,10 +279,17 @@ a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 (function(){
   var links=[].slice.call(document.querySelectorAll('.tabs nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
-  if(!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;
-    links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)});});},{rootMargin:'-30% 0px -60% 0px'});
-  secs.forEach(function(x){io.observe(x)});
+  var ind=document.querySelector('.tabs .ind'), inn=document.querySelector('.tabs .in');
+  var cur=null;
+  function place(a){if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}
+  function progress(){if(!cur)return;var a=links.filter(function(l){return l.getAttribute('href')==='#'+cur.id})[0];if(!a)return;
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;cur=e.target;
+      links.forEach(function(a){var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);});progress();});},{rootMargin:'-30% 0px -60% 0px'});
+    secs.forEach(function(x){io.observe(x)});
+  }
+  addEventListener('scroll',progress,{passive:true}); addEventListener('resize',function(){place(document.querySelector('.tabs nav a.on'))});
 })();
 </script>
 

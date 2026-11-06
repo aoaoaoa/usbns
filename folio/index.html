@@ -19,6 +19,30 @@
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
 .ui{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+/* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
+.terraces{position:fixed;top:0;right:0;bottom:0;width:30%;z-index:0;pointer-events:none;opacity:.32;filter:blur(44px) saturate(.85)}
+.terraces i{position:absolute;left:-20%;right:-20%;height:34%;border-radius:50% 50% 40% 40%/60% 60% 40% 40%;animation:drift 28s ease-in-out infinite alternate}
+.terraces i:nth-child(1){top:-12%;background:linear-gradient(90deg,#d9742a,#e9a21f);animation-duration:32s}
+.terraces i:nth-child(2){top:22%;background:#5f8f3a;animation-delay:-8s}
+.terraces i:nth-child(3){top:50%;background:#2f6a4a;animation-delay:-16s;animation-duration:36s}
+.terraces i:nth-child(4){top:78%;background:#b7d35a;animation-delay:-4s}
+@keyframes drift{from{transform:translate(-3%,0) rotate(-1.2deg)}to{transform:translate(3%,-2%) rotate(1.2deg)}}
+main,.head{position:relative;z-index:1}
+.mast{position:relative}
+.stroke{position:absolute;left:-2%;top:38%;width:min(760px,80%);height:90px;z-index:-1;pointer-events:none}
+.stroke path{fill:none;stroke:#b7d35a;stroke-width:34;stroke-linecap:round;opacity:.5;stroke-dasharray:900;stroke-dashoffset:900;animation:paint 2.6s cubic-bezier(.5,0,.2,1) .4s forwards}
+.stroke path+path{stroke:#e9a21f;stroke-width:22;animation-delay:1.1s;opacity:.45}
+@keyframes paint{to{stroke-dashoffset:0}}
+.story{position:relative}
+.blooms{position:absolute;left:0;top:34%;width:22%;height:46%;z-index:0;pointer-events:none;filter:blur(30px);opacity:.42}
+.blooms i{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply;animation:bloom 22s ease-in-out infinite alternate}
+.blooms i:nth-child(1){left:0;top:0;background:#f05a7e}
+.blooms i:nth-child(2){left:30%;top:32%;background:#2448c8;animation-delay:-7s;animation-duration:27s}
+.blooms i:nth-child(3){left:5%;top:60%;background:#f3c623;animation-delay:-13s}
+@keyframes bloom{from{transform:scale(.9)}to{transform:scale(1.15) translate(6%,-6%)}}
+.story>*{position:relative;z-index:1}
+@media (prefers-reduced-motion:reduce){.terraces i,.blooms i{animation:none}.stroke path{animation:none;stroke-dashoffset:0}}
+@media (max-width:980px){.terraces,.blooms{display:none}}
 /* running head */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
 .head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
@@ -124,8 +148,10 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </head>
 <body>
 <div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav aria-label="Features"><a href="#gregory">Louis Gregory<span class="pg">20</span></a><a href="#newyorkers">New Yorkers<span class="pg">24</span></a><a href="#twoartists">Two artists<span class="pg">27</span></a><a href="#abs">ABS at 50<span class="pg">16</span></a><a href="#endeavor">A common endeavor<span class="pg">12</span></a><a href="#comic">Comic<span class="pg">34</span></a></nav></div></div>
+<div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
+    <svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
     <p class="sub">A U.S. Bahá’í News Service publication</p>
@@ -182,7 +208,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>Gregory and his wife Louise Mathew Gregory, who was an experienced international pioneer and spoke fluent French, pioneered to Haiti in 1937. Gregory was 63 years old and Mrs. Gregory was 71. They were able to meet people of culture and capacity, and the young intelligentsia, and held study classes for them twice a week. They also found a translator and held study classes in Creole.</p>
 <p>Gregory was among the first to carry out intensive teaching, as early as 1920. Shoghi Effendi describes the objective of intensive teaching as the establishment of “a small group of well-confirmed, devoted and active believers who will be able to carry on the work after [the traveling teacher's] departure.” In 1939, Lydia Martin was the Dean of Women at the Arkansas Agricultural, Mechanical, and Normal College in Pine Bluff, Arkansas. Her parents had been taught the Faith by Gregory in Cleveland, Ohio, in 1913. Through her efforts, the College invited Gregory to be their speaker during Religious Emphasis Week, and he stayed for two months.</p>
 <p>Gregory also taught the Faith through correspondence. Gregory “had friends whom he wrote in all age groups and students in every colored college and university in the land. He always answered every letter…”</p></div>
-</article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers">
+</article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers"><div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>
   <figure class="plate bare" style="--aw:0px"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"><figcaption>Photograph, Crown Heights, Brooklyn</figcaption></figure>
   <header class="shead">
     <h2>New Yorkers create more unified communities through the arts</h2>
