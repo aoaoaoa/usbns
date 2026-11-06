@@ -42,7 +42,7 @@ main,.head{position:relative;z-index:1}
 @keyframes bloom{from{transform:scale(.9)}to{transform:scale(1.15) translate(6%,-6%)}}
 .story>*{position:relative;z-index:1}
 .story>.blooms{position:absolute;z-index:0}
-@media (prefers-reduced-motion:reduce){.terraces i,.blooms i,.torn i{animation:none}.stroke path{animation:none;stroke-dashoffset:0}.shead h2 span{transition:none}}
+@media (prefers-reduced-motion:reduce){.terraces i,.blooms i,.torn i{animation:none}.stroke path{animation:none;stroke-dashoffset:0}.torn i{transition:none}}
 @media (max-width:980px){.terraces,.blooms,.torn{display:none}}
 /* running head */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
@@ -100,6 +100,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .shead{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}
 .shead>*{position:relative;z-index:1}
 .torn{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}
+.shead{pointer-events:auto}
 .torn i{position:absolute;animation:settle 20s ease-in-out infinite alternate}
 .torn i:nth-child(1){right:6%;top:-6%;width:44%;height:70%;background:var(--a);clip-path:polygon(4% 0,96% 6%,100% 60%,88% 100%,10% 94%,0 40%);animation-delay:-3s}
 .torn i:nth-child(2){right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}
@@ -131,8 +132,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .torn[data-v="5"] i:nth-child(3){right:50%;top:40%;width:26%;height:50%;clip-path:polygon(0 100%,50% 0,100% 100%)}
 .torn[data-v="5"] i:nth-child(4){display:none}
 @keyframes settle{from{transform:translate(0,0) rotate(0)}to{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}
-.shead h2 .w{display:inline-block;white-space:nowrap}
-.shead h2 .w span{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.torn i{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.shead.hov .torn i{animation-play-state:paused}
 .shead h2{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}
 .dek{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}
 .margin{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}
@@ -218,7 +219,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <article class="story" id="gregory" style="--accent:#e8532a">
   <figure class="plate" style="--aw:0px"><img src="img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"><figcaption>Collage illustration from the issue</figcaption></figure>
   <header class="shead"><div class="torn" data-v="0" aria-hidden="true" style="--a:#f26b2b;--b:#2448c8;--c:#f05a7e;--d:#f3c623"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">The Louis Gregory Bahá'í Institute continues legacy of race amity work</h2>
+    <h2>The Louis Gregory Bahá'í Institute continues legacy of race amity work</h2>
     
   </header>
   <aside class="margin">
@@ -253,7 +254,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers" style="--accent:#f05a7e"><div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>
   <figure class="plate bare" style="--aw:0px"><img src="img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"><figcaption>Photograph, Crown Heights, Brooklyn</figcaption></figure>
   <header class="shead"><div class="torn" data-v="1" aria-hidden="true" style="--a:#2448c8;--b:#f05a7e;--c:#f3c623;--d:#5f8f3a"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">New Yorkers create more unified communities through the arts</h2>
+    <h2>New Yorkers create more unified communities through the arts</h2>
     
   </header>
   <aside class="margin">
@@ -279,9 +280,9 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>Using the arts in community is valuable. Bogan says, “When we know that art is a tool for connection and worship, we will see that our mutual understanding of each other, our capacity to empathize, our consultations, our ability to imagine new realities, our centering of youth, will all be strengthened… When we bring that world into our communities, we open up new avenues for experimenting, for supporting each other, for playing.”</p>
 <p>These artists found their passions a catalyst for new connections. Sobhani says, “It was a night of genuine friendship, with everyone meeting someone new.” Her friend Jan, an elderly neighbor at the inaugural film gathering, said, “We need more of this.”</p></div>
 </article></div><aside class="voice" style="--band:#8a3a1e"><div class="vin"><p>I rejoice to hear that thou takest pains with thine art, for in this wonderful new age, art is worship. The more thou strivest to perfect it, the closer wilt thou come to God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="twoartists" style="--accent:#b07a4a">
-  <figure class="plate" style="--aw:0px"><img src="img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"><figcaption>Photograph from the issue, with the printed title</figcaption></figure>
+  <figure class="plate" style="--aw:0px"><img src="img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"><figcaption>Photograph: The American Bahá'í</figcaption></figure>
   <header class="shead"><div class="torn" data-v="2" aria-hidden="true" style="--a:#b07a4a;--b:#e9a21f;--c:#2f6a4a;--d:#f26b2b"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">Two artists reimagine the role of art through a spiritual framework</h2>
+    <h2>Two artists reimagine the role of art through a spiritual framework</h2>
     
   </header>
   <aside class="margin">
@@ -317,7 +318,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#3b3f7a"><div class="vin"><p>The source of crafts, sciences and arts is the power of reflection. Make ye every effort that out of this ideal mine there may gleam forth such pearls of wisdom and utterance as will promote the well-being and harmony of all the kindreds of the earth.</p><cite>Bahá'u'lláh, Bahá'í Sacred Writings, Attaining Social Progress and Well-Being: Excerpts from Words of Paradise</cite></div></aside><div class="wrap"><article class="story" id="abs" style="--accent:#c9462c">
   <div class="numeral" aria-hidden="true">50</div>
   <header class="shead"><div class="torn" data-v="3" aria-hidden="true" style="--a:#c9462c;--b:#1b5e6b;--c:#e9a21f;--d:#2448c8"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">Association for Bahá'í Studies at 50</h2>
+    <h2>Association for Bahá'í Studies at 50</h2>
     <p class="dek">Scholarship and knowledge in service to the common good</p>
   </header>
   <aside class="margin">
@@ -365,7 +366,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#5c2a4e"><div class="vin"><p>The friends are also asked to give greater attention to the use of the arts, not only for proclamation, but also for the work in expansion and consolidation. The graphic and performing arts and literature have played, and can play, a major role in extending the influence of the Cause. At the level of folk art, this possibility can be pursued in every part of the world, whether it be in villages, towns or cities.</p><cite>The Universal House of Justice, April 21, 1996, to the Bahá'ís of the World</cite></div></aside><div class="wrap"><article class="story" id="endeavor" style="--accent:#1b5e6b">
   <figure class="plate" style="--aw:0px"><img src="img/endeavor-quilt.webp" alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds"><figcaption>Quilt, from “A Common Endeavor”</figcaption></figure>
   <header class="shead"><div class="torn" data-v="4" aria-hidden="true" style="--a:#1b5e6b;--b:#e9a21f;--c:#9ec3cc;--d:#f26b2b"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">Communities engage in a common endeavor</h2>
+    <h2>Communities engage in a common endeavor</h2>
     
   </header>
   <aside class="margin">
@@ -399,7 +400,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#2f5d3a"><div class="vin"><p>Mortal charm shall fade away, roses shall give way to thorns, and beauty and youth shall live their day and be no more. But that which eternally endureth is the Beauty of the True One, for its splendor perisheth not and its glory lasteth forever; its charm is all-powerful and its attraction infinite.</p><cite>'Abdu'l-Bahá, Selections from the Writings of 'Abdu'l-Bahá, no. 175</cite></div></aside><div class="wrap"><article class="story" id="comic" style="--accent:#e9a21f">
   <figure class="plate comic"><img src="img/comic-1.jpg" alt="Comic page: youth in the Westlake neighborhood of Indianapolis plan a car wash"><img src="img/comic-2.jpg" alt="Comic page: the youth consult about supplies and payments, wash ten cars in two hours, and celebrate"><figcaption>Illustrated by Aria Ghalili</figcaption></figure>
   <header class="shead"><div class="torn" data-v="5" aria-hidden="true" style="--a:#f3c623;--b:#2448c8;--c:#f26b2b;--d:#5f8f3a"><i></i><i></i><i></i><i></i></div>
-    <h2 class="lean">Sparkling spirits in Indianapolis</h2>
+    <h2>Sparkling spirits in Indianapolis</h2>
     
   </header>
   <aside class="margin">
@@ -430,12 +431,11 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   }
   addEventListener('scroll',progress,{passive:true}); addEventListener('resize',function(){place(document.querySelector('.head nav a.on'))});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
-  [].slice.call(document.querySelectorAll('.shead h2.lean')).forEach(function(h){
-    var t=h.textContent; h.textContent='';
-    t.split(' ').forEach(function(word,i){if(i)h.appendChild(document.createTextNode(' '));var w=document.createElement('span');w.className='w';word.split('').forEach(function(ch){var s=document.createElement('span');s.textContent=ch;w.appendChild(s);});h.appendChild(w);});
-    var spans=[].slice.call(h.querySelectorAll('.w span'));
-    h.addEventListener('mousemove',function(e){spans.forEach(function(s){var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/160));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-3)+'px)';});});
-    h.addEventListener('mouseleave',function(){spans.forEach(function(s){s.style.transform=''});});
+  [].slice.call(document.querySelectorAll('.shead')).forEach(function(h){
+    var pieces=[].slice.call(h.querySelectorAll('.torn i')); if(!pieces.length)return;
+    h.addEventListener('mousemove',function(e){h.classList.add('hov');var b=h.getBoundingClientRect();var cx=(e.clientX-b.left)/b.width-.5, cy=(e.clientY-b.top)/b.height-.5;
+      pieces.forEach(function(p,k){var d=(k%2?1:-1)*(10+k*5);p.style.transform='translate('+(-cx*d)+'px,'+(-cy*d)+'px) rotate('+(cx*(k%2?3:-3))+'deg)';});});
+    h.addEventListener('mouseleave',function(){h.classList.remove('hov');pieces.forEach(function(p){p.style.transform=''});});
   });
 })();
 </script>

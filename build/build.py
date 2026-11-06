@@ -55,7 +55,7 @@ def build_folio():
         secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead">{torn}
-    <h2 class="lean">{esc(a["title"])}</h2>
+    <h2>{esc(a["title"])}</h2>
     {dek}
   </header>
   <aside class="margin">
@@ -108,7 +108,7 @@ main,.head{{position:relative;z-index:1}}
 @keyframes bloom{{from{{transform:scale(.9)}}to{{transform:scale(1.15) translate(6%,-6%)}}}}
 .story>*{{position:relative;z-index:1}}
 .story>.blooms{{position:absolute;z-index:0}}
-@media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.shead h2 span{{transition:none}}}}
+@media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
@@ -166,6 +166,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead>*{{position:relative;z-index:1}}
 .torn{{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}}
+.shead{{pointer-events:auto}}
 .torn i{{position:absolute;animation:settle 20s ease-in-out infinite alternate}}
 .torn i:nth-child(1){{right:6%;top:-6%;width:44%;height:70%;background:var(--a);clip-path:polygon(4% 0,96% 6%,100% 60%,88% 100%,10% 94%,0 40%);animation-delay:-3s}}
 .torn i:nth-child(2){{right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}}
@@ -197,8 +198,8 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .torn[data-v="5"] i:nth-child(3){{right:50%;top:40%;width:26%;height:50%;clip-path:polygon(0 100%,50% 0,100% 100%)}}
 .torn[data-v="5"] i:nth-child(4){{display:none}}
 @keyframes settle{{from{{transform:translate(0,0) rotate(0)}}to{{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}}}
-.shead h2 .w{{display:inline-block;white-space:nowrap}}
-.shead h2 .w span{{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}}
+.torn i{{transition:transform .7s cubic-bezier(.2,.8,.2,1)}}
+.shead.hov .torn i{{animation-play-state:paused}}
 .shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
 .dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
@@ -299,12 +300,11 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   }}
   addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
-  [].slice.call(document.querySelectorAll('.shead h2.lean')).forEach(function(h){{
-    var t=h.textContent; h.textContent='';
-    t.split(' ').forEach(function(word,i){{if(i)h.appendChild(document.createTextNode(' '));var w=document.createElement('span');w.className='w';word.split('').forEach(function(ch){{var s=document.createElement('span');s.textContent=ch;w.appendChild(s);}});h.appendChild(w);}});
-    var spans=[].slice.call(h.querySelectorAll('.w span'));
-    h.addEventListener('mousemove',function(e){{spans.forEach(function(s){{var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/160));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-3)+'px)';}});}});
-    h.addEventListener('mouseleave',function(){{spans.forEach(function(s){{s.style.transform=''}});}});
+  [].slice.call(document.querySelectorAll('.shead')).forEach(function(h){{
+    var pieces=[].slice.call(h.querySelectorAll('.torn i')); if(!pieces.length)return;
+    h.addEventListener('mousemove',function(e){{h.classList.add('hov');var b=h.getBoundingClientRect();var cx=(e.clientX-b.left)/b.width-.5, cy=(e.clientY-b.top)/b.height-.5;
+      pieces.forEach(function(p,k){{var d=(k%2?1:-1)*(10+k*5);p.style.transform='translate('+(-cx*d)+'px,'+(-cy*d)+'px) rotate('+(cx*(k%2?3:-3))+'deg)';}});}});
+    h.addEventListener('mouseleave',function(){{h.classList.remove('hov');pieces.forEach(function(p){{p.style.transform=''}});}});
   }});
 }})();
 </script>
