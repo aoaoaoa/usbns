@@ -1,7 +1,7 @@
 import html, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import ISSUE, VOICES, ARTICLES
-SUB = "A U.S. Bah\u00e1\u2019\u00ed News Service"
+SUB = "A U.S. Bah\u00e1\u2019\u00ed News Service publication"
 
 def esc(s): return html.escape(s, quote=False) if s else ""
 HERE = os.path.dirname(os.path.abspath(__file__))

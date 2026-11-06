@@ -1,6 +1,6 @@
 # The American Bahá'í — the arts issue, online
 
-Three one-page sites built from the October/November/December 2026 issue of The American Bahá'í, a U.S. Bahá'í News Service. Each presents the issue's six features with its illustrations and photographs.
+Three one-page sites built from the October/November/December 2026 issue of The American Bahá'í, a U.S. Bahá'í News Service publication. Each presents the issue's six features with its illustrations and photographs.
 
 - `index.html` landing page.
 - `folio/` the issue as one long scroll.
