@@ -44,7 +44,8 @@ def build_folio():
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
                 if a.get("art_width"): cls += " capped"
-                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
+                cap = f'<figcaption>{esc(a["art_credit"])}</figcaption>' if a.get("art_credit") else ""
+                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{cap}</figure>'''
         else:
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
