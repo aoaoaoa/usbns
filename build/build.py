@@ -38,7 +38,7 @@ def body_html(blocks):
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
         elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
         elif k == "chart": out.append(chart_html(b[1]))
-        elif k == "figures": out.append('<div class="figs">' + "".join(f'<div><b>{esc(x)}</b><span>{esc(y)}</span></div>' for x,y in b[1]) + "</div>")
+        elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "img":
             w = b[3] if len(b) > 3 else None
             cls = "photo small" if w else "photo"
@@ -46,36 +46,47 @@ def body_html(blocks):
             out.append(f'<figure class="{cls}"{st}><img src="img/{b[1]}" alt="{esc(b[2])}" loading="lazy"><figcaption>{esc(b[2])}</figcaption></figure>')
     return "\n".join(out)
 
+import json as _json
+USMAP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "usmap.json")))
+
+def pop(title, body):
+    """Attributes that make an element open the shared popup."""
+    if not body: return ""
+    return f' tabindex="0" role="button" data-pt="{html.escape(title, quote=True)}" data-pb="{html.escape(body, quote=True)}"'
+
 def chart_html(c):
     """Small inline SVG charts drawn to scale from the record's numbers."""
     def money(v): return f"${v:,.0f}"
     fmt = money if c.get("fmt") == "money" else (lambda v: f"{v:,}")
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
     if c["kind"] == "bars":
-        data = c["data"]; mx = max(v for _, v in data); n = len(data); rowh = 34; W = 600; labw = 150; barw = W - labw - 110
+        data = c["data"]; mx = max(it[1] for it in data); n = len(data); rowh = 34; W = 600; labw = 150; barw = W - labw - 110
         rows = []
-        for i, (lab, v) in enumerate(data):
+        for i, it in enumerate(data):
+            lab, v = it[0], it[1]; story = it[2] if len(it) > 2 else ""
             y = i * rowh; w = max(2, round(barw * v / mx))
-            rows.append(f'<text x="{labw-10}" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text><rect x="{labw}" y="{y+6}" width="{w}" height="22" class="cb"/><text x="{labw+w+8}" y="{y+22}" class="cv">{fmt(v)}</text>')
+            rows.append(f'<g class="hit"{pop(f"{lab}: {fmt(v)}", story)}><rect x="0" y="{y}" width="{W}" height="{rowh}" class="ghost"/><text x="{labw-10}" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text><rect x="{labw}" y="{y+6}" width="{w}" height="22" class="cb"/><text x="{labw+w+8}" y="{y+22}" class="cv">{fmt(v)}</text></g>')
         svg = f'<svg viewBox="0 0 {W} {n*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(rows)}</svg>'
     elif c["kind"] == "progress":
         data = c["data"]; mx = c["max"]; W = 600; H = 92
         parts = [f'<rect x="0" y="40" width="{W}" height="14" class="ctrack"/>']
-        for i, (lab, v) in enumerate(data):
+        for i, it in enumerate(data):
+            lab, v = it[0], it[1]; story = it[2] if len(it) > 2 else ""
             x = round(W * v / mx)
-            parts.append(f'<rect x="0" y="40" width="{x}" height="14" class="cb" style="opacity:{.35 + .3*i}"/>')
+            parts.append(f'<rect x="0" y="40" width="{x}" height="14" class="cb" style="opacity:{.35 + .3*i}"/><circle cx="{x}" cy="47" r="11" class="ghost hit"{pop(f"{lab}: {v}", story)}/>')
             parts.append(f'<line x1="{x}" y1="30" x2="{x}" y2="62" class="ctick"/><text x="{x+ (4 if i<2 else 0)}" y="{22 if i%2==0 else 80}" text-anchor="{"start" if i<2 else "middle"}" class="cl"><tspan class="cv">{v}</tspan> {esc(lab)}</text>')
         parts.append(f'<text x="{W}" y="80" text-anchor="end" class="cn2">{esc(c["maxlabel"])}</text>')
         svg = f'<svg viewBox="0 -4 {W} {H}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "bands":
-        rows = c["rows"]; W = 600; labw = 160; rowh = 44; mx = max(v for _, bs in rows for _, v in bs)
+        rows = c["rows"]; W = 600; labw = 160; rowh = 44; mx = max(bd[1] for _, bs in rows for bd in bs)
         parts = []
         for r, (lab, bands) in enumerate(rows):
             y = r * rowh; parts.append(f'<text x="{labw-10}" y="{y+20}" text-anchor="end" class="cl">{esc(lab)}</text>')
             x = labw
-            for j, (bl, v) in enumerate(bands):
+            for j, bd in enumerate(bands):
+                bl, v = bd[0], bd[1]; story = bd[2] if len(bd) > 2 else ""
                 w = max(6, round((W - labw) * v / (mx + 6)))
-                parts.append(f'<rect x="{x}" y="{y+6}" width="{w}" height="22" class="cb" style="opacity:{1 - j*.3}"/><text x="{x+w/2}" y="{y+22}" text-anchor="middle" class="cvin">{v}</text><text x="{x+w/2}" y="{y+40}" text-anchor="middle" class="cn2">{esc(bl)}</text>')
+                parts.append(f'<rect x="{x}" y="{y+6}" width="{w}" height="22" class="cb hit" style="opacity:{1 - j*.3}"{pop(f"{lab}, {bl}: {v} clusters", story)}/><text x="{x+w/2}" y="{y+22}" text-anchor="middle" class="cvin">{v}</text><text x="{x+w/2}" y="{y+40}" text-anchor="middle" class="cn2">{esc(bl)}</text>')
                 x += w + 6
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh+4}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "timeline":
@@ -85,11 +96,12 @@ def chart_html(c):
         for era in c.get("eras", []):
             a, b, lab = era; parts.append(f'<rect x="{X(a):.1f}" y="24" width="{X(b)-X(a):.1f}" height="12" class="cera"/><text x="{(X(a)+X(b))/2:.1f}" y="16" text-anchor="middle" class="cn2">{esc(lab)}</text>')
         rows = []
-        for i, (y, lab) in enumerate(ev):
+        for i, e in enumerate(ev):
+            y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""
             x = X(y); ly = 56 if i % 2 == 0 else 72
             anc = "start" if x < 40 else ("end" if x > W - 40 else "middle")
-            parts.append(f'<circle cx="{x:.1f}" cy="30" r="4.5" class="cdot"/><line x1="{x:.1f}" y1="35" x2="{x:.1f}" y2="{ly-10}" class="cstem"/><text x="{x - 6 if anc == "start" else x + 6 if anc == "end" else x:.1f}" y="{ly}" text-anchor="{anc}" class="cv">{y}</text>')
-            rows.append(f'<li><b>{y}</b><span>{esc(lab)}</span></li>')
+            parts.append(f'<circle cx="{x:.1f}" cy="30" r="4.5" class="cdot"/><circle cx="{x:.1f}" cy="30" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><line x1="{x:.1f}" y1="35" x2="{x:.1f}" y2="{ly-10}" class="cstem"/><text x="{x - 6 if anc == "start" else x + 6 if anc == "end" else x:.1f}" y="{ly}" text-anchor="{anc}" class="cv">{y}</text>')
+            rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
         for t in c.get("ticks", []):
             parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
         svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
@@ -101,7 +113,10 @@ def chart_html(c):
             a0 = -math.pi/2 + 2*math.pi*i/n + .012; a1 = -math.pi/2 + 2*math.pi*(i+1)/n - .012
             p = lambda r, a: f"{cx + r*math.cos(a):.1f},{cy + r*math.sin(a):.1f}"
             d = f"M{p(r1,a0)} A{r1},{r1} 0 0 1 {p(r1,a1)} L{p(r0,a1)} A{r0},{r0} 0 0 0 {p(r0,a0)} Z"
-            parts.append(f'<path d="{d}" class="{"cseg on" if name in hi else "cseg"}"><title>{i+1}. {esc(name)}, {esc(mean)}</title></path>')
+            st = c.get("stories", {}).get(name, "")
+            base = c.get("starts", [None]*n)[i]
+            body = " ".join(x for x in [f"Month {i+1} of 19." , f"First day: {base}, beginning at sunset the evening before." if base else "", st] if x)
+            parts.append(f'<path d="{d}" class="{"cseg on" if name in hi else "cseg"} hit"{pop(f"{name}, {mean}", body)}/>')
             am = (a0 + a1) / 2; tx, ty = cx + 174*math.cos(am), cy + 174*math.sin(am)
             anchor = "start" if math.cos(am) > .15 else ("end" if math.cos(am) < -.15 else "middle")
             parts.append(f'<text x="{tx:.1f}" y="{ty+4:.1f}" text-anchor="{anchor}" class="{"cl on" if name in hi else "cl"}">{esc(mean)}</text>')
@@ -109,7 +124,24 @@ def chart_html(c):
             parts.append(f'<text x="{nx:.1f}" y="{ny+4:.1f}" text-anchor="middle" class="cvin">{i+1}</text>')
         parts.append(f'<text x="{cx}" y="{cy-6}" text-anchor="middle" class="cbig">19</text><text x="{cx}" y="{cy+18}" text-anchor="middle" class="cn2">months of 19 days</text><text x="{cx}" y="{cy+32}" text-anchor="middle" class="cn2">plus Ayyám-i-Há</text>')
         svg = f'<svg viewBox="-60 0 540 420" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
-    return f'<figure class="chart">{title}{svg}{note}</figure>'
+    elif c["kind"] == "map":
+        M = USMAP; parts = [f'<use href="#usmap"/>']
+        for i, pl in enumerate(c["places"]):
+            name, lab, story = pl[0], pl[1], pl[2] if len(pl) > 2 else ""
+            x, y = M["places"][name]; side = pl[3] if len(pl) > 3 else ("end" if x > M["w"] * .6 else "start")
+            dx = -9 if side == "end" else 9
+            parts.append(f'<g class="hit pin"{pop(name, story)}><circle cx="{x}" cy="{y}" r="13" class="ghost"/><circle cx="{x}" cy="{y}" r="5.5" class="cdot"/><text x="{x+dx}" y="{y+4}" text-anchor="{side}" class="cl">{esc(lab)}</text></g>')
+        svg = f'<svg viewBox="-40 -10 {M["w"]+80} {M["h"]+20}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    elif c["kind"] == "pictogram":
+        rows = c["rows"]; W = 600; parts = []; rowh = 40
+        for r, row in enumerate(rows):
+            lab, count, story = row[0], row[1], row[2] if len(row) > 2 else ""
+            y = r * rowh
+            dots = "".join(f'<circle cx="{170 + k*26}" cy="{y+18}" r="9" class="cdot"/>' for k in range(count))
+            parts.append(f'<g class="hit"{pop(f"{lab}: {count}", story)}><rect x="0" y="{y}" width="{W}" height="{rowh}" class="ghost"/><text x="156" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text>{dots}<text x="{170 + count*26 + 4}" y="{y+23}" class="cv">{count}</text></g>')
+        svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    hint = '<p class="tap">Tap or hover the marks for the story behind each number.</p>' if 'data-pb=' in svg else ""
+    return f'<figure class="chart">{title}{svg}{note}{hint}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -243,6 +275,21 @@ main,.head{{position:relative;z-index:1}}
 @media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* charts */
+.chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
+.chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
+.chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
+.chart .pin:hover .cdot,.chart .pin:focus-visible .cdot{{r:7.5}}
+.cland{{fill:var(--cream);stroke:var(--rule);stroke-width:1}} .cstate{{fill:none;stroke:var(--rule);stroke-width:.6}} .chart text{{pointer-events:none}}
+.chart .tl li.has,.figs div.has{{cursor:pointer}} .chart .tl li.has span{{text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--rule)}}
+.figs div.has b::after{{content:"+";font-size:.45em;vertical-align:super;margin-left:3px;color:var(--accent)}}
+.figs div.has:focus-visible,.chart .tl li.has:focus-visible{{outline:2px solid var(--accent);outline-offset:4px}}
+.chart .tap{{font-family:var(--ui);font-size:11px;letter-spacing:.04em;color:var(--mute);margin:6px 0 0;opacity:.8}}
+.popup{{position:fixed;z-index:30;max-width:min(340px,calc(100vw - 32px));background:var(--tabon-white);color:var(--ink);border:1px solid var(--rule);border-top:3px solid var(--pa,var(--accent));box-shadow:0 10px 30px rgba(30,25,15,.16);padding:14px 16px 14px;font-family:var(--ui);font-size:14px;line-height:1.5;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}}
+.popup.show{{opacity:1;transform:none;pointer-events:auto}}
+.popup b{{display:block;font-family:var(--disp);font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:0 18px 6px 0}}
+.popup p{{margin:0;color:var(--ink)}}
+.popup button{{position:absolute;top:6px;right:6px;border:0;background:none;font-size:18px;line-height:1;color:var(--mute);cursor:pointer;padding:4px 6px}}
+@media (prefers-reduced-motion:reduce){{.popup{{transition:none}}}}
 .chart .cax{{stroke:var(--rule);stroke-width:2}} .chart .cdot{{fill:var(--accent)}} .chart .cstem{{stroke:var(--rule);stroke-width:1}} .chart .cera{{fill:var(--accent);opacity:.18}}
 .chart .cseg{{fill:var(--rule)}} .chart .cseg.on{{fill:var(--accent)}} .chart .cl.on{{fill:var(--ink);font-weight:600}} .chart .cbig{{font-family:var(--disp);font-weight:800;font-size:44px;fill:var(--ink)}}
 .chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}}
@@ -468,6 +515,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 }}
 </style>
 <div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland"/><path d="{USMAP["states"]}" class="cstate"/></g></defs></svg>
+<div class="popup" role="dialog" aria-modal="false" aria-live="polite" hidden><button type="button" aria-label="Close">×</button><b></b><p></p></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
@@ -524,6 +573,26 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
       pieces.forEach(function(p,k){{var d=(k%2?1:-1)*(36+k*14);p.style.transform='translate('+(-cx*d)+'px,'+(-cy*d)+'px) rotate('+(cx*(k%2?8:-8))+'deg)';}});}});
     h.addEventListener('mouseleave',function(){{h.classList.remove('hov');pieces.forEach(function(p){{p.style.transform=''}});}});
   }});
+}})();
+
+(function(){{
+  var box=document.querySelector('.popup'); if(!box)return;
+  var bt=box.querySelector('b'), bp=box.querySelector('p'), cur=null, pinned=false;
+  function place(el){{var r=el.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight,x=r.left+r.width/2-w/2,y=r.top-h-12;
+    if(y<70)y=r.bottom+12; x=Math.max(16,Math.min(x,innerWidth-w-16)); y=Math.min(y,innerHeight-h-16); box.style.left=x+'px'; box.style.top=y+'px';}}
+  function show(el,pin){{cur=el;pinned=!!pin;bt.textContent=el.dataset.pt;bp.textContent=el.dataset.pb;
+    var art=el.closest('article'); box.style.setProperty('--pa', art?getComputedStyle(art).getPropertyValue('--accent'):'');
+    box.hidden=false; place(el); requestAnimationFrame(function(){{box.classList.add('show')}});}}
+  function hide(){{box.classList.remove('show');cur=null;pinned=false;setTimeout(function(){{if(!cur)box.hidden=true}},160);}}
+  var hov=matchMedia('(hover: hover)').matches;
+  document.addEventListener('mouseover',function(e){{if(!hov||pinned)return;var el=e.target.closest('[data-pb]');if(el&&el!==cur)show(el);}});
+  document.addEventListener('mouseout',function(e){{if(!hov||pinned)return;var el=e.target.closest('[data-pb]');if(el&&!el.contains(e.relatedTarget)&&!box.contains(e.relatedTarget))hide();}});
+  document.addEventListener('click',function(e){{var el=e.target.closest('[data-pb]');if(el){{e.preventDefault();(cur===el&&pinned)?hide():show(el,true);return;}}
+    if(e.target.closest('.popup button')||!box.contains(e.target))hide();}});
+  document.addEventListener('keydown',function(e){{if(e.key==='Escape'&&cur){{var c=cur;hide();c.focus();return;}}
+    var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&(e.key==='Enter'||e.key===' ')){{e.preventDefault();show(el,true);}}}});
+  document.addEventListener('focusin',function(e){{var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&!pinned)show(el);}});
+  addEventListener('scroll',function(){{if(cur)place(cur)}},{{passive:true}}); addEventListener('resize',function(){{if(cur)place(cur)}});
 }})();
 </script>
 '''
