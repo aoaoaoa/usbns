@@ -77,11 +77,11 @@ def build_folio():
 <style>
 /* Layout: one long folio. The cover painting carries a set masthead; an index follows; each feature opens on its art plate and runs in a single measure with a margin column for pull quotes; between features, a colored band carries one passage from the issue's pages on the arts. */
 :root{{
-  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#ebe6da; --tabon:#f5f1e8; --barrule:#d2cbbb;
+  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#ebe6da; --tabon:#f5f1e8; --barrule:#d2cbbb; --tabon-white:#ffffff;
   --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
 }}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}}}
-:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}}}
+:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;color-scheme:dark}}
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
@@ -147,9 +147,10 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:22px;line-height:1.25;font-weight:300}}
 .index a:hover .t,.index a:focus-visible .t{{color:var(--accent)}}
 .index .pg{{font-family:var(--ui);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.epi p{{font-family:var(--text);font-style:italic;font-weight:300;font-size:clamp(22px,2.4vw,30px);line-height:1.3;margin:0 0 12px;text-wrap:pretty}}
-.epi cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}}
-.about{{margin-top:36px;color:var(--mute);font-size:16px}}
+.uhj{{margin:0;background:var(--tabon-white,#fff);border:1px solid var(--rule);padding:clamp(20px,2.6vw,32px) clamp(22px,2.8vw,36px)}}
+.uhj p{{font-family:var(--text);font-style:italic;font-weight:400;font-size:clamp(24px,2.6vw,32px);line-height:1.28;margin:0 0 14px;text-wrap:pretty;color:var(--ink)}}
+.uhj cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}}
+.about{{margin-top:28px;color:var(--mute);font-size:14px;line-height:1.55}}
 .about b{{color:var(--ink);font-weight:700}}
 /* stories */
 .story{{padding-block:clamp(48px,8vw,112px) 0}}
@@ -279,8 +280,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
   </div>
   <div class="epi">
-    <p>“{esc(ISSUE["epigraph"])}”</p>
-    <cite>{esc(ISSUE["epigraph_src"])}</cite>
+    <blockquote class="uhj"><p>“{esc(ISSUE["epigraph"])}”</p>
+    <cite>{esc(ISSUE["epigraph_src"])}</cite></blockquote>
     <p class="about"><b>About the cover.</b> {esc(ISSUE["cover_note"])} <i>Juliet Bogan</i></p>
   </div>
 </section>
