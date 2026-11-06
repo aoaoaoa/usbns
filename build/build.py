@@ -55,6 +55,7 @@ def build_folio():
         if i < len(VOICES):
             v = VOICES[i]
             secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
+    head = "".join(f'<a href="#{a["slug"]}">{esc(a["short"])}<span class="pg">{a["pages"].split("–")[0]}</span></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Folio</title>
 {SIDES}
@@ -71,6 +72,17 @@ def build_folio():
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .wrap{{max-width:1180px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
+/* running head */
+body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
+.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}}
+.head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:baseline;gap:32px;min-height:48px;font-family:var(--disp)}}
+.head .brand{{font-size:19px;color:var(--ink);text-decoration:none;white-space:nowrap;margin-right:auto}}
+.head nav{{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;padding:10px 0}}
+.head nav a{{font-style:italic;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px}}
+.head nav a.on{{border-bottom-color:var(--ink)}}
+.head nav a:hover,.head nav a:focus-visible{{color:var(--accent)}}
+.head .pg{{font-family:var(--ui);font-size:11px;letter-spacing:.1em;color:var(--mute);margin-left:6px;font-style:normal}}
+@media (max-width:700px){{.head .brand{{display:none}} .head nav{{gap:18px}} .head .pg{{display:none}}}}
 /* cover */
 .cover{{padding-block:clamp(28px,5vw,64px) 0}}
 .cover .mast .the{{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);margin:0 0 -.2em .1em}}
@@ -140,7 +152,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<header class="cover wrap">
+<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav aria-label="Features">{head}</nav></div></div>
+<header class="cover wrap" id="top">
   <div class="mast">
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
@@ -167,6 +180,16 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <footer class="colophon">{esc(ISSUE["publisher"])} Feature texts transcribed from the printed issue; passages between features are drawn from “Abiding in God's Law: Artistic expressions of the human spirit,” pp. 32–33.</footer>
 </div>
 </main>
+<script>
+(function(){{
+  var links=[].slice.call(document.querySelectorAll('.head nav a'));
+  var secs=[].slice.call(document.querySelectorAll('article.story'));
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;
+    links.forEach(function(a){{a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)}});}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+  secs.forEach(function(x){{io.observe(x)}});
+}})();
+</script>
 '''
 
 # ------------------------------------------------------------------ V2 PLATES
@@ -311,7 +334,7 @@ def build_reader():
   {art}
   <div class="prose">{body_html(a["body"])}</div>
 </article>''')
-    rail = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span class="sw"></span><span class="t">{esc(a["short"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a>' for a in ARTICLES)
+    rail = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span></a>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Reader</title>
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..600;1,7..72,300..600&display=swap">
@@ -326,19 +349,17 @@ def build_reader():
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-size:18px;line-height:1.55}}
-.app{{display:grid;grid-template-columns:280px minmax(0,1fr);min-height:100vh}}
-.rail{{background:var(--rail);border-right:1px solid var(--rule);position:sticky;top:0;height:100vh;overflow:auto;padding:28px 20px 28px max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:28px}}
-.rail .brand{{font-family:var(--disp);font-weight:700;font-size:22px;line-height:1.05;letter-spacing:-.02em;margin:0}}
-.rail .brand small{{display:block;font-weight:400;font-size:12px;letter-spacing:.02em;color:var(--mute);margin-top:8px}}
-.rail nav{{display:flex;flex-direction:column}}
-.rail nav a{{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:19px;font-weight:400;font-variation-settings:"opsz" 36;letter-spacing:-.005em}}
-.rail nav a:last-child{{border-bottom:1px solid var(--rule)}}
-.rail nav a .sw{{width:10px;height:22px;background:var(--tint);border-radius:2px}}
-.rail nav a .pg{{font-family:var(--disp);font-style:normal;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.rail nav a:hover .t,.rail nav a:focus-visible .t{{text-decoration:underline;text-underline-offset:.2em}}
-.rail .epi{{font-size:14px;line-height:1.5;color:var(--mute);font-style:italic;margin:auto 0 0}}
-.rail .epi cite{{display:block;font-style:normal;font-family:var(--disp);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}}
-.pages{{padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:16px}}
+body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--rail)}}
+.tabs{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--rail);border-bottom:1px solid var(--rule)}}
+.tabs .in{{max-width:1100px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none}}
+.tabs .brand{{font-family:var(--disp);font-weight:700;font-size:17px;letter-spacing:-.02em;color:var(--fg);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
+.tabs .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
+.tabs nav{{display:flex;margin-left:auto}}
+.tabs nav a{{display:flex;align-items:flex-end;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--fg);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
+.tabs nav a span{{padding-bottom:12px}}
+.tabs nav a.on{{background:var(--bg)}}
+.tabs nav a:hover,.tabs nav a:focus-visible{{background:var(--bg)}}
+.pages{{{GUT}}}
 .cover{{display:grid;grid-template-columns:minmax(0,1fr);gap:36px;padding-block:clamp(32px,5vw,72px) clamp(28px,4vw,56px);border-bottom:1px solid var(--rule);max-width:1100px;margin:0 auto}}
 .cover h1{{font-family:var(--disp);font-weight:800;font-size:clamp(44px,6.6vw,96px);line-height:.92;letter-spacing:-.035em;margin:0 0 20px;font-variation-settings:"opsz" 96;text-wrap:balance}}
 .cover .about{{max-width:50ch;font-size:16px;color:var(--mute);margin:0}}
@@ -377,25 +398,14 @@ body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font
 a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 @media (max-width:900px){{
-  .app{{grid-template-columns:1fr}}
-  .rail{{position:sticky;top:env(safe-area-inset-top,0px);height:auto;border-right:0;border-bottom:1px solid var(--rule);padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));gap:10px;z-index:5}}
-  body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--rail)}}
-  .rail .brand{{font-size:16px}} .rail .brand small{{display:none}}
-  .rail nav{{flex-direction:row;overflow-x:auto;gap:14px;scrollbar-width:none}}
-  .rail nav a,.rail nav a:last-child{{border:0;padding:4px 0;grid-template-columns:8px auto;white-space:nowrap}}
-  .rail nav a .pg{{display:none}} .rail nav a .sw{{height:14px;width:8px}}
-  .rail .epi{{display:none}}
-  .pages{{padding-left:max(16px,env(safe-area-inset-left,0px))}}
+  .tabs .brand small{{display:none}}
+  .tabs nav{{margin-left:0}}
+  .tabs nav a{{padding:14px 12px 0;font-size:14px}}
   .inset.two{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="app">
-<aside class="rail">
-  <p class="brand">The American Bahá'í<small>{SUB}<br>{esc(ISSUE["date"])}</small></p>
-  <nav aria-label="Features">{rail}</nav>
-  <p class="epi">“{esc(ISSUE["epigraph"])}”<cite>{esc(ISSUE["epigraph_src"])}</cite></p>
-</aside>
-<main class="pages">
+<div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{rail}</nav></div></div>
+<main class="pages" id="top">
 <header class="cover">
   <div>
     <h1>Six features from the arts issue</h1>
@@ -404,9 +414,18 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   <figure><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption>Cover painting by {esc(ISSUE["cover_artist"])} · Oil on canvas</figcaption></figure>
 </header>
 {"".join(arts)}
-<footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue.</footer>
+<footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue.<br>“{esc(ISSUE["epigraph"])}” {esc(ISSUE["epigraph_src"])}</footer>
 </main>
-</div>
+<script>
+(function(){{
+  var links=[].slice.call(document.querySelectorAll('.tabs nav a'));
+  var secs=[].slice.call(document.querySelectorAll('article.story'));
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;
+    links.forEach(function(a){{a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)}});}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+  secs.forEach(function(x){{io.observe(x)}});
+}})();
+</script>
 '''
 
 for name, fn in [("folio", build_folio), ("plates", build_plates), ("reader", build_reader)]:
