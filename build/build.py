@@ -33,6 +33,7 @@ def first_para_dropcap(h):
 
 # ------------------------------------------------------------------ V1 FOLIO
 def build_folio():
+    tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
     for i, a in enumerate(ARTICLES):
@@ -49,7 +50,7 @@ def build_folio():
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = f'<p class="by">{esc(a["byline"])}</p>' if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
-        secs.append(f'''<article class="story" id="{a["slug"]}">{blooms}
+        secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead">
     <h2>{esc(a["title"])}</h2>
@@ -65,7 +66,7 @@ def build_folio():
         if i < len(VOICES):
             v = VOICES[i]
             secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
-    head = "".join(f'<a href="#{a["slug"]}">{esc(a["short"])}<span class="pg">{a["pages"].split("–")[0]}</span></a>' for a in ARTICLES)
+    head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Folio</title>
 {SIDES}
@@ -108,15 +109,20 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:980px){{.terraces,.blooms{{display:none}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
-.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}}
-.head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:baseline;gap:32px;min-height:48px;font-family:var(--disp)}}
-.head .brand{{font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;margin-right:auto}}
-.head nav{{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;padding:10px 0}}
-.head nav a{{font-family:var(--text);font-style:italic;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px}}
-.head nav a.on{{border-bottom-color:var(--ink)}}
-.head nav a:hover,.head nav a:focus-visible{{color:var(--accent)}}
-.head .pg{{font-family:var(--ui);font-size:11px;letter-spacing:.1em;color:var(--mute);margin-left:6px;font-style:normal}}
-@media (max-width:700px){{.head .brand{{display:none}} .head nav{{gap:18px}} .head .pg{{display:none}}}}
+.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--cream);border-bottom:1px solid var(--rule)}}
+.head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
+.head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
+.head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
+.head nav{{display:flex;margin-left:auto}}
+.head nav a{{display:flex;align-items:flex-end;position:relative;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--ink);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
+.head nav a span{{padding-bottom:12px}}
+.head nav a.on,.head nav a:hover,.head nav a:focus-visible{{background:var(--paper)}}
+.head nav a .fill{{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--ink);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}}
+.head nav a.on .fill{{width:var(--p,0%)}}
+.head .ind{{position:absolute;bottom:-1px;height:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}}
+.head .pg{{display:none}}
+@media (prefers-reduced-motion:reduce){{.head nav a .fill,.head .ind{{transition:none}}}}
+@media (max-width:900px){{.head .brand small{{display:none}} .head nav{{margin-left:0}} .head nav a{{padding:14px 12px 0;font-size:14px}}}}
 /* cover */
 .cover{{padding-block:clamp(28px,5vw,64px) 0}}
 .cover .mast .the{{font-family:var(--disp);font-weight:500;font-size:clamp(18px,2.2vw,26px);margin:0 0 -.1em .05em}}
@@ -208,7 +214,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav aria-label="Features">{head}</nav></div></div>
+<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
@@ -242,10 +248,17 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 (function(){{
   var links=[].slice.call(document.querySelectorAll('.head nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
-  if(!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;
-    links.forEach(function(a){{a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)}});}});}},{{rootMargin:'-30% 0px -60% 0px'}});
-  secs.forEach(function(x){{io.observe(x)}});
+  var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
+  var cur=null;
+  function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
+  function progress(){{if(!cur)return;var a=links.filter(function(l){{return l.getAttribute('href')==='#'+cur.id}})[0];if(!a)return;
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}}
+  if('IntersectionObserver' in window){{
+    var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
+      links.forEach(function(a){{var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+    secs.forEach(function(x){{io.observe(x)}});
+  }}
+  addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
 }})();
 </script>
 '''

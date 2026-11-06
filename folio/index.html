@@ -45,15 +45,20 @@ main,.head{position:relative;z-index:1}
 @media (max-width:980px){.terraces,.blooms{display:none}}
 /* running head */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
-.head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
-.head .in{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:baseline;gap:32px;min-height:48px;font-family:var(--disp)}
-.head .brand{font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;margin-right:auto}
-.head nav{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;padding:10px 0}
-.head nav a{font-family:var(--text);font-style:italic;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px}
-.head nav a.on{border-bottom-color:var(--ink)}
-.head nav a:hover,.head nav a:focus-visible{color:var(--accent)}
-.head .pg{font-family:var(--ui);font-size:11px;letter-spacing:.1em;color:var(--mute);margin-left:6px;font-style:normal}
-@media (max-width:700px){.head .brand{display:none} .head nav{gap:18px} .head .pg{display:none}}
+.head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--cream);border-bottom:1px solid var(--rule)}
+.head .in{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}
+.head .brand{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}
+.head .brand small{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}
+.head nav{display:flex;margin-left:auto}
+.head nav a{display:flex;align-items:flex-end;position:relative;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--ink);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.head nav a span{padding-bottom:12px}
+.head nav a.on,.head nav a:hover,.head nav a:focus-visible{background:var(--paper)}
+.head nav a .fill{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--ink);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.head nav a.on .fill{width:var(--p,0%)}
+.head .ind{position:absolute;bottom:-1px;height:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
+.head .pg{display:none}
+@media (prefers-reduced-motion:reduce){.head nav a .fill,.head .ind{transition:none}}
+@media (max-width:900px){.head .brand small{display:none} .head nav{margin-left:0} .head nav a{padding:14px 12px 0;font-size:14px}}
 /* cover */
 .cover{padding-block:clamp(28px,5vw,64px) 0}
 .cover .mast .the{font-family:var(--disp);font-weight:500;font-size:clamp(18px,2.2vw,26px);margin:0 0 -.1em .05em}
@@ -147,7 +152,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </style>
 </head>
 <body>
-<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav aria-label="Features"><a href="#gregory">Louis Gregory<span class="pg">20</span></a><a href="#newyorkers">New Yorkers<span class="pg">24</span></a><a href="#twoartists">Two artists<span class="pg">27</span></a><a href="#abs">ABS at 50<span class="pg">16</span></a><a href="#endeavor">A common endeavor<span class="pg">12</span></a><a href="#comic">Comic<span class="pg">34</span></a></nav></div></div>
+<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>A U.S. Bahá’í News Service publication</small></a><nav aria-label="Features"><a href="#gregory" style="--tint:#e8532a"><span>Louis Gregory</span><i class="fill"></i></a><a href="#newyorkers" style="--tint:#f05a7e"><span>New Yorkers</span><i class="fill"></i></a><a href="#twoartists" style="--tint:#b07a4a"><span>Two artists</span><i class="fill"></i></a><a href="#abs" style="--tint:#c9462c"><span>ABS at 50</span><i class="fill"></i></a><a href="#endeavor" style="--tint:#1b5e6b"><span>A common endeavor</span><i class="fill"></i></a><a href="#comic" style="--tint:#e9a21f"><span>Comic</span><i class="fill"></i></a></nav><span class="ind" aria-hidden="true"></span></div></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
@@ -173,7 +178,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
     <p class="about"><b>About the cover.</b> As an Iranian-American Bahá'í artist, much of my painting practice attempts to imagine a homeland I do not know, while reaching for a future uniting people, land and spirit. This painting is simultaneously nostalgic and hopeful, evoking a community built into the landscape. Natural beauty merges with the beauty of service and stewardship of the earth, inspired by community-building activities we are undertaking in New York City. References range from my landscape photography in the Northeastern United States, to photographs sourced of Iran and Yemen where my grandparents grew up, and finally to the curving calligraphy of the Greatest Name, which I used as a template for the tumbling hills of the farmland. <i>Juliet Bogan</i></p>
   </div>
 </section>
-<article class="story" id="gregory">
+<article class="story" id="gregory" style="--accent:#e8532a">
   <figure class="plate" style="--aw:0px"><img src="../img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"><figcaption>Collage illustration from the issue</figcaption></figure>
   <header class="shead">
     <h2>The Louis Gregory Bahá'í Institute continues legacy of race amity work</h2>
@@ -208,7 +213,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>Gregory and his wife Louise Mathew Gregory, who was an experienced international pioneer and spoke fluent French, pioneered to Haiti in 1937. Gregory was 63 years old and Mrs. Gregory was 71. They were able to meet people of culture and capacity, and the young intelligentsia, and held study classes for them twice a week. They also found a translator and held study classes in Creole.</p>
 <p>Gregory was among the first to carry out intensive teaching, as early as 1920. Shoghi Effendi describes the objective of intensive teaching as the establishment of “a small group of well-confirmed, devoted and active believers who will be able to carry on the work after [the traveling teacher's] departure.” In 1939, Lydia Martin was the Dean of Women at the Arkansas Agricultural, Mechanical, and Normal College in Pine Bluff, Arkansas. Her parents had been taught the Faith by Gregory in Cleveland, Ohio, in 1913. Through her efforts, the College invited Gregory to be their speaker during Religious Emphasis Week, and he stayed for two months.</p>
 <p>Gregory also taught the Faith through correspondence. Gregory “had friends whom he wrote in all age groups and students in every colored college and university in the land. He always answered every letter…”</p></div>
-</article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers"><div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>
+</article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers" style="--accent:#f05a7e"><div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>
   <figure class="plate bare" style="--aw:0px"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"><figcaption>Photograph, Crown Heights, Brooklyn</figcaption></figure>
   <header class="shead">
     <h2>New Yorkers create more unified communities through the arts</h2>
@@ -236,7 +241,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>“We're hoping to make these film deepening spaces a regular home for our community,” adds Guaman.</p>
 <p>Using the arts in community is valuable. Bogan says, “When we know that art is a tool for connection and worship, we will see that our mutual understanding of each other, our capacity to empathize, our consultations, our ability to imagine new realities, our centering of youth, will all be strengthened… When we bring that world into our communities, we open up new avenues for experimenting, for supporting each other, for playing.”</p>
 <p>These artists found their passions a catalyst for new connections. Sobhani says, “It was a night of genuine friendship, with everyone meeting someone new.” Her friend Jan, an elderly neighbor at the inaugural film gathering, said, “We need more of this.”</p></div>
-</article></div><aside class="voice" style="--band:#8a3a1e"><div class="vin"><p>I rejoice to hear that thou takest pains with thine art, for in this wonderful new age, art is worship. The more thou strivest to perfect it, the closer wilt thou come to God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="twoartists">
+</article></div><aside class="voice" style="--band:#8a3a1e"><div class="vin"><p>I rejoice to hear that thou takest pains with thine art, for in this wonderful new age, art is worship. The more thou strivest to perfect it, the closer wilt thou come to God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="twoartists" style="--accent:#b07a4a">
   <figure class="plate" style="--aw:0px"><img src="../img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"><figcaption>Photograph from the issue, with the printed title</figcaption></figure>
   <header class="shead">
     <h2>Two artists reimagine the role of art through a spiritual framework</h2>
@@ -272,7 +277,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p class="qa">What has the Faith taught you about the importance of beauty and art?</p>
 <p class="ans"><b>Mansour</b> It can sometimes feel like no one cares about art – that being an artist is non-essential work. Going to Bahá'í Holy Places helped me realize that art and beauty are some of the most essential things.</p>
 <p class="ans"><b>Paleczny</b> When I think about what has given me a sense of certitude about the Bahá'í Faith, it's not only what's written in the Writings. It is the actual beauty of the Writings that gives me a sense of knowing.</p></div>
-</article></div><aside class="voice" style="--band:#3b3f7a"><div class="vin"><p>The source of crafts, sciences and arts is the power of reflection. Make ye every effort that out of this ideal mine there may gleam forth such pearls of wisdom and utterance as will promote the well-being and harmony of all the kindreds of the earth.</p><cite>Bahá'u'lláh, Bahá'í Sacred Writings, Attaining Social Progress and Well-Being: Excerpts from Words of Paradise</cite></div></aside><div class="wrap"><article class="story" id="abs">
+</article></div><aside class="voice" style="--band:#3b3f7a"><div class="vin"><p>The source of crafts, sciences and arts is the power of reflection. Make ye every effort that out of this ideal mine there may gleam forth such pearls of wisdom and utterance as will promote the well-being and harmony of all the kindreds of the earth.</p><cite>Bahá'u'lláh, Bahá'í Sacred Writings, Attaining Social Progress and Well-Being: Excerpts from Words of Paradise</cite></div></aside><div class="wrap"><article class="story" id="abs" style="--accent:#c9462c">
   <div class="numeral" aria-hidden="true">50</div>
   <header class="shead">
     <h2>Association for Bahá'í Studies at 50</h2>
@@ -320,7 +325,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>For Nwandi Lawson, a media practitioner, the widening conception of Bahá'í scholarship is reflected in her own relationship with ABS. “I assumed, as a media professional, ABS is not for me, so I excluded myself,” she recalled. It was only after someone encouraged her to participate that she encountered collaborative spaces in which her professional experience could become part of a disciplined examination of the assumptions shaping media. This year, one detail stood out to her: A Grade 12 student was among those taking part in the seminar on media and society. Experience remains essential, Lawson said, but a field becomes richer when people just entering it can think alongside those who have worked within it for decades.</p>
 <p>That intergenerational dynamic was also reflected in the conference's dedicated program for young people. High school and university-age participants examined how their education and eventual professions can form part of a coherent life of service, alongside participation in community-building efforts and social action.</p>
 <p>Underlying this widening participation in ABS forums, Todd Smith suggested, is a posture of humility: participants diligently pursuing this work while also seeing themselves as being “on the same path of service where everybody has something to contribute.”</p></div>
-</article></div><aside class="voice" style="--band:#5c2a4e"><div class="vin"><p>The friends are also asked to give greater attention to the use of the arts, not only for proclamation, but also for the work in expansion and consolidation. The graphic and performing arts and literature have played, and can play, a major role in extending the influence of the Cause. At the level of folk art, this possibility can be pursued in every part of the world, whether it be in villages, towns or cities.</p><cite>The Universal House of Justice, April 21, 1996, to the Bahá'ís of the World</cite></div></aside><div class="wrap"><article class="story" id="endeavor">
+</article></div><aside class="voice" style="--band:#5c2a4e"><div class="vin"><p>The friends are also asked to give greater attention to the use of the arts, not only for proclamation, but also for the work in expansion and consolidation. The graphic and performing arts and literature have played, and can play, a major role in extending the influence of the Cause. At the level of folk art, this possibility can be pursued in every part of the world, whether it be in villages, towns or cities.</p><cite>The Universal House of Justice, April 21, 1996, to the Bahá'ís of the World</cite></div></aside><div class="wrap"><article class="story" id="endeavor" style="--accent:#1b5e6b">
   <figure class="plate" style="--aw:0px"><img src="../img/endeavor-quilt.webp" alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds"><figcaption>Quilt, from “A Common Endeavor”</figcaption></figure>
   <header class="shead">
     <h2>Communities engage in a common endeavor</h2>
@@ -354,7 +359,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>A sculptural art piece of diverse dolls linked arm-in-arm created by Helen Butler, whose artwork appears in “A Common Endeavor,” drew the adults, sparking in-depth conversations about the Bahá'í Faith and people's deep aspirations for this country.</p>
 <figure class="photo small" style="--w:400px"><img src="../img/ce-booth.jpg" alt="Lisa Blecker, Lesley Platner and Shiva Reader at the Brilliant Star booth, Grass Valley Juneteenth celebration." loading="lazy"><figcaption>Lisa Blecker, Lesley Platner and Shiva Reader at the Brilliant Star booth, Grass Valley Juneteenth celebration.</figcaption></figure>
 <p>In Ohio, the Yellow Springs News published “A Common Endeavor” in three installments. The publication was made possible through the efforts of the Local Spiritual Assembly, which shared that the paper's editor received the letter warmly and remarked on its timeliness.</p></div>
-</article></div><aside class="voice" style="--band:#2f5d3a"><div class="vin"><p>Mortal charm shall fade away, roses shall give way to thorns, and beauty and youth shall live their day and be no more. But that which eternally endureth is the Beauty of the True One, for its splendor perisheth not and its glory lasteth forever; its charm is all-powerful and its attraction infinite.</p><cite>'Abdu'l-Bahá, Selections from the Writings of 'Abdu'l-Bahá, no. 175</cite></div></aside><div class="wrap"><article class="story" id="comic">
+</article></div><aside class="voice" style="--band:#2f5d3a"><div class="vin"><p>Mortal charm shall fade away, roses shall give way to thorns, and beauty and youth shall live their day and be no more. But that which eternally endureth is the Beauty of the True One, for its splendor perisheth not and its glory lasteth forever; its charm is all-powerful and its attraction infinite.</p><cite>'Abdu'l-Bahá, Selections from the Writings of 'Abdu'l-Bahá, no. 175</cite></div></aside><div class="wrap"><article class="story" id="comic" style="--accent:#e9a21f">
   <figure class="plate comic"><img src="../img/comic-1.jpg" alt="Comic page: youth in the Westlake neighborhood of Indianapolis plan a car wash"><img src="../img/comic-2.jpg" alt="Comic page: the youth consult about supplies and payments, wash ten cars in two hours, and celebrate"><figcaption>Illustrated by Aria Ghalili</figcaption></figure>
   <header class="shead">
     <h2>Sparkling spirits in Indianapolis</h2>
@@ -376,10 +381,17 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 (function(){
   var links=[].slice.call(document.querySelectorAll('.head nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
-  if(!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;
-    links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)});});},{rootMargin:'-30% 0px -60% 0px'});
-  secs.forEach(function(x){io.observe(x)});
+  var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
+  var cur=null;
+  function place(a){if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}
+  function progress(){if(!cur)return;var a=links.filter(function(l){return l.getAttribute('href')==='#'+cur.id})[0];if(!a)return;
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;cur=e.target;
+      links.forEach(function(a){var on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)place(a);});progress();});},{rootMargin:'-30% 0px -60% 0px'});
+    secs.forEach(function(x){io.observe(x)});
+  }
+  addEventListener('scroll',progress,{passive:true}); addEventListener('resize',function(){place(document.querySelector('.head nav a.on'))});
 })();
 </script>
 
