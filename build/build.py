@@ -592,7 +592,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .listen:focus-visible{{outline:2px solid var(--accent);outline-offset:4px;border-radius:24px}}
 .listen .lt{{font-size:13.5px;font-weight:600;line-height:1.2}}
 .listen .ltime,.listen .lby{{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.listen.na{{cursor:default}} .listen.na .lp{{background:var(--rule);transform:none}}
+.listen.na .lp{{background:color-mix(in oklab,var(--accent) 45%,var(--rule))}}
 @media (max-width:980px){{.listen{{margin:6px 0 0;max-width:none}}}}
 .dock{{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none;font-family:var(--ui);color:var(--ink)}}
 .dock[hidden]{{display:block;visibility:hidden}}
@@ -615,6 +615,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .dock .dbar b{{position:absolute;top:5px;left:calc(var(--p,0%) - 6px);width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bar)}}
 .dock .dx{{width:34px;height:34px;border-radius:50%}} .dock .dx svg{{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}}
 html.docked body{{padding-bottom:84px}}
+.dock.na .dp,.dock.na .ds,.dock.na .dj,.dock.na .dbar{{opacity:.35;pointer-events:none}} .dock.na .dbar b{{display:none}} .dock.na .dtime{{font-style:italic}}
 @media (max-width:700px){{
  .dock .dk{{flex-wrap:wrap;padding:8px 8px 6px}}
  .dock .dt{{order:-1;flex:1 1 100%;margin:0 0 2px 4px;font-size:13px}}
@@ -761,25 +762,25 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var dock=document.getElementById('dock'), dk=dock.querySelector('.dk'), dp=dock.querySelector('.dp'), ds=dock.querySelector('.ds'), dt=dock.querySelector('.dt'), dtime=dock.querySelector('.dtime'), bar=dock.querySelector('.dbar'), dx=dock.querySelector('.dx');
   var speeds=[1,1.25,1.5,2,0.85], si=0, cur=null;
   var fmt=function(t){{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}};
-  function sync(){{if(!cur)return;var au=cur.au,p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));bar.setAttribute('aria-valuetext',fmt(au.currentTime)+' of '+fmt(au.duration));dtime.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}}
-  function state(){{var pl=cur&&!cur.au.paused;dock.classList.toggle('paused',!pl);dp.setAttribute('aria-label',pl?'Pause':'Play');L.forEach(function(x){{x.classList.toggle('playing',!!(cur&&x===cur.el&&pl));}});}}
+  function sync(){{if(!cur)return;if(cur.na){{bar.style.setProperty('--p','0%');dtime.textContent='Audio not yet added';return;}}var au=cur.au,p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));bar.setAttribute('aria-valuetext',fmt(au.currentTime)+' of '+fmt(au.duration));dtime.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}}
+  function state(){{var pl=cur&&!cur.na&&!cur.au.paused;dock.classList.toggle('paused',!pl);dp.setAttribute('aria-label',pl?'Pause':'Play');L.forEach(function(x){{x.classList.toggle('playing',!!(cur&&x===cur.el&&pl));}});}}
   function open(p){{
     if(cur&&cur!==p)cur.au.pause();
-    cur=p; var st=getComputedStyle(p.el).getPropertyValue('--accent'); if(st)dock.style.setProperty('--accent',st.trim());
+    cur=p; dock.classList.toggle('na',!!p.na); var st=getComputedStyle(p.el).getPropertyValue('--accent'); if(st)dock.style.setProperty('--accent',st.trim());
     dt.textContent=p.el.dataset.title; dt.href='#'+(p.el.closest('.story')||{{}}).id;
     p.au.playbackRate=speeds[si];
     dock.hidden=false; document.documentElement.classList.add('docked'); requestAnimationFrame(function(){{dock.classList.add('on');}});
-    sync();
+    sync(); state();
   }}
   L.forEach(function(el){{
     var au=new Audio(); au.preload='none'; var p={{el:el,au:au}}, probed=false, t=el.querySelector('.ltime');
     function probe(){{if(probed)return;probed=true;au.src=el.dataset.src;au.preload='metadata';au.load();}}
-    au.addEventListener('error',function(){{el.classList.add('na');t.textContent='Reading coming soon';el.setAttribute('aria-label','Audio reading coming soon');if(cur===p)close();}});
+    au.addEventListener('error',function(){{p.na=true;au.pause();el.classList.add('na');t.textContent='Audio not yet added';if(cur===p){{dock.classList.add('na');sync();state();}}}});
     au.addEventListener('loadedmetadata',function(){{t.textContent=fmt(au.duration);if(cur===p)sync();}});
     au.addEventListener('timeupdate',function(){{if(cur===p)sync();}});
     ['play','pause'].forEach(function(e){{au.addEventListener(e,state);}});
     au.addEventListener('ended',function(){{au.currentTime=0;state();}});
-    el.addEventListener('click',function(){{if(el.classList.contains('na'))return;probe();if(cur===p&&!au.paused){{au.pause();return;}}open(p);var r=au.play();if(r&&r.catch)r.catch(function(){{}});}});
+    el.addEventListener('click',function(){{probe();if(p.na){{open(p);return;}}if(cur===p&&!au.paused){{au.pause();return;}}open(p);var r=au.play();if(r&&r.catch)r.catch(function(){{}});}});
     if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{if(es[0].isIntersecting){{probe();io.disconnect();}}}},{{rootMargin:'400px'}});io.observe(el);}}else probe();
   }});
   function close(){{if(cur)cur.au.pause();dock.classList.remove('on');document.documentElement.classList.remove('docked');setTimeout(function(){{if(!dock.classList.contains('on'))dock.hidden=true;}},360);state();}}
