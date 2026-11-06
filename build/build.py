@@ -76,11 +76,11 @@ def build_folio():
 <style>
 /* Layout: one long folio. The cover painting carries a set masthead; an index follows; each feature opens on its art plate and runs in a single measure with a margin column for pull quotes; between features, a colored band carries one passage from the issue's pages on the arts. */
 :root{{
-  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#faf8f2; --tabon:#f5f1e8;
+  --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#ebe6da; --tabon:#f5f1e8; --barrule:#d2cbbb;
   --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
 }}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#1a1814;--tabon:#15130f;color-scheme:dark}}}}
-:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#1a1814;--tabon:#15130f;color-scheme:dark}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}}}
+:root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}
 *{{box-sizing:border-box}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .wrap{{max-width:1180px;margin:0 auto;{GUT}}}
@@ -112,7 +112,7 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
-.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}}
+.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}}
 .head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
 .head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
 .head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
