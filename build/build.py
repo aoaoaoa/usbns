@@ -312,7 +312,10 @@ def build_tab(member=False):
                 cls = "plate bare" if a.get("art_transparent") else "plate"
                 if a.get("art_width"): cls += " capped"
                 cap = f'<figcaption>{esc(a["art_credit"])}</figcaption>' if a.get("art_credit") else ""
-                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{cap}</figure>'''
+                ov = a.get("art_overlay")
+                ov_open = f'<div class="ovw" style="--ar:{ov["ar"]}">' if ov else ""
+                ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
+                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
         else:
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -386,7 +389,7 @@ def build_tab(member=False):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -605,6 +608,21 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate{{margin:0 0 clamp(28px,4vw,48px);background:var(--cream);border:1px solid var(--rule)}}
 .plate img{{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;background:var(--cream)}}
 .plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
+/* typographic overlay recapturing the print opener */
+.plate:has(.ovw){{background:#1a0f0b;border-color:#1a0f0b}}
+.ovw{{position:relative;width:min(100%,calc(88vh * var(--ar)));margin:0 auto;container-type:inline-size}}
+.ovw img{{max-height:none;background:none}}
+.ov{{position:absolute;inset:0;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(20,6,2,.35),0 6px 28px rgba(30,10,5,.55)}}
+.ov span{{position:absolute;white-space:nowrap;line-height:.9}}
+.ov .t1{{left:11%;top:16%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
+.ov .t1 i{{font-style:italic}}
+.ov .t2{{left:33%;top:27.5%;font-family:"Pinyon Script",cursive;font-size:17cqw;transform:rotate(-9deg);transform-origin:left center}}
+.ov .t3{{right:8%;top:37%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
+.ov .byl{{left:9%;top:58.5%;font-family:"Bodoni Moda",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
+.ov .sub{{right:8%;top:49.5%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
+@media (prefers-reduced-motion:no-preference){{.ov span{{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
+@keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
+
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
 .plate.bare figcaption{{padding-left:0}}

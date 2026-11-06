@@ -112,7 +112,7 @@ dict(
     title="Two artists reimagine the role of art through a spiritual framework",
     short="Two artists",
     byline="Neena Rouhani",
-    art="organ-hd.jpg", art_alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun", art_credit=None,
+    art="organ-hd.jpg", art_overlay={"ar":"0.75","html":'<span class="t1"><i>T</i>wo</span><span class="t2">artists</span><span class="t3">reimagine</span><span class="byl">By Neena Rouhani</span><span class="sub">the role of art through a spiritual framework</span>'}, art_alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun", art_credit=None,
     pages="27–29",
     body=[
         ("p","At an exhibition during this year's Los Angeles Design Weekend, visual artist Maya Mansour overheard the curator explaining the Bahá'í calendar to visitors who had stopped to admire it. The Bahá'í calendar, which is composed of intercalary days alongside 19 months named after various divine attributes, such as splendor, beauty and light, was the subject of Mansour's recent design project and had caught the attention of the exhibition curator."),
