@@ -40,6 +40,13 @@ def body_html(blocks):
         elif k == "chart": out.append(chart_html(b[1]))
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
+        elif k == "portraits":
+            out.append('<div class="portraits">' + "".join(f'<figure class="{cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in b[1]) + '</div>')
+        elif k == "band":
+            # full-bleed room: a toned wall or stage on which several photographs hang together
+            c = b[1]; items = "".join(f'<figure class="bi {cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in c["items"])
+            lab = f'<p class="blab">{esc(c["label"])}</p>' if c.get("label") else ""
+            out.append(f'<section class="band {c["tone"]}"><div class="bin">{lab}{items}</div></section>')
         elif k == "img":
             w = b[3] if len(b) > 3 else None
             cls = "photo small" if w else "photo"
@@ -391,7 +398,7 @@ def build_tab(member=False):
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
+body{{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
 .wrap{{max-width:1120px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
@@ -450,6 +457,30 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+/* bands: full-bleed rooms for high-resolution sets */
+.prose>.band{{grid-column:1/-1;width:100vw;margin:clamp(48px,7vw,96px) 0 clamp(48px,7vw,96px) calc(50% - 50vw);padding:clamp(40px,6vw,88px) 0;position:relative}}
+.band .bin{{max-width:1240px;margin:0 auto;{GUT}display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.2vw,32px);align-items:start}}
+.band .bi{{margin:0;min-width:0}} .band .bi img{{display:block;width:100%;height:auto}}
+.band figcaption{{font-family:var(--ui);font-size:13px;line-height:1.45;margin-top:10px;max-width:42ch}}
+.band .blab{{grid-column:1/-1;font-family:var(--ui);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 6px}}
+.band.wall{{background:#e7c3c6;color:#5a3a3e}}
+.band.wall::before{{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .35 0 0 0 0 .38 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}}
+.band.wall .bin{{position:relative}}
+.band.wall .bi img{{box-shadow:0 14px 30px -12px rgba(70,30,35,.45),0 2px 4px rgba(70,30,35,.18)}}
+.band.wall .w1{{grid-column:1/8;grid-row:2}} .band.wall .w2{{grid-column:8/13;grid-row:2/4;margin-top:clamp(30px,5vw,70px)}}
+.band.wall .w3{{grid-column:1/5;grid-row:3;margin-top:clamp(10px,2vw,28px)}} .band.wall .w4{{grid-column:5/8;grid-row:3;margin-top:clamp(10px,2vw,28px)}}
+.band.stage{{background:radial-gradient(120% 90% at 30% 20%,#2a211b 0%,#100d0b 55%,#070605 100%);color:#d9cfc2}}
+.band.stage .s1{{grid-column:1/8}} .band.stage .s2{{grid-column:8/13;margin-top:clamp(60px,12vw,200px)}}
+.band.stage figcaption{{color:#b8ab9b}}
+.band.stage .blab{{color:#8f8273}}
+.prose>.portraits{{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2vw,28px);margin:clamp(40px,6vw,80px) 0;align-items:start}}
+.portraits figure{{margin:0}} .portraits img{{display:block;width:100%;height:auto}}
+.portraits figcaption{{font-family:var(--ui);font-size:13px;color:var(--mute);margin-top:10px;line-height:1.45}}
+.portraits .p1{{grid-column:1/6}} .portraits .p2{{grid-column:6/9;margin-top:clamp(60px,9vw,140px)}} .portraits .p3{{grid-column:9/13;margin-top:clamp(20px,3vw,44px)}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .band.wall{{background:#4a3436;color:#ecd6d8}}}}
+:root[data-theme="dark"] .band.wall{{background:#4a3436;color:#ecd6d8}}
+@media (max-width:760px){{.band .bin>.bi,.portraits>figure{{grid-column:1/-1!important;grid-row:auto!important;margin-top:0!important;transform:none!important}}}}
+
 .chart .carrb{{fill:var(--accent)}}
 .chart .csp{{stroke-linecap:round}} .chart .ctrav{{fill:var(--accent);stroke:var(--paper);stroke-width:3}}
 .chart text.csw{{font-family:var(--disp);font-weight:800;font-size:40px;letter-spacing:-.045em;fill:var(--ink)}}
