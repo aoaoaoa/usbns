@@ -55,6 +55,11 @@ def pop(title, body):
     if not body: return ""
     return f' tabindex="0" role="button" data-pt="{html.escape(title, quote=True)}" data-pb="{html.escape(body, quote=True)}"'
 
+def size_cls(c):
+    w = c.get("w"); return "" if not w else (" sized span" if w > 640 else " sized")
+def size_sty(c):
+    return f' style="--cw:{c["w"]}px"' if c.get("w") else ""
+
 def chart_html(c):
     """Small inline SVG charts drawn to scale from the record's numbers."""
     def money(v): return f"${v:,.0f}"
@@ -127,12 +132,16 @@ def chart_html(c):
         svg = f'<svg viewBox="-60 0 540 420" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "map":
         M = USMAP; parts = [f'<use href="#usmap"/>']
+        for name, story in c.get("reports", []):
+            x, y = M["places"][name]
+            parts.append(f'<g class="hit pin rep"{pop(name, story)}><circle cx="{x}" cy="{y}" r="9" class="ghost"/><circle cx="{x}" cy="{y}" r="4.2" class="crep"/></g>')
         for i, pl in enumerate(c["places"]):
             name, lab, story = pl[0], pl[1], pl[2] if len(pl) > 2 else ""
             x, y = M["places"][name]; side = pl[3] if len(pl) > 3 else ("end" if x > M["w"] * .6 else "start")
             dx = -9 if side == "end" else 9
-            parts.append(f'<g class="hit pin"{pop(name, story)}><circle cx="{x}" cy="{y}" r="13" class="ghost"/><circle cx="{x}" cy="{y}" r="5.5" class="cdot"/><text x="{x+dx}" y="{y+4}" text-anchor="{side}" class="cl">{esc(lab)}</text></g>')
+            parts.append(f'<g class="hit pin"{pop(name, story)}><circle cx="{x}" cy="{y}" r="13" class="ghost"/><circle cx="{x}" cy="{y}" r="6.5" class="cdot big"/><text x="{x+dx*1.15:.0f}" y="{y+4}" text-anchor="{side}" class="cl on">{esc(lab)}</text></g>')
         svg = f'<svg viewBox="-40 -10 {M["w"]+80} {M["h"]+20}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+        if c.get("reports"): svg += f'<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>{len(c["reports"])} more communities that reported on the letter</span></p>'
     elif c["kind"] == "pictogram":
         rows = c["rows"]; W = 600; parts = []; rowh = 40
         for r, row in enumerate(rows):
@@ -142,7 +151,7 @@ def chart_html(c):
             parts.append(f'<g class="hit"{pop(f"{lab}: {count}", story)}><rect x="0" y="{y}" width="{W}" height="{rowh}" class="ghost"/><text x="156" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text>{dots}<text x="{170 + count*26 + 4}" y="{y+23}" class="cv">{count}</text></g>')
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     hint = '<p class="tap">Tap or hover the marks for the story behind each number.</p>' if 'data-pb=' in svg else ""
-    return f'<figure class="chart">{title}{svg}{note}{hint}</figure>'
+    return f'<figure class="chart{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}{hint}</figure>'
 
 def concept_html(c):
     """Diagrams for ideas rather than numbers. Every part can open the shared popup."""
@@ -230,7 +239,7 @@ def concept_html(c):
         P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-    return f'<figure class="chart concept">{title}{svg}{note}<p class="tap">Tap or hover each part for the idea behind it.</p></figure>'
+    return f'<figure class="chart concept{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -388,11 +397,11 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* charts */
 .chart .cline{{fill:none;stroke:var(--mute);stroke-width:1.6}} .chart .carr{{fill:var(--mute)}} .chart .carea{{fill:var(--accent)}} .chart .cdotm{{fill:var(--mute);opacity:.55}}
-.chart .csq{{fill:var(--tabon-white);stroke:var(--accent);stroke-width:2.5}} .chart .cdot.big{{stroke:var(--tabon-white);stroke-width:3}}
-.chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:var(--tabon-white);stroke:var(--rule)}}
+.chart .csq{{fill:var(--paper);stroke:var(--accent);stroke-width:2.5}} .chart .cdot.big{{stroke:var(--paper);stroke-width:3}}
+.chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:transparent;stroke:transparent}}
 .chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
 .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5;opacity:.7}} .chart .ghostline{{fill:none;stroke:transparent;stroke-width:22}} .chart .cjoin{{stroke:var(--accent);stroke-width:16;stroke-linecap:round}}
-.chart g.hit:hover .cpanel{{stroke:var(--accent)}} .chart g.hit:hover .cstrand{{opacity:1}}
+.chart g.hit:hover .cpanel{{stroke:var(--rule)}} .chart g.hit:hover .cstrand{{opacity:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
 .chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
@@ -415,6 +424,10 @@ main,.head{{position:relative;z-index:1}}
 .chart .tl li{{display:grid;grid-template-columns:3.4em 1fr;gap:10px;font-family:var(--ui);font-size:14px;line-height:1.45;color:var(--mute)}} .chart .tl b{{color:var(--ink);font-variant-numeric:tabular-nums}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
+.prose .chart.sized{{max-width:var(--cw)}}
+@media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
+.chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
+.chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.75;width:8px;height:8px}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
 .chart .cn{{font-family:var(--ui);font-size:13.5px;color:var(--mute);margin:8px 0 0}}
 .chart svg{{display:block;overflow:visible}}
@@ -712,6 +725,12 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </main>
 {DOCK}
 <script>
+(function(){{ /* trim the empty bands above and below each diagram */
+  [].forEach.call(document.querySelectorAll('.chart>svg[viewBox]'),function(svg){{
+    try{{var vb=svg.viewBox.baseVal,bb=svg.getBBox();if(!bb.height)return;var y=Math.max(vb.y,bb.y-6),h=Math.min(vb.y+vb.height,bb.y+bb.height+6)-y;
+    if(vb.height-h>8)svg.setAttribute('viewBox',vb.x+' '+y+' '+vb.width+' '+h);}}catch(e){{}}
+  }});
+}})();
 (function(){{
   var links=[].slice.call(document.querySelectorAll('.head nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
