@@ -598,6 +598,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:22px;line-height:1.25;font-weight:300}}
 .index a:hover .t,.index a:focus-visible .t{{color:var(--accent)}}
 .index .pg{{font-family:var(--ui);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}}
+.uhjf{{padding:clamp(16px,2.2vw,28px);background:#2f5a2a url(img/motif-uhj.jpg) center/cover;border:1px solid var(--rule);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}}
 .uhj{{margin:0;background:var(--tabon-white,#fff);border:1px solid var(--rule);padding:clamp(20px,2.6vw,32px) clamp(22px,2.8vw,36px)}}
 .uhj p{{font-family:var(--text);font-style:italic;font-weight:400;font-size:clamp(24px,2.6vw,32px);line-height:1.28;margin:0 0 14px;text-wrap:pretty;color:var(--ink)}}
 .uhj cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}}
@@ -614,12 +615,12 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ovw img{{max-height:none;background:none}}
 .ov{{position:absolute;inset:0;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(20,6,2,.35),0 6px 28px rgba(30,10,5,.55)}}
 .ov span{{position:absolute;white-space:nowrap;line-height:.9}}
-.ov .t1{{left:5%;top:5%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
+.ov .t1{{left:2%;top:5%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
 .ov .t1 i{{font-style:italic}}
-.ov .t2{{left:34%;top:19%;font-family:"Pinyon Script",cursive;font-size:17cqw;transform:rotate(-9deg);transform-origin:left center}}
+.ov .t2{{left:36%;top:17%;font-family:"Pinyon Script",cursive;font-size:17cqw}}
 .ov .t3{{right:8%;top:32%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
 .ov .byl{{left:9%;top:58%;font-family:"Bodoni Moda",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
-.ov .sub{{right:3%;top:47%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
+.ov .sub{{right:1.5%;top:47%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
 @media (prefers-reduced-motion:no-preference){{.ov span{{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
 @keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
 
@@ -795,8 +796,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     {dindex}
   </div>
   <div class="epi">
-    <blockquote class="uhj"><p>“{esc(ISSUE["epigraph"])}”</p>
-    <cite>{esc(ISSUE["epigraph_src"])}</cite></blockquote>
+    <div class="uhjf"><blockquote class="uhj"><p>“{esc(ISSUE["epigraph"])}”</p>
+    <cite>{esc(ISSUE["epigraph_src"])}</cite></blockquote></div>
     <p class="about"><b>About the cover.</b> “{esc(ISSUE["cover_note"])}” <i>Juliet Bogan</i></p>
   </div>
 </section>
@@ -1206,7 +1207,7 @@ with open(os.path.join(OUT, "member.html"), "w") as f: f.write(build_tab(member=
 SITE = os.path.join(HERE, "site")
 def standalone(body):
     """Wrap an artifact page in a full HTML document; image paths become relative to site/img."""
-    body = body.replace(SIDES, "").replace('src="img/', 'src="../img/')
+    body = body.replace(SIDES, "").replace('src="img/', 'src="../img/').replace('url(img/', 'url(../img/')
     i = body.rfind("</style>")
     i = body.index("\n", i) + 1
     body = body[:i] + "</head>\n<body>\n" + body[i:]
@@ -1216,7 +1217,7 @@ def standalone(body):
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
-with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="FAVICON"', 'href="favicon.svg"'))
+with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
 os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
 with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
