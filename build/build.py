@@ -159,21 +159,27 @@ def concept_html(c):
     kind = c["form"]; W = 600; P = []
     arrow = '<defs><marker id="ah{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>'.format(i=id(c) % 100000)
     mk = f'url(#ah{id(c) % 100000})'
+    if c.get("bold"):
+        arrow += '<defs><marker id="ahb{i}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carrb"/></marker></defs>'.format(i=id(c) % 100000)
+        mk = f'url(#ahb{id(c) % 100000})'
     def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
         return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
     H = 300
     if kind == "cycle":
-        st = c["steps"]; n = len(st); cx, cy, r = 300, 150, 100; H = 300
+        st = c["steps"]; n = len(st); bold = c.get("bold")
+        cx, cy, r = (300, 190, 128) if bold else (300, 150, 100); H = 380 if bold else 300
+        gap = .26 if bold else .32
         for i, (lab, story) in enumerate(st):
             a = -math.pi/2 + 2*math.pi*i/n; b = -math.pi/2 + 2*math.pi*(i+1)/n
-            pa = (cx + r*math.cos(a + .32), cy + r*math.sin(a + .32)); pb = (cx + r*math.cos(b - .32), cy + r*math.sin(b - .32))
-            P.append(f'<path d="M{pa[0]:.1f},{pa[1]:.1f} A{r},{r} 0 0 1 {pb[0]:.1f},{pb[1]:.1f}" class="cline" marker-end="{mk}"/>')
+            pa = (cx + r*math.cos(a + gap), cy + r*math.sin(a + gap)); pb = (cx + r*math.cos(b - gap), cy + r*math.sin(b - gap))
+            P.append(f'<path d="M{pa[0]:.1f},{pa[1]:.1f} A{r},{r} 0 0 1 {pb[0]:.1f},{pb[1]:.1f}" class="cline{" cbold" if bold else ""}" marker-end="{mk}"/>')
         for i, (lab, story) in enumerate(st):
             a = -math.pi/2 + 2*math.pi*i/n; x, y = cx + r*math.cos(a), cy + r*math.sin(a)
-            lx, ly = cx + (r + 26)*math.cos(a), cy + (r + 26)*math.sin(a)
+            off = 34 if bold else 26
+            lx, ly = cx + (r + off)*math.cos(a), cy + (r + off)*math.sin(a)
             anc = "start" if math.cos(a) > .3 else ("end" if math.cos(a) < -.3 else "middle")
-            P.append(f'<g class="hit"{pop(lab, story)}><circle cx="{x:.1f}" cy="{y:.1f}" r="16" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="cdot"/><text x="{lx:.1f}" y="{ly + 5:.1f}" text-anchor="{anc}" class="cv">{esc(lab)}</text></g>')
-        P.append(lines(c.get("center", ""), cx, cy - 4, "cl"))
+            P.append(f'<g class="hit"{pop(lab, story)}><circle cx="{x:.1f}" cy="{y:.1f}" r="{24 if bold else 16}" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="{15 if bold else 9}" class="cdot{" big" if bold else ""}"/><text x="{lx:.1f}" y="{ly + (8 if bold else 5):.1f}" text-anchor="{anc}" class="cv{" cvbig" if bold else ""}">{esc(lab)}</text></g>')
+        P.append(lines(c.get("center", ""), cx, cy - (6 if bold else 4), "cv" if bold else "cl", lh=22 if bold else 17))
     elif kind == "rings":
         rs = c["rings"]; n = len(rs); cx, cy = 300, 175; step = 160 / n; H = 350
         for i in range(n - 1, -1, -1):
@@ -239,7 +245,7 @@ def concept_html(c):
         P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-    return f'<figure class="chart concept{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}</figure>'
+    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -425,6 +431,8 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+.chart .carrb{{fill:var(--accent)}} .chart.bold .ct{{font-size:clamp(17px,1.6vw,20px);line-height:1.35;max-width:40ch;letter-spacing:.01em}}
+.chart .cline.cbold{{stroke:var(--accent);stroke-width:5;opacity:.85}} .chart text.cvbig{{font-size:25px;font-weight:800;letter-spacing:-.01em}}
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
 .chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
 .chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.75;width:8px;height:8px}}
