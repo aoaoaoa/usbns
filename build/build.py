@@ -82,7 +82,10 @@ def build_folio():
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}}}
 :root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#0f0d0a;--tabon:#15130f;--barrule:#2f2a22;color-scheme:dark}}
 *{{box-sizing:border-box}}
+html{{scroll-behavior:smooth}}
+@media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
+.story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
 .wrap{{max-width:1180px;margin:0 auto;{GUT}}}
 .ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
 /* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
