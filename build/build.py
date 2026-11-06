@@ -149,7 +149,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo>figcaption{{grid-column:1;grid-row:2;margin-top:10px}}
 .prose .photo.small{{grid-column:2;display:block;max-width:var(--w)}}
 .prose .photo.small>figcaption{{margin-top:10px}}
-.prose .photo.pair{{grid-column:1/3;grid-template-columns:1fr 1fr;gap:16px;align-items:start}}
+.prose .photo.pair{{grid-column:1/-1;grid-template-columns:1fr 1fr;gap:20px;align-items:start}}
 .prose .photo.pair>div{{grid-column:auto}}
 .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
@@ -311,6 +311,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo{{margin:2.2em 0;background:var(--card);border:1px solid var(--rule);padding:10px}}
 .prose .photo.pair{{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:none}}
 .prose .photo.pair>div{{min-width:0}}
+@media (min-width:1000px){{.prose .photo.pair{{width:calc(100% + 14rem);margin-left:-7rem}}}}
 @media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
 .prose .photo.small{{max-width:calc(var(--w) + 20px)}}
 .prose .photo img{{display:block;width:100%;height:auto}}
@@ -420,7 +421,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo.small{{grid-template-columns:minmax(0,var(--w)) 15ch;width:auto}}
 .prose .photo>figcaption{{grid-column:2;grid-row:1;font-family:var(--disp);font-size:13px;line-height:1.5;color:var(--mute);padding-top:10px;border-top:3px solid var(--tint);align-self:end}}
 .prose .photo>figcaption::before{{content:"Photograph";display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--tint);margin-bottom:6px}}
-.prose .photo.pair{{grid-template-columns:1fr 1fr;gap:20px;align-items:start}}
+.prose .photo.pair{{grid-template-columns:1fr 1fr;gap:22px;align-items:start;width:min(66rem,calc(100vw - 32px))}}
 .prose .photo.pair>div{{min-width:0}}
 .prose .photo.pair>div img{{display:block;width:100%;height:auto;border-radius:4px}}
 .prose .photo.pair>div figcaption{{font-family:var(--disp);font-size:13px;line-height:1.5;color:var(--mute);margin-top:10px;padding-top:10px;border-top:3px solid var(--tint)}}
