@@ -1,6 +1,6 @@
 # The American Bahá'í, the arts issue
 
-TAB online: the October/November/December 2026 issue of The American Bahá'í, a U.S. Bahá'í News Service publication, as a one-page site. Six features with their illustrations and photographs.
+TAB online: the October/November/December 2026 issue of The American Bahá'í, a U.S. Bahá'í News publication, as a one-page site. Six features with their illustrations and photographs.
 
 - `index.html` the site.
 - `alt/plates/`, `alt/reader/` two earlier presentations, kept for reference.
