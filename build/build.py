@@ -46,10 +46,14 @@ def build_folio():
         secs.append(f'''<article class="story" id="{a["slug"]}">
   {art}
   <header class="shead">
-    <p class="kicker"><span>{esc(a["kicker"])}</span><span>pp. {a["pages"]}</span></p>
     <h2>{esc(a["title"])}</h2>
-    {dek}{by}
+    {dek}
   </header>
+  <aside class="margin">
+    <p class="kicker">{esc(a["kicker"])}</p>
+    {by}
+    <p class="pp">Pages {a["pages"]}</p>
+  </aside>
   <div class="prose">{first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
         if i < len(VOICES):
@@ -116,21 +120,31 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate.comic figcaption{{grid-column:1/-1;background:var(--cream)}}
 .plate figcaption{{font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:10px 14px}}
 .numeral{{font-family:var(--disp);font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.04em}}
-.shead{{max-width:30ch}}
-.kicker{{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 20px;max-width:62ch}}
-.shead h2{{font-family:var(--disp);font-size:clamp(38px,5.6vw,76px);line-height:1;font-weight:400;letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance}}
-.dek{{font-size:clamp(20px,2vw,26px);font-style:italic;margin:0 0 12px;color:var(--mute)}}
-.by{{font-family:var(--ui);font-size:13px;letter-spacing:.04em;margin:0 0 36px;color:var(--mute)}}
+/* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
+.story{{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,66ch) minmax(0,1fr);column-gap:clamp(24px,4vw,64px)}}
+.story>.plate,.story>.numeral{{grid-column:1/-1}}
+.shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px)}}
+.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,110px);line-height:.95;font-weight:400;letter-spacing:-.025em;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
+.dek{{font-size:clamp(20px,2vw,28px);font-style:italic;margin:0;color:var(--mute);max-width:30ch}}
+.margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
+.margin p{{margin:0}}
+.kicker{{color:var(--accent);font-weight:600;margin-bottom:10px!important}}
 .by::before{{content:"By ";}}
-.prose{{max-width:66ch;font-size:19px;line-height:1.6}}
-.prose p{{margin:0 0 1.2em;text-wrap:pretty}}
+.pp{{margin-top:10px!important;font-variant-numeric:tabular-nums}}
+.prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:19px;line-height:1.62}}
+.prose>*{{grid-column:2;min-width:0}}
+.prose p{{margin:0 0 1.25em;text-wrap:pretty}}
+.prose p.first{{font-size:1.14em;line-height:1.5}}
 .prose p.first::first-letter{{font-family:var(--disp);font-size:4.4em;float:left;line-height:.78;padding:.08em .1em 0 0;color:var(--accent)}}
-.prose h3{{font-family:var(--ui);font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin:2.2em 0 .8em;color:var(--accent)}}
-.prose .pull{{margin:2em 0 2em clamp(-120px,-10vw,0px);padding:0 0 0 20px;border-left:3px solid var(--accent);max-width:34ch}}
-.prose .pull p{{font-family:var(--disp);font-size:clamp(22px,2.2vw,30px);line-height:1.25;margin:0 0 10px}}
+.prose h3{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:3.2em 0 1em;color:var(--accent);padding-top:1.2em;border-top:1px solid var(--rule)}}
+.prose .pull{{grid-column:1;grid-row:span 2;margin:.4em 0 2em;padding:0 0 0 18px;border-left:3px solid var(--accent);align-self:start}}
+.prose .pull p{{font-family:var(--disp);font-size:clamp(20px,1.9vw,27px);line-height:1.25;margin:0 0 10px}}
 .prose .pull cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}}
-.prose .photo{{margin:2em 0;max-width:none}}
-.prose .photo.pair{{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:none}}
+.prose .photo{{grid-column:1/-1;margin:2.4em 0;display:grid;grid-template-columns:subgrid;column-gap:inherit;align-items:end}}
+.prose .photo>img{{grid-column:1/-1}}
+.prose .photo>figcaption{{grid-column:1;grid-row:2;margin-top:10px}}
+.prose .photo.pair{{grid-column:1/3;grid-template-columns:1fr 1fr;gap:16px;align-items:start}}
+.prose .photo.pair>div{{grid-column:auto}}
 .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
 .prose .photo img{{display:block;width:100%;height:auto;border:1px solid var(--rule)}}
@@ -146,7 +160,16 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .voice cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}}
 .colophon{{padding-block:clamp(48px,8vw,96px);font-family:var(--ui);font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6;border-top:1px solid var(--rule);margin-top:clamp(48px,8vw,112px)}}
 a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
-@media (max-width:820px){{
+@media (max-width:980px){{
+  .story{{grid-template-columns:minmax(0,1fr)}}
+  .shead,.margin,.prose{{grid-column:1}}
+  .margin{{grid-row:auto;position:static;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:28px}}
+  .margin .kicker,.margin .pp{{margin:0!important}}
+  .prose{{display:block}}
+  .prose .pull{{margin:1.6em 0}}
+  .prose .photo{{display:block}}
+  .prose .photo.pair{{display:grid;grid-template-columns:1fr 1fr}}
+
   .front{{grid-template-columns:1fr}}
   .prose .pull{{margin-left:0}}
   .plate.comic{{grid-template-columns:1fr}}
@@ -385,12 +408,15 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .pull{{margin:1.8em 0;padding:4px 0 4px 20px;border-left:4px solid var(--tint)}}
 .prose .pull p{{font-family:var(--disp);font-weight:500;font-size:clamp(21px,2.2vw,27px);line-height:1.25;letter-spacing:-.015em;margin:0 0 8px}}
 .prose .pull cite{{font-style:normal;font-family:var(--disp);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}}
-.prose .photo{{margin:2em 0}}
-.prose .photo.pair{{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:none}}
+.prose .photo{{margin:2.4em 0;display:grid;grid-template-columns:minmax(0,1fr) 15ch;gap:14px 24px;align-items:end;max-width:none;width:min(58rem,calc(100vw - 32px))}}
+.prose .photo>img{{display:block;width:100%;height:auto;border-radius:4px;grid-row:1;grid-column:1}}
+.prose .photo>figcaption{{grid-column:2;grid-row:1;font-family:var(--disp);font-size:13px;line-height:1.5;color:var(--mute);padding-top:10px;border-top:3px solid var(--tint);align-self:end}}
+.prose .photo>figcaption::before{{content:"Photograph";display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--tint);margin-bottom:6px}}
+.prose .photo.pair{{grid-template-columns:1fr 1fr;gap:20px;align-items:start}}
 .prose .photo.pair>div{{min-width:0}}
-@media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
-.prose .photo img{{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--rule)}}
-.prose .photo figcaption{{font-family:var(--disp);font-size:12.5px;color:var(--mute);margin-top:8px;line-height:1.5}}
+.prose .photo.pair>div img{{display:block;width:100%;height:auto;border-radius:4px}}
+.prose .photo.pair>div figcaption{{font-family:var(--disp);font-size:13px;line-height:1.5;color:var(--mute);margin-top:10px;padding-top:10px;border-top:3px solid var(--tint)}}
+@media (max-width:640px){{.prose .photo,.prose .photo.pair{{grid-template-columns:1fr}} .prose .photo>figcaption{{grid-column:1;grid-row:2}}}}
 .prose .note{{font-family:var(--disp);font-size:14px;color:var(--mute);background:var(--rail);padding:14px 16px;border-radius:4px;margin:2em 0}}
 .prose .qa{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.01em;margin:1.8em 0 .6em}}
 .prose .ans b{{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--tint);margin-right:.4em}}

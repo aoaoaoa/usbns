@@ -63,21 +63,31 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .plate.comic figcaption{grid-column:1/-1;background:var(--cream)}
 .plate figcaption{font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:10px 14px}
 .numeral{font-family:var(--disp);font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.04em}
-.shead{max-width:30ch}
-.kicker{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 20px;max-width:62ch}
-.shead h2{font-family:var(--disp);font-size:clamp(38px,5.6vw,76px);line-height:1;font-weight:400;letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance}
-.dek{font-size:clamp(20px,2vw,26px);font-style:italic;margin:0 0 12px;color:var(--mute)}
-.by{font-family:var(--ui);font-size:13px;letter-spacing:.04em;margin:0 0 36px;color:var(--mute)}
+/* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
+.story{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,66ch) minmax(0,1fr);column-gap:clamp(24px,4vw,64px)}
+.story>.plate,.story>.numeral{grid-column:1/-1}
+.shead{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px)}
+.shead h2{font-family:var(--disp);font-size:clamp(44px,7vw,110px);line-height:.95;font-weight:400;letter-spacing:-.025em;margin:0 0 22px;text-wrap:balance;max-width:14ch}
+.dek{font-size:clamp(20px,2vw,28px);font-style:italic;margin:0;color:var(--mute);max-width:30ch}
+.margin{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}
+.margin p{margin:0}
+.kicker{color:var(--accent);font-weight:600;margin-bottom:10px!important}
 .by::before{content:"By ";}
-.prose{max-width:66ch;font-size:19px;line-height:1.6}
-.prose p{margin:0 0 1.2em;text-wrap:pretty}
+.pp{margin-top:10px!important;font-variant-numeric:tabular-nums}
+.prose{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:19px;line-height:1.62}
+.prose>*{grid-column:2;min-width:0}
+.prose p{margin:0 0 1.25em;text-wrap:pretty}
+.prose p.first{font-size:1.14em;line-height:1.5}
 .prose p.first::first-letter{font-family:var(--disp);font-size:4.4em;float:left;line-height:.78;padding:.08em .1em 0 0;color:var(--accent)}
-.prose h3{font-family:var(--ui);font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin:2.2em 0 .8em;color:var(--accent)}
-.prose .pull{margin:2em 0 2em clamp(-120px,-10vw,0px);padding:0 0 0 20px;border-left:3px solid var(--accent);max-width:34ch}
-.prose .pull p{font-family:var(--disp);font-size:clamp(22px,2.2vw,30px);line-height:1.25;margin:0 0 10px}
+.prose h3{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:3.2em 0 1em;color:var(--accent);padding-top:1.2em;border-top:1px solid var(--rule)}
+.prose .pull{grid-column:1;grid-row:span 2;margin:.4em 0 2em;padding:0 0 0 18px;border-left:3px solid var(--accent);align-self:start}
+.prose .pull p{font-family:var(--disp);font-size:clamp(20px,1.9vw,27px);line-height:1.25;margin:0 0 10px}
 .prose .pull cite{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.prose .photo{margin:2em 0;max-width:none}
-.prose .photo.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:none}
+.prose .photo{grid-column:1/-1;margin:2.4em 0;display:grid;grid-template-columns:subgrid;column-gap:inherit;align-items:end}
+.prose .photo>img{grid-column:1/-1}
+.prose .photo>figcaption{grid-column:1;grid-row:2;margin-top:10px}
+.prose .photo.pair{grid-column:1/3;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.prose .photo.pair>div{grid-column:auto}
 .prose .photo.pair>div{min-width:0}
 @media (max-width:640px){.prose .photo.pair{grid-template-columns:1fr}}
 .prose .photo img{display:block;width:100%;height:auto;border:1px solid var(--rule)}
@@ -93,7 +103,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .voice cite{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
 .colophon{padding-block:clamp(48px,8vw,96px);font-family:var(--ui);font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6;border-top:1px solid var(--rule);margin-top:clamp(48px,8vw,112px)}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-@media (max-width:820px){
+@media (max-width:980px){
+  .story{grid-template-columns:minmax(0,1fr)}
+  .shead,.margin,.prose{grid-column:1}
+  .margin{grid-row:auto;position:static;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:28px}
+  .margin .kicker,.margin .pp{margin:0!important}
+  .prose{display:block}
+  .prose .pull{margin:1.6em 0}
+  .prose .photo{display:block}
+  .prose .photo.pair{display:grid;grid-template-columns:1fr 1fr}
+
   .front{grid-template-columns:1fr}
   .prose .pull{margin-left:0}
   .plate.comic{grid-template-columns:1fr}
@@ -128,10 +147,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <article class="story" id="gregory">
   <figure class="plate"><img src="../img/gregory-collage.jpg" alt="Collage: a portrait of Louis Gregory in spectacles and a polka-dot tie, surrounded by torn paper in orange, pink and blue, flowers, a map, and early Bahá'í gatherings"><figcaption>Collage illustration from the issue</figcaption></figure>
   <header class="shead">
-    <p class="kicker"><span>Race amity</span><span>pp. 20–23</span></p>
     <h2>The Louis Gregory Bahá'í Institute continues legacy of race amity work</h2>
-    <p class="by">Linda Ahdieh Grant</p>
+    
   </header>
+  <aside class="margin">
+    <p class="kicker">Race amity</p>
+    <p class="by">Linda Ahdieh Grant</p>
+    <p class="pp">Pages 20–23</p>
+  </aside>
   <div class="prose"><p class="first">Earlier this year, the Bahá'ís of the United States addressed a message titled “A Common Endeavor” to every soul who holds “the promise of America in their heart.” The statement describes the common endeavor that has brought America to this moment in history, acknowledging the generations that have labored to realize the ideals on which our country was founded, in order to “build a more perfect union where all can flourish.”</p>
 <p>Currently, Bahá'ís' contributions to this common endeavor build on the foundation laid by previous generations. The Louis Gregory Bahá'í Institute (LGBI), named after early American Bahá'í and race amity leader Louis George Gregory, carries on the legacy of Gregory's unifying racial justice work through community-building spaces and efforts.</p>
 <p>Located in Gregory's home state of South Carolina, LGBI is an education and retreat center dedicated in 1972 and home to half a century of community-building work. In recent years, LGBI continues to contribute to the training and empowerment of young people centered on the principle of the oneness of humanity.</p>
@@ -159,10 +182,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#1b5e6b"><div class="vin"><p>All Art is a gift of the Holy Spirit. When this light shines through the mind of a musician, it manifests itself in beautiful harmonies. Again, shining through the mind of a poet, it is seen in fine poetry and poetic prose. When the Light of the Sun of Truth inspires the mind of a painter, he produces marvellous pictures. These gifts are fulfilling their highest purpose, when showing forth the praise of God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="newyorkers">
   <figure class="plate bare"><img src="../img/ny-blob.webp" alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette"><figcaption>Photograph, Crown Heights, Brooklyn</figcaption></figure>
   <header class="shead">
-    <p class="kicker"><span>Community</span><span>pp. 24–26</span></p>
     <h2>New Yorkers create more unified communities through the arts</h2>
-    <p class="by">Michelle Goering</p>
+    
   </header>
+  <aside class="margin">
+    <p class="kicker">Community</p>
+    <p class="by">Michelle Goering</p>
+    <p class="pp">Pages 24–26</p>
+  </aside>
   <div class="prose"><p class="first">How can the arts bring neighbors together and create spaces for deeper connection and collective problem-solving? New youth initiatives in New York City inspired by Bahá'í teachings, some centered around thought-provoking films or painting with children, are demonstrating the power of shared artistic expression. In both cases, the impetus came from a community's creative interests.</p>
 <p>“Our initial film gathering was meant for our community—friends, neighbors and strangers—to come into my home and share a meal before we watched a selection of short films revolving around a theme,” says Felicia Sobhani. She and her partner Christian Guaman are cinephiles, and see film as a shared language. “It's how we, as artists and people of wildly different backgrounds, found commonality, moved by narratives and storytelling,” says Guaman. “We'd leave a film and think, ‘More people need to see this.’”</p>
 <p>Noticing “how films spoke to each other,” Guaman says the idea was sparked to use this artistic medium to start neighborhood conversations around topics of concern. Sobhani and Guaman spread the word to their Harlem neighbors and friends, many of whom walked over, that the evening's selections would center around children and the collective responsibility to care for them.</p>
@@ -183,10 +210,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#8a3a1e"><div class="vin"><p>I rejoice to hear that thou takest pains with thine art, for in this wonderful new age, art is worship. The more thou strivest to perfect it, the closer wilt thou come to God.</p><cite>'Abdu'l-Bahá, in the compilation The Importance of the Arts in Promoting the Faith</cite></div></aside><div class="wrap"><article class="story" id="twoartists">
   <figure class="plate"><img src="../img/organ.jpg" alt="Calla Paleczny at a laptop and mixing desk on a stage beneath the tall pipes of a church organ, lit by afternoon sun"><figcaption>Photograph from the issue, with the printed title</figcaption></figure>
   <header class="shead">
-    <p class="kicker"><span>In conversation</span><span>pp. 27–29</span></p>
     <h2>Two artists reimagine the role of art through a spiritual framework</h2>
-    <p class="by">Neena Rouhani</p>
+    
   </header>
+  <aside class="margin">
+    <p class="kicker">In conversation</p>
+    <p class="by">Neena Rouhani</p>
+    <p class="pp">Pages 27–29</p>
+  </aside>
   <div class="prose"><p class="first">At an exhibition during this year's Los Angeles Design Weekend, visual artist Maya Mansour overheard the curator explaining the Bahá'í calendar to visitors who had stopped to admire it. The Bahá'í calendar, which is composed of intercalary days alongside 19 months named after various divine attributes, such as splendor, beauty and light, was the subject of Mansour's recent design project and had caught the attention of the exhibition curator.</p>
 <p>The moment affirmed Mansour's hope behind the project: Thoughtfully designed artwork can spark curiosity and attraction to the Faith. “I really changed the way that I think about being an artist and teaching the Faith,” Mansour says. “These systems that we have — like our calendar — lend themselves so beautifully to artfulness and thoughtful design.”</p>
 <p>Mansour, a photographer and co-founder of the nonprofit Black Image Center, created the calendar after realizing that the rhythm of Bahá'í life was not reflected in the Gregorian calendars she used every day. What was initially a personal project grew into Studio Kam Kam, an initiative named after ‘Abdu'l-Bahá's phrase “little by little, day by day” that brings together artists and designers from different religious backgrounds to create intentionally designed Bahá'í goods for everyday use. For Mansour, the project has unfolded alongside her own understanding of how art and beauty can make spiritual ideas accessible beyond the Bahá'í community itself.</p>
@@ -215,10 +246,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#3b3f7a"><div class="vin"><p>The source of crafts, sciences and arts is the power of reflection. Make ye every effort that out of this ideal mine there may gleam forth such pearls of wisdom and utterance as will promote the well-being and harmony of all the kindreds of the earth.</p><cite>Bahá'u'lláh, Bahá'í Sacred Writings, Attaining Social Progress and Well-Being: Excerpts from Words of Paradise</cite></div></aside><div class="wrap"><article class="story" id="abs">
   <div class="numeral" aria-hidden="true">50</div>
   <header class="shead">
-    <p class="kicker"><span>Scholarship</span><span>pp. 16–19</span></p>
     <h2>Association for Bahá'í Studies at 50</h2>
-    <p class="dek">Scholarship and knowledge in service to the common good</p><p class="by">Adapted from the Bahá'í World News Service</p>
+    <p class="dek">Scholarship and knowledge in service to the common good</p>
   </header>
+  <aside class="margin">
+    <p class="kicker">Scholarship</p>
+    <p class="by">Adapted from the Bahá'í World News Service</p>
+    <p class="pp">Pages 16–19</p>
+  </aside>
   <div class="prose"><p class="first">Ottawa, Canada — Scholarship is often imagined as solely the work of specialists, carried out in universities and published in journals. Over 50 years of experience within the Association for Bahá'í Studies (ABS) is pointing toward a broader conception: every person can contribute to the generation of knowledge, and countless social spaces can become a setting for the search for insights that advance human well-being.</p>
 <p>This idea permeated the Association's 50th annual conference, which in August brought some 2,100 participants to Ottawa. The gathering began with 16 two-day seminars examining fields including health, technology, media, education, the arts, mental health, scientific inquiry and community-engaged research, among others. A parallel program, organized by the Institute for Studies in Global Prosperity, brought together youth aged 15 to 21 to consider the relationship between their studies, work, service and contribution to the life of society.</p>
 <figure class="photo"><img src="../img/abs-stage.jpg" alt="A panel at the Association's 50th annual conference in Ottawa." loading="lazy"><figcaption>A panel at the Association's 50th annual conference in Ottawa.</figcaption></figure>
@@ -259,10 +294,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#5c2a4e"><div class="vin"><p>The friends are also asked to give greater attention to the use of the arts, not only for proclamation, but also for the work in expansion and consolidation. The graphic and performing arts and literature have played, and can play, a major role in extending the influence of the Cause. At the level of folk art, this possibility can be pursued in every part of the world, whether it be in villages, towns or cities.</p><cite>The Universal House of Justice, April 21, 1996, to the Bahá'ís of the World</cite></div></aside><div class="wrap"><article class="story" id="endeavor">
   <figure class="plate"><img src="../img/endeavor.jpg" alt="A wave-shaped collage of photographs of people smiling at gatherings, on a ground of mustard, cream and teal"><figcaption>Collage from the issue</figcaption></figure>
   <header class="shead">
-    <p class="kicker"><span>Across America</span><span>pp. 12–15</span></p>
     <h2>Communities engage in a common endeavor</h2>
     
   </header>
+  <aside class="margin">
+    <p class="kicker">Across America</p>
+    
+    <p class="pp">Pages 12–15</p>
+  </aside>
   <div class="prose"><p class="first">In the months since the National Spiritual Assembly shared “A Common Endeavor,” a message laying out the Assembly's vision for the United States, Bahá'ís have been creating opportunities to introduce the message's uplifting and pragmatic content and concepts to their friends and neighbors. Here are glimpses of some of the creative efforts supported by the resources found at acommonendeavor.org.</p>
 <h3>Sarasota-Manatee County, Florida: Practical steps to oneness</h3>
 <p>In July, the Bahá'ís of Sarasota-Manatee County, Florida, invited people to a conference focusing on our oneness as a single human family and promoting consultation for problem solving and community building through inclusivity, understanding and detachment. Nearly 50 participants, representing a variety of ages and backgrounds, came together to listen, learn and reflect on the process of consultation. The conference demonstrated that the principles of consultation and the vision of human oneness are not merely subjects for academic study, but living practices to be integrated into the fabric of daily life.</p>
@@ -289,10 +328,14 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 </article></div><aside class="voice" style="--band:#2f5d3a"><div class="vin"><p>Mortal charm shall fade away, roses shall give way to thorns, and beauty and youth shall live their day and be no more. But that which eternally endureth is the Beauty of the True One, for its splendor perisheth not and its glory lasteth forever; its charm is all-powerful and its attraction infinite.</p><cite>'Abdu'l-Bahá, Selections from the Writings of 'Abdu'l-Bahá, no. 175</cite></div></aside><div class="wrap"><article class="story" id="comic">
   <figure class="plate comic"><img src="../img/comic-1.jpg" alt="Comic page: youth in the Westlake neighborhood of Indianapolis plan a car wash"><img src="../img/comic-2.jpg" alt="Comic page: the youth consult about supplies and payments, wash ten cars in two hours, and celebrate"><figcaption>Illustrated by Aria Ghalili</figcaption></figure>
   <header class="shead">
-    <p class="kicker"><span>Adventures in pioneering</span><span>pp. 34–35</span></p>
     <h2>Sparkling spirits in Indianapolis</h2>
-    <p class="by">Story by Cher Gupta, as told to Joyce Litoff. Illustrated by Aria Ghalili.</p>
+    
   </header>
+  <aside class="margin">
+    <p class="kicker">Adventures in pioneering</p>
+    <p class="by">Story by Cher Gupta, as told to Joyce Litoff. Illustrated by Aria Ghalili.</p>
+    <p class="pp">Pages 34–35</p>
+  </aside>
   <div class="prose"><p class="first">Two years ago, pioneers in the Westlake neighborhood of Indianapolis helped their young neighbors raise $1,500 towards transportation so they could attend Midwest Region camps for youth and junior youth. They did yard work and other odd jobs, and the fundraising was a huge success. But promoting, tracking and carpooling the participants proved to be quite the undertaking.</p>
 <p>Upon reflection, they realized a previously organized car wash had yielded the best return for the amount of work, so they planned and promoted another. One blistering June morning, attendees of a breakfast and devotional program at the local Bahá'í Center were offered a car wash service by youth volunteers.</p>
 <p>Hosting a car wash sounds simple, but there was much to consider: What supplies were necessary? Should they work in teams? How much would they charge? How would they track people, cars and electronic payments? How should they present themselves to customers? It became an opportunity for open consultation, listening, learning, kindness and commitment. Four youth, between 14 and 17, washed 10 cars in two hours, earning $215 towards their goal. Happy customers went home in sparkling cars that matched their sparkling spirits.</p></div>
