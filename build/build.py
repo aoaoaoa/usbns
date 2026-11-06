@@ -282,7 +282,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   <div class="epi">
     <blockquote class="uhj"><p>“{esc(ISSUE["epigraph"])}”</p>
     <cite>{esc(ISSUE["epigraph_src"])}</cite></blockquote>
-    <p class="about"><b>About the cover.</b> {esc(ISSUE["cover_note"])} <i>Juliet Bogan</i></p>
+    <p class="about"><b>About the cover.</b> “{esc(ISSUE["cover_note"])}” <i>Juliet Bogan</i></p>
   </div>
 </section>
 {"".join(secs)}
