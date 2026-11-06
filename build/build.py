@@ -249,7 +249,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .voice{{background:var(--band);color:#f7f2ea;margin-top:clamp(48px,8vw,112px)}}
 .voice+.wrap .story{{padding-top:clamp(48px,8vw,112px)}}
 .vin{{max-width:1040px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
-.voice p{{font-family:var(--text);font-style:italic;font-weight:600;font-size:clamp(24px,2.8vw,38px);line-height:1.22;letter-spacing:-.01em;max-width:30ch;margin:0 0 22px;text-wrap:pretty;font-variation-settings:"opsz" 72;position:relative;padding-left:clamp(28px,4vw,56px)}}
+.voice p{{font-family:var(--text);font-style:italic;font-weight:600;font-size:clamp(24px,2.8vw,38px);line-height:1.36;letter-spacing:-.01em;max-width:30ch;margin:0 0 26px;text-wrap:pretty;font-variation-settings:"opsz" 72;position:relative;padding-left:clamp(28px,4vw,56px)}}
 .voice p::before{{content:"\u201C";position:absolute;left:0;top:-.08em;font-family:var(--text);font-style:italic;font-weight:600;font-size:2.4em;line-height:1;opacity:.35}}
 .voice cite{{display:flex;align-items:center;gap:12px;font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:.85;padding-left:clamp(28px,4vw,56px)}}
 .voice cite::before{{content:"";width:28px;height:2px;background:currentColor;opacity:.7}}
