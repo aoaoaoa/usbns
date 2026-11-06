@@ -78,6 +78,37 @@ def chart_html(c):
                 parts.append(f'<rect x="{x}" y="{y+6}" width="{w}" height="22" class="cb" style="opacity:{1 - j*.3}"/><text x="{x+w/2}" y="{y+22}" text-anchor="middle" class="cvin">{v}</text><text x="{x+w/2}" y="{y+40}" text-anchor="middle" class="cn2">{esc(bl)}</text>')
                 x += w + 6
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh+4}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    elif c["kind"] == "timeline":
+        ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
+        X = lambda y: pad + (W - 2*pad) * (y - y0) / (y1 - y0)
+        parts = [f'<line x1="{pad}" y1="30" x2="{W-pad}" y2="30" class="cax"/>']
+        for era in c.get("eras", []):
+            a, b, lab = era; parts.append(f'<rect x="{X(a):.1f}" y="24" width="{X(b)-X(a):.1f}" height="12" class="cera"/><text x="{(X(a)+X(b))/2:.1f}" y="16" text-anchor="middle" class="cn2">{esc(lab)}</text>')
+        rows = []
+        for i, (y, lab) in enumerate(ev):
+            x = X(y); ly = 56 if i % 2 == 0 else 72
+            anc = "start" if x < 40 else ("end" if x > W - 40 else "middle")
+            parts.append(f'<circle cx="{x:.1f}" cy="30" r="4.5" class="cdot"/><line x1="{x:.1f}" y1="35" x2="{x:.1f}" y2="{ly-10}" class="cstem"/><text x="{x - 6 if anc == "start" else x + 6 if anc == "end" else x:.1f}" y="{ly}" text-anchor="{anc}" class="cv">{y}</text>')
+            rows.append(f'<li><b>{y}</b><span>{esc(lab)}</span></li>')
+        for t in c.get("ticks", []):
+            parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
+        svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
+    elif c["kind"] == "ring":
+        import math
+        months = c["months"]; hi = set(c.get("highlight", [])); n = len(months); cx = cy = 210; r0, r1 = 118, 160
+        parts = []
+        for i, (name, mean) in enumerate(months):
+            a0 = -math.pi/2 + 2*math.pi*i/n + .012; a1 = -math.pi/2 + 2*math.pi*(i+1)/n - .012
+            p = lambda r, a: f"{cx + r*math.cos(a):.1f},{cy + r*math.sin(a):.1f}"
+            d = f"M{p(r1,a0)} A{r1},{r1} 0 0 1 {p(r1,a1)} L{p(r0,a1)} A{r0},{r0} 0 0 0 {p(r0,a0)} Z"
+            parts.append(f'<path d="{d}" class="{"cseg on" if name in hi else "cseg"}"><title>{i+1}. {esc(name)}, {esc(mean)}</title></path>')
+            am = (a0 + a1) / 2; tx, ty = cx + 174*math.cos(am), cy + 174*math.sin(am)
+            anchor = "start" if math.cos(am) > .15 else ("end" if math.cos(am) < -.15 else "middle")
+            parts.append(f'<text x="{tx:.1f}" y="{ty+4:.1f}" text-anchor="{anchor}" class="{"cl on" if name in hi else "cl"}">{esc(mean)}</text>')
+            nx, ny = cx + (r0+r1)/2*math.cos(am), cy + (r0+r1)/2*math.sin(am)
+            parts.append(f'<text x="{nx:.1f}" y="{ny+4:.1f}" text-anchor="middle" class="cvin">{i+1}</text>')
+        parts.append(f'<text x="{cx}" y="{cy-6}" text-anchor="middle" class="cbig">19</text><text x="{cx}" y="{cy+18}" text-anchor="middle" class="cn2">months of 19 days</text><text x="{cx}" y="{cy+32}" text-anchor="middle" class="cn2">plus Ayyám-i-Há</text>')
+        svg = f'<svg viewBox="-60 0 540 420" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     return f'<figure class="chart">{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
@@ -146,6 +177,7 @@ def build_tab(member=False):
         fs = "".join(f'<li><b>{esc(n)}</b><i>{esc(m)}</i><span>{esc(d)}</span></li>' for n,m,d in R["feasts"])
         rhythm = dept_open(R, "#8b6a1a") + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
+  {chart_html(R["ring"]) if R.get("ring") else ""}
   <p class="note">{esc(R["note"])}</p>
   <blockquote class="passage prayer"><p>{esc(R["prayer"][0])}</p><cite>{esc(R["prayer"][1])}</cite></blockquote>
 </div></article>'''
@@ -211,6 +243,12 @@ main,.head{{position:relative;z-index:1}}
 @media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* charts */
+.chart .cax{{stroke:var(--rule);stroke-width:2}} .chart .cdot{{fill:var(--accent)}} .chart .cstem{{stroke:var(--rule);stroke-width:1}} .chart .cera{{fill:var(--accent);opacity:.18}}
+.chart .cseg{{fill:var(--rule)}} .chart .cseg.on{{fill:var(--accent)}} .chart .cl.on{{fill:var(--ink);font-weight:600}} .chart .cbig{{font-family:var(--disp);font-weight:800;font-size:44px;fill:var(--ink)}}
+.chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}}
+.chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px}}
+.chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px;font-family:var(--ui);font-size:12.5px;line-height:1.4;color:var(--mute)}} .chart .tl b{{color:var(--ink);font-variant-numeric:tabular-nums}}
+.prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
 .chart .cn{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:8px 0 0}}
@@ -608,6 +646,11 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 @media (max-width:860px){{.plate .img.two{{grid-template-columns:1fr}}}}
+.chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
+.chart .cb,.chart .cdot,.chart .cseg.on{{fill:var(--accent)}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
+.chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
+.figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
 </style>
 <div class="bar"><div class="in"><a class="brand" href="#top">The American Bahá'í</a><nav>{nav}</nav></div></div>
 <main id="top">
@@ -743,6 +786,11 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   .tabs nav a{{padding:14px 12px 0;font-size:14px}}
   .inset.two{{grid-template-columns:1fr}}
 }}
+.chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
+.chart .cb,.chart .cdot,.chart .cseg.on{{fill:var(--accent)}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
+.chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
+.figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
 </style>
 <div class="tabs"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{rail}</nav><span class="ind" aria-hidden="true"></span></div></div>
 <main class="pages" id="top">
