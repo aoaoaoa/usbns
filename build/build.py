@@ -38,6 +38,7 @@ def body_html(blocks):
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
         elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
         elif k == "chart": out.append(chart_html(b[1]))
+        elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "img":
             w = b[3] if len(b) > 3 else None
@@ -142,6 +143,94 @@ def chart_html(c):
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     hint = '<p class="tap">Tap or hover the marks for the story behind each number.</p>' if 'data-pb=' in svg else ""
     return f'<figure class="chart">{title}{svg}{note}{hint}</figure>'
+
+def concept_html(c):
+    """Diagrams for ideas rather than numbers. Every part can open the shared popup."""
+    import math
+    kind = c["form"]; W = 600; P = []
+    arrow = '<defs><marker id="ah{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>'.format(i=id(c) % 100000)
+    mk = f'url(#ah{id(c) % 100000})'
+    def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
+        return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
+    H = 300
+    if kind == "cycle":
+        st = c["steps"]; n = len(st); cx, cy, r = 300, 150, 100; H = 300
+        for i, (lab, story) in enumerate(st):
+            a = -math.pi/2 + 2*math.pi*i/n; b = -math.pi/2 + 2*math.pi*(i+1)/n
+            pa = (cx + r*math.cos(a + .32), cy + r*math.sin(a + .32)); pb = (cx + r*math.cos(b - .32), cy + r*math.sin(b - .32))
+            P.append(f'<path d="M{pa[0]:.1f},{pa[1]:.1f} A{r},{r} 0 0 1 {pb[0]:.1f},{pb[1]:.1f}" class="cline" marker-end="{mk}"/>')
+        for i, (lab, story) in enumerate(st):
+            a = -math.pi/2 + 2*math.pi*i/n; x, y = cx + r*math.cos(a), cy + r*math.sin(a)
+            lx, ly = cx + (r + 26)*math.cos(a), cy + (r + 26)*math.sin(a)
+            anc = "start" if math.cos(a) > .3 else ("end" if math.cos(a) < -.3 else "middle")
+            P.append(f'<g class="hit"{pop(lab, story)}><circle cx="{x:.1f}" cy="{y:.1f}" r="16" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="cdot"/><text x="{lx:.1f}" y="{ly + 5:.1f}" text-anchor="{anc}" class="cv">{esc(lab)}</text></g>')
+        P.append(lines(c.get("center", ""), cx, cy - 4, "cl"))
+    elif kind == "rings":
+        rs = c["rings"]; n = len(rs); cx, cy = 300, 175; step = 160 / n; H = 350
+        for i in range(n - 1, -1, -1):
+            lab, story = rs[i]; R = step * (i + 1)
+            P.append(f'<circle cx="{cx}" cy="{cy}" r="{R:.1f}" class="carea hit" style="opacity:{.95 - i*.17:.2f}"{pop(lab, story)}/>')
+        for i, (lab, story) in enumerate(rs):
+            R0 = step * i; R1 = step * (i + 1); y = cy if i == 0 else cy - (R0 + R1)/2
+            P.append(lines(lab, cx, y + (4 if i == 0 else 5) - (8 if "|" in lab else 0), "cring", lh=15))
+    elif kind == "path":
+        st = c["steps"]; n = len(st); x0, x1 = 70, 530; y = 110 if c.get("bracket") else 50; H = y + 90
+        xs = [x0 + (x1 - x0) * i / (n - 1) for i in range(n)]
+        for i in range(n - 1):
+            P.append(f'<line x1="{xs[i] + 14:.1f}" y1="{y}" x2="{xs[i+1] - 16:.1f}" y2="{y}" class="cline" marker-end="{mk}"/>')
+        for i, s_ in enumerate(st):
+            lab, story, sty = s_[0], s_[1], (s_[2] if len(s_) > 2 else "")
+            shape = f'<rect x="{xs[i]-9:.1f}" y="{y-9}" width="18" height="18" class="csq"/>' if sty == "admin" else f'<circle cx="{xs[i]:.1f}" cy="{y}" r="{11 if sty == "sacred" else 8}" class="{"cdot big" if sty == "sacred" else "cdot"}"/>'
+            P.append(f'<g class="hit"{pop(lab.replace("|", " "), story)}><circle cx="{xs[i]:.1f}" cy="{y}" r="22" class="ghost"/>{shape}{lines(lab, round(xs[i],1), y + 36, "cv" if sty else "cl")}</g>')
+        if c.get("bracket"):
+            a, b, note = c["bracket"]; xa, xb = xs[a], xs[b]
+            P.append(f'<path d="M{xa:.1f},{y-22} L{xa:.1f},{y-40} L{xb:.1f},{y-40} L{xb:.1f},{y-22}" class="cbr"/><text x="{(xa+xb)/2:.1f}" y="{y-48}" text-anchor="middle" class="cv">{esc(note)}</text>')
+    elif kind == "contrast":
+        H = 250
+        for k, panel in enumerate(c["panels"]):
+            title, story, sch = panel; ox = k * 310; cx, cy = ox + 145, 100
+            g = []
+            if sch in ("outside", "inside"):
+                g.append(f'<circle cx="{cx+(20 if sch=="outside" else 0)}" cy="{cy}" r="72" class="carea" style="opacity:.25"/>')
+                pts = [(-30,-30),(20,-40),(40,0),(10,35),(-35,20),(-5,-5)]
+                for dx, dy in pts: g.append(f'<circle cx="{cx+(20 if sch=="outside" else 0)+dx}" cy="{cy+dy}" r="7" class="cdotm"/>')
+                if sch == "outside":
+                    g.append(f'<circle cx="{cx-100}" cy="{cy}" r="9" class="cdot"/><line x1="{cx-88}" y1="{cy}" x2="{cx-58}" y2="{cy}" class="cline" marker-end="{mk}"/>')
+                else:
+                    g.append(f'<circle cx="{cx+28}" cy="{cy+30}" r="9" class="cdot"/>')
+            elif sch == "apart":
+                for dx, dy in [(-70,-20),(0,40),(70,-20)]:
+                    g.append(f'<circle cx="{cx+dx}" cy="{cy+dy}" r="26" class="carea" style="opacity:.55"/>')
+                    g.append(f'<line x1="{cx+dx*0.55:.0f}" y1="{cy+dy*0.55:.0f}" x2="{cx+dx*1.55:.0f}" y2="{cy+dy*1.55+(-14 if dy<0 else 14):.0f}" class="cline" marker-end="{mk}"/>' if False else "")
+                g.append(f'<line x1="{cx-40}" y1="{cy-10}" x2="{cx-12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/><line x1="{cx+40}" y1="{cy-10}" x2="{cx+12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/>')
+            elif sch == "whole":
+                g.append(f'<circle cx="{cx}" cy="{cy}" r="80" class="carea" style="opacity:.25"/>')
+                for dx, dy in [(-34,-18),(0,32),(34,-18)]: g.append(f'<circle cx="{cx+dx}" cy="{cy+dy}" r="30" class="carea" style="opacity:.6"/>')
+            elif sch == "oneway":
+                g.append(f'<rect x="{cx-110}" y="{cy-26}" width="80" height="52" class="carea" style="opacity:.6"/><line x1="{cx-24}" y1="{cy}" x2="{cx+60}" y2="{cy}" class="cline" marker-end="{mk}"/><circle cx="{cx+78}" cy="{cy}" r="10" class="cdot"/>')
+            elif sch == "loop":
+                pts = [(cx + 62*math.cos(t), cy + 62*math.sin(t)) for t in [-math.pi/2, 0, math.pi/2, math.pi]]
+                for i in range(4):
+                    a = pts[i]; b = pts[(i+1) % 4]
+                    g.append(f'<path d="M{a[0]+(b[0]-a[0])*.22:.1f},{a[1]+(b[1]-a[1])*.22:.1f} Q{cx+(a[0]+b[0]-2*cx)*.9:.1f},{cy+(a[1]+b[1]-2*cy)*.9:.1f} {a[0]+(b[0]-a[0])*.78:.1f},{a[1]+(b[1]-a[1])*.78:.1f}" class="cline" marker-end="{mk}"/>')
+                for x, y in pts: g.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="10" class="cdot"/>')
+            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{"".join(g)}{lines(title, cx, 206, "cv")}</g>')
+    elif kind == "spectrum":
+        pts = c["points"]; n = len(pts); x0, x1 = 60, 560; y = 40; H = 120
+        P.append(f'<line x1="{x0}" y1="{y}" x2="{x1}" y2="{y}" class="cline" marker-end="{mk}"/>')
+        for i, (lab, story) in enumerate(pts):
+            x = x0 + (x1 - x0 - 70) * i / (n - 1); on = i == n - 1
+            P.append(f'<g class="hit"{pop(lab.replace("|"," "), story)}><circle cx="{x:.1f}" cy="{y}" r="20" class="ghost"/><circle cx="{x:.1f}" cy="{y}" r="{12 if on else 8}" class="{"cdot" if on else "cdotm"}"/>{lines(lab, round(x,1), y + 36, "cv" if on else "cl")}</g>')
+    elif kind == "strands":
+        st = c["strands"]; n = len(st); xj, yj = 360, 120; H = 240
+        for i, (lab, story) in enumerate(st):
+            y0 = 40 + i * 80
+            P.append(f'<g class="hit"{pop(lab, story)}><path d="M200,{y0} C290,{y0} 300,{yj} {xj},{yj}" class="cstrand"/><path d="M200,{y0} C290,{y0} 300,{yj} {xj},{yj}" class="ghostline"/><circle cx="200" cy="{y0}" r="7" class="cdot"/>{lines(lab, 186, y0 + 5, "cv", "end")}</g>')
+        jl, js = c["joined"]
+        P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
+    svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
+    title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
+    return f'<figure class="chart concept">{title}{svg}{note}<p class="tap">Tap or hover each part for the idea behind it.</p></figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -275,6 +364,12 @@ main,.head{{position:relative;z-index:1}}
 @media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* charts */
+.chart .cline{{fill:none;stroke:var(--mute);stroke-width:1.6}} .chart .carr{{fill:var(--mute)}} .chart .carea{{fill:var(--accent)}} .chart .cdotm{{fill:var(--mute);opacity:.55}}
+.chart .csq{{fill:var(--tabon-white);stroke:var(--accent);stroke-width:2.5}} .chart .cdot.big{{stroke:var(--tabon-white);stroke-width:3}}
+.chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:var(--tabon-white);stroke:var(--rule)}}
+.chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
+.chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5;opacity:.7}} .chart .ghostline{{fill:none;stroke:transparent;stroke-width:22}} .chart .cjoin{{stroke:var(--accent);stroke-width:16;stroke-linecap:round}}
+.chart g.hit:hover .cpanel{{stroke:var(--accent)}} .chart g.hit:hover .cstrand{{opacity:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
 .chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
@@ -283,7 +378,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .tl li.has,.figs div.has{{cursor:pointer}} .chart .tl li.has span{{text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--rule)}}
 .figs div.has b::after{{content:"+";font-size:.45em;vertical-align:super;margin-left:3px;color:var(--accent)}}
 .figs div.has:focus-visible,.chart .tl li.has:focus-visible{{outline:2px solid var(--accent);outline-offset:4px}}
-.chart .tap{{font-family:var(--ui);font-size:11px;letter-spacing:.04em;color:var(--mute);margin:6px 0 0;opacity:.8}}
+.chart .tap{{font-family:var(--ui);font-size:12px;letter-spacing:.04em;color:var(--mute);margin:6px 0 0;opacity:.8}}
 .popup{{position:fixed;z-index:30;max-width:min(340px,calc(100vw - 32px));background:var(--tabon-white);color:var(--ink);border:1px solid var(--rule);border-top:3px solid var(--pa,var(--accent));box-shadow:0 10px 30px rgba(30,25,15,.16);padding:14px 16px 14px;font-family:var(--ui);font-size:14px;line-height:1.5;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}}
 .popup.show{{opacity:1;transform:none;pointer-events:auto}}
 .popup b{{display:block;font-family:var(--disp);font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:0 18px 6px 0}}
@@ -291,18 +386,18 @@ main,.head{{position:relative;z-index:1}}
 .popup button{{position:absolute;top:6px;right:6px;border:0;background:none;font-size:18px;line-height:1;color:var(--mute);cursor:pointer;padding:4px 6px}}
 @media (prefers-reduced-motion:reduce){{.popup{{transition:none}}}}
 .chart .cax{{stroke:var(--rule);stroke-width:2}} .chart .cdot{{fill:var(--accent)}} .chart .cstem{{stroke:var(--rule);stroke-width:1}} .chart .cera{{fill:var(--accent);opacity:.18}}
-.chart .cseg{{fill:var(--rule)}} .chart .cseg.on{{fill:var(--accent)}} .chart .cl.on{{fill:var(--ink);font-weight:600}} .chart .cbig{{font-family:var(--disp);font-weight:800;font-size:44px;fill:var(--ink)}}
+.chart .cseg{{fill:var(--rule)}} .chart .cseg.on{{fill:var(--accent)}} .chart .cl.on{{fill:var(--ink);font-weight:600}} .chart .cbig{{font-family:var(--disp);font-weight:800;font-size:48px;fill:var(--ink)}}
 .chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}}
 .chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px}}
-.chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px;font-family:var(--ui);font-size:12.5px;line-height:1.4;color:var(--mute)}} .chart .tl b{{color:var(--ink);font-variant-numeric:tabular-nums}}
+.chart .tl li{{display:grid;grid-template-columns:3.4em 1fr;gap:10px;font-family:var(--ui);font-size:14px;line-height:1.45;color:var(--mute)}} .chart .tl b{{color:var(--ink);font-variant-numeric:tabular-nums}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
-.chart .ct{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
-.chart .cn{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:8px 0 0}}
+.chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
+.chart .cn{{font-family:var(--ui);font-size:13.5px;color:var(--mute);margin:8px 0 0}}
 .chart svg{{display:block;overflow:visible}}
 .chart .cb{{fill:var(--accent)}} .chart .ctrack{{fill:var(--rule)}} .chart .ctick{{stroke:var(--ink);stroke-width:1.5}}
-.chart .cl{{font-family:var(--ui);font-size:12px;fill:var(--mute)}} .chart .cv{{font-family:var(--disp);font-weight:700;font-size:13px;fill:var(--ink);font-variant-numeric:tabular-nums}}
-.chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}} .chart .cn2{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}}
+.chart .cl{{font-family:var(--ui);font-size:14px;fill:var(--mute)}} .chart .cv{{font-family:var(--disp);font-weight:700;font-size:15.5px;fill:var(--ink);font-variant-numeric:tabular-nums}}
+.chart .cvin{{font-family:var(--disp);font-weight:700;font-size:13.5px;fill:#fff}} .chart .cn2{{font-family:var(--ui);font-size:12px;fill:var(--mute)}}
 /* member-only areas */
 .story.members{{--accent:var(--mem)}}
 .members .margin::before{{content:"Full issue";display:inline-block;font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mem);border:1px solid var(--mem);border-radius:999px;padding:3px 8px;margin-bottom:12px}}
@@ -322,10 +417,10 @@ main,.head{{position:relative;z-index:1}}
 .prose .qs{{margin:0 0 1.4em;padding-left:1.2em}} .prose .qs li{{margin:0 0 .6em;text-wrap:pretty}}
 .prose .kv{{margin:1.2em 0 1.8em;display:grid;grid-template-columns:minmax(10ch,14ch) 1fr;gap:8px 18px;font-size:15.5px;line-height:1.5}}
 .prose .kv dt{{font-family:var(--ui);font-weight:600;font-size:12.5px;letter-spacing:.04em;color:var(--accent);padding-top:2px}} .prose .kv dd{{margin:0}}
-.prose .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}}
+.prose .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px;margin:1.8em 0 2.2em}}
 .prose .figs div{{border-top:3px solid var(--accent);padding-top:10px}}
-.prose .figs b{{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}}
-.prose .figs span{{display:block;font-family:var(--ui);font-size:12.5px;color:var(--mute);margin-top:6px;line-height:1.4}}
+.prose .figs b{{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(36px,3.8vw,52px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}}
+.prose .figs span{{display:block;font-family:var(--ui);font-size:14px;color:var(--mute);margin-top:6px;line-height:1.4}}
 .compilation .qblock{{margin:2.4em 0 0}}
 .compilation h3{{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.02em;text-transform:none;border:0;padding:0;margin:0 0 .8em;color:var(--ink)}}
 .passage{{margin:0 0 1.4em;padding:16px 0 0;border-top:1px solid var(--rule)}}
@@ -716,7 +811,7 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 @media (max-width:860px){{.plate .img.two{{grid-template-columns:1fr}}}}
 .chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
-.chart .cb,.chart .cdot,.chart .cseg.on{{fill:var(--accent)}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline,.chart .cbr{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
 .chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
 .chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
 .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
@@ -856,7 +951,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   .inset.two{{grid-template-columns:1fr}}
 }}
 .chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
-.chart .cb,.chart .cdot,.chart .cseg.on{{fill:var(--accent)}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline,.chart .cbr{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
 .chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
 .chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
 .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
