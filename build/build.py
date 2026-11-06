@@ -1003,15 +1003,17 @@ def standalone(body):
     body = body[:i] + "</head>\n<body>\n" + body[i:]
     return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+            '<link rel="icon" type="image/svg+xml" href="FAVICON">\n'
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
-with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/'))
+with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="FAVICON"', 'href="favicon.svg"'))
+shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
 os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
-with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)))
+with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
-    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/'))
+    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
 for f in os.listdir(os.path.join(OUT, "img")): shutil.copy(os.path.join(OUT, "img", f), os.path.join(SITE, "img", f))
 open(os.path.join(SITE, ".nojekyll"), "w").close()
