@@ -181,7 +181,7 @@ dict(
     title="Communities engage in a common endeavor",
     short="A common endeavor",
     byline=None,
-    art="endeavor-quilt.jpg", art_alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds", art_credit="Quilt, from “A Common Endeavor”",
+    art="endeavor-quilt.webp", art_alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds", art_credit="Quilt, from “A Common Endeavor”",
     pages="12–15",
     body=[
         ("p","In the months since the National Spiritual Assembly shared “A Common Endeavor,” a message laying out the Assembly's vision for the United States, Bahá'ís have been creating opportunities to introduce the message's uplifting and pragmatic content and concepts to their friends and neighbors. Here are glimpses of some of the creative efforts supported by the resources found at acommonendeavor.org."),
