@@ -1,4 +1,11 @@
-import html, os, re, sys
+"""Builds The American Bahá'í arts-issue site from data.py.
+
+Outputs:
+  out/tab.html, out/plates.html, out/reader.html   artifact pages (no html/head/body skeleton)
+  site/                                            GitHub Pages tree: index.html (TAB), alt/plates, alt/reader, img/
+Images are read from out/img/.
+"""
+import html, os, re, shutil, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import ISSUE, VOICES, ARTICLES
 SUB = "A U.S. Bah\u00e1\u2019\u00ed News publication"
@@ -12,7 +19,7 @@ os.makedirs(OUT, exist_ok=True)
 SIDES = '<meta name="claude:viewport-fit-sides" content="cover">'
 GUT = "padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));"
 
-def body_html(blocks, qa_style="dl"):
+def body_html(blocks):
     out = []
     for b in blocks:
         k = b[0]
@@ -33,8 +40,8 @@ def body_html(blocks, qa_style="dl"):
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
 
-# ------------------------------------------------------------------ V1 FOLIO
-def build_folio():
+# ------------------------------------------------------------------ TAB (the published site)
+def build_tab():
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
@@ -77,7 +84,7 @@ def build_folio():
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
 <style>
-/* Layout: one long folio. The cover painting carries a set masthead; an index follows; each feature opens on its art plate and runs in a single measure with a margin column for pull quotes; between features, a colored band carries one passage from the issue's pages on the arts. */
+/* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
   --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea; --bar:#ebe6da; --tabon:#f5f1e8; --barrule:#d2cbbb; --tabon-white:#ffffff;
   --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
@@ -129,7 +136,6 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head nav a .fill{{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--ink);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}}
 .head nav a.on .fill{{width:var(--p,0%)}}
 .head .ind{{position:absolute;bottom:-1px;height:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}}
-.head .pg{{display:none}}
 @media (prefers-reduced-motion:reduce){{.head nav a .fill,.head .ind{{transition:none}}}}
 @media (max-width:900px){{.head .brand small{{display:none}} .head nav{{margin-left:0}} .head nav a{{padding:14px 12px 0;font-size:14px}}}}
 /* cover */
@@ -319,7 +325,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </script>
 '''
 
-# ------------------------------------------------------------------ V2 PLATES
+# ------------------------------------------------------------------ PLATES (alternate, kept under alt/)
 def build_plates():
     chapters = []
     for i, a in enumerate(ARTICLES):
@@ -469,7 +475,7 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 </script>
 '''
 
-# ------------------------------------------------------------------ V3 READER
+# ------------------------------------------------------------------ READER (alternate, kept under alt/)
 def build_reader():
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     arts = []
@@ -511,18 +517,16 @@ html{{scroll-behavior:smooth}}
 body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-size:18px;line-height:1.55}}
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--rail)}}
 .tabs{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--rail);border-bottom:1px solid var(--rule)}}
-.tabs .in{{max-width:1100px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none}}
+.tabs .in{{max-width:1100px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
 .tabs .brand{{font-family:var(--disp);font-weight:700;font-size:17px;letter-spacing:-.02em;color:var(--fg);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
 .tabs .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
 .tabs nav{{display:flex;margin-left:auto}}
-.tabs nav a{{display:flex;align-items:flex-end;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--fg);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
+.tabs nav a{{position:relative;display:flex;align-items:flex-end;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--fg);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
 .tabs nav a span{{padding-bottom:12px}}
 /* motion: the current tab's underline fills as the story is read; a thin dark line slides between tabs. */
 .tabs nav a .fill{{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--fg);opacity:.9;transition:width .4s cubic-bezier(.2,.8,.2,1)}}
-.tabs nav a{{position:relative}}
 .tabs nav a.on .fill{{width:var(--p,0%)}}
 .tabs .ind{{position:absolute;bottom:-1px;height:2px;background:var(--fg);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}}
-.tabs .in{{position:relative}}
 @media (prefers-reduced-motion:reduce){{.tabs nav a .fill,.tabs .ind{{transition:none}}}}
 .tabs nav a.on{{background:var(--tabon)}}
 .tabs nav a:hover,.tabs nav a:focus-visible{{background:var(--tabon)}}
@@ -606,15 +610,14 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
 </script>
 '''
 
-for name, fn in [("folio", build_folio), ("plates", build_plates), ("reader", build_reader)]:
+for name, fn in [("tab", build_tab), ("plates", build_plates), ("reader", build_reader)]:
     with open(os.path.join(OUT, f"{name}.html"), "w") as f: f.write(fn())
-print("ok")
 
 # ---------------------------------------------------------------- GitHub Pages site
 SITE = os.path.join(HERE, "site")
 def standalone(body):
+    """Wrap an artifact page in a full HTML document; image paths become relative to site/img."""
     body = body.replace(SIDES, "").replace('src="img/', 'src="../img/')
-    body = body.replace("</style>\n", "</style>\n</head>\n<body>\n" if False else "</style>\n", 1)
     i = body.rfind("</style>")
     i = body.index("\n", i) + 1
     body = body[:i] + "</head>\n<body>\n" + body[i:]
@@ -623,56 +626,11 @@ def standalone(body):
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
-with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_folio()).replace('src="../img/', 'src="img/'))
+with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/'))
 os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
-import shutil
 for f in os.listdir(os.path.join(OUT, "img")): shutil.copy(os.path.join(OUT, "img", f), os.path.join(SITE, "img", f))
 open(os.path.join(SITE, ".nojekyll"), "w").close()
-LANDING = f'''<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The American Bahá'í</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Public+Sans:wght@400;600&display=swap">
-<style>
-:root{{--paper:#f5f1e8;--ink:#1d1a16;--mute:#6a635a;--rule:#d9d2c4;--accent:#1b5e6b}}
-@media (prefers-color-scheme:dark){{:root{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;color-scheme:dark}}}}
-*{{box-sizing:border-box}}
-body{{margin:0;background:var(--paper);color:var(--ink);font-family:"Libre Caslon Display",Georgia,serif;line-height:1.4}}
-main{{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:clamp(40px,8vw,96px)}}
-.the{{font-size:clamp(18px,2.2vw,26px);margin:0 0 -.2em .1em}}
-h1{{font-weight:400;font-size:clamp(52px,10vw,132px);line-height:.95;letter-spacing:-.015em;margin:0}}
-.sub{{font-style:italic;font-size:clamp(18px,2.2vw,28px);margin:14px 0 0 .1em}}
-.date{{font-family:"Public Sans",Arial,sans-serif;font-size:13px;letter-spacing:.06em;color:var(--mute);margin:28px 0 48px}}
-ol{{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}}
-li{{border-bottom:1px solid var(--rule)}}
-li a{{display:block;padding:28px 0;color:inherit;text-decoration:none;padding-right:24px}}
-li a:hover h2,li a:focus-visible h2{{color:var(--accent)}}
-li a:focus-visible{{outline:2px solid var(--accent);outline-offset:4px}}
-.v{{font-family:"Public Sans",Arial,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}}
-h2{{font-weight:400;font-size:32px;margin:8px 0 10px;letter-spacing:-.01em}}
-li p{{margin:0;font-family:"Public Sans",Arial,sans-serif;font-size:14px;line-height:1.55;color:var(--mute);max-width:40ch}}
-footer{{margin-top:48px;font-family:"Public Sans",Arial,sans-serif;font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6}}
-</style>
-</head>
-<body>
-<main>
-<p class="the">The</p>
-<h1>American Bahá'í</h1>
-<p class="sub">{SUB}</p>
-<p class="date">{esc(ISSUE["date"])} · Cover painting by {esc(ISSUE["cover_artist"])}</p>
-<ol>
-<li><a href="folio/"><span class="v">Version one</span><h2>Folio</h2><p>The issue as one long scroll: masthead over the painting, an index, six features on their art plates, quotation bands between them.</p></a></li>
-<li><a href="plates/"><span class="v">Version two</span><h2>Plates</h2><p>A dark gallery: each feature's illustration hung as a numbered plate, headlines in Bodoni italic, text in one lit column.</p></a></li>
-<li><a href="reader/"><span class="v">Version three</span><h2>Reader</h2><p>A reading app: a color-tabbed rail on the left, grotesque headlines and book-weight serif on the right.</p></a></li>
-</ol>
-<footer>{esc(ISSUE["publisher"])}</footer>
-</main>
-</body>
-</html>
-'''
-print("site ok")
+print("built out/ and site/")

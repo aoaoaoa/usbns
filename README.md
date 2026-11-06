@@ -5,6 +5,7 @@ TAB online: the October/November/December 2026 issue of The American Bahá'í, a
 - `index.html` the site.
 - `alt/plates/`, `alt/reader/` two earlier presentations, kept for reference.
 - `img/` art and photographs.
-- `build/` the transcribed texts (`data.py`) and the generator (`build.py`; it expects the cropped images in `out/img/` and writes `site/`).
+- `build/data.py` the transcribed texts, captions and sources. The next issue is a new `data.py`.
+- `build/build.py` the generator. Run `python3 build.py` beside a `data.py` and an `out/img/` folder of images; it writes `out/` (artifact pages) and `site/` (this tree).
 
 Published with GitHub Pages from `main` via `.github/workflows/pages.yml`. Contents © 2026 National Spiritual Assembly of the Bahá'ís of the United States.
