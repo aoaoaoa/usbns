@@ -48,10 +48,10 @@ def build_folio():
         else:
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
-        by = f'<p class="by">{esc(a["byline"])}</p>' if a.get("byline") else ""
+        by = (f'<p class="by{" nob" if a["byline"].startswith(("Adapted","Story")) else ""}">{esc(a["byline"])}</p>') if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
         pal = {"gregory":("#f26b2b","#2448c8","#f05a7e","#f3c623"),"newyorkers":("#2448c8","#f05a7e","#f3c623","#5f8f3a"),"twoartists":("#b07a4a","#e9a21f","#2f6a4a","#f26b2b"),"abs":("#c9462c","#1b5e6b","#e9a21f","#2448c8"),"endeavor":("#1b5e6b","#e9a21f","#9ec3cc","#f26b2b"),"comic":("#f3c623","#2448c8","#f26b2b","#5f8f3a")}[a["slug"]]
-        torn = f'<div class="torn" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
+        torn = f'<div class="torn" data-v="{i % 6}" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
         secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead">{torn}
@@ -70,7 +70,7 @@ def build_folio():
             secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
     head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
-    return f'''<title>{esc(ISSUE["title"])} Folio</title>
+    return f'''<title>{esc(ISSUE["title"])}</title>
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
 <style>
@@ -171,15 +171,41 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .torn i:nth-child(2){{right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}}
 .torn i:nth-child(3){{right:0;bottom:-4%;width:26%;height:46%;background:var(--c);clip-path:polygon(10% 0,100% 10%,90% 100%,0 86%);animation-delay:-14s}}
 .torn i:nth-child(4){{right:48%;top:0;width:16%;aspect-ratio:1;height:auto;background:var(--d);border-radius:50%;animation-duration:16s}}
+/* 1: tall strip and two discs */
+.torn[data-v="1"] i:nth-child(1){{right:14%;top:-14%;width:18%;height:120%;clip-path:polygon(0 2%,100% 0,92% 100%,8% 96%)}}
+.torn[data-v="1"] i:nth-child(2){{right:36%;top:36%;width:30%;aspect-ratio:1;height:auto;clip-path:none;border-radius:50%}}
+.torn[data-v="1"] i:nth-child(3){{right:-4%;top:10%;width:22%;height:40%;clip-path:polygon(0 0,100% 12%,86% 100%,6% 80%)}}
+.torn[data-v="1"] i:nth-child(4){{right:54%;top:-4%;width:10%}}
+/* 2: three horizontal tears */
+.torn[data-v="2"] i:nth-child(1){{right:0;top:4%;width:58%;height:26%;clip-path:polygon(0 20%,100% 0,98% 90%,4% 100%)}}
+.torn[data-v="2"] i:nth-child(2){{right:10%;top:38%;width:46%;height:24%;clip-path:polygon(2% 0,100% 14%,94% 100%,0 86%)}}
+.torn[data-v="2"] i:nth-child(3){{right:4%;top:70%;width:52%;height:24%;clip-path:polygon(0 0,96% 8%,100% 100%,6% 90%)}}
+.torn[data-v="2"] i:nth-child(4){{right:60%;top:50%;width:12%}}
+/* 3: one large disc, a wedge */
+.torn[data-v="3"] i:nth-child(1){{right:2%;top:-10%;width:50%;aspect-ratio:1;height:auto;clip-path:none;border-radius:50%}}
+.torn[data-v="3"] i:nth-child(2){{right:40%;top:50%;width:34%;height:50%;clip-path:polygon(0 100%,100% 0,100% 100%)}}
+.torn[data-v="3"] i:nth-child(3){{right:-2%;bottom:0;width:20%;height:34%;clip-path:polygon(10% 0,100% 10%,90% 100%,0 86%)}}
+.torn[data-v="3"] i:nth-child(4){{display:none}}
+/* 4: stacked squares, offset */
+.torn[data-v="4"] i:nth-child(1){{right:8%;top:0;width:30%;aspect-ratio:1;height:auto;clip-path:polygon(2% 4%,100% 0,96% 100%,0 94%)}}
+.torn[data-v="4"] i:nth-child(2){{right:24%;top:28%;width:30%;aspect-ratio:1;height:auto;clip-path:polygon(0 0,98% 6%,100% 96%,4% 100%)}}
+.torn[data-v="4"] i:nth-child(3){{right:0;top:52%;width:30%;aspect-ratio:1;height:auto;clip-path:polygon(4% 0,100% 2%,94% 100%,0 96%)}}
+.torn[data-v="4"] i:nth-child(4){{right:56%;top:10%;width:10%}}
+/* 5: a sun and rays */
+.torn[data-v="5"] i:nth-child(1){{right:20%;top:6%;width:34%;aspect-ratio:1;height:auto;clip-path:none;border-radius:50%}}
+.torn[data-v="5"] i:nth-child(2){{right:0;top:-10%;width:14%;height:120%;clip-path:polygon(40% 0,60% 0,100% 100%,0 100%)}}
+.torn[data-v="5"] i:nth-child(3){{right:50%;top:40%;width:26%;height:50%;clip-path:polygon(0 100%,50% 0,100% 100%)}}
+.torn[data-v="5"] i:nth-child(4){{display:none}}
 @keyframes settle{{from{{transform:translate(0,0) rotate(0)}}to{{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}}}
-.shead h2 span{{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}}
-.shead h2 span.sp{{width:.22em}}
-.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
+.shead h2 .w{{display:inline-block;white-space:nowrap}}
+.shead h2 .w span{{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}}
+.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
 .dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
 .margin p{{margin:0}}
 .kicker{{color:var(--accent);font-weight:600;margin-bottom:10px!important}}
 .by::before{{content:"By ";}}
+.by.nob::before{{content:""}}
 .pp{{margin-top:10px!important;font-variant-numeric:tabular-nums}}
 .prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:18.5px;line-height:1.62;font-variation-settings:"opsz" 18}}
 .prose>*{{grid-column:2;min-width:0}}
@@ -275,8 +301,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
   [].slice.call(document.querySelectorAll('.shead h2.lean')).forEach(function(h){{
     var t=h.textContent; h.textContent='';
-    t.split('').forEach(function(ch){{var s=document.createElement('span');if(ch===' '){{s.className='sp';s.innerHTML='&nbsp;'}}else s.textContent=ch;h.appendChild(s);}});
-    var spans=[].slice.call(h.children);
+    t.split(' ').forEach(function(word,i){{if(i)h.appendChild(document.createTextNode(' '));var w=document.createElement('span');w.className='w';word.split('').forEach(function(ch){{var s=document.createElement('span');s.textContent=ch;w.appendChild(s);}});h.appendChild(w);}});
+    var spans=[].slice.call(h.querySelectorAll('.w span'));
     h.addEventListener('mousemove',function(e){{spans.forEach(function(s){{var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/160));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-3)+'px)';}});}});
     h.addEventListener('mouseleave',function(){{spans.forEach(function(s){{s.style.transform=''}});}});
   }});
@@ -587,9 +613,11 @@ def standalone(body):
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
-for d, fn in [("folio", build_folio), ("plates", build_plates), ("reader", build_reader)]:
+os.makedirs(SITE, exist_ok=True)
+with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_folio()).replace('src="../img/', 'src="img/'))
+for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
-    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()))
+    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/'))
 os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
 import shutil
 for f in os.listdir(os.path.join(OUT, "img")): shutil.copy(os.path.join(OUT, "img", f), os.path.join(SITE, "img", f))
@@ -638,5 +666,4 @@ footer{{margin-top:48px;font-family:"Public Sans",Arial,sans-serif;font-size:13p
 </body>
 </html>
 '''
-with open(os.path.join(SITE, "index.html"), "w") as f: f.write(LANDING)
 print("site ok")
