@@ -165,7 +165,26 @@ def concept_html(c):
     def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
         return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
     H = 300
-    if kind == "cycle":
+    if kind == "spiral":
+        # learning as a widening spiral: no arrows; the line thickens as it grows, returning to its start one turn higher
+        st = c["steps"]; W = 760; cx, cy = 380, 236; r0, r1 = 10, 170; T = 3 * 2 * math.pi; N = 360
+        rad = lambda t: r0 + (r1 - r0) * (t / T) ** 1.15
+        pt = lambda t, rr: (cx + rr * math.sin(t), cy - rr * math.cos(t))
+        pts = [pt(T * k / N, rad(T * k / N)) for k in range(N + 1)]
+        for k in range(N):
+            f = k / N
+            P.append(f'<line x1="{pts[k][0]:.1f}" y1="{pts[k][1]:.1f}" x2="{pts[k+1][0]:.1f}" y2="{pts[k+1][1]:.1f}" class="csp" style="stroke-width:{.8 + 13*f**2:.2f};stroke:color-mix(in oklab,var(--accent) {12 + 88*f**1.3:.0f}%,var(--paper))"/>')
+        d = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+        P.append(f'<path id="sp{id(c)%100000}" d="{d}" fill="none" stroke="none"/><circle r="6.5" class="ctrav"><animateMotion dur="12s" repeatCount="indefinite"><mpath href="#sp{id(c)%100000}"/></animateMotion></circle>')
+        place = [(0, "middle"), (math.pi/2, "start"), (math.pi, "middle"), (3*math.pi/2, "end")]
+        for i, (lab, story) in enumerate(st):
+            a, anc = place[i % 4]; t = T if a == 0 else 2 * 2 * math.pi + a; x, y = pt(a, rad(t) + (22 if a == 0 else 30))
+            if anc == "middle" and a == 0: y -= 4
+            if anc == "middle" and a > 0: y += 42
+            if anc != "middle": y += 13
+            P.append(f'<g class="hit"{pop(lab, story)}><text x="{x:.1f}" y="{y - 40:.1f}" text-anchor="{anc}" class="csn">0{i+1}</text><text x="{x:.1f}" y="{y:.1f}" text-anchor="{anc}" class="csw">{esc(lab)}</text></g>')
+        H = 450
+    elif kind == "cycle":
         st = c["steps"]; n = len(st); bold = c.get("bold")
         cx, cy, r = (300, 190, 128) if bold else (300, 150, 100); H = 380 if bold else 300
         gap = .26 if bold else .32
@@ -245,7 +264,7 @@ def concept_html(c):
         P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
+    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}{" spiral" if kind == "spiral" else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -431,7 +450,14 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
-.chart .carrb{{fill:var(--accent)}} .chart.bold .ct{{font-size:clamp(17px,1.6vw,20px);line-height:1.35;max-width:40ch;letter-spacing:.01em}}
+.chart .carrb{{fill:var(--accent)}}
+.chart .csp{{stroke-linecap:round}} .chart .ctrav{{fill:var(--accent);stroke:var(--paper);stroke-width:3}}
+.chart text.csw{{font-family:var(--disp);font-weight:800;font-size:40px;letter-spacing:-.045em;fill:var(--ink)}}
+.chart text.csn{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.18em;fill:var(--accent)}}
+.chart text.csc{{font-family:var(--text);font-style:italic;font-size:19px;fill:var(--mute)}}
+.chart .hit:hover text.csw{{fill:var(--accent)}}
+.chart.spiral .ct{{font-family:var(--disp);font-weight:800;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.025em;max-width:24ch;margin-bottom:22px}} .chart.spiral .cn{{margin-top:22px}}
+@media (prefers-reduced-motion:reduce){{.chart .ctrav{{display:none}}}} .chart.bold .ct{{font-size:clamp(17px,1.6vw,20px);line-height:1.35;max-width:40ch;letter-spacing:.01em}}
 .chart .cline.cbold{{stroke:var(--accent);stroke-width:5;opacity:.85}} .chart text.cvbig{{font-size:25px;font-weight:800;letter-spacing:-.01em}}
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
 .chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
