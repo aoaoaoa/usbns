@@ -151,14 +151,14 @@ def build_tab(member=False):
         books = dept_open(B, "#8a3a1e") + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h4>{esc(n["title"])}</h4><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = f'<h2 class="reg members" id="members">For members<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
+        depts = f'<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
         lead = ""
         D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
-        dindex = '<h2 style="margin-top:36px;color:var(--mem)">For members</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
+        dindex = '<h2 style="margin-top:36px;color:var(--mem)">The full issue</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
         dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
-    title = esc(ISSUE["title"]) + (" Member Edition" if member else "")
+    title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
@@ -212,12 +212,12 @@ main,.head{{position:relative;z-index:1}}
 .chart .cvin{{font-family:var(--disp);font-weight:700;font-size:12px;fill:#fff}} .chart .cn2{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}}
 /* member-only areas */
 .story.members{{--accent:var(--mem)}}
-.members .margin::before{{content:"Members";display:inline-block;font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mem);border:1px solid var(--mem);border-radius:999px;padding:3px 8px;margin-bottom:12px}}
+.members .margin::before{{content:"Full issue";display:inline-block;font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--mem);border:1px solid var(--mem);border-radius:999px;padding:3px 8px;margin-bottom:12px}}
 .reg.members{{border-top-color:var(--mem);color:var(--mem)}}
 .reg.members small{{display:block;font-family:var(--ui);font-weight:400;font-size:14px;letter-spacing:.02em;color:var(--mute);margin-top:8px}}
 .head nav a.mem{{background:color-mix(in oklab,var(--mem) 10%,var(--bar))}}
 .head nav a.mem.on{{background:color-mix(in oklab,var(--mem) 16%,var(--tabon))}}
-.index.mem a .t::after{{content:"Members";font-family:var(--ui);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mem);margin-left:10px;vertical-align:middle}}
+.index.mem a .t::after{{content:"Full issue";font-family:var(--ui);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mem);margin-left:10px;vertical-align:middle}}
 /* departments and letter */
 .kicker-top{{font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}}
 .reg{{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:clamp(34px,5vw,64px);letter-spacing:-.035em;margin:clamp(64px,10vw,140px) 0 0;padding-top:28px;border-top:3px solid var(--ink)}}
@@ -424,8 +424,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
-    <p class="sub">{SUB}{" · Member edition" if member else ""}</p>
-    <div class="line"><span>{esc(ISSUE["date"])}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Public edition</a></span>' if member else ''}</div>
+    <p class="sub">{SUB}{" · Full edition" if member else " · Curated edition"}</p>
+    <div class="line"><span>{esc(ISSUE["date"])}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Curated edition</a></span>' if member else '<span><a href="member/">Full edition</a></span>'}</div>
   </div>
   <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
