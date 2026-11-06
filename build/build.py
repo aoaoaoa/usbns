@@ -36,7 +36,8 @@ def build_folio():
             if a["slug"] == "comic":
                 art = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
             else:
-                art = f'''<figure class="plate"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
+                cls = "plate bare" if a.get("art_transparent") else "plate"
+                art = f'''<figure class="{cls}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
         else:
             art = '<div class="numeral" aria-hidden="true">50</div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -94,6 +95,9 @@ body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
 .story{{padding-block:clamp(48px,8vw,112px) 0}}
 .plate{{margin:0 0 clamp(28px,4vw,48px);background:var(--cream);border:1px solid var(--rule)}}
 .plate img{{display:block;width:100%;height:auto;max-height:78vh;object-fit:cover}}
+.plate.bare{{background:transparent;border:0}}
+.plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
+.plate.bare figcaption{{padding-left:0}}
 .plate.comic{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)}}
 .plate.comic img{{max-height:none;background:#fff}}
 .plate.comic figcaption{{grid-column:1/-1;background:var(--cream)}}
@@ -170,7 +174,7 @@ def build_plates():
             if a["slug"] == "comic":
                 plate = f'<div class="img two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"></div>'
             else:
-                plate = f'<div class="img"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
+                plate = f'<div class="img{" bare" if a.get("art_transparent") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
         else:
             plate = '<div class="img type"><span>50</span></div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -228,6 +232,8 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate{{background:var(--card);border:1px solid var(--rule);padding:clamp(10px,1.5vw,20px)}}
 .plate .img{{background:#000;display:grid;place-items:center}}
 .plate .img img{{display:block;width:100%;height:auto;max-height:80vh;object-fit:contain}}
+.plate .img.bare{{background:var(--card);padding:clamp(16px,3vw,48px)}}
+.plate .img.bare img{{max-width:1100px}}
 .plate .img.two{{grid-template-columns:1fr 1fr;gap:2px;background:var(--rule)}}
 .plate .img.two img{{max-height:none;background:#fff}}
 .plate .img.type{{min-height:40vh}}
@@ -283,7 +289,7 @@ def build_reader():
             if a["slug"] == "comic":
                 art = f'<figure class="inset two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
             else:
-                art = f'<figure class="inset"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
+                art = f'<figure class="inset{" bare" if a.get("art_transparent") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
         else:
             art = ""
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -342,6 +348,7 @@ body{{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font
 .meta{{display:flex;gap:20px;flex-wrap:wrap;font-family:var(--disp);font-size:13px;color:var(--mute);margin:0 0 32px}}
 .inset{{margin:0 0 clamp(28px,4vw,48px);max-width:860px}}
 .inset img{{display:block;width:100%;height:auto;border-radius:4px;border:1px solid var(--rule)}}
+.inset.bare img{{border:0;border-radius:0}}
 .inset.two{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
 .inset figcaption{{grid-column:1/-1;font-family:var(--disp);font-size:12px;color:var(--mute);margin-top:8px}}
 .prose{{max-width:64ch;font-size:18.5px;line-height:1.62;font-variation-settings:"opsz" 18}}
