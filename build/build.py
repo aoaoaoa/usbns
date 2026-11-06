@@ -67,12 +67,12 @@ def build_folio():
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Folio</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Public+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
 <style>
 /* Layout: one long folio. The cover painting carries a set masthead; an index follows; each feature opens on its art plate and runs in a single measure with a margin column for pull quotes; between features, a colored band carries one passage from the issue's pages on the arts. */
 :root{{
   --paper:#f5f1e8; --ink:#1d1a16; --mute:#6a635a; --rule:#d9d2c4; --accent:#1b5e6b; --cream:#f7f2ea;
-  --disp:"Libre Caslon Display",Georgia,serif; --text:"Libre Caslon Text",Georgia,serif; --ui:"Public Sans","Helvetica Neue",Arial,sans-serif;
+  --disp:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --text:"Literata",Georgia,serif; --ui:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
 }}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;color-scheme:dark}}}}
 :root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;color-scheme:dark}}
@@ -84,18 +84,18 @@ body{{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--paper) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}}
 .head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:baseline;gap:32px;min-height:48px;font-family:var(--disp)}}
-.head .brand{{font-size:19px;color:var(--ink);text-decoration:none;white-space:nowrap;margin-right:auto}}
+.head .brand{{font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;margin-right:auto}}
 .head nav{{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;padding:10px 0}}
-.head nav a{{font-style:italic;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px}}
+.head nav a{{font-family:var(--text);font-style:italic;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:1px solid transparent;padding-bottom:2px}}
 .head nav a.on{{border-bottom-color:var(--ink)}}
 .head nav a:hover,.head nav a:focus-visible{{color:var(--accent)}}
 .head .pg{{font-family:var(--ui);font-size:11px;letter-spacing:.1em;color:var(--mute);margin-left:6px;font-style:normal}}
 @media (max-width:700px){{.head .brand{{display:none}} .head nav{{gap:18px}} .head .pg{{display:none}}}}
 /* cover */
 .cover{{padding-block:clamp(28px,5vw,64px) 0}}
-.cover .mast .the{{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);margin:0 0 -.2em .1em}}
-.cover h1{{font-family:var(--disp);font-size:clamp(56px,11vw,150px);line-height:.95;margin:0;letter-spacing:-.015em;font-weight:400}}
-.cover .sub{{font-family:var(--disp);font-size:clamp(18px,2.2vw,28px);margin:14px 0 0 .1em;font-style:italic}}
+.cover .mast .the{{font-family:var(--disp);font-weight:500;font-size:clamp(18px,2.2vw,26px);margin:0 0 -.1em .05em}}
+.cover h1{{font-family:var(--disp);font-size:clamp(56px,11vw,150px);line-height:.9;margin:0;letter-spacing:-.04em;font-weight:800;font-variation-settings:"opsz" 96}}
+.cover .sub{{font-family:var(--text);font-size:clamp(18px,2.2vw,28px);margin:14px 0 0 .05em;font-style:italic;font-weight:300}}
 .cover .line{{display:flex;flex-wrap:wrap;gap:8px 32px;margin-top:24px;font-family:var(--ui);font-size:13px;letter-spacing:.06em;color:var(--mute)}}
 .painting{{margin:clamp(28px,4vw,48px) auto 0;width:fit-content;max-width:100%;border:1px solid var(--rule);background:var(--cream);padding:clamp(10px,1.4vw,18px)}}
 .painting .mat{{border:1px solid var(--rule)}}
@@ -103,12 +103,12 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .painting figcaption{{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:12px 2px 0}}
 /* front matter */
 .front{{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:48px clamp(32px,6vw,96px);padding-block:clamp(40px,7vw,96px);border-bottom:1px solid var(--rule)}}
-.front h2{{font-family:var(--disp);font-size:clamp(32px,4vw,52px);font-weight:400;margin:0 0 20px;letter-spacing:-.01em}}
+.front h2{{font-family:var(--disp);font-size:clamp(32px,4vw,52px);font-weight:800;margin:0 0 20px;letter-spacing:-.03em}}
 .index{{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}}
-.index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--disp);font-style:italic;font-size:22px;line-height:1.25}}
+.index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:22px;line-height:1.25;font-weight:300}}
 .index a:hover .t,.index a:focus-visible .t{{color:var(--accent)}}
 .index .pg{{font-family:var(--ui);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.epi p{{font-family:var(--disp);font-size:clamp(22px,2.4vw,30px);line-height:1.3;margin:0 0 12px;text-wrap:pretty}}
+.epi p{{font-family:var(--text);font-style:italic;font-weight:300;font-size:clamp(22px,2.4vw,30px);line-height:1.3;margin:0 0 12px;text-wrap:pretty}}
 .epi cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}}
 .about{{margin-top:36px;color:var(--mute);font-size:16px}}
 .about b{{color:var(--ink);font-weight:700}}
@@ -123,26 +123,26 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate.comic img{{max-height:none;background:#fff}}
 .plate.comic figcaption{{grid-column:1/-1;background:var(--cream)}}
 .plate figcaption{{font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:10px 14px}}
-.numeral{{font-family:var(--disp);font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.04em}}
+.numeral{{font-family:var(--disp);font-weight:800;font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.06em}}
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,66ch) minmax(0,1fr);column-gap:clamp(24px,4vw,64px)}}
 .story>.plate,.story>.numeral{{grid-column:1/-1}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px)}}
-.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,110px);line-height:.95;font-weight:400;letter-spacing:-.025em;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
-.dek{{font-size:clamp(20px,2vw,28px);font-style:italic;margin:0;color:var(--mute);max-width:30ch}}
+.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
+.dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
 .margin p{{margin:0}}
 .kicker{{color:var(--accent);font-weight:600;margin-bottom:10px!important}}
 .by::before{{content:"By ";}}
 .pp{{margin-top:10px!important;font-variant-numeric:tabular-nums}}
-.prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:19px;line-height:1.62}}
+.prose{{grid-column:1/-1;display:grid;grid-template-columns:subgrid;column-gap:inherit;font-size:18.5px;line-height:1.62;font-variation-settings:"opsz" 18}}
 .prose>*{{grid-column:2;min-width:0}}
 .prose p{{margin:0 0 1.25em;text-wrap:pretty}}
 .prose p.first{{font-size:1.14em;line-height:1.5}}
-.prose p.first::first-letter{{font-family:var(--disp);font-size:4.4em;float:left;line-height:.78;padding:.08em .1em 0 0;color:var(--accent)}}
+.prose p.first::first-letter{{font-family:var(--disp);font-weight:700;font-size:4.2em;float:left;line-height:.8;padding:.06em .1em 0 0;color:var(--accent)}}
 .prose h3{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:3.2em 0 1em;color:var(--accent);padding-top:1.2em;border-top:1px solid var(--rule)}}
 .prose .pull{{grid-column:1;grid-row:span 2;margin:.4em 0 2em;padding:0 0 0 18px;border-left:3px solid var(--accent);align-self:start}}
-.prose .pull p{{font-family:var(--disp);font-size:clamp(20px,1.9vw,27px);line-height:1.25;margin:0 0 10px}}
+.prose .pull p{{font-family:var(--disp);font-weight:500;font-size:clamp(20px,1.9vw,26px);line-height:1.22;letter-spacing:-.015em;margin:0 0 10px}}
 .prose .pull cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}}
 .prose .photo{{grid-column:1/-1;margin:2.4em 0;display:grid;grid-template-columns:subgrid;column-gap:inherit;align-items:end}}
 .prose .photo>img{{grid-column:1/-1}}
@@ -156,13 +156,13 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo img{{display:block;width:100%;height:auto;border:1px solid var(--rule)}}
 .prose .photo figcaption{{font-family:var(--ui);font-size:12.5px;letter-spacing:.02em;color:var(--mute);margin-top:8px;line-height:1.5}}
 .prose .note{{font-family:var(--ui);font-size:15px;color:var(--mute);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 0;margin:2em 0}}
-.prose .qa{{font-weight:700;margin-top:1.8em}}
+.prose .qa{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.01em;margin-top:1.8em}}
 .prose .ans b{{font-family:var(--ui);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:.4em}}
 /* voices */
 .voice{{background:var(--band);color:#f7f2ea;margin-top:clamp(48px,8vw,112px)}}
 .voice+.wrap .story{{padding-top:clamp(48px,8vw,112px)}}
 .vin{{max-width:1180px;margin:0 auto;{GUT}padding-block:clamp(40px,6vw,80px)}}
-.voice p{{font-family:var(--disp);font-size:clamp(22px,2.6vw,34px);line-height:1.3;max-width:34ch;margin:0 0 18px;text-wrap:pretty}}
+.voice p{{font-family:var(--text);font-style:italic;font-weight:300;font-size:clamp(22px,2.6vw,34px);line-height:1.3;max-width:34ch;margin:0 0 18px;text-wrap:pretty}}
 .voice cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}}
 .colophon{{padding-block:clamp(48px,8vw,96px);font-family:var(--ui);font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6;border-top:1px solid var(--rule);margin-top:clamp(48px,8vw,112px)}}
 a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
