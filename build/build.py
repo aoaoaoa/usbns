@@ -30,6 +30,11 @@ def body_html(blocks):
         elif k == "qa": out.append(f'<p class="qa">{esc(b[1])}</p>')
         elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {qesc(b[2])}</p>')
         elif k == "pair": out.append('<figure class="photo pair">' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in b[1:]) + '</figure>')
+        elif k == "ext": out.append(f'<blockquote class="ext"><p>{qesc(b[1])}</p></blockquote>')
+        elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
+        elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
+        elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
+        elif k == "figures": out.append('<div class="figs">' + "".join(f'<div><b>{esc(x)}</b><span>{esc(y)}</span></div>' for x,y in b[1]) + "</div>")
         elif k == "img":
             w = b[3] if len(b) > 3 else None
             cls = "photo small" if w else "photo"
@@ -41,7 +46,7 @@ def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
 
 # ------------------------------------------------------------------ TAB (the published site)
-def build_tab():
+def build_tab(member=False):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
@@ -80,7 +85,45 @@ def build_tab():
             secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
     head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
-    return f'''<title>{esc(ISSUE["title"])}</title>
+    lead = ""; depts = ""; dindex = ""; dhead = ""
+    if member:
+        from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
+        L = LETTER
+        lead = f'''<article class="story letter" id="{L["slug"]}" style="--accent:#1b5e6b">
+  <header class="shead"><p class="kicker-top">{esc(L["kicker"])}</p><h2>{esc(L["title"])}</h2><p class="dek">{esc(L["dek"])}</p></header>
+  <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">Pages {L["pages"]}</p></aside>
+  <div class="prose"><p class="salute">{esc(L["salutation"])}</p>{first_para_dropcap(body_html(L["body"]))}<p class="sign">{esc(L["closing"][0])}<br><b>{esc(L["closing"][1])}</b></p></div>
+</article>'''
+        def dept_open(d, tint):
+            dek = f'<p class="dek">{esc(d["dek"])}</p>' if d.get("dek") else ""
+            return f'''<article class="story dept" id="{d["slug"]}" style="--accent:{tint}">
+  <header class="shead"><p class="kicker-top">{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>{dek}</header>
+  <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">Pages {d["pages"]}</p></aside>'''
+        huq = dept_open(HUQUQ, "#3b3f7a") + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
+        qs = "".join(f'<section class="qblock"><h3>{esc(q)}</h3>' + "".join(f'<blockquote class="passage"><p>{esc(t)}</p><cite>{esc(c)}</cite></blockquote>' for t,c in items) + '</section>' for q,items in ABIDING["questions"])
+        abide = dept_open(ABIDING, "#5c2a4e") + f'''<div class="prose compilation"><blockquote class="passage lead"><p>{esc(ABIDING["epigraph"][0])}</p><cite>{esc(ABIDING["epigraph"][1])}</cite></blockquote>{qs}</div></article>'''
+        fund = dept_open(FUND, "#2f5d3a") + f'<div class="prose">{first_para_dropcap(body_html(FUND["body"]))}</div></article>'
+        R = RHYTHM
+        hd = "".join(f'<li><b>{esc(n)}</b><span>{esc(w)}</span></li>' for n,w in R["holydays"])
+        fs = "".join(f'<li><b>{esc(n)}</b><i>{esc(m)}</i><span>{esc(d)}</span></li>' for n,m,d in R["feasts"])
+        rhythm = dept_open(R, "#8b6a1a") + f'''<div class="prose calendar">
+  <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
+  <p class="note">{esc(R["note"])}</p>
+  <blockquote class="passage prayer"><p>{esc(R["prayer"][0])}</p><cite>{esc(R["prayer"][1])}</cite></blockquote>
+</div></article>'''
+        B = BOOKS
+        bk = "".join(f'<li><h4>{esc(t)}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+"</p>") if price else ""}</li>' for t,sub,desc,price in B["items"])
+        books = dept_open(B, "#8a3a1e") + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
+        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h4>{esc(n["title"])}</h4><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
+        notices = f'''<article class="story dept" id="notices" style="--accent:#1b5e6b"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
+        depts = f'<h2 class="reg" id="departments">Departments</h2>' + huq + abide + fund + rhythm + books + notices
+        D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
+        dindex = '<h2 style="margin-top:36px">Departments</h2><ol class="index">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
+        shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
+        dhead = f'<a href="#letter" style="--tint:#1b5e6b"><span>Letter</span><i class="fill"></i></a>' + "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#departments" class="more" style="--tint:#8a8378"><span>Departments</span><i class="fill"></i></a>'
+        head = dhead
+    title = esc(ISSUE["title"]) + (" Member Edition" if member else "")
+    return f'''<title>{title}</title>
 {SIDES}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&display=swap">
 <style>
@@ -123,6 +166,57 @@ main,.head{{position:relative;z-index:1}}
 .story>.blooms{{position:absolute;z-index:0}}
 @media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.torn i{{transition:none}}}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
+/* departments and letter */
+.kicker-top{{font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}}
+.reg{{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:clamp(34px,5vw,64px);letter-spacing:-.035em;margin:clamp(64px,10vw,140px) 0 0;padding-top:28px;border-top:3px solid var(--ink)}}
+.letter .shead h2{{font-size:clamp(40px,5.6vw,78px);max-width:18ch}}
+.prose .salute{{font-style:italic;margin-bottom:1.2em}}
+.prose .sign{{margin-top:2em;font-style:italic}} .prose .sign b{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent)}}
+.prose .ext{{margin:1.4em 0 1.6em;padding:0 0 0 20px;border-left:2px solid var(--rule);font-size:.94em}}
+.prose .ext p{{margin:0}} .prose .ext2{{margin-left:20px}}
+.prose .qs{{margin:0 0 1.4em;padding-left:1.2em}} .prose .qs li{{margin:0 0 .6em;text-wrap:pretty}}
+.prose .kv{{margin:1.2em 0 1.8em;display:grid;grid-template-columns:minmax(10ch,14ch) 1fr;gap:8px 18px;font-size:15.5px;line-height:1.5}}
+.prose .kv dt{{font-family:var(--ui);font-weight:600;font-size:12.5px;letter-spacing:.04em;color:var(--accent);padding-top:2px}} .prose .kv dd{{margin:0}}
+.prose .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}}
+.prose .figs div{{border-top:3px solid var(--accent);padding-top:10px}}
+.prose .figs b{{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}}
+.prose .figs span{{display:block;font-family:var(--ui);font-size:12.5px;color:var(--mute);margin-top:6px;line-height:1.4}}
+.compilation .qblock{{margin:2.4em 0 0}}
+.compilation h3{{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:-.02em;text-transform:none;border:0;padding:0;margin:0 0 .8em;color:var(--ink)}}
+.passage{{margin:0 0 1.4em;padding:16px 0 0;border-top:1px solid var(--rule)}}
+.passage p{{margin:0 0 8px;font-size:17.5px;line-height:1.55}}
+.passage cite{{font-style:normal;font-family:var(--ui);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}}
+.passage.lead{{border:0;padding:0;font-style:italic;font-size:1.05em}}
+.calendar .cal{{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;margin:0 0 1.6em}}
+.calendar h3{{border:0;padding:0;margin:0 0 .8em}}
+.calendar ul{{list-style:none;margin:0;padding:0}}
+.calendar .hd li{{padding:12px 0;border-top:1px solid var(--rule);display:grid;gap:4px}} .calendar .hd b{{font-family:var(--disp);font-size:17px;letter-spacing:-.01em}} .calendar .hd span{{font-family:var(--ui);font-size:13px;color:var(--mute);line-height:1.5}}
+.calendar .feast li{{padding:12px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline}} .calendar .feast b{{font-family:var(--disp);font-size:17px}} .calendar .feast i{{color:var(--mute);font-size:14px}} .calendar .feast span{{font-family:var(--ui);font-size:13px;font-variant-numeric:tabular-nums}}
+.passage.prayer{{border-top:3px solid var(--accent);margin-top:1.6em}} .passage.prayer p{{font-style:italic;font-size:19px;line-height:1.5}}
+.shelf .books{{list-style:none;margin:0 0 1.6em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 28px}}
+.shelf .books li{{border-top:1px solid var(--rule);padding-top:12px}}
+.shelf h4{{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.015em;margin:0 0 4px}}
+.shelf .sub{{font-family:var(--ui);font-size:12.5px;color:var(--mute);margin:0 0 8px}}
+.shelf .books p{{font-size:15px;line-height:1.5;margin:0 0 8px}}
+.shelf .price{{font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--accent)}}
+.notices{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:28px}}
+.dept .prose:has(.notices){{grid-column:2/4;display:block;max-width:none}}
+.notices li{{border-top:3px solid var(--accent);padding-top:14px}}
+.notices img{{display:block;width:120px;height:auto;border:1px solid var(--rule);margin:0 0 12px}}
+.notices .k{{font-family:var(--ui);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}}
+.notices h4{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:0 0 8px}}
+.notices p{{font-size:15.5px;line-height:1.55;margin:0 0 8px}}
+.notices cite{{font-style:normal;font-family:var(--ui);font-size:12.5px;color:var(--accent)}}
+.prose>.shelf,.prose>.calendar{{grid-column:2/4}}
+.dept .prose.shelf,.dept .prose.calendar{{grid-column:1/-1;display:block;max-width:none}}
+.dept .prose.calendar{{max-width:72ch;grid-column:2/4}}
+.dept .prose.shelf{{grid-column:2/4}}
+.dept .margin,.letter .margin{{grid-row:2}}
+.dept .prose,.letter .prose{{grid-row:2}}
+.dept .shead,.letter .shead{{grid-row:1}}
+.head nav a.more{{margin-left:8px}}
+.head.member nav a{{padding:18px 13px 0;font-size:14.5px}}
+@media (max-width:980px){{.calendar .cal{{grid-template-columns:1fr}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}}
@@ -271,15 +365,15 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="head"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
+<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top">The American Bahá'í<small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
   <div class="mast">
     <svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>
     <p class="the">The</p>
     <h1>American Bahá'í</h1>
-    <p class="sub">{SUB}</p>
-    <div class="line"><span>{esc(ISSUE["date"])}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span></div>
+    <p class="sub">{SUB}{" · Member edition" if member else ""}</p>
+    <div class="line"><span>{esc(ISSUE["date"])}</span><span>legacy: <a href="https://{esc(ISSUE["url"])}">{esc(ISSUE["url"])}</a></span>{'<span><a href="../">Public edition</a></span>' if member else ''}</div>
   </div>
   <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
@@ -290,6 +384,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <h2>Features</h2>
     <ol class="index">{index}</ol>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
+    {dindex}
   </div>
   <div class="epi">
     <blockquote class="uhj"><p>“{esc(ISSUE["epigraph"])}”</p>
@@ -297,7 +392,9 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="about"><b>About the cover.</b> “{esc(ISSUE["cover_note"])}” <i>Juliet Bogan</i></p>
   </div>
 </section>
+{lead}
 {"".join(secs)}
+{depts}
 <footer class="colophon">{esc(ISSUE["publisher"])} Feature texts transcribed from the printed issue; passages between features are drawn from “Abiding in God's Law: Artistic expressions of the human spirit,” pp. 32–33.</footer>
 </div>
 </main>
@@ -614,6 +711,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
 
 for name, fn in [("tab", build_tab), ("plates", build_plates), ("reader", build_reader)]:
     with open(os.path.join(OUT, f"{name}.html"), "w") as f: f.write(fn())
+with open(os.path.join(OUT, "member.html"), "w") as f: f.write(build_tab(member=True))
 
 # ---------------------------------------------------------------- GitHub Pages site
 SITE = os.path.join(HERE, "site")
@@ -629,6 +727,8 @@ def standalone(body):
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
 with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/'))
+os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
+with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/'))
