@@ -447,7 +447,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {lead}
 {"".join(secs)}
 {depts}
-<footer class="colophon">{esc(ISSUE["publisher"])} Feature texts transcribed from the printed issue; passages between features are drawn from “Abiding in God's Law: Artistic expressions of the human spirit,” pp. 32–33.</footer>
+<footer class="colophon">{esc(ISSUE["publisher"])}</footer>
 </div>
 </main>
 <script>
