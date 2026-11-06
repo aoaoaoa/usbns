@@ -21,7 +21,11 @@ def body_html(blocks, qa_style="dl"):
         elif k == "qa": out.append(f'<p class="qa">{esc(b[1])}</p>')
         elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {esc(b[2])}</p>')
         elif k == "pair": out.append('<figure class="photo pair">' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in b[1:]) + '</figure>')
-        elif k == "img": out.append(f'<figure class="photo"><img src="img/{b[1]}" alt="{esc(b[2])}" loading="lazy"><figcaption>{esc(b[2])}</figcaption></figure>')
+        elif k == "img":
+            w = b[3] if len(b) > 3 else None
+            cls = "photo small" if w else "photo"
+            st = f' style="--w:{w}px"' if w else ""
+            out.append(f'<figure class="{cls}"{st}><img src="img/{b[1]}" alt="{esc(b[2])}" loading="lazy"><figcaption>{esc(b[2])}</figcaption></figure>')
     return "\n".join(out)
 
 def first_para_dropcap(h):
@@ -143,6 +147,8 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo{{grid-column:1/-1;margin:2.4em 0;display:grid;grid-template-columns:subgrid;column-gap:inherit;align-items:end}}
 .prose .photo>img{{grid-column:1/-1}}
 .prose .photo>figcaption{{grid-column:1;grid-row:2;margin-top:10px}}
+.prose .photo.small{{grid-column:2;display:block;max-width:var(--w)}}
+.prose .photo.small>figcaption{{margin-top:10px}}
 .prose .photo.pair{{grid-column:1/3;grid-template-columns:1fr 1fr;gap:16px;align-items:start}}
 .prose .photo.pair>div{{grid-column:auto}}
 .prose .photo.pair>div{{min-width:0}}
@@ -306,6 +312,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .photo.pair{{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:none}}
 .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{grid-template-columns:1fr}}}}
+.prose .photo.small{{max-width:calc(var(--w) + 20px)}}
 .prose .photo img{{display:block;width:100%;height:auto}}
 .prose .photo figcaption{{font-family:var(--mono);font-size:12px;color:var(--dim);padding:10px 2px 0;line-height:1.5}}
 .prose .qa{{font-family:var(--disp);font-style:italic;font-size:24px;line-height:1.3;color:var(--gold);margin:2em 0 .8em}}
@@ -410,6 +417,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .prose .pull cite{{font-style:normal;font-family:var(--disp);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}}
 .prose .photo{{margin:2.4em 0;display:grid;grid-template-columns:minmax(0,1fr) 15ch;gap:14px 24px;align-items:end;max-width:none;width:min(58rem,calc(100vw - 32px))}}
 .prose .photo>img{{display:block;width:100%;height:auto;border-radius:4px;grid-row:1;grid-column:1}}
+.prose .photo.small{{grid-template-columns:minmax(0,var(--w)) 15ch;width:auto}}
 .prose .photo>figcaption{{grid-column:2;grid-row:1;font-family:var(--disp);font-size:13px;line-height:1.5;color:var(--mute);padding-top:10px;border-top:3px solid var(--tint);align-self:end}}
 .prose .photo>figcaption::before{{content:"Photograph";display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--tint);margin-bottom:6px}}
 .prose .photo.pair{{grid-template-columns:1fr 1fr;gap:20px;align-items:start}}
