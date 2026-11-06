@@ -141,7 +141,7 @@ def chart_html(c):
             dx = -9 if side == "end" else 9
             parts.append(f'<g class="hit pin"{pop(name, story)}><circle cx="{x}" cy="{y}" r="13" class="ghost"/><circle cx="{x}" cy="{y}" r="6.5" class="cdot big"/><text x="{x+dx*1.15:.0f}" y="{y+4}" text-anchor="{side}" class="cl on">{esc(lab)}</text></g>')
         svg = f'<svg viewBox="-40 -10 {M["w"]+80} {M["h"]+20}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
-        if c.get("reports"): svg += f'<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>{len(c["reports"])} more communities that reported on the letter, and a reader in India</span></p>'
+        if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span></p>'
     elif c["kind"] == "pictogram":
         rows = c["rows"]; W = 600; parts = []; rowh = 40
         for r, row in enumerate(rows):
