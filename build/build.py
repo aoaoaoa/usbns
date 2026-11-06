@@ -50,10 +50,12 @@ def build_folio():
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = f'<p class="by">{esc(a["byline"])}</p>' if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
+        pal = {"gregory":("#f26b2b","#2448c8","#f05a7e","#f3c623"),"newyorkers":("#2448c8","#f05a7e","#f3c623","#5f8f3a"),"twoartists":("#b07a4a","#e9a21f","#2f6a4a","#f26b2b"),"abs":("#c9462c","#1b5e6b","#e9a21f","#2448c8"),"endeavor":("#1b5e6b","#e9a21f","#9ec3cc","#f26b2b"),"comic":("#f3c623","#2448c8","#f26b2b","#5f8f3a")}[a["slug"]]
+        torn = f'<div class="torn" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
         secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
-  <header class="shead">
-    <h2>{esc(a["title"])}</h2>
+  <header class="shead">{torn}
+    <h2 class="lean">{esc(a["title"])}</h2>
     {dek}
   </header>
   <aside class="margin">
@@ -98,18 +100,19 @@ main,.head{{position:relative;z-index:1}}
 .stroke path+path{{stroke:#e9a21f;stroke-width:22;animation-delay:1.1s;opacity:.45}}
 @keyframes paint{{to{{stroke-dashoffset:0}}}}
 .story{{position:relative}}
-.blooms{{position:absolute;left:0;top:34%;width:22%;height:46%;z-index:0;pointer-events:none;filter:blur(30px);opacity:.42}}
-.blooms i{{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply;animation:bloom 22s ease-in-out infinite alternate}}
+.blooms{{position:absolute;left:-4%;top:30%;width:28%;height:54%;z-index:0;pointer-events:none;filter:blur(26px);opacity:.7}}
+.blooms i{{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply;animation:bloom 22s ease-in-out infinite alternate}}
 .blooms i:nth-child(1){{left:0;top:0;background:#f05a7e}}
 .blooms i:nth-child(2){{left:30%;top:32%;background:#2448c8;animation-delay:-7s;animation-duration:27s}}
 .blooms i:nth-child(3){{left:5%;top:60%;background:#f3c623;animation-delay:-13s}}
 @keyframes bloom{{from{{transform:scale(.9)}}to{{transform:scale(1.15) translate(6%,-6%)}}}}
 .story>*{{position:relative;z-index:1}}
-@media (prefers-reduced-motion:reduce){{.terraces i,.blooms i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}}}
-@media (max-width:980px){{.terraces,.blooms{{display:none}}}}
+.story>.blooms{{position:absolute;z-index:0}}
+@media (prefers-reduced-motion:reduce){{.terraces i,.blooms i,.torn i{{animation:none}}.stroke path{{animation:none;stroke-dashoffset:0}}.shead h2 span{{transition:none}}}}
+@media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* running head */
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
-.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--cream);border-bottom:1px solid var(--rule)}}
+.head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--cream) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}}
 .head .in{{max-width:1180px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
 .head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
 .head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
@@ -160,7 +163,17 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(140px,1fr) minmax(0,66ch) minmax(0,1fr);column-gap:clamp(24px,4vw,64px)}}
 .story>.plate,.story>.numeral{{grid-column:1/-1}}
-.shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px)}}
+.shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
+.shead>*{{position:relative;z-index:1}}
+.torn{{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}}
+.torn i{{position:absolute;animation:settle 20s ease-in-out infinite alternate}}
+.torn i:nth-child(1){{right:6%;top:-6%;width:44%;height:70%;background:var(--a);clip-path:polygon(4% 0,96% 6%,100% 60%,88% 100%,10% 94%,0 40%);animation-delay:-3s}}
+.torn i:nth-child(2){{right:30%;top:30%;width:38%;height:60%;background:var(--b);clip-path:polygon(0 12%,80% 0,100% 50%,92% 100%,18% 96%,4% 60%);animation-delay:-9s;animation-duration:24s}}
+.torn i:nth-child(3){{right:0;bottom:-4%;width:26%;height:46%;background:var(--c);clip-path:polygon(10% 0,100% 10%,90% 100%,0 86%);animation-delay:-14s}}
+.torn i:nth-child(4){{right:48%;top:0;width:16%;aspect-ratio:1;height:auto;background:var(--d);border-radius:50%;animation-duration:16s}}
+@keyframes settle{{from{{transform:translate(0,0) rotate(0)}}to{{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}}}
+.shead h2 span{{display:inline-block;transition:transform .5s cubic-bezier(.2,.8,.2,1)}}
+.shead h2 span.sp{{width:.22em}}
 .shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
 .dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
@@ -259,6 +272,14 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     secs.forEach(function(x){{io.observe(x)}});
   }}
   addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
+  [].slice.call(document.querySelectorAll('.shead h2.lean')).forEach(function(h){{
+    var t=h.textContent; h.textContent='';
+    t.split('').forEach(function(ch){{var s=document.createElement('span');if(ch===' '){{s.className='sp';s.innerHTML='&nbsp;'}}else s.textContent=ch;h.appendChild(s);}});
+    var spans=[].slice.call(h.children);
+    h.addEventListener('mousemove',function(e){{spans.forEach(function(s){{var r=s.getBoundingClientRect();var dx=(r.left+r.width/2)-e.clientX;var k=Math.max(-1,Math.min(1,dx/160));s.style.transform='rotate('+(k*-5)+'deg) translateY('+(Math.abs(k)*-3)+'px)';}});}});
+    h.addEventListener('mouseleave',function(){{spans.forEach(function(s){{s.style.transform=''}});}});
+  }});
 }})();
 </script>
 '''
