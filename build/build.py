@@ -476,7 +476,7 @@ main,.head{{position:relative;z-index:1}}
 .prose>.portraits{{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2vw,28px);margin:clamp(40px,6vw,80px) 0;align-items:start}}
 .portraits figure{{margin:0}} .portraits img{{display:block;width:100%;height:auto}}
 .portraits figcaption{{font-family:var(--ui);font-size:13px;color:var(--mute);margin-top:10px;line-height:1.45}}
-.portraits .p1{{grid-column:1/6}} .portraits .p2{{grid-column:6/9;margin-top:clamp(60px,9vw,140px)}} .portraits .p3{{grid-column:9/13;margin-top:clamp(20px,3vw,44px)}}
+.portraits .q1{{grid-column:2/7}} .portraits .q2{{grid-column:7/12;margin-top:clamp(60px,9vw,140px)}} .portraits .p1{{grid-column:1/6}} .portraits .p2{{grid-column:6/9;margin-top:clamp(60px,9vw,140px)}} .portraits .p3{{grid-column:9/13;margin-top:clamp(20px,3vw,44px)}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .band.wall{{background:#4a3436;color:#ecd6d8}}}}
 :root[data-theme="dark"] .band.wall{{background:#4a3436;color:#ecd6d8}}
 @media (max-width:760px){{.band .bin>.bi,.portraits>figure{{grid-column:1/-1!important;grid-row:auto!important;margin-top:0!important;transform:none!important}}}}

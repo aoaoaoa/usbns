@@ -137,9 +137,8 @@ dict(
         ("qa","What do you hope for your art to explore or express?"),
         ("a","Mansour","I mainly am a portrait photographer. My goal whenever I'm taking someone's portrait is for them to get those photos back and feel that they truthfully reflect who they are, what they look like and feeling that sense of satisfaction. That can be so rare. I know from experience."),
         ("portraits",[
-            ("ta-lantern.jpg","Portrait by Maya Mansour.","p1"),
-            ("ta-portrait.jpg","Portrait by Maya Mansour.","p2"),
-            ("ta-opening.jpg","Mansour at the opening of an exhibition of her photographs.","p3")]),
+            ("ta-portrait.jpg","Portrait by Maya Mansour.","q1"),
+            ("ta-opening.jpg","Mansour at the opening of an exhibition of her photographs.","q2")]),
         ("a","Paleczny","My primary interest in my art practice is to explore reality. My art making is always propelled by questions about the nature of reality and how we perceive it. My overarching desire is to use my knowledge of sound as a way of exploring spiritual reality and hopefully expand the ways that we engage with ideas of the divine."),
         ("qa","Maya, what are your hopes for Studio Kam Kam?"),
         ("a","Mansour","Creating the calendar changed the way I think about being an artist and teaching the Faith. With Studio Kam Kam, I'm not making a Bahá'í-inspired calendar. I'm making a Bahá'í calendar. It just is Bahá'í. My number one goal is that someone walks into your apartment and they're immediately drawn to something decorative and they're like, “Oh my gosh, what is this?” And it's the Bahá'í thing. I think about the spiritual concept of attraction to beauty and using that as a teaching tool. What if you have this really amazing tote bag and someone stops you on the street and says, “What is that? What does that quote mean?” I know someone whose mom became a Bahá'í because someone in her city was wearing a pin that had ‘Abdu'l-Bahá's face on it. She said, “Who is that guy?” And they told her about the Faith. One of my other friends' [relative] became a Bahá'í because she loved the calendar system so much. She thought it was so cool and wanted to be part of it."),
