@@ -207,7 +207,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 @keyframes settle{{from{{transform:translate(0,0) rotate(0)}}to{{transform:translate(-1.5%,1.5%) rotate(1.5deg)}}}}
 .torn i{{transition:transform .7s cubic-bezier(.2,.8,.2,1)}}
 .shead.hov .torn i{{animation:none}}
-.shead h2{{font-family:var(--disp);font-size:clamp(44px,7vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
+.shead h2{{font-family:var(--disp);font-size:clamp(50px,9vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
 .dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
 .margin p{{margin:0}}
@@ -250,6 +250,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .story{{grid-template-columns:minmax(0,1fr)}}
   .shead,.margin,.prose{{grid-column:1}}
   .margin{{grid-row:auto;position:static;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:28px}}
+  .shead h2{{font-size:clamp(46px,12.5vw,76px);line-height:.94;max-width:none}}
   .margin .kicker,.margin .pp{{margin:0!important}}
   .prose{{display:block}}
   .prose .pull{{margin:1.6em 0}}
