@@ -31,10 +31,12 @@ VOICES = [
 ]
 
 GREGORY_EVENTS = [
-    (1874,"Born in Charleston, South Carolina","Born to a family that valued education, he went on to Avery Institute in Charleston, Fisk University and Howard University Law School."),
+    (1874,"Born in Charleston, South Carolina","Born to a family that valued education, he went on to Avery Institute in Charleston, Fisk University and Howard University Law School. He graduated from Avery, one of the first schools in the city to teach both Black and white children, and gave the graduation speech, “Thou Shalt Not Live For Thyself Alone.” Avery still displays his portrait in a preserved classroom."),
+    (1878,"His father, Ebenezer, dies","Louis was four."),
     (1881,"Witnesses the lynching of his grandfather","About 1881, as a young boy in Charleston."),
-    (1896,"Graduates from Fisk University","About 1896."),
-    (1902,"Law degree from Howard University","He received his law degree in the spring and was admitted to practice that October."),
+    (1891,"His mother and his brother die","His mother, Mary Elizabeth, died three months after giving birth, and the infant soon after. His older brother Theodore died the same year."),
+    (1896,"Graduates from Fisk University","About 1896. His stepfather paid for his first year at Fisk, where he studied English literature; he paid for the rest with tailoring skills his mother had taught him."),
+    (1902,"Law degree from Howard University","He studied law at Howard because no Southern law school would admit him. He received his law degree in the spring and was admitted to practice that October."),
     (1906,"Vice president of the Howard law alumni association",""),
     (1907,"Hears Lua Getsinger speak on the Bahá'í Faith","The same year he was elected vice president of the Bethel Literary and Historical Society."),
     (1909,"Becomes a Bahá'í in Washington, D.C.","He began teaching the Bahá'í Faith at once within his professional, academic and social circles. As President of the Bethel Literary and Historical Society he arranged four landmark presentations."),
@@ -67,7 +69,7 @@ GREGORY_EVENTS = [
     (2003,"His boyhood home opens as a museum in Charleston","The Charleston Bahá'í community bought the house at auction in 1989. The Louis G. Gregory Bahá'í Museum was dedicated in February 2003."),
     (2022,"Institute's 50th anniversary","Friends who had trained at the Institute decades earlier returned to celebrate, and to consider its future."),
     (2026,"Summer of Service hosts 25 youth","Youth of diverse races and faiths studied, prayed and “built friendships across what society deems as impermeable racial walls.”")]
-GREGORY_KINDS = {1881: 'life', 1896: 'life', 1906: 'life', 1950: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'serve', 1917: 'serve', 1924: 'serve', 1940: 'serve', 1942: 'serve', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'serve', 1911: 'write', 1912: 'life', 1913: 'serve', 1919: 'serve', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'serve', 1937: 'serve', 1939: 'serve', 1951: 'life'}  # every later year is "legacy"
+GREGORY_KINDS = {1878: 'life', 1891: 'life', 1881: 'life', 1896: 'life', 1906: 'life', 1950: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'serve', 1917: 'serve', 1924: 'serve', 1940: 'serve', 1942: 'serve', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'serve', 1911: 'write', 1912: 'life', 1913: 'serve', 1919: 'serve', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'serve', 1937: 'serve', 1939: 'serve', 1951: 'life'}  # every later year is "legacy"
 
 ARTICLES = [
 dict(
