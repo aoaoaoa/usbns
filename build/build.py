@@ -40,7 +40,7 @@ def body_html(blocks):
         elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
         elif k == "chart": out.append(chart_html(b[1]))
         elif k == "concept": out.append(concept_html(b[1]))
-        elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
+        elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "portraits":
             out.append('<div class="portraits">' + "".join(f'<figure class="{cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in b[1]) + '</div>')
         elif k == "band":
@@ -637,7 +637,7 @@ main,.head{{position:relative;z-index:1}}
 .prose .kv{{margin:1.2em 0 1.8em;display:grid;grid-template-columns:minmax(10ch,14ch) 1fr;gap:8px 18px;font-size:15.5px;line-height:1.5}}
 .prose .kv dt{{font-family:var(--ui);font-weight:600;font-size:12.5px;letter-spacing:.04em;color:var(--accent);padding-top:2px}} .prose .kv dd{{margin:0}}
 .prose .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px;margin:1.8em 0 2.2em}}
-.prose .figs div{{border-top:3px solid var(--accent);padding-top:10px}}
+.prose .figs div{{border-top:3px solid var(--accent);padding-top:10px;min-width:0}} .prose .figs b.wd{{font-size:clamp(22px,2.2vw,28px);line-height:1.1;letter-spacing:-.02em}}
 .prose .figs b{{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(36px,3.8vw,52px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}}
 .prose .figs span{{display:block;font-family:var(--ui);font-size:14px;color:var(--mute);margin-top:6px;line-height:1.4}}
 .compilation .qblock{{margin:2.4em 0 0}}
