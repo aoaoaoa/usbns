@@ -31,7 +31,9 @@ def body_html(blocks):
         elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {qesc(b[2])}</p>')
         elif k == "pair":
             w = next((x for x in b[1:] if isinstance(x, int)), None)
-            st = f' style="max-width:{w}px"' if w else ""
+            prs = [x for x in b[1:] if isinstance(x, tuple)]
+            cols = " ".join(f'{IMGAR.get(f, 1):.3f}fr' for f, _ in prs)
+            st = f' style="max-width:{w}px;grid-template-columns:{cols}"' if w else f' style="grid-template-columns:{cols}"'
             out.append(f'<figure class="photo pair{" capped" if w else ""}"{st}>' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in (x for x in b[1:] if isinstance(x, tuple))) + '</figure>')
         elif k == "ext": out.append(f'<blockquote class="ext"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
