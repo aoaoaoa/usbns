@@ -32,9 +32,8 @@ def body_html(blocks):
         elif k == "pair":
             w = next((x for x in b[1:] if isinstance(x, int)), None)
             prs = [x for x in b[1:] if isinstance(x, tuple)]
-            cols = " ".join(f'{IMGAR.get(f, 1):.3f}fr' for f, _ in prs)
-            st = f' style="max-width:{w}px;grid-template-columns:{cols}"' if w else f' style="grid-template-columns:{cols}"'
-            out.append(f'<figure class="photo pair{" capped" if w else ""}"{st}>' + "".join(f'<div><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in (x for x in b[1:] if isinstance(x, tuple))) + '</figure>')
+            st = f' style="max-width:{w}px"' if w else ""
+            out.append(f'<figure class="photo pair{" capped" if w else ""}"{st}>' + "".join(f'<div style="flex:{IMGAR.get(f, 1):.3f} 1 12px"><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in prs) + '</figure>')
         elif k == "ext": out.append(f'<blockquote class="ext"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
@@ -528,6 +527,11 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+/* photo frames: a thin border cut from the cover painting */
+.prose .photo.pair{{display:flex!important;gap:20px;align-items:flex-start}} .prose .photo.pair>div{{min-width:0}}
+@media (max-width:640px){{.prose .photo.pair{{flex-direction:column}}}}
+.prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{{box-sizing:border-box;padding:6px;background:#2f5a2a url(img/motif-uhj.jpg) center/cover;border-radius:0!important}}
+
 /* CARS wheel: four phases, each filling in turn */
 .chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.2;letter-spacing:-.01em;max-width:28ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
 .rwrap{{display:grid;gap:clamp(20px,3vw,44px)}}
