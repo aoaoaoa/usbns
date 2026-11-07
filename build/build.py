@@ -60,7 +60,7 @@ USMAP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 def pop(title, body):
     """Attributes that make an element open the shared popup."""
     if not body: return ""
-    return f' tabindex="0" role="button" data-pt="{html.escape(title, quote=True)}" data-pb="{html.escape(body, quote=True)}"'
+    return f' tabindex="0" role="button" data-pt="{html.escape(title.replace("|", " "), quote=True)}" data-pb="{html.escape(body, quote=True)}"'
 
 def size_cls(c):
     w = c.get("w"); return "" if not w else (" sized span" if w > 640 else " sized")
