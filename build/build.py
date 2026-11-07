@@ -259,7 +259,6 @@ def concept_html(c):
             P2.append(f'<path d="M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}" class="wseg" opacity="{lo}">{on}</path>')
             mid = (a0 + a1) / 2; tx, ty = pt(R + SW / 2 + 22, mid); anc = "start" if 0 < mid < 180 else "end"
             nx, ny = pt(R, (a0 + a1) / 2)
-            P2.append(f'<text x="{nx:.1f}" y="{ny + 5:.1f}" text-anchor="middle" class="wnum">0{i+1}</text>')
             onw = on.replace(f'values="{lo};1;{lo}"', f'values="{lw};1;{lw}"').replace(f'values="1;{lo}"', f'values="1;{lw}"')
             P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword" opacity="{lw}">{esc(l)}{onw}</text>')
         orbit = f'M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}'
@@ -269,7 +268,7 @@ def concept_html(c):
         P2.append(f'<circle r="5.5" class="wdot"><animateMotion dur="16s" repeatCount="indefinite" path="{orbit}"/><animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="{";".join(f"{k:.4f}" for k in kt)}" values="{";".join(vals)}"/></circle>')
         P2.append(f'<circle cx="300" cy="300" r="{R-SW/2-14}" class="whair"/>')
         ring = f'<svg class="rsvg" viewBox="-70 70 740 460" aria-hidden="true">{"".join(P2)}</svg>'
-        cols = "".join(f'<li><b>0{i+1}</b><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
+        cols = "".join(f'<li{" class=on" if i == 0 else ""}><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
         return f'<figure class="chart concept ringf{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="rwrap">{ring}<ol class="rcols">{cols}</ol></div></figure>'
     if kind == "ticker":
         st = c["steps"]
@@ -614,7 +613,7 @@ main,.head{{position:relative;z-index:1}}
 .rc1{{animation-delay:3s}} .rc2{{animation-delay:6s}} .rc3{{animation-delay:9s}}
 @keyframes rcyc{{0%{{opacity:0}} 4%,21%{{opacity:1}} 25%,100%{{opacity:0}}}}
 .rcols{{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px 26px}}
-.rcols li{{border-top:2px solid var(--accent);padding-top:10px}}
+.rcols li{{border-top:2px solid var(--rule);padding-top:10px;opacity:.5;transition:opacity .5s,border-color .5s}} .rcols li.on{{opacity:1;border-color:var(--accent)}} .rcols li h5{{transition:color .5s}} .rcols li.on h5{{color:var(--accent)!important}}
 .rcols b{{font-family:var(--ui);font-size:12px;letter-spacing:.16em;color:var(--accent)}}
 .rcols h5{{font-family:var(--text);font-style:italic;font-weight:600;font-size:22px;margin:2px 0 6px;color:var(--ink)}}
 .rcols p{{font-family:var(--ui);font-size:13.5px;line-height:1.45;color:var(--mute);margin:0}}
@@ -1020,6 +1019,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </main>
 {DOCK}
 <script>
+(function(){{[].forEach.call(document.querySelectorAll('figure.ringf'),function(f){{var v=f.querySelector('.rsvg'),li=[].slice.call(f.querySelectorAll('.rcols li'));if(!v||!v.getCurrentTime)return;var last=-1;setInterval(function(){{var k=Math.floor((v.getCurrentTime()%16)/4);if(k!==last){{last=k;li.forEach(function(x,i){{x.classList.toggle('on',i===k)}});}}}},150);}});}})();
 (function(){{var R=[].slice.call(document.querySelectorAll('.rsvg'));var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;R.forEach(function(v){{if(rm&&v.pauseAnimations)v.pauseAnimations();var f=v.closest('figure');f.addEventListener('mouseenter',function(){{v.pauseAnimations&&v.pauseAnimations()}});f.addEventListener('mouseleave',function(){{if(!rm&&v.unpauseAnimations)v.unpauseAnimations()}});}});}})();
 (function(){{var f=[].slice.call(document.querySelectorAll('.chart.spiral'));if(!f.length)return;if(!('IntersectionObserver' in window)){{f.forEach(function(x){{x.classList.add('in')}});return;}}var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('in');io.unobserve(e.target);}}}});}},{{threshold:.35}});f.forEach(function(x){{io.observe(x)}});}})();
 (function(){{ /* trim the empty bands above and below each diagram */
