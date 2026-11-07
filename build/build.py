@@ -256,16 +256,22 @@ def concept_html(c):
             (x0, y0), (x1, y1) = pt(R, a0), pt(R, a1)
             mix = 100 - i * 18
             on = f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{i/n:.4f};{(i+1)/n:.4f}" values="{lo};1;{lo}"/>' if i else f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{1/n:.4f}" values="1;{lo}"/>'
-            P2.append(f'<path d="M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}" class="wseg" opacity="{lo}">{on}</path>')
+            seg = f'M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}'
+            P2.append(f'<path d="{seg}" class="wseg" opacity="{lo}"/>')
+            k0, k1 = i / n, (i + 1) / n
+            if i == 0:
+                vis = f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{k1:.4f}" values="1;0"/>'
+                dash = f'<animate attributeName="stroke-dashoffset" dur="16s" repeatCount="indefinite" keyTimes="0;{k1:.4f};1" values="1;0;0"/>'
+            else:
+                vis = f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{k0:.4f};{k1:.4f}" values="0;1;0"/>'
+                dash = f'<animate attributeName="stroke-dashoffset" dur="16s" repeatCount="indefinite" keyTimes="0;{k0:.4f};{k1:.4f};1" values="1;1;0;0"/>'
+            P2.append(f'<path d="{seg}" pathLength="1" class="wseg wfill" stroke-dasharray="1 1" stroke-dashoffset="{0 if i == 0 else 1}" opacity="{1 if i == 0 else 0}">{vis}{dash}</path>')
             mid = (a0 + a1) / 2; tx, ty = pt(R + SW / 2 + 22, mid); anc = "start" if 0 < mid < 180 else "end"
             nx, ny = pt(R, (a0 + a1) / 2)
             onw = on.replace(f'values="{lo};1;{lo}"', f'values="{lw};1;{lw}"').replace(f'values="1;{lo}"', f'values="1;{lw}"')
             P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword" opacity="{lw}">{esc(l)}{onw}</text>')
         orbit = f'M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}'
-        h = gap / 2 + 3; kt = [0.0]; vals = ["0"]
-        for i in range(n):
-            kt += [(i * 360 / n + h) / 360, ((i + 1) * 360 / n - h) / 360]; vals += ["1", "0"]
-        P2.append(f'<circle r="5.5" class="wdot"><animateMotion dur="16s" repeatCount="indefinite" path="{orbit}"/><animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="{";".join(f"{k:.4f}" for k in kt)}" values="{";".join(vals)}"/></circle>')
+
         P2.append(f'<circle cx="300" cy="300" r="{R-SW/2-14}" class="whair"/>')
         ring = f'<svg class="rsvg" viewBox="-70 70 740 460" aria-hidden="true">{"".join(P2)}</svg>'
         cols = "".join(f'<li{" class=on" if i == 0 else ""}><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
@@ -594,7 +600,7 @@ main,.head{{position:relative;z-index:1}}
 .wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
 .wnum{{font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.14em;fill:var(--paper)}}
 .wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
-.wdot{{fill:var(--paper);opacity:.85}}
+.wfill{{stroke-linecap:butt}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
 .chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif!important;font-weight:500!important;font-size:clamp(24px,2.4vw,34px)!important;letter-spacing:-.01em!important;font-variation-settings:"opsz" 48}}
 .rcols h5{{font-family:"Bodoni Moda",var(--text),serif!important;font-style:normal!important;font-weight:500!important;font-size:24px!important}}
@@ -1020,7 +1026,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {DOCK}
 <script>
 (function(){{[].forEach.call(document.querySelectorAll('figure.ringf'),function(f){{var v=f.querySelector('.rsvg'),li=[].slice.call(f.querySelectorAll('.rcols li'));if(!v||!v.getCurrentTime)return;var last=-1;setInterval(function(){{var k=Math.floor((v.getCurrentTime()%16)/4);if(k!==last){{last=k;li.forEach(function(x,i){{x.classList.toggle('on',i===k)}});}}}},150);}});}})();
-(function(){{var R=[].slice.call(document.querySelectorAll('.rsvg'));var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;R.forEach(function(v){{if(rm&&v.pauseAnimations)v.pauseAnimations();var f=v.closest('figure');f.addEventListener('mouseenter',function(){{v.pauseAnimations&&v.pauseAnimations()}});f.addEventListener('mouseleave',function(){{if(!rm&&v.unpauseAnimations)v.unpauseAnimations()}});}});}})();
+(function(){{var R=[].slice.call(document.querySelectorAll('.rsvg'));var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;R.forEach(function(v){{if(rm&&v.pauseAnimations){{v.pauseAnimations();v.setCurrentTime(3.9);}}var f=v.closest('figure');f.addEventListener('mouseenter',function(){{v.pauseAnimations&&v.pauseAnimations()}});f.addEventListener('mouseleave',function(){{if(!rm&&v.unpauseAnimations)v.unpauseAnimations()}});}});}})();
 (function(){{var f=[].slice.call(document.querySelectorAll('.chart.spiral'));if(!f.length)return;if(!('IntersectionObserver' in window)){{f.forEach(function(x){{x.classList.add('in')}});return;}}var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('in');io.unobserve(e.target);}}}});}},{{threshold:.35}});f.forEach(function(x){{io.observe(x)}});}})();
 (function(){{ /* trim the empty bands above and below each diagram */
   [].forEach.call(document.querySelectorAll('.chart>svg[viewBox]'),function(svg){{
