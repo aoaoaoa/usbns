@@ -759,7 +759,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -1082,7 +1082,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate img{{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;background:var(--cream)}}
 .plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
 /* typographic overlay recapturing the print opener */
-.plate:has(.ovw:not(.nyo)){{background:#1a0f0b;border-color:#1a0f0b}}
+.plate:has(.ovw:not(.nyo):not(.gro)){{background:#1a0f0b;border-color:#1a0f0b}}
 /* New Yorkers: the print title set beneath the brush-stroke cut */
 .ovw.nyo{{padding-bottom:0}}
 .nyo .ov{{text-shadow:none;color:var(--accent)}}
@@ -1104,6 +1104,41 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ov .sub{{right:1.5%;top:50%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
 @media (prefers-reduced-motion:no-preference){{.ov span:not(.nyb){{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .nyo .n2{{animation-delay:.25s}} .nyo .n3{{animation-delay:.5s}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
 @keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
+/* New Yorkers: the two words drift apart a few pixels as the image scrolls past; the bold words wash in with the story color */
+.nyo .n3 b{{color:var(--accent);text-shadow:none}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .nyo .n3 b{{background:linear-gradient(90deg,var(--accent) 0 50%,var(--ink) 50% 100%);background-size:200% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent}}
+.ovready .nyo.go .n3 b{{background-position:0 0;transition:background-position 1.3s cubic-bezier(.4,.1,.2,1) .9s}} .ovready .nyo.go .n3 b+b{{transition-delay:1.5s}}
+}}
+.nyo .n1{{transform:translateX(calc(var(--dr,0) * -1px)) scaleX(.86)}} .nyo .n2{{transform:translateX(calc(var(--dr,0) * 1px))}}
+/* Two artists: the script is traced by pen, then inked; a band of warm light crosses the lettering once */
+.ov .t2{{display:none}}
+.ov .pen{{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 2px rgba(20,6,2,.35)) drop-shadow(0 6px 22px rgba(30,10,5,.5))}}
+.ov .pen text{{font-family:"Pinyon Script",cursive;font-size:170px;fill:#fff;stroke:#fff;stroke-width:0;stroke-linejoin:round}}
+.ov .sweep{{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(255,214,150,0) 44%,rgba(255,214,150,.55) 50%,rgba(255,214,150,0) 56%,transparent 60%);background-size:250% 100%;background-position:120% 0;mix-blend-mode:soft-light}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .ov .pen{{clip-path:inset(0 63% 0 0)}} .ovready .ov .pen text{{fill-opacity:0;stroke-width:1.6;stroke-dasharray:420;stroke-dashoffset:420}}
+.ovready .ovw.go .ov .pen{{animation:penclip 2.2s cubic-bezier(.5,.1,.4,1) .3s forwards}}
+.ovready .ovw.go .ov .pen text{{animation:pendraw 2.6s cubic-bezier(.45,.05,.3,1) .3s forwards,penfill .9s ease-out 2.2s forwards}}
+.ovready .ovw.go .ov .sweep{{animation:sweep 2.4s cubic-bezier(.4,.1,.3,1) 2.9s both}}
+}}
+@keyframes penclip{{to{{clip-path:inset(0 0 0 0)}}}} @keyframes pendraw{{to{{stroke-dashoffset:0}}}} @keyframes penfill{{to{{fill-opacity:1;stroke-width:0}}}}
+@keyframes sweep{{from{{background-position:120% 0}}to{{background-position:-20% 0}}}}
+/* Louis Gregory: a broadside, the name pressed in letter by letter */
+.gro .ov{{text-shadow:none;color:#1d1a16}}
+.gro .ov span{{animation:none!important}}
+.gro .gbs{{position:absolute;right:2.5%;top:4%;width:36%;white-space:normal;line-height:1;background:rgba(247,242,234,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:1.6cqw 1.8cqw;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.12)}}
+.gro .gbs span{{position:relative;white-space:normal}} .gro .gbs .gnm{{white-space:nowrap}}
+.gro .gk{{display:block;font-family:"Libre Caslon Text",serif;font-size:2.1cqw;letter-spacing:.24em;text-transform:uppercase;margin:0 0 .4em;border-top:.25cqw solid #1d1a16;padding-top:.5em}}
+.gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:8.2cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
+.gro .gl{{display:inline-block}}
+.gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:3cqw;margin:.35em 0 .2em;border-bottom:.25cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
+.gro .gdk{{display:block;font-family:"Libre Caslon Text",serif;font-style:italic;font-size:2.5cqw;line-height:1.25;color:#2a2622}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .gro .gl{{transform:scale(1.12);opacity:0;filter:blur(1.5px)}} .ovready .gro .gk,.ovready .gro .gyr,.ovready .gro .gdk{{opacity:0}}
+.ovready .gro.go .gl{{transform:none;opacity:1;filter:none;transition:transform .5s cubic-bezier(.2,.9,.2,1) var(--d),opacity .35s var(--d),filter .5s var(--d)}}
+.ovready .gro.go .gk,.ovready .gro.go .gyr,.ovready .gro.go .gdk{{opacity:1;transition:opacity .8s .9s}}
+}}
 
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
@@ -1293,6 +1328,13 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {LBX_HTML}
 {LBX_JS}
 <script>
+(function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
+  var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
+  var W=[].slice.call(document.querySelectorAll('.ovw'));
+  if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
+  else W.forEach(function(w){{w.classList.add('go')}});
+  var ny=document.querySelector('.ovw.nyo'); if(ny&&!rm){{var tick=function(){{var r=ny.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight+r.height);p=Math.max(0,Math.min(1,p))-.5;ny.style.setProperty('--dr',(p*24).toFixed(1))}};addEventListener('scroll',tick,{{passive:true}});tick();}}
+}})();
 (function(){{[].forEach.call(document.querySelectorAll('figure.ringf'),function(f){{var v=f.querySelector('.rsvg'),li=[].slice.call(f.querySelectorAll('.rcols li'));if(!v||!v.getCurrentTime)return;var last=-1;setInterval(function(){{var k=Math.floor((v.getCurrentTime()%16)/4);if(k!==last){{last=k;li.forEach(function(x,i){{x.classList.toggle('on',i===k)}});}}}},150);}});}})();
 (function(){{var R=[].slice.call(document.querySelectorAll('.rsvg'));var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;R.forEach(function(v){{if(rm&&v.pauseAnimations){{v.pauseAnimations();v.setCurrentTime(3.9);}}var f=v.closest('figure');f.addEventListener('mouseenter',function(){{v.pauseAnimations&&v.pauseAnimations()}});f.addEventListener('mouseleave',function(){{if(!rm&&v.unpauseAnimations)v.unpauseAnimations()}});}});}})();
 (function(){{ /* trim the empty bands above and below each diagram */
