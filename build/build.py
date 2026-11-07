@@ -47,6 +47,10 @@ def body_html(blocks):
             c = b[1]; items = "".join(f'<figure class="bi {cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in c["items"])
             lab = f'<p class="blab">{esc(c["label"])}</p>' if c.get("label") else ""
             out.append(f'<section class="band {c["tone"]}"><div class="bin">{lab}{items}</div></section>')
+        elif k == "mount":
+            # mounted print: a soft photograph shown at its sharp size on an off-white card
+            f, cap, w = b[1], b[2], b[3]; side = b[4] if len(b) > 4 else ""
+            out.append(f'<figure class="mountp {side}" style="--w:{w}px"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>')
         elif k == "strip":
             # contact strip: soft photographs shown small on one mount, read as a set
             its = b[1]; n = len(its)
@@ -228,6 +232,13 @@ def concept_html(c):
     """Diagrams for ideas rather than numbers. Every part can open the shared popup."""
     import math
     kind = c["form"]; W = 600; P = []
+    if kind == "ticker":
+        st = c["steps"]
+        seq = "".join(f'<span class="tw t{i%4}">{esc(l)}</span><i class="tsep" aria-hidden="true"></i>' for i, (l, _) in enumerate(st))
+        track = f'<div class="ttrack">{seq * 4}</div>'
+        cols = "".join(f'<li><b>0{i+1}</b><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
+        note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
+        return f'<figure class="chart concept ticker{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="tband" aria-hidden="true">{track}</div><ol class="tcols">{cols}</ol>{note}</figure>'
     arrow = '<defs><marker id="ah{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>'.format(i=id(c) % 100000)
     mk = f'url(#ah{id(c) % 100000})'
     if c.get("bold"):
@@ -541,6 +552,32 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+/* CARS ticker: the four practices in unbroken procession */
+.chart.ticker .ct{{font-family:var(--disp);font-weight:800;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.025em;max-width:26ch;margin-bottom:18px}}
+.tband{{overflow:hidden;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:clamp(10px,1.4vw,18px) 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}}
+.ttrack{{display:flex;align-items:center;width:max-content;animation:tick 36s linear infinite}}
+.chart.ticker:hover .ttrack{{animation-play-state:paused}}
+@keyframes tick{{to{{transform:translateX(-50%)}}}}
+.tw{{font-family:var(--disp);font-weight:800;font-size:clamp(34px,4.6vw,64px);line-height:1;letter-spacing:-.045em;padding:0 .18em;white-space:nowrap}}
+.tw.t0{{color:var(--accent)}} .tw.t2{{color:var(--ink)}}
+.tw.t1,.tw.t3{{color:transparent;-webkit-text-stroke:1.5px var(--ink)}}
+.tsep{{display:inline-block;width:.32em;height:.32em;font-size:clamp(34px,4.6vw,64px);background:var(--accent);transform:rotate(45deg);margin:0 .3em;flex:none}}
+.tcols{{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 24px}}
+.tcols li{{border-top:3px solid var(--accent);padding-top:10px}}
+.tcols b{{font-family:var(--ui);font-size:12px;letter-spacing:.16em;color:var(--accent)}}
+.tcols h5{{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.02em;margin:4px 0 6px;color:var(--ink)}}
+.tcols p{{font-family:var(--ui);font-size:13.5px;line-height:1.45;color:var(--mute);margin:0}}
+@media (max-width:760px){{.tcols{{grid-template-columns:1fr 1fr}}}}
+@media (prefers-reduced-motion:reduce){{.ttrack{{animation:none}}}}
+
+/* mounted prints */
+.prose>.mountp{{grid-column:2;justify-self:start;width:calc(var(--w) + 44px);max-width:100%;box-sizing:border-box;margin:2.2em 0;background:#fdfcf9;border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
+.prose>.mountp.right{{justify-self:end}}
+.prose>.mountp::after{{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;background:var(--accent)}}
+.mountp img{{display:block;width:100%;height:auto}}
+.mountp figcaption{{font-family:var(--ui);font-size:12.5px;line-height:1.45;color:var(--mute);margin-top:12px;padding-bottom:6px;text-wrap:pretty}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.mountp{{background:#1f1c17}}}} :root[data-theme="dark"] .prose>.mountp{{background:#1f1c17}}
+
 /* contact strip: soft photographs mounted small, as a set */
 .prose>.strip{{grid-column:2;margin:2.2em 0;background:var(--card,#fdfcf9);border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
 .prose>.strip::after{{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;background:var(--accent)}}
