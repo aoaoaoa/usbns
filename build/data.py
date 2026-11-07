@@ -84,7 +84,7 @@ dict(
     title="New Yorkers create more unified communities through the arts",
     short="New Yorkers",
     byline="Michelle Goering",
-    art="ny-blob.webp", art_alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette", art_credit="Photograph, Crown Heights, Brooklyn", art_transparent=True,
+    art="ny-blob.webp", art_overlay={"ar":"1.163","cls":"nyo","html":'<span class="nyb"><span class="n1">NEW</span><span class="n2">YORKERS</span><span class="n3">create more <b>unified communities</b> through the <b>arts</b></span></span>'}, art_alt="Children's hands at a watercolor set on a blue cloth, with a painted portrait captioned I am kind, loving, and friendly, cut in the issue's brush-stroke silhouette", art_credit="Photograph, Crown Heights, Brooklyn", art_transparent=True,
     pages="24–26",
     body=[
         ("p","How can the arts bring neighbors together and create spaces for deeper connection and collective problem-solving? New youth initiatives in New York City inspired by Bahá'í teachings, some centered around thought-provoking films or painting with children, are demonstrating the power of shared artistic expression. In both cases, the impetus came from a community's creative interests."),

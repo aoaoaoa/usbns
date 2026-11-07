@@ -380,7 +380,7 @@ def build_tab(member=False):
                 if a.get("art_width"): cls += " capped"
                 cap = f'<figcaption>{esc(a["art_credit"])}</figcaption>' if a.get("art_credit") else ""
                 ov = a.get("art_overlay")
-                ov_open = f'<div class="ovw" style="--ar:{ov["ar"]}">' if ov else ""
+                ov_open = f'<div class="ovw {ov.get("cls","")}" style="--ar:{ov["ar"]}">' if ov else ""
                 ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
                 art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
         else:
@@ -702,7 +702,16 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate img{{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;background:var(--cream)}}
 .plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
 /* typographic overlay recapturing the print opener */
-.plate:has(.ovw){{background:#1a0f0b;border-color:#1a0f0b}}
+.plate:has(.ovw:not(.nyo)){{background:#1a0f0b;border-color:#1a0f0b}}
+/* New Yorkers: the print title set beneath the brush-stroke cut */
+.ovw.nyo{{padding-bottom:37cqw}}
+.nyo .ov{{text-shadow:none;color:var(--accent)}}
+.nyo .ov .nyb{{position:absolute;left:5%;top:auto;bottom:2%;width:86%;height:auto;container-type:inline-size}}
+.nyo .ov span{{position:relative;display:block;white-space:nowrap}}
+.nyo .n1{{font-family:"Bricolage Grotesque",sans-serif;font-weight:300;font-size:24.6cqw;line-height:.74;letter-spacing:-.045em;margin-left:9.4%;font-variation-settings:"opsz" 96,"wdth" 75;transform:scaleX(.86);transform-origin:left}}
+.nyo .n2{{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:24.6cqw;line-height:.74;letter-spacing:-.03em;margin:.06em 0 0 6.2%;font-variation-settings:"opsz" 96}}
+.nyo .n3{{font-family:"Literata",Georgia,serif;font-style:italic;font-weight:400;font-size:4.6cqw;line-height:1;color:var(--ink);margin-top:.75em;letter-spacing:-.005em}}
+.nyo .n3 b{{font-weight:800}}
 .ovw{{position:relative;width:min(100%,calc(92vh * var(--ar)));margin:0 auto;container-type:inline-size}}
 .ovw img{{max-height:none;background:none}}
 .ov{{position:absolute;inset:0;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(20,6,2,.35),0 6px 28px rgba(30,10,5,.55)}}
@@ -713,7 +722,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ov .t3{{right:8%;top:29%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
 .ov .byl{{left:9%;top:58%;font-family:"Bodoni Moda",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
 .ov .sub{{right:1.5%;top:50%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
-@media (prefers-reduced-motion:no-preference){{.ov span{{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
+@media (prefers-reduced-motion:no-preference){{.ov span:not(.nyb){{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .nyo .n2{{animation-delay:.25s}} .nyo .n3{{animation-delay:.5s}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
 @keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
 
 .plate.bare{{background:transparent;border:0}}
