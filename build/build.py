@@ -142,7 +142,19 @@ def chart_html(c):
             d = f"M{p(r1,a0)} A{r1},{r1} 0 0 1 {p(r1,a1)} L{p(r0,a1)} A{r0},{r0} 0 0 0 {p(r0,a0)} Z"
             st = c.get("stories", {}).get(name, "")
             base = c.get("starts", [None]*n)[i]
-            body = " ".join(x for x in [f"Month {i+1} of 19." , f"First day: {base}, beginning at sunset the evening before." if base else "", st] if x)
+            import datetime as _dt
+            starts = c.get("starts", [None]*n)
+            if base is None and i == n - 1 and starts[i-1]:
+                base = (_dt.datetime.strptime(starts[i-1], "%B %d, %Y") + _dt.timedelta(days=19 + 4)).strftime("%B %-d, %Y")
+            lines = [f"Month {i+1} of 19."]
+            if base:
+                d0 = _dt.datetime.strptime(base, "%B %d, %Y")
+                lines.append(f"Feast of {name}: {base}, the month's first day, beginning at sunset the evening before.")
+                hd = c.get("holy", {}).get(name, [])
+                if hd:
+                    lines.append("Holy Days: " + "; ".join(f"{h} ({(d0 + _dt.timedelta(days=day-1)).strftime('%B %-d')})" for day, h in hd) + ".")
+            if st: lines.append(st)
+            body = "\n".join(lines)
             hue = (135 + 330 * i / (n - 1)) % 360
             parts.append(f'<path d="{d}" class="cseg hit" style="fill:oklch(.62 .11 {hue:.0f})"{pop(f"{name}, {mean}", body)}/>')
             am = (a0 + a1) / 2; tx, ty = cx + 174*math.cos(am), cy + 174*math.sin(am)
