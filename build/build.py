@@ -150,13 +150,20 @@ def chart_html(c):
         parts = [f'<line x1="{pad}" y1="30" x2="{W-pad}" y2="30" class="cax"/>']
         for era in c.get("eras", []):
             a, b, lab = era; parts.append(f'<rect x="{X(a):.1f}" y="24" width="{X(b)-X(a):.1f}" height="12" class="cera"/><text x="{(X(a)+X(b))/2:.1f}" y="16" text-anchor="middle" class="cn2">{esc(lab)}</text>')
-        rows = []
+        rows = []; edge = [-1e9, -1e9]; labs = []; LW = 44  # year labels take two rows; a crowded year keeps its dot and popup, and the list below names it
         for i, e in enumerate(ev):
             y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""
-            x = X(y); ly = 56 if i % 2 == 0 else 72
-            anc = "start" if x < 40 else ("end" if x > W - 40 else "middle")
-            parts.append(f'<circle cx="{x:.1f}" cy="30" r="4.5" class="cdot"/><circle cx="{x:.1f}" cy="30" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><line x1="{x:.1f}" y1="35" x2="{x:.1f}" y2="{ly-10}" class="cstem"/><text x="{x - 6 if anc == "start" else x + 6 if anc == "end" else x:.1f}" y="{ly}" text-anchor="{anc}" class="cv">{y}</text>')
+            x = X(y); anc = "start" if x < 40 else ("end" if x > W - 40 else "middle")
+            l = x - 6 if anc == "start" else x - LW - 6 if anc == "end" else x - LW/2
+            r = next((k for k in (0, 1) if l > edge[k] + 4), None)
+            parts.append(f'<circle cx="{x:.1f}" cy="30" r="4.5" class="cdot"/><circle cx="{x:.1f}" cy="30" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/>')
+            if r is not None:
+                edge[r] = l + LW; ly = 56 + 16 * r; labs.append((r, x, l, ly))
+                parts.append(f'<text x="{x - 6 if anc == "start" else x + 6 if anc == "end" else x:.1f}" y="{ly}" text-anchor="{anc}" class="cv">{y}</text>')
             rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
+        for r, x, l, ly in labs:  # a lower label's stem stops short rather than cut through an upper label
+            cut = r and any(l0 - 2 < x < l0 + LW + 2 for r0, x0, l0, _ in labs if r0 == 0)
+            parts.append(f'<line x1="{x:.1f}" y1="35" x2="{x:.1f}" y2="{40 if cut else ly-10}" class="cstem"/>')
         for t in c.get("ticks", []):
             parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
         svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
