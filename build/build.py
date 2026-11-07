@@ -677,7 +677,7 @@ def build_tab(member=False, menu="contents"):
                 art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
         else:
             art = (f'<div class="fnote" role="img" aria-label="50 years: the Association for Bahá\'í Studies, founded in 1975"><div class="fbig" aria-hidden="true"><span>50</span><sup>1</sup></div><div class="frule" aria-hidden="true"></div>'
-                   f'<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975. {esc(a.get("dek", "").rstrip(".") + ".")}</p></div>')
+                   f'<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975.</p></div>')
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = (f'<p class="by{" nob" if a["byline"].startswith(("Adapted","Story")) else ""}">{esc(a["byline"])}</p>') if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
