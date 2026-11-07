@@ -50,7 +50,7 @@ def body_html(blocks):
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "verb":
-            out.append('<blockquote class="verb" data-f="3"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s0"></span><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
+            out.append('<blockquote class="verb" data-f="3"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s0">&#8203;</span><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
                        f'<p class="vr"><span class="vh">“Neighboring </span>has become a verb.”</p><cite>{esc(b[1])}</cite></blockquote>')
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
@@ -798,7 +798,7 @@ main,.head{{position:relative;z-index:1}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.verb{{grid-column:2;margin:clamp(28px,4vw,48px) 0;padding:0 0 0 .1em}}
 .prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:500;letter-spacing:-.01em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
-.verb .sx{{display:inline-grid;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0;transform:translateY(.12em);transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}}
+.verb .sx{{display:inline-grid;align-items:baseline;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0;transform:translateY(.12em);transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}}
 .verb[data-f="0"] .s0,.verb[data-f="1"] .s1,.verb[data-f="2"] .s2,.verb[data-f="3"] .s3{{opacity:1;transform:none}}
 .verb .vq{{margin-left:-.42em;display:inline-block;width:.42em}}
 .verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(22px,2.9vw,36px);line-height:1.15;margin-top:.1em;transition:opacity .5s,transform .5s}}
@@ -1057,7 +1057,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate img{{display:block;width:100%;height:auto;max-height:88vh;object-fit:contain;background:var(--cream)}}
 .plate.capped{{max-width:var(--aw);margin-left:auto;margin-right:auto}}
 /* typographic overlay recapturing the print opener */
-.plate:has(.ovw:not(.nyo):not(.gro)){{background:#1a0f0b;border-color:#1a0f0b}}
+.plate:has(.ovw:not(.nyo):not(.gro):not(.evo)){{background:#1a0f0b;border-color:#1a0f0b}}
 /* New Yorkers: the print title set beneath the brush-stroke cut */
 .ovw.nyo{{padding-bottom:0}}
 .nyo .ov{{text-shadow:none;color:var(--accent)}}
