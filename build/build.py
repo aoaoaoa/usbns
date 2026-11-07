@@ -548,7 +548,6 @@ main,.head{{position:relative;z-index:1}}
 /* mounted prints */
 .prose>.mountp{{grid-column:2;justify-self:start;width:calc(var(--w) + 44px);max-width:100%;box-sizing:border-box;margin:2.2em 0;background:#fdfcf9;border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
 .prose>.mountp.right{{justify-self:end}}
-.prose>.mountp::after{{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;background:var(--accent)}}
 .mountp img{{display:block;width:100%;height:auto}}
 .mountp figcaption{{font-family:var(--ui);font-size:12.5px;line-height:1.45;color:var(--mute);margin-top:12px;padding-bottom:6px;text-wrap:pretty}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.mountp{{background:#1f1c17}}}} :root[data-theme="dark"] .prose>.mountp{{background:#1f1c17}}
