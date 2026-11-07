@@ -67,7 +67,7 @@ GREGORY_EVENTS = [
     (2003,"His boyhood home opens as a museum in Charleston","The Charleston Bahá'í community bought the house at auction in 1989. The Louis G. Gregory Bahá'í Museum was dedicated in February 2003."),
     (2022,"Institute's 50th anniversary","Friends who had trained at the Institute decades earlier returned to celebrate, and to consider its future."),
     (2026,"Summer of Service hosts 25 youth","Youth of diverse races and faiths studied, prayed and “built friendships across what society deems as impermeable racial walls.”")]
-GREGORY_KINDS = {1881: 'life', 1896: 'life', 1906: 'life', 1950: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'teach', 1917: 'teach', 1924: 'teach', 1940: 'serve', 1942: 'teach', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'teach', 1911: 'write', 1912: 'life', 1913: 'teach', 1919: 'teach', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'teach', 1937: 'teach', 1939: 'teach', 1951: 'life'}  # every later year is "legacy"
+GREGORY_KINDS = {1881: 'life', 1896: 'life', 1906: 'life', 1950: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'serve', 1917: 'serve', 1924: 'serve', 1940: 'serve', 1942: 'serve', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'serve', 1911: 'write', 1912: 'life', 1913: 'serve', 1919: 'serve', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'serve', 1937: 'serve', 1939: 'serve', 1951: 'life'}  # every later year is "legacy"
 
 ARTICLES = [
 dict(

@@ -172,7 +172,8 @@ def chart_html(c):
             parts.append(f'<g class="k-{k}"><circle cx="{x:.1f}" cy="{LY}" r="5.5" class="cdotk"/><circle cx="{x:.1f}" cy="{LY}" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><text x="{lx[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk">{y}</text></g>')
             rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
         K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
-        key = ('<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items()) + '</p>') if c.get("kinds") else ""
+        used = {kind(e[0]) for e in ev}
+        key = ('<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items() if k in used) + '</p>') if c.get("kinds") else ""
         svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
     elif c["kind"] == "timeline":
         ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
