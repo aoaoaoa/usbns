@@ -246,12 +246,12 @@ def concept_html(c):
     kind = c["form"]; W = 600; P = []
     if kind == "ring":
         st = c["steps"]; R = 228
-        txt = "".join(f'\u00a0{esc(l)}\u00a0<tspan class="rsep">\u00a0◆\u00a0</tspan>' for l, _ in st) * 2
+        txt = "".join(f'\u00a0{esc(l)}\u00a0<tspan class="rsep">\u00a0◆\u00a0</tspan>' for l, _ in st) * 2 if c.get("twice") else "".join(f'\u00a0{esc(l)}\u00a0<tspan class="rsep">\u00a0◆\u00a0</tspan>' for l, _ in st)
         ring = (f'<svg class="rsvg" viewBox="0 0 600 600" aria-hidden="true"><defs><path id="rp{id(c)%100000}" d="M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}"/></defs>'
-                f'<circle cx="300" cy="300" r="{R+44}" class="rhair"/><circle cx="300" cy="300" r="{R-22}" class="rhair"/>'
+                f'<circle cx="300" cy="300" r="{R+60}" class="rhair"/><circle cx="300" cy="300" r="{R-18}" class="rhair"/>'
                 f'<g class="rspin"><animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="60s" repeatCount="indefinite"/><text class="rtxt"><textPath href="#rp{id(c)%100000}" textLength="{2*3.14159*R:.0f}" lengthAdjust="spacing">{txt}</textPath></text></g>'
-                f'<g class="rtick">' + "".join(f'<line x1="300" y1="{300-R-50}" x2="300" y2="{300-R-38}" transform="rotate({i*90} 300 300)"/>' for i in range(4)) + '</g>'
-                + "".join(f'<text x="300" y="318" text-anchor="middle" class="rc rc{i}">{esc(l)}</text>' for i, (l, _) in enumerate(st)) + '</svg>')
+                f'<g class="rtick">' + "".join(f'<line x1="300" y1="{300-R-66}" x2="300" y2="{300-R-54}" transform="rotate({i*90} 300 300)"/>' for i in range(4)) + '</g>'
+                + '</svg>')
         cols = "".join(f'<li><b>0{i+1}</b><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
         return f'<figure class="chart concept ringf{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="rwrap">{ring}<ol class="rcols">{cols}</ol></div></figure>'
     if kind == "ticker":
@@ -578,11 +578,11 @@ main,.head{{position:relative;z-index:1}}
 .chart.ringf .ct{{font-family:var(--text);font-weight:600;font-size:clamp(22px,2.2vw,30px);line-height:1.2;letter-spacing:-.015em;max-width:28ch;margin-bottom:18px}}
 .rwrap{{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:clamp(20px,3vw,44px);align-items:center}}
 .rsvg{{display:block;width:100%;height:auto;overflow:visible}}
-.rtxt{{font-family:var(--text);font-style:italic;font-weight:500;font-size:34px;fill:var(--ink);letter-spacing:.01em;font-variation-settings:"opsz" 72}}
+.rtxt{{font-family:var(--text);font-style:normal;font-weight:500;font-size:64px;fill:var(--ink);letter-spacing:.01em;font-variation-settings:"opsz" 72}}
 
 @keyframes rspin{{to{{transform:rotate(360deg)}}}}
 
-.rsep{{font-size:16px;fill:var(--accent);font-style:normal}} .rhair{{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.55}}
+.rsep{{font-size:24px;fill:var(--accent);font-style:normal}} .rhair{{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.55}}
 .rtick line{{stroke:var(--accent);stroke-width:3}}
 .rc{{font-family:var(--text);font-weight:600;font-size:46px;fill:var(--accent);opacity:0;letter-spacing:-.01em;animation:rcyc 12s infinite}}
 .rc1{{animation-delay:3s}} .rc2{{animation-delay:6s}} .rc3{{animation-delay:9s}}
