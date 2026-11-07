@@ -475,6 +475,11 @@ def concept_html(c):
     title = (f'<p class="cno">No. {c["no"]}</p>' if c.get("no") else "") + f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
     return f'<figure class="chart concept{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
+def after_first(h, extra):
+    """Place a block right after the first paragraph of a story."""
+    i = h.find("</p>")
+    return h[:i + 4] + extra + h[i + 4:] if i >= 0 else extra + h
+
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
 
@@ -688,7 +693,7 @@ def build_tab(member=False, menu="contents"):
     {share(a)}
     {listen(a)}
   </aside>
-  <div class="prose">{below if a["slug"] == "comic" else ""}{first_para_dropcap(body_html(a["body"]))}</div>
+  <div class="prose">{after_first(first_para_dropcap(body_html(a["body"])), below) if a["slug"] == "comic" else first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
         if i < len(VOICES):
             v = VOICES[i]
