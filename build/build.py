@@ -703,13 +703,13 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* typographic overlay recapturing the print opener */
 .plate:has(.ovw:not(.nyo)){{background:#1a0f0b;border-color:#1a0f0b}}
 /* New Yorkers: the print title set beneath the brush-stroke cut */
-.ovw.nyo{{padding-bottom:37cqw}}
+.ovw.nyo{{padding-bottom:0}}
 .nyo .ov{{text-shadow:none;color:var(--accent)}}
-.nyo .ov .nyb{{position:absolute;left:5%;top:auto;bottom:2%;width:86%;height:auto;container-type:inline-size}}
+.nyo .ov .nyb{{position:absolute;left:40%;top:auto;bottom:1.5%;width:58%;height:auto;container-type:inline-size}}
 .nyo .ov span{{position:relative;display:block;white-space:nowrap}}
-.nyo .n1{{font-family:"Bricolage Grotesque",sans-serif;font-weight:300;font-size:24.6cqw;line-height:.74;letter-spacing:-.045em;margin-left:9.4%;font-variation-settings:"opsz" 96,"wdth" 75;transform:scaleX(.86);transform-origin:left}}
-.nyo .n2{{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:24.6cqw;line-height:.74;letter-spacing:-.03em;margin:.06em 0 0 6.2%;font-variation-settings:"opsz" 96}}
-.nyo .n3{{font-family:"Literata",Georgia,serif;font-style:italic;font-weight:400;font-size:4.6cqw;line-height:1;color:var(--ink);margin-top:.75em;letter-spacing:-.005em}}
+.nyo .n1{{font-family:"Bricolage Grotesque",sans-serif;font-weight:300;font-size:22.6cqw;line-height:.74;letter-spacing:-.045em;margin-left:9.4%;font-variation-settings:"opsz" 96,"wdth" 75;transform:scaleX(.86);transform-origin:left}}
+.nyo .n2{{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:22.6cqw;line-height:.74;letter-spacing:-.03em;margin:.06em 0 0 6.2%;font-variation-settings:"opsz" 96}}
+.nyo .n3{{font-family:"Literata",Georgia,serif;font-style:italic;font-weight:400;font-size:4.3cqw;line-height:1;color:var(--ink);margin-top:.75em;text-shadow:0 0 3px var(--paper),0 0 8px var(--paper),0 0 14px var(--paper);letter-spacing:-.005em}}
 .nyo .n3 b{{font-weight:800}}
 .ovw{{position:relative;width:min(100%,calc(92vh * var(--ar)));margin:0 auto;container-type:inline-size}}
 .ovw img{{max-height:none;background:none}}
