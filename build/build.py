@@ -144,6 +144,36 @@ def chart_html(c):
             parts.append(f'<g class="hit"{pop(f"{y}: {lab}", story)}><rect x="{x:.1f}" y="0" width="{cw-6:.1f}" height="{90 + 16*9}" class="ghost"/>'
                          f'<text x="{x:.1f}" y="40" class="cyr">{y}</text><circle cx="{x+6:.1f}" cy="58" r="{6.5 if story else 5}" class="cdot"/>{txt}</g>')
         svg = f'<svg viewBox="0 0 {W} {80 + 16*mx + 8}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    elif c["kind"] == "timeline" and c.get("break"):
+        # two scales: the life stretched across most of the width, the later years folded behind a break mark;
+        # year labels fan out on leader lines in two tiers so every year can be read
+        ev = c["events"]; y0, y1 = c["start"], c["end"]; b0, b1 = c["break"]; W = 760; pad = 14; BR = 26; split = c.get("split", .76)
+        lw = (W - 2*pad - BR) * split; gw = (W - 2*pad - BR) - lw
+        X = lambda y: pad + lw * (y - y0) / (b0 - y0) if y <= b0 else pad + lw + BR + gw * (y - b1) / (y1 - b1)
+        kind = (lambda y: c["kinds"].get(y, "legacy")) if c.get("kinds") else (lambda y: "teach")
+        LY = 46; T = (86, 102, 118); SP = 38
+        parts = [f'<line x1="{pad}" y1="{LY}" x2="{pad+lw:.1f}" y2="{LY}" class="cax"/><line x1="{pad+lw+BR:.1f}" y1="{LY}" x2="{W-pad}" y2="{LY}" class="cax"/>',
+                 f'<path d="M{pad+lw+7:.1f} {LY+8} l5 -16 M{pad+lw+14:.1f} {LY+8} l5 -16" class="cbrk"/>']
+        for a, bb, lab in c.get("eras", []):
+            parts.append(f'<rect x="{X(a):.1f}" y="{LY-5}" width="{X(bb)-X(a):.1f}" height="10" rx="5" class="cera"/><text x="{(X(a)+X(bb))/2:.1f}" y="10" text-anchor="middle" class="cn2">{esc(lab)}</text>')
+        for t in [t for t in range((y0 // 10) * 10, b0 + 1, 10)] + [t for t in (1970, 2000, 2030) if b1 <= t <= y1]:
+            parts.append(f'<text x="{X(t):.1f}" y="30" text-anchor="middle" class="cn2">{t}</text>')
+        xs = [X(e[0]) for e in ev]; lx = [0.0] * len(ev)
+        for tier in range(len(T)):  # place each tier's labels left to right, then pull back from the right edge
+            idx = [i for i in range(len(ev)) if i % len(T) == tier]
+            for n, i in enumerate(idx): lx[i] = max(xs[i], lx[idx[n-1]] + SP if n else pad + 12)
+            for n in range(len(idx) - 1, -1, -1):
+                i = idx[n]; lim = lx[idx[n+1]] - SP if n < len(idx) - 1 else W - pad - 12
+                if lx[i] > lim: lx[i] = lim
+        rows = []
+        for i, e in enumerate(ev):
+            y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""; x = xs[i]; ty = T[i % len(T)]; k = kind(y)
+            parts.append(f'<path d="M{x:.1f} {LY+6} V{LY+12} L{lx[i]:.1f} {ty-16} V{ty-12}" class="cfan"/>')
+            parts.append(f'<g class="k-{k}"><circle cx="{x:.1f}" cy="{LY}" r="5.5" class="cdotk"/><circle cx="{x:.1f}" cy="{LY}" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><text x="{lx[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk">{y}</text></g>')
+            rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
+        K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
+        key = ('<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items()) + '</p>') if c.get("kinds") else ""
+        svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
     elif c["kind"] == "timeline":
         ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
         X = lambda y: pad + (W - 2*pad) * (y - y0) / (y1 - y0)
@@ -733,6 +763,8 @@ main,.head{{position:relative;z-index:1}}
 .chart .cno{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}}
 .chart{{--k-life:var(--ink);--k-teach:var(--accent);--k-serve:#265b76;--k-write:#9a6a12;--k-legacy:#8a8072}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}}} :root[data-theme="dark"] .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}
+.chart .cdotk{{fill:var(--k)}} .chart .cvk{{font-family:var(--ui);font-weight:700;font-size:12px;fill:var(--k);stroke:var(--paper);stroke-width:3px;paint-order:stroke;stroke-linejoin:round;font-variant-numeric:tabular-nums}} .chart .cfan{{fill:none;stroke:var(--rule);stroke-width:1}} .chart .cbrk{{stroke:var(--mute);stroke-width:1.5;fill:none}}
+.chart .hit:hover+.cvk,.chart g:hover .cdotk{{stroke:var(--paper);stroke-width:2}}
 .chart .k-life{{--k:var(--k-life)}} .chart .k-teach{{--k:var(--k-teach)}} .chart .k-serve{{--k:var(--k-serve)}} .chart .k-write{{--k:var(--k-write)}} .chart .k-legacy{{--k:var(--k-legacy)}}
 .chart .kkey{{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--ui);font-size:12px;color:var(--mute);margin:0 0 16px}} .chart .kkey i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--k);margin-right:6px}}
 .chart .ages{{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;margin-top:18px}}
