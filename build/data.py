@@ -3,6 +3,7 @@
 
 ISSUE = dict(
     title="The American Bahá'í",
+    theme="The Arts Issue",
     vol="Volume 57, Number 5",
     date="October / November / December 2026",
     url="www.bahai.us/stories",
