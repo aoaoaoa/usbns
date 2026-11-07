@@ -568,9 +568,15 @@ main,.head{{position:relative;z-index:1}}
 body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}}
 .head{{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in oklab,var(--bar) 94%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--barrule)}}
 .head .in{{max-width:1120px;margin:0 auto;{GUT}display:flex;align-items:stretch;gap:0;overflow-x:auto;scrollbar-width:none;position:relative}}
-.head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;margin-right:28px}}
+.head .brand{{font-family:var(--disp);font-size:17px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap;align-self:center;position:relative;padding-right:28px;margin-right:4px}}
+.head .brand::after{{content:"";position:absolute;right:0;top:12%;bottom:12%;width:1px;background:var(--barrule)}}
+.head .brand b{{font-family:var(--text);font-weight:600;font-size:18.5px;letter-spacing:-.015em;font-variation-settings:"opsz" 24}}
+.head .brand .sc{{font-style:normal;font-variant-caps:all-small-caps;letter-spacing:.06em;font-weight:500}}
+.head .brand .star path{{transition:fill .5s}} .head .brand.tinted .star path{{fill:var(--sc)}}
+.head .brand .star{{transform:translateY(-1px) rotate(var(--rot,0deg));transition:transform .4s cubic-bezier(.2,.8,.2,1)}}
+@media (prefers-reduced-motion:reduce){{.head .brand .star{{transform:translateY(-1px)!important}}}}
 .head .brand .bn{{display:inline-flex;align-items:center;gap:6px}}
-.head .brand .star{{width:17px;height:17px;flex:none;transform:translateY(-1px)}}
+.head .brand .star{{width:17px;height:17px;flex:none}}
 .head .brand small{{display:block;font-weight:400;font-size:11px;color:var(--mute);letter-spacing:.02em}}
 .head nav{{display:flex;margin-left:auto}}
 .head nav a{{display:flex;align-items:flex-end;position:relative;padding:18px 16px 0;border-bottom:4px solid var(--tint);color:var(--ink);text-decoration:none;font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap}}
@@ -772,7 +778,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg>The American Bahá'í</span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
+<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland"/><path d="{USMAP["states"]}" class="cstate"/></g></defs></svg>
 <div class="popup" role="dialog" aria-modal="false" aria-live="polite" hidden><button type="button" aria-label="Close">×</button><b></b><p></p></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -819,18 +825,19 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var links=[].slice.call(document.querySelectorAll('.head nav a'));
   var secs=[].slice.call(document.querySelectorAll('article.story'));
   var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
-  var cur=null;
+  var cur=null, brand=document.querySelector('.head .brand');
   function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
   var alias={{abiding:'huquq',fund:'huquq',rhythm:'huquq',books:'huquq',notices:'huquq'}};
   function tabFor(id){{return links.filter(function(l){{return l.getAttribute('href')==='#'+(alias[id]||id)}})[0];}}
   function progress(){{if(!cur)return;var a=tabFor(cur.id);if(!a)return;
-    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');}}
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');if(brand)brand.style.setProperty('--rot',(p*40).toFixed(1)+'deg');}}
   if('IntersectionObserver' in window){{
     var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
-      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});if(brand){{var c=t&&getComputedStyle(t).getPropertyValue('--tint').trim();brand.classList.toggle('tinted',!!c);if(c)brand.style.setProperty('--sc',c);}}progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
     secs.forEach(function(x){{io.observe(x)}});
   }}
-  addEventListener('scroll',progress,{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
+  function home(){{if(brand&&secs[0]&&secs[0].getBoundingClientRect().top>innerHeight*.4){{brand.classList.remove('tinted');brand.style.setProperty('--rot','0deg');}}}}
+  addEventListener('scroll',function(){{progress();home();}},{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
   [].slice.call(document.querySelectorAll('.shead')).forEach(function(h){{
     var pieces=[].slice.call(h.querySelectorAll('.torn i')); if(!pieces.length)return;
