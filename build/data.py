@@ -74,7 +74,7 @@ GREGORY_KINDS = {1881: 'life', 1879: 'life', 1891: 'life', 1896: 'life', 1906: '
 
 
 # A common endeavor: the letter's address line and postmarks from places that took it up, set over the quilt
-_PM = [('SEATTLE', 'WA', 1210, 250, -12), ('IDAHO FALLS', 'ID', 1440, 420, 8), ('HOUSTON', 'TX', 1230, 600, 10), ('MINNEAPOLIS', 'MN', 1450, 770, -9), ('LORAIN', 'OH', 1120, 830, -4), ('ALBUQUERQUE', 'NM', 330, 250, -6), ('CHICAGO', 'IL', 110, 330, 7), ('INDIANAPOLIS', 'IN', 380, 860, 5)]
+_PM = [('SEATTLE', 'WA', 1210, 250, -12), ('IDAHO FALLS', 'ID', 1440, 420, 8), ('HOUSTON', 'TX', 1230, 600, 10), ('MINNEAPOLIS', 'MN', 1450, 770, -9), ('LORAIN', 'OH', 1120, 830, -4), ('ALBUQUERQUE', 'NM', 330, 250, -6), ('CHICAGO', 'IL', 110, 330, 7), ('INDIANAPOLIS', 'IN', 1420, 105, 5)]
 ENDEAVOR_POSTMARKS = ('<svg viewBox="0 0 1600 923">'
     '<g class="adr"><text x="60" y="560">To every soul who holds</text><text x="60" y="628">“the promise of America</text><text x="60" y="696">in their heart”</text></g>'
     '<text class="ttl" x="62" y="758">A COMMON ENDEAVOR</text>'

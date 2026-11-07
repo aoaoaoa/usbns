@@ -50,7 +50,7 @@ def body_html(blocks):
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "verb":
-            out.append('<blockquote class="verb" data-f="3"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s0">&#8203;</span><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
+            out.append('<blockquote class="verb" data-f="2"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx">&#8203;<span class="s2">ing</span></span><span class="pos"><s class="pn">noun</s><b class="pv">verb</b></span></p>'
                        f'<p class="vr"><span class="vh">“Neighboring </span>has become a verb.”</p><cite>{esc(b[1])}</cite></blockquote>')
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
@@ -798,12 +798,16 @@ main,.head{{position:relative;z-index:1}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.verb{{grid-column:2;margin:clamp(28px,4vw,48px) 0;padding:0 0 0 .1em}}
 .prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:500;letter-spacing:-.01em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
-.verb .sx{{display:inline-grid;align-items:baseline;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0;transform:translateY(.12em);transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}}
-.verb[data-f="0"] .s0,.verb[data-f="1"] .s1,.verb[data-f="2"] .s2,.verb[data-f="3"] .s3{{opacity:1;transform:none}}
+.verb .sx{{display:inline-block;color:var(--accent);font-style:italic}} .verb .s2{{display:inline-block;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}}
+.verb:not([data-f="2"]) .s2{{opacity:0;transform:translateX(-.15em)}}
+.verb .pos{{display:inline-flex;flex-direction:column;gap:.15em;vertical-align:top;margin:.12em 0 0 .5em;font-family:var(--ui);font-size:clamp(11px,1.1vw,13px);font-style:normal;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;color:var(--mute)}}
+.verb .pn{{text-decoration:none;position:relative}} .verb .pn::after{{content:"";position:absolute;left:-2px;right:-2px;top:52%;height:1.5px;background:currentColor;transform:scaleX(var(--k,1));transform-origin:left;transition:transform .4s cubic-bezier(.5,.1,.4,1)}}
+.verb .pv{{font-weight:600;color:var(--accent);transition:opacity .35s .15s,transform .35s .15s}}
+.verb[data-f="0"] .pn{{--k:0}} .verb[data-f="0"] .pv{{opacity:0;transform:translateY(-.3em)}}
 .verb .vq{{margin-left:-.42em;display:inline-block;width:.42em}}
 .verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(22px,2.9vw,36px);line-height:1.15;margin-top:.1em;transition:opacity .5s,transform .5s}}
 .verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1em;transition:opacity .5s .15s}}
-.verb:not([data-f="3"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="3"]) cite{{opacity:0}}
+.verb:not([data-f="2"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="2"]) cite{{opacity:0}}
 @media (max-width:760px){{.prose>.verb{{grid-column:auto}} .verb .vq{{margin-left:0;width:auto}}}}
 .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 .prose>.mnote{{grid-column:1;grid-row:span 2;align-self:start;margin:.3em 0 1.6em;max-width:24ch;transform:rotate(var(--mr,-1.5deg));color:#2c4a72;cursor:default}}
@@ -1328,8 +1332,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
   (function(){{var V=[].slice.call(document.querySelectorAll('.verb'));if(!V.length||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-    V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%4)}})}});
-    function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.92-r.top)/(h*0.55);v.dataset.f=String(Math.max(0,Math.min(3,Math.floor(p*4))))}})}}
+    V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%3)}})}});
+    function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.92-r.top)/(h*0.5);v.dataset.f=String(Math.max(0,Math.min(2,Math.floor(p*3))))}})}}
     addEventListener('scroll',tick,{{passive:true}});addEventListener('resize',tick);tick();}})();
   var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.mnote,.mnh'));
   if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
