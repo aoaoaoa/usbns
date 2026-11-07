@@ -514,6 +514,7 @@ def build_tab(member=False):
     head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
     lead = ""; depts = ""; dindex = ""; dhead = ""
+    rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]]) for a in ARTICLES]
     if member:
         from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
         L = LETTER
@@ -557,6 +558,7 @@ def build_tab(member=False):
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
         dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
+        rows += [("letter", "Letter from the National Assembly", "2", "var(--mem)")] + [(s, t, p, "var(--mem)") for s, t, p in D]
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
@@ -791,6 +793,22 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head nav a.on .fill{{width:var(--p,0%)}}
 .head .ind{{position:absolute;bottom:-1px;height:2px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}}
 @media (prefers-reduced-motion:reduce){{.head nav a .fill,.head .ind{{transition:none}}}}
+.head .rh,.head .rht,.head .rhp,.head .rhs{{display:none}}
+@media (max-width:700px){{
+.head .in{{overflow:visible;align-items:center;min-height:54px}} .head nav,.head .ind{{display:none}}
+.head .brand{{padding-right:0;margin-right:10px}} .head .brand::after,.head .brand b{{display:none}} .head .brand .star{{width:20px;height:20px}}
+.head .rh{{display:flex;flex:1;min-width:0;flex-direction:column;gap:1px;background:none;border:0;padding:6px 0;text-align:left;color:var(--ink);cursor:pointer;font:inherit}}
+.head .rh small{{font-family:var(--text);font-size:11.5px;color:var(--mute);line-height:1.2}}
+.head .rh b{{font-family:var(--ui);font-weight:600;font-size:15.5px;display:flex;align-items:center;gap:7px;line-height:1.25;min-width:0}} .head .rh b span{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+.head .rh b i{{width:8px;height:8px;border-radius:50%;background:var(--rt,transparent);flex:none}} .head:not(.inside) .rh b i{{display:none}}
+.head .rht{{display:grid;place-items:center;width:44px;height:44px;margin-right:-10px;border:0;background:none;color:var(--ink);cursor:pointer}} .head .rht svg{{transition:transform .25s}} .head.open .rht svg{{transform:rotate(180deg)}}
+.head .rhp{{display:block;position:absolute;left:0;bottom:-1px;height:3px;width:var(--rp,0%);background:var(--rt,transparent);transition:width .15s}}
+.head .rhs{{display:block;position:absolute;left:0;right:0;top:100%;max-height:calc(100dvh - 70px);overflow-y:auto;background:var(--bar);border-bottom:1px solid var(--barrule);box-shadow:0 14px 24px rgb(0 0 0/.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility 0s .18s}}
+.head.open .rhs{{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}}
+.head .rhs a{{display:flex;align-items:baseline;gap:10px;padding:13px 16px 13px 14px;border-left:4px solid var(--tint);border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none;font-family:var(--disp);font-size:18px;line-height:1.25}}
+.head .rhs a small{{margin-left:auto;flex:none;font-family:var(--ui);font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}} .head .rhs a.on{{background:var(--tabon)}}
+}}
+@media (prefers-reduced-motion:reduce){{.head .rhs,.head .rhp,.head .rht svg{{transition:none}}}}
 @media (max-width:900px){{.head .brand small{{display:none}} .head nav{{margin-left:0}} .head nav a{{padding:14px 12px 0;font-size:14px}}}}
 /* cover */
 .cover{{padding-block:clamp(28px,5vw,64px) 0}}
@@ -992,7 +1010,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 </style>
-<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
+<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span><button class="rh" type="button" aria-expanded="false" aria-controls="rhs"><small>The American Bahá'í</small><b><i></i><span>Contents</span></b></button><button class="rht" type="button" aria-label="Contents" aria-expanded="false" aria-controls="rhs"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div><i class="rhp" aria-hidden="true"></i><div class="rhs" role="navigation" id="rhs" aria-label="Contents">{"".join(f'<a href="#{s}" style="--tint:{t}">{esc(n)}<small>p.&#8201;{p}</small></a>' for s, n, p, t in rows)}</div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland" vector-effect="non-scaling-stroke"/><path d="{USMAP["states"]}" class="cstate" vector-effect="non-scaling-stroke"/></g></defs></svg>
 <div class="popup" role="dialog" aria-modal="false" aria-live="polite" hidden><button type="button" aria-label="Close">×</button><b></b><p></p></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -1042,17 +1060,28 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var secs=[].slice.call(document.querySelectorAll('article.story'));
   var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
   var cur=null, brand=document.querySelector('.head .brand');
+  var hd=document.querySelector('.head'), rhs=[].slice.call(document.querySelectorAll('.head .rhs a')), rhn=document.querySelector('.head .rh span');
+  function rhSet(id){{var l=rhs.filter(function(x){{return x.getAttribute('href')==='#'+id}})[0]||rhs.filter(function(x){{return x.getAttribute('href')==='#'+(alias[id]||id)}})[0];
+    rhs.forEach(function(x){{x.classList.toggle('on',x===l)}});hd.classList.toggle('inside',!!l);rhn.textContent=l?l.firstChild.textContent:'Contents';if(l)hd.style.setProperty('--rt',l.style.getPropertyValue('--tint'));}}
+  function rhOpen(o){{hd.classList.toggle('open',o);var on=o&&document.querySelector('.head .rhs a.on');if(on)on.parentNode.scrollTop=on.offsetTop-on.parentNode.clientHeight/3;[].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.setAttribute('aria-expanded',o)}});}}
+  [].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.addEventListener('click',function(){{rhOpen(!hd.classList.contains('open'))}})}});
+  rhs.forEach(function(x){{x.addEventListener('click',function(){{rhOpen(false)}})}});
+  // lazy images above a target can push it down mid-jump; settle on it once they load
+  [].forEach.call(document.querySelectorAll('.head a[href^="#"]'),function(x){{x.addEventListener('click',function(){{var t=document.getElementById(x.getAttribute('href').slice(1));if(!t)return;
+    var n=0,iv=setInterval(function(){{var d=t.getBoundingClientRect().top-hd.offsetHeight;if(++n>20||Math.abs(d)<3&&n>4){{clearInterval(iv);return}}if(n>1&&Math.abs(d)>=3)scrollTo({{top:scrollY+d,behavior:'auto'}});}},250);}})}});
+  document.addEventListener('keydown',function(e){{if(e.key==='Escape')rhOpen(false)}});
+  document.addEventListener('click',function(e){{if(!e.target.closest('.head'))rhOpen(false)}});
   function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
   var alias={{abiding:'huquq',fund:'huquq',rhythm:'huquq',books:'huquq',notices:'huquq'}};
   function tabFor(id){{return links.filter(function(l){{return l.getAttribute('href')==='#'+(alias[id]||id)}})[0];}}
   function progress(){{if(!cur)return;var a=tabFor(cur.id);if(!a)return;
-    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');if(brand)brand.style.setProperty('--rot',(p*40).toFixed(1)+'deg');}}
+    var r=cur.getBoundingClientRect();var top=r.top+scrollY, h=r.height;var p=(scrollY+innerHeight*0.4-top)/h;p=Math.max(0,Math.min(1,p));a.style.setProperty('--p',(p*100).toFixed(1)+'%');hd.style.setProperty('--rp',(p*100).toFixed(1)+'%');if(brand)brand.style.setProperty('--rot',(p*40).toFixed(1)+'deg');}}
   if('IntersectionObserver' in window){{
     var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;cur=e.target;
-      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});if(brand){{var c=t&&getComputedStyle(t).getPropertyValue('--tint').trim();brand.classList.toggle('tinted',!!c);if(c)brand.style.setProperty('--sc',c);}}progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
+      var t=tabFor(e.target.id);links.forEach(function(a){{var on=a===t;a.classList.toggle('on',on);if(on)place(a);}});rhSet(e.target.id);if(brand){{var c=t&&getComputedStyle(t).getPropertyValue('--tint').trim();brand.classList.toggle('tinted',!!c);if(c)brand.style.setProperty('--sc',c);}}progress();}});}},{{rootMargin:'-30% 0px -60% 0px'}});
     secs.forEach(function(x){{io.observe(x)}});
   }}
-  function home(){{if(brand&&secs[0]&&secs[0].getBoundingClientRect().top>innerHeight*.4){{brand.classList.remove('tinted');brand.style.setProperty('--rot','0deg');}}}}
+  function home(){{if(brand&&secs[0]&&secs[0].getBoundingClientRect().top>innerHeight*.4){{brand.classList.remove('tinted');brand.style.setProperty('--rot','0deg');hd.classList.remove('inside');hd.style.setProperty('--rp','0%');rhn.textContent='Contents';rhs.forEach(function(x){{x.classList.remove('on')}});}}}}
   addEventListener('scroll',function(){{progress();home();}},{{passive:true}}); addEventListener('resize',function(){{place(document.querySelector('.head nav a.on'))}});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!matchMedia('(hover: hover)').matches)return;
   [].slice.call(document.querySelectorAll('.shead')).forEach(function(h){{
