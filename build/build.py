@@ -41,6 +41,9 @@ def body_html(blocks):
         elif k == "chart": out.append(chart_html(b[1]))
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
+        elif k == "verb":
+            out.append(f'<blockquote class="verb"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
+                       f'<p class="vr"><span class="vh">“Neighboring </span>has become a verb.”</p><cite>{esc(b[1])}</cite></blockquote>')
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
             out.append(f'<p class="figsent{" " + b[3] if len(b) > 3 else ""}">' + "".join((f'<b class="{"has" if pops.get(p) else ""}{" wd" if len(p) > 8 else ""}"{pop(p, pops.get(p, ""))}>{esc(p)}</b>' if i % 2 else esc(p)) for i, p in enumerate(parts)) + '</p>')
@@ -844,6 +847,19 @@ main,.head{{position:relative;z-index:1}}
 .chart .cpull{{stroke:var(--accent);stroke-width:2.5;fill:none}}
 .chart text.csubw{{font-family:var(--text);font-style:italic;font-size:15px;fill:var(--mute)}} .chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
+.prose>.verb{{grid-column:1/-1;container-type:inline-size;margin:clamp(36px,6vw,72px) 0;padding:clamp(36px,6vw,72px) 16px;background:var(--cream);border-radius:4px;text-align:center}}
+.prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:min(12cqw,150px);line-height:1;font-weight:500;letter-spacing:-.01em}}
+.verb .sx{{display:inline-grid;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0}} .verb .sx .s3{{opacity:1}}
+.verb .vq{{margin-left:-.4em;display:inline-block;width:.4em}}
+.verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:min(5.2cqw,64px);line-height:1.1;margin-top:.15em}}
+.verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:clamp(11px,1.5cqw,15px);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1.4em}}
+.vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .verb .sx .s3,.ovready .verb .vr,.ovready .verb cite{{opacity:0}}
+.ovready .verb.go .s1{{animation:vsfx 1s .5s}} .ovready .verb.go .s2{{animation:vsfx 1s 1.5s}} .ovready .verb.go .s3{{animation:vkeep .4s 2.5s forwards}}
+.ovready .verb.go .vr{{opacity:1;transition:opacity .8s 3.1s}} .ovready .verb.go cite{{opacity:1;transition:opacity .8s 3.7s}}
+}}
+@keyframes vsfx{{15%,80%{{opacity:1}}}} @keyframes vkeep{{to{{opacity:1}}}}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
 .figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
 .prose>.figsent.lg{{font-size:clamp(26px,2.9vw,36px);line-height:1.35}} .figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
@@ -1357,7 +1373,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
-  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash'));
+  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.verb'));
   if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
   else W.forEach(function(w){{w.classList.add('go')}});
   var ny=document.querySelector('.ovw.nyo'); if(ny&&!rm){{var tick=function(){{var r=ny.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight+r.height);p=Math.max(0,Math.min(1,p))-.5;ny.style.setProperty('--dr',(p*24).toFixed(1))}};addEventListener('scroll',tick,{{passive:true}});tick();}}
