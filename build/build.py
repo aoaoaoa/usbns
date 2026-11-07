@@ -1345,6 +1345,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .story{{grid-template-columns:minmax(0,1fr)}}
   .shead,.margin,.prose{{grid-column:1}}
   .margin{{grid-row:auto;position:static;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:28px}}
+  .margin .sharebtn{{order:1}} .margin .listen{{order:2;flex-basis:100%}}
   .shead h2{{font-size:clamp(46px,12.5vw,76px);line-height:.94;max-width:none}}
   .margin .kicker,.margin .pp{{margin:0!important}}
   .prose{{display:block}}
