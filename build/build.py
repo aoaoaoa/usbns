@@ -648,7 +648,7 @@ def build_tab(member=False, menu="contents"):
   <aside class="margin">
     <p class="kicker">{esc(a["kicker"])}</p>
     {by}
-    <p class="pp">Pages {a["pages"]}</p>
+    <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
     {listen(a)}
   </aside>
   <div class="prose">{below if a["slug"] == "comic" else ""}{first_para_dropcap(body_html(a["body"]))}</div>
@@ -665,14 +665,14 @@ def build_tab(member=False, menu="contents"):
         L = LETTER
         lead = f'''<article class="story letter members" id="{L["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(L["kicker"])}</p><h2>{esc(L["title"])}</h2><p class="dek">{esc(L["dek"])}</p></header>
-  <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">Pages {L["pages"]}</p></aside>
+  <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">{"Print pages" if "–" in str(L["pages"]) else "Print page"} {L["pages"]}</p></aside>
   <div class="prose"><p class="salute">{esc(L["salutation"])}</p>{first_para_dropcap(body_html(L["body"]))}<p class="sign">{esc(L["closing"][0])}<br><b>{esc(L["closing"][1])}</b></p></div>
 </article>'''
         def dept_open(d):
             dek = f'<p class="dek">{esc(d["dek"])}</p>' if d.get("dek") else ""
             return f'''<article class="story dept members" id="{d["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>{dek}</header>
-  <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">Pages {d["pages"]}</p></aside>'''
+  <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">{"Print pages" if "–" in str(d["pages"]) else "Print page"} {d["pages"]}</p></aside>'''
         huq = dept_open(HUQUQ) + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
         qs = "".join(f'<section class="qblock"><h3>{esc(q)}</h3>' + "".join(f'<blockquote class="passage"><p>{esc(t)}</p><cite>{esc(c)}</cite></blockquote>' for t,c in items) + '</section>' for q,items in ABIDING["questions"])
         abide = dept_open(ABIDING) + f'''<div class="prose compilation"><blockquote class="passage lead"><p>{esc(ABIDING["epigraph"][0])}</p><cite>{esc(ABIDING["epigraph"][1])}</cite></blockquote>{qs}</div></article>'''
@@ -695,7 +695,7 @@ def build_tab(member=False, menu="contents"):
         bk = "".join(book(it) for it in B["items"])
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
-        notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
+        notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
         lead = ""
         D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
@@ -1482,7 +1482,7 @@ def build_plates():
         chapters.append(f'''<section class="chapter" id="{a["slug"]}">
   <div class="plate">
     {plate}
-    <div class="cap"><span class="n">Plate {n}</span><span>{esc(a["art_credit"] or "Set in type")}</span><span>pp. {a["pages"]}</span></div>
+    <div class="cap"><span class="n">Plate {n}</span><span>{esc(a["art_credit"] or "Set in type")}</span><span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span></div>
   </div>
   <header class="chead">{torn}
     <p class="kicker">{esc(a["kicker"])}</p>
@@ -1638,7 +1638,7 @@ def build_reader():
     <p class="kicker">{esc(a["kicker"])}</p>
     <h2>{esc(a["title"])}</h2>
     {dek}
-    <p class="meta">{by}<span>Pages {a["pages"]}</span></p>
+    <p class="meta">{by}<span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span></p>
   </header>
   {art}
   <div class="prose">{body_html(a["body"])}</div>
