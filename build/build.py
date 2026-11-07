@@ -1130,11 +1130,11 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* Louis Gregory: a broadside, the name pressed in letter by letter */
 .gro .ov{{text-shadow:none;color:#1d1a16}}
 .gro .ov span{{animation:none!important}}
-.gro .gbs{{position:absolute;right:2.5%;top:4%;width:36%;white-space:normal;line-height:1;background:rgba(247,242,234,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:1.6cqw 1.8cqw;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.12)}}
+.gro .gbs{{position:absolute;right:2.5%;top:4%;width:auto;white-space:normal;line-height:1;background:rgba(247,242,234,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:1.2cqw 1.4cqw;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.12)}}
 .gro .gbs span{{position:relative;white-space:normal}} .gro .gbs .gnm{{white-space:nowrap}}
-.gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:8.2cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
+.gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:5.8cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
 .gro .gl{{display:inline-block}}
-.gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:3cqw;margin:.35em 0 .2em;border-bottom:.25cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
+.gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:2.2cqw;margin:.35em 0 .2em;border-bottom:.25cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
 @media (prefers-reduced-motion:no-preference){{
 .ovready .gro .gl{{transform:scale(1.12);opacity:0;filter:blur(1.5px)}} .ovready .gro .gyr{{opacity:0}}
 .ovready .gro.go .gl{{transform:none;opacity:1;filter:none;transition:transform .5s cubic-bezier(.2,.9,.2,1) var(--d),opacity .35s var(--d),filter .5s var(--d)}}
