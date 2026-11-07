@@ -174,7 +174,29 @@ def chart_html(c):
         K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
         used = {kind(e[0]) for e in ev}
         key = ('<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items() if k in used) + '</p>') if c.get("kinds") else ""
-        svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
+        def row(evs, a, z, ticks, era, T):
+            # phone row: one span at the phone's width, labels fanned in T rows
+            RW = 358; rp = 12; RY = 30; RSP = 34; Xr = lambda y: rp + (RW - 2*rp) * (y - a) / (z - a)
+            q = [f'<line x1="{rp}" y1="{RY}" x2="{RW-rp}" y2="{RY}" class="cax"/>']
+            if era: q.append(f'<rect x="{Xr(era[0]):.1f}" y="{RY-4}" width="{Xr(era[1])-Xr(era[0]):.1f}" height="8" rx="4" class="cera"/>')
+            q += [f'<text x="{Xr(t):.1f}" y="{RY-12}" text-anchor="middle" class="cn2">{t}</text>' for t in ticks]
+            rx = [Xr(e[0]) for e in evs]; rl = rx[:]
+            for tier in range(len(T)):
+                idx = [i for i in range(len(evs)) if i % len(T) == tier]
+                for n, i in enumerate(idx): rl[i] = max(rx[i], rl[idx[n-1]] + RSP if n else rp + 10)
+                for n in range(len(idx) - 1, -1, -1):
+                    i = idx[n]; lim = rl[idx[n+1]] - RSP if n < len(idx) - 1 else RW - rp - 10
+                    if rl[i] > lim: rl[i] = lim
+            for i, e in enumerate(evs):
+                ty = T[i % len(T)]; k = kind(e[0]); story = e[2] if len(e) > 2 else ""
+                q.append(f'<path d="M{rx[i]:.1f} {RY+5} V{RY+10} L{rl[i]:.1f} {ty-13} V{ty-10}" class="cfan"/>')
+                q.append(f'<g class="k-{k}"><circle cx="{rx[i]:.1f}" cy="{RY}" r="4" class="cdotk"/><circle cx="{rx[i]:.1f}" cy="{RY}" r="9" class="ghost hit"{pop(f"{e[0]}: {e[1]}", story)}/><text x="{rl[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk">{e[0]}</text></g>')
+            return f'<svg viewBox="0 0 {RW} {T[-1] + 6}" width="100%" aria-hidden="true">{"".join(q)}</svg>'
+        eras = c.get("eras", [])
+        life = [e for e in ev if e[0] <= b0]; later = [e for e in ev if e[0] > b0]
+        rows2 = (f'<div class="tlrows"><p class="tlrl">{esc(eras[0][2]) if eras else ""}, {life[0][0]}–{life[-1][0]}</p>' + row(life, (y0 // 10) * 10, b0 + 3, [t for t in range(1880, b0, 20)], eras[0][:2] if eras else None, (62, 78, 94, 110))
+                 + f'<p class="tlrl">{esc(eras[1][2]) if len(eras) > 1 else ""}, {later[0][0]}–{later[-1][0]}</p>' + row(later, later[0][0] - 6, y1, [t for t in (1960, 1980, 2000, 2020) if later[0][0] - 6 < t < y1], (later[0][0], later[-1][0]), (62, 78)) + '</div>') if later else ""
+        svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg>{rows2}<ol class="tl">{"".join(rows)}</ol>'
     elif c["kind"] == "timeline":
         ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
         X = lambda y: pad + (W - 2*pad) * (y - y0) / (y1 - y0)
@@ -764,6 +786,8 @@ main,.head{{position:relative;z-index:1}}
 .chart .cno{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}}
 .chart{{--k-life:var(--ink);--k-teach:var(--accent);--k-serve:#265b76;--k-write:#9a6a12;--k-legacy:#8a8072}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}}} :root[data-theme="dark"] .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}
+.chart .tlrows{{display:none}} .chart .tlrl{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:10px 0 0}}
+@media (max-width:600px){{.chart svg.tl2{{display:none}} .chart .tlrows{{display:block}} .chart .tlrows svg+.tlrl{{margin-top:4px}}}}
 .chart .cdotk{{fill:var(--k)}} .chart .cvk{{font-family:var(--ui);font-weight:700;font-size:12px;fill:var(--k);stroke:var(--paper);stroke-width:3px;paint-order:stroke;stroke-linejoin:round;font-variant-numeric:tabular-nums}} .chart .cfan{{fill:none;stroke:var(--rule);stroke-width:1}} .chart .cbrk{{stroke:var(--mute);stroke-width:1.5;fill:none}}
 .chart .hit:hover+.cvk,.chart g:hover .cdotk{{stroke:var(--paper);stroke-width:2}}
 .chart .k-life{{--k:var(--k-life)}} .chart .k-teach{{--k:var(--k-teach)}} .chart .k-serve{{--k:var(--k-serve)}} .chart .k-write{{--k:var(--k-write)}} .chart .k-legacy{{--k:var(--k-legacy)}}
