@@ -680,7 +680,6 @@ def build_tab(member=False, menu="contents"):
             art = (f'<div class="fnote" role="img" aria-label="50 years: the Association for Bahá\'í Studies, founded in 1975"><div class="fbig" aria-hidden="true"><span>50</span><sup>1</sup></div><div class="frule" aria-hidden="true"></div>'
                    f'<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975.</p></div>')
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
-        dek += below if a["slug"] == "comic" else ""
         by = (f'<p class="by{" nob" if a["byline"].startswith(("Adapted","Story")) else ""}">{esc(a["byline"])}</p>') if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
         pal = {"gregory":("#f26b2b","#2448c8","#f05a7e","#f3c623"),"newyorkers":("#2448c8","#f05a7e","#f3c623","#5f8f3a"),"twoartists":("#b07a4a","#e9a21f","#2f6a4a","#f26b2b"),"abs":("#c9462c","#1b5e6b","#e9a21f","#2448c8"),"endeavor":("#1b5e6b","#e9a21f","#9ec3cc","#f26b2b"),"comic":("#f3c623","#2448c8","#f26b2b","#5f8f3a")}[a["slug"]]
@@ -697,7 +696,7 @@ def build_tab(member=False, menu="contents"):
     <p class="pp">Pages {a["pages"]}</p>
     {listen(a)}
   </aside>
-  <div class="prose">{first_para_dropcap(body_html(a["body"]))}</div>
+  <div class="prose">{below if a["slug"] == "comic" else ""}{first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
         if i < len(VOICES):
             v = VOICES[i]
@@ -1185,7 +1184,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
 .plate.bare figcaption{{padding-left:0}}
-.shead .plate.comic{{margin:clamp(24px,3.4vw,40px) 0 0}}
+.prose>.plate.comic{{grid-column:1/-1;margin:0 0 clamp(28px,4vw,44px)}}
 .plate.comic{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)}}
 .plate.comic img{{max-height:none;background:#fff}}
 .plate.comic figcaption{{grid-column:1/-1;background:var(--cream)}}
