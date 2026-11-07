@@ -20,10 +20,18 @@ SIDES = '<meta name="claude:viewport-fit-sides" content="cover">'
 GUT = "padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));"
 
 def body_html(blocks):
-    out = []
+    out = []; mark = None
     for b in blocks:
         k = b[0]
-        if k == "p": out.append(f"<p>{qesc(b[1])}</p>")
+        if k == "p":
+            t = qesc(b[1])
+            if mark and mark[0] in t:  # the phrase a margin note answers
+                t = t.replace(mark[0], f'<mark class="mnh" id="{mark[1]}">{mark[0]}</mark>', 1); mark = None
+            out.append(f"<p>{t}</p>")
+        elif k == "mnote":
+            # ("mnote", quote, who, phrase in the next paragraph)
+            mid = "mn-" + re.sub(r"[^a-z]+", "-", b[3].lower()).strip("-"); mark = (b[3], mid)
+            out.append(f'<aside class="mnote" data-for="{mid}"><span class="mq">{qesc(b[1])}</span><span class="mw">{esc(b[2])}</span></aside>')
         elif k == "h": out.append(f"<h3>{esc(b[1])}</h3>")
         elif k == "q": out.append(f'<blockquote class="pull"><p>{esc(b[1])}</p><cite>{esc(b[2])}</cite></blockquote>')
         elif k == "note": out.append(f'<p class="note">{esc(b[1])}</p>')
@@ -42,7 +50,7 @@ def body_html(blocks):
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "verb":
-            out.append(f'<blockquote class="verb"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
+            out.append('<blockquote class="verb" data-f="3"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx"><span class="s0"></span><span class="s1">s</span><span class="s2">ed</span><span class="s3">ing</span></span></p>'
                        f'<p class="vr"><span class="vh">“Neighboring </span>has become a verb.”</p><cite>{esc(b[1])}</cite></blockquote>')
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
@@ -80,7 +88,8 @@ IMGAR = _imgar()
 def pop(title, body):
     """Attributes that make an element open the shared popup."""
     if not body: return ""
-    return f' tabindex="0" role="button" data-pt="{html.escape(title.replace("|", " "), quote=True)}" data-pb="{html.escape(body, quote=True)}"'
+    t = html.escape(title.replace("|", " "), quote=True)
+    return f' tabindex="0" role="button" aria-label="{t}" data-pt="{t}" data-pb="{html.escape(body, quote=True)}"'
 
 def size_cls(c):
     w = c.get("w"); return "" if not w else (" sized span" if w > 640 else " sized")
@@ -223,41 +232,9 @@ def chart_html(c):
         for t in c.get("ticks", []):
             parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
         svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
-    elif c["kind"] in ("lifeyears", "ledger"):
-        K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
-        kind = lambda y: c["kinds"].get(y, "legacy")
-        key = '<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items()) + '</p>'
-        if c["kind"] == "lifeyears":
-            by = {e[0]: e for e in c["events"]}; born, died = c["born"], c["died"]
-            marks = {born: "Born", 1909: "Age 35", died: f"Age {died - born}", 1972: f"{1972 - died} years on", c["end"]: f"{c['end'] - died} years on"}
-            cells = []
-            for y in range(born, c["end"] + 1):
-                e = by.get(y); cl = ("lv" if y <= died else "af") + (f" ev k-{kind(y)}" if e else "")
-                m = f'<em{" class=r" if (y - born) % 26 > 20 else ""}>{marks[y]}</em>' if y in marks else ""
-                cells.append(f'<span class="{cl}"{pop(f"{y}: {e[1]}", e[2]) if e else ""}>{m}</span>')
-            svg = key + f'<div class="ages">{"".join(cells)}</div><p class="agecap"><span>{born}</span><span>{died} · {c["end"]}</span></p>'
-        else:
-            rows = []; prev = None
-            for e in c["events"]:
-                if prev and e[0] - prev >= 12: rows.append(f'<li class="gap"><span>{e[0] - prev} years</span></li>')
-                rows.append(f'<li class="k-{kind(e[0])}"><b>{e[0]}</b><div><h4>{esc(e[1])}</h4><p>{esc(e[2])}</p></div></li>'); prev = e[0]
-            svg = key + f'<ol class="ledger">{"".join(rows)}</ol>'
-    elif c["kind"] == "ribbon":
-        months = c["months"]; n = len(months); W = 620; GAP = 18; cw = (W - GAP) / n; parts = []
-        for i, (name, mean) in enumerate(months):
-            hue = (135 + 330 * i / (n - 1)) % 360; x = i * cw + (GAP if i == n - 1 else 0)
-            base = c.get("starts", [None]*n)[i]; st = c.get("stories", {}).get(name, "")
-            parts.append(f'<g class="hit"{pop(f"{name}, {mean}", month_body(c, i, name, base, st))}><rect x="{x+1:.1f}" y="26" width="{cw-2:.1f}" height="120" rx="3" style="fill:oklch(.62 .11 {hue:.0f})"/>'
-                         f'<text x="{x+cw/2:.1f}" y="44" text-anchor="middle" class="cvin">{i+1}</text>'
-                         f'<text transform="translate({x+cw/2+4:.1f},136) rotate(-90)" class="crib">{esc(mean)}</text></g>')
-        xa = (n - 1) * cw + GAP / 2
-        ah = "The intercalary days, four or five, before the last month: days of hospitality, charity and gift-giving."
-        parts.append(f'<g class="hit"{pop("Ayyám-i-Há", ah)}><rect x="{xa-9:.1f}" y="26" width="18" height="120" class="ghost"/>' + "".join(f'<circle cx="{xa:.1f}" cy="{58 + k*18}" r="4.5" class="cayy"/>' for k in range(4)) + '</g>')
-        parts.append(f'<text x="0" y="172" class="cn2">Naw-Rúz · March 21</text><text x="{xa:.1f}" y="172" text-anchor="middle" class="cn2">Ayyám-i-Há</text><text x="{W}" y="190" text-anchor="end" class="cn2">‘Alá’, the month of fasting</text>')
-        svg = f'<svg viewBox="0 0 {W} 196" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "ring":
         import math
-        months = c["months"]; hi = set(c.get("highlight", [])); n = len(months); cx = cy = 210; r0, r1 = 118, 160
+        months = c["months"]; n = len(months); cx = cy = 210; r0, r1 = 118, 160
         parts = []
         for i, (name, mean) in enumerate(months):
             a0 = -math.pi/2 + 2*math.pi*i/n + .012; a1 = -math.pi/2 + 2*math.pi*(i+1)/n - .012
@@ -347,14 +324,6 @@ def chart_html(c):
         tot = TOP + PH + 6 if insets else H + 10
         svg = f'<svg viewBox="-10 -6 {W + 20} {tot + 6}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}{"".join(panels)}</svg>'
         if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>Reported to the National Assembly</span></p>'
-    elif c["kind"] == "pictogram":
-        rows = c["rows"]; W = 600; parts = []; rowh = 40
-        for r, row in enumerate(rows):
-            lab, count, story = row[0], row[1], row[2] if len(row) > 2 else ""
-            y = r * rowh
-            dots = "".join(f'<circle cx="{170 + k*26}" cy="{y+18}" r="9" class="cdot"/>' for k in range(count))
-            parts.append(f'<g class="hit"{pop(f"{lab}: {count}", story)}><rect x="0" y="{y}" width="{W}" height="{rowh}" class="ghost"/><text x="156" y="{y+22}" text-anchor="end" class="cl">{esc(lab)}</text>{dots}<text x="{170 + count*26 + 4}" y="{y+23}" class="cv">{count}</text></g>')
-        svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     hint = ""
     return f'<figure class="chart{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}{hint}</figure>'
 
@@ -370,7 +339,6 @@ def concept_html(c):
         for i, (l, _) in enumerate(st):
             a0, a1 = i * 360 / n + gap / 2, (i + 1) * 360 / n - gap / 2
             (x0, y0), (x1, y1) = pt(R, a0), pt(R, a1)
-            mix = 100 - i * 18
             on = f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{i/n:.4f};{(i+1)/n:.4f}" values="{lo};1;{lo}"/>' if i else f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{1/n:.4f}" values="1;{lo}"/>'
             seg = f'M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}'
             P2.append(f'<path d="{seg}" class="wseg" opacity="{lo}"/>')
@@ -386,7 +354,6 @@ def concept_html(c):
             nx, ny = pt(R, (a0 + a1) / 2)
             onw = on.replace(f'values="{lo};1;{lo}"', f'values="{lw};1;{lw}"').replace(f'values="1;{lo}"', f'values="1;{lw}"')
             P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword" opacity="{lw}">{esc(l)}{onw}</text>')
-        orbit = f'M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}'
 
         P2.append(f'<circle cx="300" cy="300" r="{R-SW/2-14}" class="whair"/>')
         ring = f'<svg class="rsvg" viewBox="-70 70 740 460" aria-hidden="true">{"".join(P2)}</svg>'
@@ -442,18 +409,6 @@ def concept_html(c):
             lab, story = s_[0], s_[1]; x = i * cw
             d = f"M{x+(0 if i == 0 else 0)},10 h{cw-20} l20,45 l-20,45 h{-(cw-20)}" + (" l20,-45 Z" if i else " Z")
             P.append(f'<g class="hit"{pop(lab.replace("|"," "), story)}><path d="{d}" class="carea" style="opacity:{.38 + .62*i/max(1,n-1):.2f}"/>{lines(lab, x + cw/2 + (8 if i else 0), 52 - (8 if "|" in lab else 0), "cring cin", lh=16)}</g>')
-    elif kind == "path":
-        st = c["steps"]; n = len(st); x0, x1 = 70, 530; y = 110 if c.get("bracket") else 50; H = y + 90
-        xs = [x0 + (x1 - x0) * i / (n - 1) for i in range(n)]
-        for i in range(n - 1):
-            P.append(f'<line x1="{xs[i] + 14:.1f}" y1="{y}" x2="{xs[i+1] - 16:.1f}" y2="{y}" class="cline" marker-end="{mk}"/>')
-        for i, s_ in enumerate(st):
-            lab, story, sty = s_[0], s_[1], (s_[2] if len(s_) > 2 else "")
-            shape = f'<rect x="{xs[i]-9:.1f}" y="{y-9}" width="18" height="18" class="csq"/>' if sty == "admin" else f'<circle cx="{xs[i]:.1f}" cy="{y}" r="{11 if sty == "sacred" else 8}" class="{"cdot big" if sty == "sacred" else "cdot"}"/>'
-            P.append(f'<g class="hit"{pop(lab.replace("|", " "), story)}><circle cx="{xs[i]:.1f}" cy="{y}" r="22" class="ghost"/>{shape}{lines(lab, round(xs[i],1), y + 36, "cv" if sty else "cl")}</g>')
-        if c.get("bracket"):
-            a, b, note = c["bracket"]; xa, xb = xs[a], xs[b]
-            P.append(f'<path d="M{xa:.1f},{y-22} L{xa:.1f},{y-40} L{xb:.1f},{y-40} L{xb:.1f},{y-22}" class="cbr"/><text x="{(xa+xb)/2:.1f}" y="{y-48}" text-anchor="middle" class="cv">{esc(note)}</text>')
     elif kind == "twoway":
         # one band between people and technology; which way the weight runs is the difference
         W = 600; H = 230; P2 = []
@@ -489,7 +444,6 @@ def concept_html(c):
                     if c.get("arrows"):
                         L = math.hypot(dx, dy); ux, uy = dx/L, dy/L
                         g.append(f'<line x1="{cx+dx+ux*30:.1f}" y1="{cy+dy+uy*30:.1f}" x2="{cx+dx+ux*56:.1f}" y2="{cy+dy+uy*56:.1f}" class="cpull" marker-end="{mka}"/>')
-                    g.append(f'<line x1="{cx+dx*0.55:.0f}" y1="{cy+dy*0.55:.0f}" x2="{cx+dx*1.55:.0f}" y2="{cy+dy*1.55+(-14 if dy<0 else 14):.0f}" class="cline" marker-end="{mk}"/>' if False else "")
                 g.append(f'<line x1="{cx-40}" y1="{cy-10}" x2="{cx-12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/><line x1="{cx+40}" y1="{cy-10}" x2="{cx+12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/>')
             elif sch == "whole":
                 g.append(f'<circle cx="{cx}" cy="{cy}" r="80" class="carea" style="opacity:.25"/>')
@@ -515,13 +469,6 @@ def concept_html(c):
         for i, (lab, story) in enumerate(pts):
             x = x0 + (x1 - x0 - 70) * i / (n - 1); on = i == n - 1
             P.append(f'<g class="hit"{pop(lab.replace("|"," "), story)}><circle cx="{x:.1f}" cy="{y}" r="20" class="ghost"/><circle cx="{x:.1f}" cy="{y}" r="{12 if on else 8}" class="{"cdot" if on else "cdotm"}"/>{lines(lab, round(x,1), y + 36, "cv" if on else "cl")}</g>')
-    elif kind == "strands":
-        st = c["strands"]; n = len(st); xj, yj = 360, 120; H = 240
-        for i, (lab, story) in enumerate(st):
-            y0 = 40 + i * 80
-            P.append(f'<g class="hit"{pop(lab, story)}><path d="M200,{y0} C290,{y0} 300,{yj} {xj},{yj}" class="cstrand"/><path d="M200,{y0} C290,{y0} 300,{yj} {xj},{yj}" class="ghostline"/><circle cx="200" cy="{y0}" r="7" class="cdot"/>{lines(lab, 186, y0 + 5, "cv", "end")}</g>')
-        jl, js = c["joined"]
-        P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = (f'<p class="cno">No. {c["no"]}</p>' if c.get("no") else "") + f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
     return f'<figure class="chart concept{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}</figure>'
@@ -605,7 +552,10 @@ LBX_JS = r'''<script>
     imgs.forEach(function(img,k){img.classList.add('lbx-t');img.setAttribute('tabindex','0');img.setAttribute('role','button');
       img.setAttribute('aria-label','View larger: '+(img.alt||capOf(img))+'. Photograph '+(k+1)+' of '+imgs.length);
       img.addEventListener('click',function(){open(a,imgs,k,img)});
-      img.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(a,imgs,k,img)}});});});
+      img.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(a,imgs,k,img)}});});
+    [].forEach.call(a.querySelectorAll('a[data-lbx]'),function(l){l.addEventListener('click',function(e){var t=document.getElementById(l.getAttribute('data-lbx'));var k=imgs.indexOf(t);if(k<0)return;e.preventDefault();open(a,imgs,k,l)})});});
+  [].forEach.call(document.querySelectorAll('.mnote'),function(n){var m=document.getElementById(n.getAttribute('data-for'));if(!m)return;
+    n.addEventListener('mouseenter',function(){m.classList.add('on')});n.addEventListener('mouseleave',function(){m.classList.remove('on')});});
   function title(a){var h=a.querySelector('.shead h2');return h?h.textContent.trim():'';}
   function show(){var n=set.length;
     if(ending){fig.hidden=true;end.hidden=false;prevB.hidden=false;nextB.hidden=true;nEl.innerHTML='<span>Back to the story</span>';
@@ -671,14 +621,17 @@ def build_tab(member=False, menu="contents"):
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
                 if a.get("art_width"): cls += " capped"
-                cap = f'<figcaption>{esc(a["art_credit"])}</figcaption>' if a.get("art_credit") else ""
+                cap = f'<figcaption>{a.get("art_credit_html") or esc(a["art_credit"])}</figcaption>' if a.get("art_credit") else ""
                 ov = a.get("art_overlay")
                 ov_open = f'<div class="ovw {ov.get("cls","")}" style="--ar:{ov["ar"]}">' if ov else ""
                 ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
                 art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
+                if a.get("art_extra"):  # seen only in the lightbox, opened from a link in the caption
+                    x = a["art_extra"]
+                    art += f'<figure class="lbx-only" hidden><img id="{x["id"]}" src="img/{x["file"]}" alt="{esc(x["alt"])}" loading="lazy"><figcaption>{esc(x["caption"])}</figcaption></figure>'
         else:
-            art = (f'<div class="fnote" role="img" aria-label="50 years: the Association for Bahá\'í Studies, founded in 1975"><div class="fbig" aria-hidden="true"><span>50</span><sup>1</sup></div><div class="frule" aria-hidden="true"></div>'
-                   f'<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975.</p></div>')
+            art = ('<div class="fnote" role="img" aria-label="50 years: the Association for Bahá\'í Studies, founded in 1975"><div class="fbig" aria-hidden="true"><span>50</span><sup>1</sup></div><div class="frule" aria-hidden="true"></div>'
+                   '<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975.</p></div>')
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = (f'<p class="by{" nob" if a["byline"].startswith(("Adapted","Story")) else ""}">{esc(a["byline"])}</p>') if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
@@ -713,19 +666,19 @@ def build_tab(member=False, menu="contents"):
   <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">Pages {L["pages"]}</p></aside>
   <div class="prose"><p class="salute">{esc(L["salutation"])}</p>{first_para_dropcap(body_html(L["body"]))}<p class="sign">{esc(L["closing"][0])}<br><b>{esc(L["closing"][1])}</b></p></div>
 </article>'''
-        def dept_open(d, tint):
+        def dept_open(d):
             dek = f'<p class="dek">{esc(d["dek"])}</p>' if d.get("dek") else ""
             return f'''<article class="story dept members" id="{d["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>{dek}</header>
   <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">Pages {d["pages"]}</p></aside>'''
-        huq = dept_open(HUQUQ, "#3b3f7a") + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
+        huq = dept_open(HUQUQ) + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
         qs = "".join(f'<section class="qblock"><h3>{esc(q)}</h3>' + "".join(f'<blockquote class="passage"><p>{esc(t)}</p><cite>{esc(c)}</cite></blockquote>' for t,c in items) + '</section>' for q,items in ABIDING["questions"])
-        abide = dept_open(ABIDING, "#5c2a4e") + f'''<div class="prose compilation"><blockquote class="passage lead"><p>{esc(ABIDING["epigraph"][0])}</p><cite>{esc(ABIDING["epigraph"][1])}</cite></blockquote>{qs}</div></article>'''
-        fund = dept_open(FUND, "#2f5d3a") + f'<div class="prose">{first_para_dropcap(body_html(FUND["body"]))}</div></article>'
+        abide = dept_open(ABIDING) + f'''<div class="prose compilation"><blockquote class="passage lead"><p>{esc(ABIDING["epigraph"][0])}</p><cite>{esc(ABIDING["epigraph"][1])}</cite></blockquote>{qs}</div></article>'''
+        fund = dept_open(FUND) + f'<div class="prose">{first_para_dropcap(body_html(FUND["body"]))}</div></article>'
         R = RHYTHM
         hd = "".join(f'<li><b>{esc(n)}</b><span>{esc(w)}</span></li>' for n,w in R["holydays"])
         fs = "".join(f'<li><b>{esc(n)}</b><i>{esc(m)}</i><span>{esc(d)}</span></li>' for n,m,d in R["feasts"])
-        rhythm = dept_open(R, "#8b6a1a") + f'''<div class="prose calendar">
+        rhythm = dept_open(R) + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
   {chart_html(R["ring"]) if R.get("ring") else ""}
   <p class="note">{esc(R["note"])}</p>
@@ -736,17 +689,17 @@ def build_tab(member=False, menu="contents"):
             t, sub, desc, price = it[:4]; url = it[4] if len(it) > 4 else None
             h = f'<a href="{url}" target="_blank" rel="noopener">{esc(t)}</a>' if url else esc(t)
             buy = f' <a class="buy" href="{url}" target="_blank" rel="noopener">View at the Bahá\'í Bookstore</a>' if url else ""
-            return f'<li><h4>{h}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
+            return f'<li><h3>{h}</h3>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
         bk = "".join(book(it) for it in B["items"])
-        books = dept_open(B, "#8a3a1e") + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
-        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h4>{esc(n["title"])}</h4><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
+        books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
+        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = f'<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
+        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
         lead = ""
         D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
         dindex = '<h2 style="margin-top:36px;color:var(--mem)">The full issue</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
-        dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
+        dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + '<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
         recs = {"huquq": HUQUQ, "abiding": ABIDING, "fund": FUND, "rhythm": RHYTHM, "books": BOOKS}
         rows += [("letter", "Letter", "2", "var(--mem)", L["kicker"], L["title"])] + [(s, t, p, "var(--mem)", recs[s]["kicker"] if s in recs else "Announcements", t) for s, t, p in D]
@@ -764,7 +717,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Caveat:wght@500..700&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -776,6 +729,7 @@ def build_tab(member=False, menu="contents"):
 *{{box-sizing:border-box}}
 html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
+html{{overflow-x:clip}}
 body{{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
 .wrap{{max-width:1120px;margin:0 auto;{GUT}}}
@@ -807,11 +761,9 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:980px){{.terraces,.blooms,.torn{{display:none}}}}
 /* charts */
 .chart .cline{{fill:none;stroke:var(--mute);stroke-width:1.6}} .chart .carr{{fill:var(--mute)}} .chart .carea{{fill:var(--accent)}} .chart .cdotm{{fill:var(--mute);opacity:.55}}
-.chart .csq{{fill:var(--paper);stroke:var(--accent);stroke-width:2.5}} .chart .cdot.big{{stroke:var(--paper);stroke-width:3}}
-.chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:transparent;stroke:transparent}}
+.chart .cdot.big{{stroke:var(--paper);stroke-width:3}}
+.chart .cpanel{{fill:transparent;stroke:transparent}}
 .chart .cringf{{stroke:var(--paper);stroke-width:2.5}} .chart text.cin{{fill:#fff}} .chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
-.chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5;opacity:.7}} .chart .ghostline{{fill:none;stroke:transparent;stroke-width:22}} .chart .cjoin{{stroke:var(--accent);stroke-width:16;stroke-linecap:round}}
-.chart g.hit:hover .cstrand{{opacity:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
 .chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
@@ -820,7 +772,6 @@ main,.head{{position:relative;z-index:1}}
 .chart .tl li.has,.figs div.has{{cursor:pointer}} .chart .tl li.has span{{text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--rule)}}
 .figs div.has b::after{{content:"+";font-size:.45em;vertical-align:super;margin-left:3px;color:var(--accent)}}
 .figs div.has:focus-visible,.chart .tl li.has:focus-visible{{outline:2px solid var(--accent);outline-offset:4px}}
-.chart .tap{{font-family:var(--ui);font-size:12px;letter-spacing:.04em;color:var(--mute);margin:6px 0 0;opacity:.8}}
 .popup{{position:fixed;z-index:30;max-width:min(340px,calc(100vw - 32px));background:var(--tabon-white);color:var(--ink);border:1px solid var(--rule);border-top:3px solid var(--pa,var(--accent));box-shadow:0 10px 30px rgba(30,25,15,.16);padding:14px 16px 14px;font-family:var(--ui);font-size:14px;line-height:1.5;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}}
 .popup.show{{opacity:1;transform:none;pointer-events:auto}}
 .popup b{{display:block;font-family:var(--disp);font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:0 18px 6px 0}}
@@ -836,7 +787,6 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
 /* infographic refresh */
-.chart .cayy{{fill:#c9a227}} .chart text.crib{{font-family:var(--ui);font-weight:600;font-size:11.5px;fill:#fff}} .chart .cink{{fill:var(--ink)}}
 .chart .hit:hover rect[style]{{filter:brightness(1.08)}}
 .chart text.cyr{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
 .chart .cground{{stroke:var(--rule);stroke-width:2}}
@@ -846,19 +796,43 @@ main,.head{{position:relative;z-index:1}}
 .chart .cpull{{stroke:var(--accent);stroke-width:2.5;fill:none}}
 .chart text.csubw{{font-family:var(--text);font-style:italic;font-size:15px;fill:var(--mute)}} .chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
-.prose>.verb{{grid-column:1/-1;container-type:inline-size;margin:clamp(36px,6vw,72px) 0;padding:clamp(36px,6vw,72px) 16px;background:var(--cream);border-radius:4px;text-align:center}}
-.prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:min(12cqw,150px);line-height:1;font-weight:500;letter-spacing:-.01em}}
-.verb .sx{{display:inline-grid;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0}} .verb .sx .s3{{opacity:1}}
-.verb .vq{{margin-left:-.4em;display:inline-block;width:.4em}}
-.verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:min(5.2cqw,64px);line-height:1.1;margin-top:.15em}}
-.verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:clamp(11px,1.5cqw,15px);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1.4em}}
+.prose>.verb{{grid-column:2;margin:clamp(28px,4vw,48px) 0;padding:0 0 0 .1em}}
+.prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:500;letter-spacing:-.01em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
+.verb .sx{{display:inline-grid;text-align:left;color:var(--accent);font-style:italic}} .verb .sx span{{grid-area:1/1;opacity:0;transform:translateY(.12em);transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}}
+.verb[data-f="0"] .s0,.verb[data-f="1"] .s1,.verb[data-f="2"] .s2,.verb[data-f="3"] .s3{{opacity:1;transform:none}}
+.verb .vq{{margin-left:-.42em;display:inline-block;width:.42em}}
+.verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(22px,2.9vw,36px);line-height:1.15;margin-top:.1em;transition:opacity .5s,transform .5s}}
+.verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1em;transition:opacity .5s .15s}}
+.verb:not([data-f="3"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="3"]) cite{{opacity:0}}
+@media (max-width:760px){{.prose>.verb{{grid-column:auto}} .verb .vq{{margin-left:0;width:auto}}}}
 .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+.prose>.mnote{{grid-column:1;grid-row:span 2;align-self:start;margin:.3em 0 1.6em;max-width:24ch;transform:rotate(var(--mr,-1.5deg));color:#2c4a72;cursor:default}}
+.prose>.mnote:nth-of-type(even){{--mr:1.2deg}}
+.mnote .mq{{display:block;font-family:"Caveat",cursive;font-size:clamp(21px,1.9vw,25px);line-height:1.08}}
+.mnote .mw{{display:block;font-family:var(--ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-top:6px;line-height:1.45}}
+.mnh{{background:none;color:inherit;background-image:linear-gradient(color-mix(in oklab,#e7b84a 70%,transparent),color-mix(in oklab,#e7b84a 70%,transparent));background-repeat:no-repeat;background-position:0 92%;background-size:100% .3em;transition:background-size .7s,background-position .3s}}
+.mnh.on{{background-size:100% 1.1em;background-position:0 70%}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.mnote{{color:#a9c4e8}}}} :root[data-theme="dark"] .prose>.mnote{{color:#a9c4e8}}
+@media (max-width:760px){{.prose>.mnote{{grid-column:auto;grid-row:auto;margin:0 0 1.4em 1em;max-width:none}}}}
 @media (prefers-reduced-motion:no-preference){{
-.ovready .verb .sx .s3,.ovready .verb .vr,.ovready .verb cite{{opacity:0}}
-.ovready .verb.go .s1{{animation:vsfx 1s .5s}} .ovready .verb.go .s2{{animation:vsfx 1s 1.5s}} .ovready .verb.go .s3{{animation:vkeep .4s 2.5s forwards}}
-.ovready .verb.go .vr{{opacity:1;transition:opacity .8s 3.1s}} .ovready .verb.go cite{{opacity:1;transition:opacity .8s 3.7s}}
+.ovready .mnote .mq{{clip-path:inset(0 100% 0 0)}} .ovready .mnote .mw{{opacity:0}}
+.ovready .mnote.go .mq{{clip-path:inset(0 0 0 0);transition:clip-path 1.4s cubic-bezier(.5,.1,.4,1)}} .ovready .mnote.go .mw{{opacity:1;transition:opacity .6s 1.2s}}
+.ovready .mnh{{background-size:0 .3em}} .ovready .mnh.go{{background-size:100% .3em;transition:background-size .8s .9s}} .ovready .mnh.go.on{{background-size:100% 1.1em;transition:background-size .4s,background-position .3s}}
 }}
-@keyframes vsfx{{15%,80%{{opacity:1}}}} @keyframes vkeep{{to{{opacity:1}}}}
+/* A common endeavor: postmarks on the quilt */
+.evo .ov{{text-shadow:none}}
+.evo svg{{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 1px 1.5px rgba(10,30,40,.85)) drop-shadow(0 0 6px rgba(10,30,40,.5))}}
+.evo .adr text{{font-family:"Caveat",cursive;font-size:60px;font-weight:600;fill:#fbf3e2}}
+.evo .ttl{{font-family:var(--ui);font-size:22px;letter-spacing:5px;fill:#fbf3e2}}
+.evo .pm circle,.evo .pm .wv{{fill:none;stroke:#fbf3e2;stroke-width:3}}
+.evo .pm text{{fill:#fbf3e2;font-family:var(--ui);font-weight:700}} .evo .pmt{{font-size:14px;letter-spacing:2px}} .evo .pms{{font-size:21px}} .evo .pmy{{font-size:13px}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .evo .pm{{opacity:0}} .ovready .evo .pmi{{transform:scale(1.7)}}
+.ovready .evo.go .pm{{opacity:1;transition:opacity .15s;transition-delay:var(--d)}}
+.ovready .evo.go .pmi{{transform:none;transition:transform .25s cubic-bezier(.3,1.4,.5,1);transition-delay:var(--d)}}
+.ovready .evo .adr{{clip-path:inset(0 100% 0 0)}} .ovready .evo.go .adr{{clip-path:inset(0 0 0 0);transition:clip-path 1.8s cubic-bezier(.5,.1,.4,1) .2s}}
+.ovready .evo .ttl{{opacity:0}} .ovready .evo.go .ttl{{opacity:1;transition:opacity .8s 2.6s}}
+}}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
 .figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
 .prose>.figsent.lg{{font-size:clamp(26px,2.9vw,36px);line-height:1.35}} .figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
@@ -928,21 +902,6 @@ main,.head{{position:relative;z-index:1}}
 .chart .hit:hover+.cvk,.chart g:hover .cdotk{{stroke:var(--paper);stroke-width:2}}
 .chart .k-life{{--k:var(--k-life)}} .chart .k-teach{{--k:var(--k-teach)}} .chart .k-serve{{--k:var(--k-serve)}} .chart .k-write{{--k:var(--k-write)}} .chart .k-legacy{{--k:var(--k-legacy)}}
 .chart .kkey{{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--ui);font-size:12px;color:var(--mute);margin:0 0 16px}} .chart .kkey i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--k);margin-right:6px}}
-.chart .ages{{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;margin-top:18px}}
-.chart .ages span{{aspect-ratio:1;border-radius:2px;position:relative}} .chart .ages .lv{{background:color-mix(in oklab,var(--accent) 13%,var(--paper))}} .chart .ages .af{{border:1px solid var(--rule)}}
-.chart .ages .ev{{background:var(--k);border:0;cursor:pointer}} .chart .ages .ev:hover,.chart .ages .ev:focus-visible{{outline:2px solid var(--ink);outline-offset:1px}}
-.chart .ages em{{position:absolute;left:0;top:-15px;font-style:normal;font-family:var(--ui);font-size:10px;color:var(--mute);white-space:nowrap;pointer-events:none}}
-.chart .ages em.r{{left:auto;right:0}} .chart .agecap{{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;color:var(--mute);margin:8px 0 0}}
-@media (max-width:560px){{.chart .ages{{grid-template-columns:repeat(16,1fr)}} .chart .ages em{{font-size:9px}}}}
-.chart .ledger{{list-style:none;margin:0;padding:0;columns:2;column-gap:44px}}
-.chart .ledger li{{break-inside:avoid;display:grid;grid-template-columns:3.1em 1fr;gap:0 16px;padding:0 0 16px;position:relative}}
-.chart .ledger li::before{{content:"";position:absolute;left:calc(3.1em + 7px);top:0;bottom:0;width:1px;background:var(--rule)}}
-.chart .ledger li b{{font-family:var(--disp);font-weight:600;font-size:24px;line-height:1;color:var(--k);text-align:right;font-variant-numeric:lining-nums;padding-top:3px}}
-.chart .ledger li div{{padding-left:14px;position:relative}} .chart .ledger li div::before{{content:"";position:absolute;left:-3px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--k);box-shadow:0 0 0 3px var(--paper)}}
-.chart .ledger h4{{font-family:var(--ui);font-weight:600;font-size:15px;line-height:1.3;margin:2px 0 4px;color:var(--ink)}} .chart .ledger p{{margin:0;font-family:var(--text);font-size:14px;line-height:1.55;color:var(--ink);opacity:.82}}
-.chart .ledger li.gap{{display:block;padding:0 0 16px calc(3.1em + 30px);font-family:var(--ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}}
-.chart .ledger li.gap::before{{background:repeating-linear-gradient(var(--rule) 0 4px,transparent 4px 9px)}}
-@media (max-width:760px){{.chart .ledger{{columns:1}}}}
 .chart .cn{{font-family:var(--ui);font-size:13.5px;color:var(--mute);margin:8px 0 0}}
 .chart svg{{display:block;overflow:visible}}
 .chart .cb{{fill:var(--accent)}} .chart .ctrack{{fill:var(--rule)}} .chart .ctick{{stroke:var(--ink);stroke-width:1.5}}
@@ -985,19 +944,19 @@ main,.head{{position:relative;z-index:1}}
 .passage.prayer{{border-top:3px solid var(--accent);margin-top:1.6em}} .passage.prayer p{{font-style:italic;font-size:19px;line-height:1.5}}
 .shelf .books{{list-style:none;margin:0 0 1.6em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 28px}}
 .shelf .books li{{border-top:1px solid var(--rule);padding-top:12px}}
-.shelf h4{{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.015em;margin:0 0 4px}}
+.shelf li h3{{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.015em;text-transform:none;color:inherit;padding-top:0;border-top:0;line-height:1.6;margin:0 0 4px}}
 .shelf .sub{{font-family:var(--ui);font-size:12.5px;color:var(--mute);margin:0 0 8px}}
 .shelf .books p{{font-size:15px;line-height:1.5;margin:0 0 8px}}
 .shelf .price{{font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--accent)}}
-.shelf h4 a{{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%}}
-.shelf h4 a:hover,.shelf h4 a:focus-visible{{color:var(--accent)}}
+.shelf li h3 a{{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%}}
+.shelf li h3 a:hover,.shelf li h3 a:focus-visible{{color:var(--accent)}}
 .shelf .buy{{display:block;margin-top:4px;font-weight:500;color:var(--accent)}}
 .notices{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:28px}}
 .dept .prose:has(.notices){{grid-column:2/4;display:block;max-width:none}}
 .notices li{{border-top:3px solid var(--accent);padding-top:14px}}
 .notices img{{display:block;width:120px;height:auto;border:1px solid var(--rule);margin:0 0 12px}}
 .notices .k{{font-family:var(--ui);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}}
-.notices h4{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:0 0 8px}}
+.notices li h3{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em;text-transform:none;color:inherit;padding-top:0;border-top:0;line-height:1.6;margin:0 0 8px}}
 .notices p{{font-size:15.5px;line-height:1.55;margin:0 0 8px}}
 .notices cite{{font-style:normal;font-family:var(--ui);font-size:12.5px;color:var(--accent)}}
 .prose>.shelf,.prose>.calendar{{grid-column:2/4}}
@@ -1044,7 +1003,6 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhp{{display:block;position:absolute;left:0;bottom:-1px;height:3px;width:var(--rp,0%);background:var(--rt,transparent);transition:width .15s}}
 .head .rhs{{display:block;position:absolute;left:0;right:0;top:100%;max-height:calc(100dvh - 70px);overflow-y:auto;background:var(--bar);border-bottom:1px solid var(--barrule);box-shadow:0 14px 24px rgb(0 0 0/.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility 0s .18s}}
 .head.open .rhs{{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}}
-.head .rhs-x{{display:none}}
 .head .rhs-c{{padding:16px 18px 6px}}
 .head .rhs-c .rhm{{display:flex;justify-content:space-between;font-family:"Bodoni Moda",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--ink);padding-bottom:8px}}
 .head .rhs-c .rhtt{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:29px;line-height:1.1;margin:10px 0 10px;color:var(--ink)}}
@@ -1066,7 +1024,6 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhs-b .bar{{position:absolute;left:0;bottom:0;height:4px;width:var(--rp,0%);background:currentColor;opacity:.85;display:none}}
 .head .rhs-b a.on{{min-height:84px;align-content:center;background:var(--tint)}} .head .rhs-b a.on .cur,.head .rhs-b a.on .bar{{display:block}}
 .head .rhs a:focus-visible{{outline:2px solid var(--ink);outline-offset:-2px}}
-.head .rhs-x a{{display:flex;align-items:baseline;gap:10px;padding:13px 16px 13px 14px;border-left:4px solid var(--tint);border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none;font-family:var(--disp);font-size:18px;line-height:1.25}}
 .head .rhs a small{{margin-left:auto;flex:none;font-family:var(--ui);font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}} .head .rhs a.on{{background:var(--tabon)}}
 }}
 @media (prefers-reduced-motion:reduce){{.head .rhs,.head .rhp,.head .rht svg{{transition:none}}}}
@@ -1170,29 +1127,27 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .gro .ov span{{animation:none!important}}
 .gro .gbs{{position:absolute;right:2.5%;top:4%;width:36%;white-space:normal;line-height:1;background:rgba(247,242,234,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:1.6cqw 1.8cqw;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.12)}}
 .gro .gbs span{{position:relative;white-space:normal}} .gro .gbs .gnm{{white-space:nowrap}}
-.gro .gk{{display:block;font-family:"Libre Caslon Text",serif;font-size:2.1cqw;letter-spacing:.24em;text-transform:uppercase;margin:0 0 .4em;border-top:.25cqw solid #1d1a16;padding-top:.5em}}
 .gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:8.2cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
 .gro .gl{{display:inline-block}}
 .gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:3cqw;margin:.35em 0 .2em;border-bottom:.25cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
-.gro .gdk{{display:block;font-family:"Libre Caslon Text",serif;font-style:italic;font-size:2.5cqw;line-height:1.25;color:#2a2622}}
 @media (prefers-reduced-motion:no-preference){{
-.ovready .gro .gl{{transform:scale(1.12);opacity:0;filter:blur(1.5px)}} .ovready .gro .gk,.ovready .gro .gyr,.ovready .gro .gdk{{opacity:0}}
+.ovready .gro .gl{{transform:scale(1.12);opacity:0;filter:blur(1.5px)}} .ovready .gro .gyr{{opacity:0}}
 .ovready .gro.go .gl{{transform:none;opacity:1;filter:none;transition:transform .5s cubic-bezier(.2,.9,.2,1) var(--d),opacity .35s var(--d),filter .5s var(--d)}}
-.ovready .gro.go .gk,.ovready .gro.go .gyr,.ovready .gro.go .gdk{{opacity:1;transition:opacity .8s .9s}}
+.ovready .gro.go .gyr{{opacity:1;transition:opacity .8s .9s}}
 }}
 
 .plate.bare{{background:transparent;border:0}}
 .plate.bare img{{max-height:none;object-fit:contain;max-width:1000px}}
 .plate.bare figcaption{{padding-left:0}}
 .prose>.plate.comic{{grid-column:1/-1;margin:0 0 clamp(28px,4vw,44px)}}
+.plate figcaption a{{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}} .plate figcaption a:hover{{text-decoration-thickness:2px}}
 .plate.comic{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule)}}
 .plate.comic img{{max-height:none;background:#fff}}
 .plate.comic figcaption{{grid-column:1/-1;background:var(--cream)}}
 .plate figcaption{{font-family:var(--ui);font-size:12px;letter-spacing:.06em;color:var(--mute);padding:10px 14px}}
-.numeral{{font-family:var(--disp);font-weight:800;font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.06em}}
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
-.story>.plate,.story>.numeral,.story>.fnote,.story>.csplash{{grid-column:1/-1}}
+.story>.plate,.story>.fnote,.story>.csplash{{grid-column:1/-1}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead>*{{position:relative;z-index:1}}
 .torn{{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}}
@@ -1372,7 +1327,11 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
-  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.verb'));
+  (function(){{var V=[].slice.call(document.querySelectorAll('.verb'));if(!V.length||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%4)}})}});
+    function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.92-r.top)/(h*0.55);v.dataset.f=String(Math.max(0,Math.min(3,Math.floor(p*4))))}})}}
+    addEventListener('scroll',tick,{{passive:true}});addEventListener('resize',tick);tick();}})();
+  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.mnote,.mnh'));
   if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
   else W.forEach(function(w){{w.classList.add('go')}});
   var ny=document.querySelector('.ovw.nyo'); if(ny&&!rm){{var tick=function(){{var r=ny.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight+r.height);p=Math.max(0,Math.min(1,p))-.5;ny.style.setProperty('--dr',(p*24).toFixed(1))}};addEventListener('scroll',tick,{{passive:true}});tick();}}
@@ -1603,7 +1562,7 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 @media (max-width:860px){{.plate .img.two{{grid-template-columns:1fr}}}}
 .chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
-.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline,.chart .cbr{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
 .chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
 .chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
 .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
@@ -1743,7 +1702,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
   .inset.two{{grid-template-columns:1fr}}
 }}
 .chart{{margin:1.8em 0 2.2em;max-width:600px;--accent:var(--tint,var(--gold,#1b5e6b));--ink:var(--fg,#171614);--mute:var(--dim,var(--mute,#6d6962))}} .chart .ct{{font-size:13px;font-weight:600;margin:0 0 10px}} .chart .cn{{font-size:12px;margin:8px 0 0;opacity:.75}} .chart svg{{display:block;overflow:visible}}
-.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline,.chart .cbr{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
+.chart .cb,.chart .cdot,.chart .cseg.on,.chart .carea{{fill:var(--accent)}} .chart .cline{{fill:none;stroke:currentColor;opacity:.6;stroke-width:1.6}} .chart .carr{{fill:currentColor}} .chart .cpanel{{fill:none;stroke:var(--rule)}} .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5}} .chart .cjoin{{stroke:var(--accent);stroke-width:16}} .chart .ghostline,.chart .ghost{{fill:transparent;stroke:transparent}} .chart .csq{{fill:none;stroke:var(--accent);stroke-width:2.5}} .chart .cdotm{{fill:currentColor;opacity:.5}} .chart .ctrack,.chart .cseg{{fill:var(--rule)}} .chart .cax,.chart .cstem{{stroke:var(--rule)}} .chart .ctick{{stroke:currentColor}}
 .chart text{{font-size:12px;fill:currentColor}} .chart .cvin{{fill:#fff;font-weight:700}} .chart .cbig{{font-size:44px;font-weight:800}} .chart .cn2{{font-size:10.5px;opacity:.7}}
 .chart .tl{{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 22px;font-size:12.5px}} .chart .tl li{{display:grid;grid-template-columns:3.2em 1fr;gap:8px}}
 .figs{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:1.6em 0 2em}} .figs div{{border-top:3px solid var(--tint,var(--gold));padding-top:10px}} .figs b{{display:block;font-size:34px;line-height:1}} .figs span{{display:block;font-size:12.5px;margin-top:6px;opacity:.75}}
@@ -1789,7 +1748,7 @@ with open(os.path.join(OUT, "member.html"), "w") as f: f.write(build_tab(member=
 SITE = os.path.join(HERE, "site")
 def standalone(body):
     """Wrap an artifact page in a full HTML document; image paths become relative to site/img."""
-    body = body.replace(SIDES, "").replace('src="img/', 'src="../img/').replace('url(img/', 'url(../img/')
+    body = body.replace(SIDES, "").replace('src="img/', 'src="../img/').replace('href="img/', 'href="../img/').replace('url(img/', 'url(../img/')
     i = body.rfind("</style>")
     i = body.index("\n", i) + 1
     body = body[:i] + "</head>\n<body>\n" + body[i:]
@@ -1799,7 +1758,7 @@ def standalone(body):
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
-with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
+with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="../img/', 'href="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
 os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
 with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
@@ -1807,10 +1766,10 @@ with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standal
 os.makedirs(os.path.join(SITE, "alt"), exist_ok=True)
 with open(os.path.join(SITE, "alt", "index.html"), "w") as f: f.write(standalone(build_tab(menu="bands")).replace('href="FAVICON"', 'href="../favicon.svg"'))
 os.makedirs(os.path.join(SITE, "member", "alt"), exist_ok=True)
-with open(os.path.join(SITE, "member", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
+with open(os.path.join(SITE, "member", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
-    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
+    with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
 for f in os.listdir(os.path.join(OUT, "img")): shutil.copy(os.path.join(OUT, "img", f), os.path.join(SITE, "img", f))
 open(os.path.join(SITE, ".nojekyll"), "w").close()

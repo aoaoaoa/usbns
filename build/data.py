@@ -72,6 +72,18 @@ GREGORY_EVENTS = [
     (2026,"Summer of Service hosts 25 youth","Youth of diverse races and faiths studied, prayed and “built friendships across what society deems as impermeable racial walls.”")]
 GREGORY_KINDS = {1881: 'life', 1879: 'life', 1891: 'life', 1896: 'life', 1906: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'serve', 1917: 'serve', 1924: 'serve', 1940: 'serve', 1942: 'serve', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'serve', 1911: 'write', 1912: 'life', 1913: 'serve', 1919: 'serve', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'serve', 1937: 'serve', 1939: 'serve', 1951: 'life'}  # every later year is "legacy"
 
+
+# A common endeavor: the letter's address line and postmarks from places that took it up, set over the quilt
+_PM = [('SEATTLE', 'WA', 1210, 250, -12), ('IDAHO FALLS', 'ID', 1440, 420, 8), ('HOUSTON', 'TX', 1230, 600, 10), ('MINNEAPOLIS', 'MN', 1450, 770, -9), ('LORAIN', 'OH', 1120, 830, -4), ('ALBUQUERQUE', 'NM', 330, 250, -6), ('CHICAGO', 'IL', 110, 330, 7), ('INDIANAPOLIS', 'IN', 380, 860, 5)]
+ENDEAVOR_POSTMARKS = ('<svg viewBox="0 0 1600 923">'
+    '<g class="adr"><text x="60" y="560">To every soul who holds</text><text x="60" y="628">“the promise of America</text><text x="60" y="696">in their heart”</text></g>'
+    '<text class="ttl" x="62" y="758">A COMMON ENDEAVOR</text>'
+    + "".join(f'<g class="pm" style="--d:{.5+i*.25:.2f}s" transform="translate({x} {y}) rotate({r})"><g class="pmi"><circle r="62"/><circle r="44"/>'
+              f'<path id="pma{i}" d="M -51 0 A 51 51 0 0 1 51 0" fill="none" stroke="none"/><text class="pmt"><textPath href="#pma{i}" startOffset="50%" text-anchor="middle">{c}</textPath></text>'
+              f'<text class="pms" y="9" text-anchor="middle">{s}</text><text class="pmy" y="30" text-anchor="middle">2026</text>'
+              f'<path class="wv" d="M 70 -16 q 18 -9 36 0 t 36 0 t 36 0 M 70 0 q 18 -9 36 0 t 36 0 t 36 0 M 70 16 q 18 -9 36 0 t 36 0 t 36 0"/></g></g>'
+              for i, (c, s, x, y, r) in enumerate(_PM))
+    + '</svg>')
 ARTICLES = [
 dict(
     slug="gregory",
@@ -267,7 +279,11 @@ dict(
     title="Communities engage in a common endeavor",
     short="A common endeavor",
     byline=None,
-    art="endeavor-quilt.webp", art_alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds", art_credit="Quilt art by Helen Butler",
+    art="endeavor-quilt.webp", art_alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds", art_credit="Quilt art (background only) by Helen Butler, from her original work for “A Common Endeavor”",
+    art_credit_html='Quilt art (background only) by Helen Butler, from her <a href="img/endeavor-quilt-original.jpg" data-lbx="quilt-original">original work</a> for “A Common Endeavor”',
+    art_extra={"id":"quilt-original","file":"endeavor-quilt-original.jpg","alt":"Helen Butler's quilt for “A Common Endeavor,” hanging from a rod on a wood-paneled wall: four figures in patterned fabrics embrace beneath two green leaves, above a crescent and a bird, on a deep blue quilted ground with a mottled border",
+               "caption":"Helen Butler, MFA (Theatre Arts, Brandeis University), is an artist and educator based in central Virginia. She crafts fiber works and creative interventions to inspire self-reflection and community engagement."},
+    art_overlay={"ar":"1.7335","cls":"evo","html":ENDEAVOR_POSTMARKS},
     pages="12–15",
     body=[
         ("p","In the months since the National Spiritual Assembly shared “A Common Endeavor,” a message laying out the Assembly's vision for the United States, Bahá'ís have been creating opportunities to introduce the message's uplifting and pragmatic content and concepts to their friends and neighbors. Here are glimpses of some of the creative efforts supported by the resources found at acommonendeavor.org."),
@@ -324,12 +340,16 @@ dict(
         ("verb","Washington County, Minnesota"),
         ("h","Sarasota-Manatee County, Florida: Practical steps to oneness"),
         ("p","In July, the Bahá'ís of Sarasota-Manatee County, Florida, invited people to a conference focusing on our oneness as a single human family and promoting consultation for problem solving and community building through inclusivity, understanding and detachment. Nearly 50 participants, representing a variety of ages and backgrounds, came together to listen, learn and reflect on the process of consultation. The conference demonstrated that the principles of consultation and the vision of human oneness are not merely subjects for academic study, but living practices to be integrated into the fabric of daily life."),
+        ("mnote","“The room became a safe space in which attendees shared things they had held on to.”","A fireside of about fifteen · Minneapolis, Minnesota","Table discussions"),
         ("p","Table discussions allowed people to explore the shared themes with attention to practical ways to bring people together. The YouTube video “Oneness” fostered additional discussion. Youth attending helped capture the spirit of the conference through their creativity and dedication. Abbie Khoshnood created art that was photographed by Seneca Bristol, Sisi Lino and Teresa Pettersen."),
         ("h","Pima County, Arizona: Multifaith gathering"),
+        ("mnote","“…because it speaks so much to the moment right now.”","A collaborator at Interfaith America · Tucson, Arizona","invited local faith communities"),
         ("p","In August, the Bahá'ís of Santa Cruz and South Pima County, Arizona, invited local faith communities to gather for a conversation around the themes of “A Common Endeavor.” Presentation copies of the message and invitations were mailed to 17 faith communities in the cluster. Fifteen members from three faith groups, Baptist, Presbyterian and the Unity Church, joined an equal number of Bahá'ís at the event."),
+        ("mnote","“a magnificent description of what this country needs.”","Secretary, Lorain Interfaith Association · Ohio","foundational documents"),
         ("p","The opening presentation tied the Bahá'í ideals and values in “A Common Endeavor” to America's foundational documents: The Declaration of Independence, the U.S. Constitution, the Bill of Rights and specific amendments. Discussion of spiritual renewal ensued, emphasizing movement from the individual to faith communities to the wider community and nation. The “Oneness” video, a few closing remarks, and a reading of The Prayer for America rounded out the program."),
         ("img","az-ace.jpg","The multifaith gathering in South Pima County, Arizona, held around the themes of “A Common Endeavor.”"),
         ("h","Rutland, Vermont: Sharing at the Rotary Club"),
+        ("mnote","It “asks deeper questions.”","A reader · Evanston, Illinois","commenting on each section"),
         ("p","In August, Alis Headlam, a Bahá'í, shared themes from “A Common Endeavor” with the Rutland City Rotary Club at its weekly meeting. A high level of participation was facilitated by an interactive slideshow, which invited people to take turns reading aloud and commenting on each section."),
         ("sentence",["One food program in Rutland serves ","400+"," people each week and gives out ","2,000+"," meals a month."],{'400+': 'The Rotary member who organizes it wondered how those being served might join the conversation and help find solutions. A long-term consultative project, following study, consultation, action and reflection, was suggested.'},"lg"),
         ("p","A Rotary Club member who organizes donations and service for a local food assistance program raised a concern. The program serves more than 400 people a week and provides more than 2,000 meals a month. He wondered how to bring those being served into conversations and offering solutions, so that they might better recognize their own role in the community. A long-term consultative project, following the process of study, consultation, action and reflection was suggested. One attendee said the presentation made him think about how a simple smile or a wave had the potential to help people feel more welcome in the community."),
@@ -339,9 +359,11 @@ dict(
             ("Consultation","Bringing the people a program serves into the conversation about solutions."),
             ("Study","Reading together, section by section, and returning to action with new questions.")]}),
         ("h","San Francisco cluster: Institute study seminar"),
+        ("mnote","“I left this first discussion with a new seed of hope in my heart.”","A devotional gathering · Brookfield, Wisconsin","thoughtful conversation"),
         ("p","About 40 people studied “A Common Endeavor” as part of an institute study gathering. Across the seminar, the material stimulated thoughtful conversation, deepened understanding of the institute process and inspired participants to continue walking a path of service together. Subgroups drew insights from their own levels of experience. One group was composed of several college students who had little prior experience with the Faith. Their conversation revolved around the important role that youth play in forging relationships that will contribute to the spiritual progress of society."),
         ("p","Another deep conversation took place with a group of Nepali parents whose children participate in children's classes and the junior youth spiritual empowerment program. They said that the message provided a clear and inspiring picture of the purpose underlying this educational process for their children. They said they could see a broader vision of community building, inspiring them toward participating more fully through regular study of the main sequence of courses. The parents shared that several passages touched them deeply, such as those describing the power of loving conversations and the central role of divine love in contributing to social transformation."),
         ("h","Benton County, Oregon: Sharing the message re-energizes community"),
+        ("mnote","“a gift.”","Shared with a hairdresser and a walking buddy · Washington County, Minnesota","shared an invitation"),
         ("p","In rural Benton County, Oregon, one Bahá'í couple shared an invitation to reflect on “A Common Endeavor” using a community listserve. The postings range from lost dogs to cougar sightings to community announcements, and the couple, Paula and Robert Siegel, were very careful to craft an invitation that was respectful of the space. “We wanted the wording to be welcoming and not [proselytising] in any way,” Robert says. “We wanted them to feel like we're all working together.”"),
         ("p","In response, a mix of Bahá'ís and friends of the Faith gathered at the Siegel's home, where they reflected together and shared their “small acts of service.”"),
         ("q","These little acts of service really are contagious. And they may be small, but they motivate others and they're important.","Paula Siegel"),
