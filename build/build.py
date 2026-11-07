@@ -616,7 +616,7 @@ def build_tab(member=False, menu="contents"):
         art = ""
         if a.get("art"):
             if a["slug"] == "comic":
-                art = ('<div class="csplash" aria-hidden="true"><div class="burst"></div><div class="k">Adventures in pioneering · Indianapolis</div><div class="tt">Sparkling<br>spirits!</div></div>')
+                art = ('<div class="csplash" aria-hidden="true"><div class="burst"></div><div class="k">Adventures in pioneering · Indianapolis</div><div class="tt">Sparkling spirits!</div></div>')
                 below = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
@@ -1116,10 +1116,11 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ovready .fnote.go .fbig sup{{opacity:1;transition:opacity .6s 1s}} .ovready .fnote.go .frule{{transform:none;transition:transform .6s 1.4s}} .ovready .fnote.go .fnt{{opacity:1;transition:opacity .8s 1.8s}}
 }}
 /* Comic: splash page */
-.csplash{{position:relative;overflow:hidden;container-type:inline-size;aspect-ratio:16/9;background:#f0b429;display:grid;place-items:center;margin:0 0 clamp(16px,2.4vw,28px);border-radius:4px}}
+@media (max-width:600px){{.story>.csplash{{aspect-ratio:16/7}}}}
+.csplash{{position:relative;overflow:hidden;container-type:inline-size;aspect-ratio:16/5;background:#f0b429;display:grid;place-items:center;margin:0 0 clamp(16px,2.4vw,28px);border-radius:4px}}
 .csplash .burst{{position:absolute;inset:-20%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.42) 0 6deg,transparent 6deg 18deg)}}
-.csplash .tt{{position:relative;text-align:center;font-family:"Bangers",var(--disp),cursive;color:#fff;-webkit-text-stroke:.4cqw #1d1a16;paint-order:stroke fill;text-shadow:.8cqw .8cqw 0 #1d1a16;font-size:13cqw;line-height:.9;letter-spacing:.04em;transform:rotate(-4deg)}}
-.csplash .k{{position:absolute;left:4cqw;top:4cqw;background:#fff6c9;color:#1d1a16;border:.3cqw solid #1d1a16;padding:.8cqw 1.4cqw;font-family:"Bangers",var(--disp),cursive;font-size:2.4cqw;letter-spacing:.08em}}
+.csplash .tt{{position:relative;text-align:center;font-family:"Bangers",var(--disp),cursive;color:#fff;-webkit-text-stroke:.4cqw #1d1a16;paint-order:stroke fill;text-shadow:.6cqw .6cqw 0 #1d1a16;font-size:9cqw;line-height:1;white-space:nowrap;margin-top:3cqw;letter-spacing:.04em;transform:rotate(-4deg)}}
+.csplash .k{{position:absolute;left:4cqw;top:4cqw;background:#fff6c9;color:#1d1a16;border:.3cqw solid #1d1a16;padding:.8cqw 1.4cqw;font-family:"Bangers",var(--disp),cursive;font-size:max(11px,1.9cqw);letter-spacing:.08em}}
 @media (prefers-reduced-motion:no-preference){{
 .ovready .csplash .burst{{transform:rotate(-40deg) scale(.6);opacity:0}} .ovready .csplash .tt{{transform:scale(.4) rotate(-6deg);opacity:0}} .ovready .csplash .k{{opacity:0}}
 .ovready .csplash.go .burst{{transform:none;opacity:1;transition:transform 1.6s cubic-bezier(.2,.8,.2,1),opacity .6s}}
