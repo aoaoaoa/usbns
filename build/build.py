@@ -479,6 +479,42 @@ def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
 
 # ------------------------------------------------------------------ TAB (the published site)
+SHARE_ICONS = {
+ "copy": '<path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.2 1.2M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1.2-1.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+ "facebook": '<path d="M13.4 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.7v3h2.6V21z"/>',
+ "x": '<path d="M4 4h4.6l3.9 5.3L17.2 4h2.3l-6 6.9L20.2 20h-4.6l-4.2-5.7L6.3 20H4l6.4-7.3zm3 1.4 9.6 13.2h1.3L8.4 5.4z"/>',
+ "linkedin": '<circle cx="6.2" cy="6.2" r="1.9"/><path d="M4.6 9.2h3.2V20H4.6zM10 9.2h3.1v1.5c.5-.9 1.6-1.8 3.3-1.8 3.4 0 4 2.2 4 5V20h-3.2v-5.4c0-1.3 0-2.9-1.8-2.9s-2.1 1.4-2.1 2.8V20H10z"/>',
+ "whatsapp": '<path d="M12 3.6a8.4 8.4 0 0 0-7.2 12.7L3.7 20.3l4.1-1.1A8.4 8.4 0 1 0 12 3.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9.3 7.9c.2 0 .4 0 .6.4l.8 1.9c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.5.9 1.5 2 2.8 2.6.3.1.4.1.6-.1l.6-.8c.2-.2.4-.2.6-.1l1.8.9c.3.1.4.3.4.4 0 .6-.3 1.4-1 1.8-.7.4-1.8.5-3.6-.3-2.2-1-3.7-3.2-4-3.6-.3-.4-1-1.5-1-2.8 0-1.2.7-1.8 1-2.1.2-.1.4-.1.6-.1z"/>',
+ "telegram": '<path d="M20.6 4.2 2.9 11c-.9.4-.9 1.4 0 1.7l4.4 1.4 1.7 5.3c.2.7 1 .8 1.5.4l2.5-2.1 4.7 3.4c.6.4 1.4.1 1.5-.6l2.9-14.3c.2-.8-.6-1.4-1.5-1zM9.6 14.4l8.3-6.9-6.6 7.7-.3 3.1z"/>',
+ "email": '<rect x="3.5" y="5.5" width="17" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+}
+def share(a):
+    """Opens the shared share sheet for this feature."""
+    return (f'<button class="sharebtn" type="button" data-share="{a["slug"]}" data-title="{esc(a["title"])}" aria-haspopup="dialog">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v7.5h14V12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            '<span>Share this story</span></button>')
+SHARE_HTML = ('<dialog class="sharedlg" aria-labelledby="share-h"><div class="shd"><p class="shk">Share</p><h2 id="share-h"></h2>'
+    '<button class="shx" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><ul class="shl">'
+    + "".join(f'<li><{"button type=button" if k == "copy" else "a target=_blank rel=noopener"} class="sho" data-k="{k}"><span class="shi"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">{p}</svg></span><span class="shn">{n}</span></{"button" if k == "copy" else "a"}></li>'
+              for k, n, p in [(k, n, SHARE_ICONS[k]) for k, n in [("copy","Copy link"),("facebook","Facebook"),("x","X"),("linkedin","LinkedIn"),("whatsapp","WhatsApp"),("telegram","Telegram"),("email","Email")]])
+    + '</ul><p class="shst" role="status" aria-live="polite"></p></dialog>')
+SHARE_JS = r"""<script>
+(function(){var d=document.querySelector('.sharedlg');if(!d||!d.showModal)return;var h=d.querySelector('#share-h'),st=d.querySelector('.shst'),url='',title='',opener=null;
+  var mk={facebook:function(u,t){return 'https://www.facebook.com/sharer/sharer.php?u='+u},x:function(u,t){return 'https://x.com/intent/post?url='+u+'&text='+t},
+    linkedin:function(u){return 'https://www.linkedin.com/sharing/share-offsite/?url='+u},whatsapp:function(u,t){return 'https://wa.me/?text='+t+'%20'+u},
+    telegram:function(u,t){return 'https://t.me/share/url?url='+u+'&text='+t},email:function(u,t){return 'mailto:?subject='+t+'&body='+t+'%0A%0A'+u}};
+  document.addEventListener('click',function(e){var b=e.target.closest('.sharebtn');if(!b)return;opener=b;
+    url=location.href.split('#')[0]+'#'+b.dataset.share;title=b.dataset.title+' · The American Bahá’í';h.textContent=b.dataset.title;st.textContent='';
+    var u=encodeURIComponent(url),t=encodeURIComponent(title);[].forEach.call(d.querySelectorAll('a.sho'),function(a){a.href=mk[a.dataset.k](u,t);if(a.dataset.k==='email')a.removeAttribute('target')});
+    d.showModal();});
+  d.querySelector('.shx').addEventListener('click',function(){d.close()});
+  d.addEventListener('click',function(e){if(e.target===d)d.close()});
+  d.addEventListener('close',function(){if(opener)opener.focus()});
+  d.querySelector('[data-k=copy]').addEventListener('click',function(){var done=function(){st.textContent='Link copied'};
+    if(navigator.clipboard)navigator.clipboard.writeText(url).then(done,function(){st.textContent=url});else st.textContent=url;});
+})();
+</script>"""
+
 def listen(a):
     """Launcher for a feature's audio reading; playback runs in the docked player."""
     if not a.get("audio"): return ""
@@ -650,6 +686,7 @@ def build_tab(member=False, menu="contents"):
     {by}
     <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
     {listen(a)}
+    {share(a)}
   </aside>
   <div class="prose">{below if a["slug"] == "comic" else ""}{first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
@@ -1221,6 +1258,24 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .listen .ltime,.listen .lby{{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}}
 .listen.na .lp{{background:color-mix(in oklab,var(--accent) 45%,var(--rule))}}
 @media (max-width:980px){{.listen{{margin:6px 0 0;max-width:none}}}}
+.sharebtn{{display:inline-flex;align-items:center;gap:8px;margin-top:16px;min-height:40px;padding:0 14px 0 10px;border:1px solid var(--rule);border-radius:999px;background:transparent;color:var(--ink);font:inherit;font-family:var(--ui);font-size:13px;letter-spacing:0;text-transform:none;cursor:pointer}}
+.sharebtn:hover{{border-color:var(--accent);color:var(--accent)}} .sharebtn:focus-visible{{outline:2px solid var(--accent);outline-offset:2px}} .sharebtn svg{{width:18px;height:18px}}
+@media (max-width:980px){{.sharebtn{{margin-top:0}}}}
+.sharedlg{{border:0;border-radius:14px;padding:22px 22px 18px;width:min(440px,calc(100vw - 32px));background:var(--bar);color:var(--ink);box-shadow:0 24px 60px rgba(20,16,10,.28)}}
+.sharedlg::backdrop{{background:rgba(20,16,10,.38)}}
+.sharedlg .shd{{display:grid;grid-template-columns:1fr auto;align-items:start;gap:2px 12px;margin-bottom:18px}}
+.sharedlg .shk{{grid-column:1;margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
+.sharedlg h2{{grid-column:1;margin:0;font-family:var(--disp);font-size:20px;line-height:1.2;letter-spacing:-.01em}}
+.sharedlg .shx{{grid-column:2;grid-row:1/3;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer}} .sharedlg .shx svg{{width:20px;height:20px}}
+.sharedlg .shx:hover{{background:var(--tabon)}}
+.sharedlg .shl{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 8px}}
+.sharedlg .sho{{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;padding:4px 0;border:0;background:none;color:var(--ink);text-decoration:none;font:inherit;font-family:var(--ui);font-size:13px;cursor:pointer;border-radius:10px}}
+.sharedlg .shi{{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:color-mix(in oklab,var(--ink) 8%,transparent);transition:background .15s,transform .15s}}
+.sharedlg .shi svg{{width:24px;height:24px}}
+.sharedlg .sho:hover .shi,.sharedlg .sho:focus-visible .shi{{background:color-mix(in oklab,var(--ink) 14%,transparent);transform:translateY(-1px)}}
+.sharedlg .sho:focus-visible{{outline:2px solid var(--ink);outline-offset:2px}}
+.sharedlg .shst{{min-height:1.2em;margin:14px 0 0;text-align:center;font-family:var(--ui);font-size:13px;color:var(--mute);word-break:break-all}}
+@media (max-width:420px){{.sharedlg .shl{{grid-template-columns:repeat(3,1fr)}}}}
 .dock{{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none;font-family:var(--ui);color:var(--ink)}}
 .dock[hidden]{{display:block;visibility:hidden}}
 .dock .dk{{pointer-events:auto;max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px 10px;padding:8px 10px 8px 8px;background:color-mix(in oklab,var(--bar) 95%,transparent);backdrop-filter:blur(12px);border:1px solid var(--barrule);border-top:2px solid var(--accent);border-radius:14px;box-shadow:0 8px 30px rgba(20,16,10,.14);transform:translateY(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1)}}
@@ -1340,6 +1395,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </main>
 {DOCK}
 {LBX_HTML}
+{SHARE_HTML}
+{SHARE_JS}
 {LBX_JS}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
