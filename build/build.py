@@ -677,7 +677,7 @@ def build_tab(member=False, menu="contents"):
         torn = f'<div class="torn" data-v="{i % 6}" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
         secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
-  <header class="shead">{torn}
+  <header class="shead{"" if dek else " nodek"}">{torn}
     <h2>{esc(a["title"])}</h2>
     {dek}
   </header>
@@ -685,8 +685,8 @@ def build_tab(member=False, menu="contents"):
     <p class="kicker">{esc(a["kicker"])}</p>
     {by}
     <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
-    {listen(a)}
     {share(a)}
+    {listen(a)}
   </aside>
   <div class="prose">{below if a["slug"] == "comic" else ""}{first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
@@ -1203,6 +1203,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
 .story>.plate,.story>.fnote,.story>.csplash{{grid-column:1/-1}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
+.shead.nodek{{margin-bottom:clamp(20px,2.6vw,36px)}}
 .shead>*{{position:relative;z-index:1}}
 .torn{{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}}
 .shead{{pointer-events:auto}}
@@ -1345,7 +1346,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .story{{grid-template-columns:minmax(0,1fr)}}
   .shead,.margin,.prose{{grid-column:1}}
   .margin{{grid-row:auto;position:static;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:28px}}
-  .margin .sharebtn{{order:1}} .margin .listen{{order:2;flex-basis:100%}}
+  .margin .listen{{flex-basis:100%}}
   .shead h2{{font-size:clamp(46px,12.5vw,76px);line-height:.94;max-width:none}}
   .margin .kicker,.margin .pp{{margin:0!important}}
   .prose{{display:block}}
