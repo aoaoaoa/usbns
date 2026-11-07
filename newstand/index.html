@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The American Bahá'í · Newsstand</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&display=swap">
+<style>
+:root{--paper:#f5f1e8;--card:#fdfcf9;--ink:#1d1a16;--soft:#3d3831;--mute:#6a635a;--rule:#d9d2c4;--link:#1b5e6b;--mem:#5b4a8a;--ph:#e7e1d4;--ui:"Bricolage Grotesque",system-ui,sans-serif;--text:"Literata",Georgia,serif;--disp:"Bodoni Moda",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15130f;--card:#1f1c17;--ink:#efe9dd;--soft:#cfc7b8;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;--mem:#b3a3dd;--ph:#2a251e;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15130f;--card:#1f1c17;--ink:#efe9dd;--soft:#cfc7b8;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;--mem:#b3a3dd;--ph:#2a251e;color-scheme:dark}
+*{box-sizing:border-box}
+html{overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text)}
+a{color:var(--link)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media (min-width:700px){.wrap{padding-left:24px;padding-right:24px}}
+header{border-bottom:1px solid var(--rule);background:var(--card)}
+header .wrap{min-height:64px;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
+.brand span{font-weight:600;font-size:19px;letter-spacing:-.015em}.brand small{font-size:inherit;font-variant-caps:all-small-caps;letter-spacing:.06em;font-weight:500}
+nav{margin-left:auto;display:flex;gap:6px 22px;flex-wrap:wrap;font-family:var(--ui);font-size:14.5px;font-weight:600}
+nav a{color:var(--ink);text-decoration:none;padding:6px 0}nav a.mem{color:var(--mem)}nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.cur{display:flex;flex-wrap:wrap;gap:48px 56px;align-items:center;padding-top:56px;padding-bottom:64px}
+.cover{margin:0;flex:1 1 360px;max-width:500px;background:var(--card);padding:16px;box-shadow:0 1px 0 var(--rule),0 24px 48px rgba(29,26,22,.16);transform:rotate(-1.2deg)}
+.cover img{display:block;width:100%;height:auto;aspect-ratio:1468/1912}
+.cover figcaption{font-family:var(--ui);font-size:12px;color:var(--mute);margin-top:10px}
+.intro{flex:1 1 380px;display:flex;flex-direction:column;gap:20px}
+.eyebrow{margin:0;font-family:var(--ui);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+h1{margin:0;font-family:var(--disp);font-weight:500;font-size:clamp(36px,5vw,62px);line-height:1.04;letter-spacing:-.015em}
+.dek{margin:0;font-size:19px;line-height:1.6;color:var(--soft);max-width:34em}
+.meta{margin:0;font-family:var(--ui);font-size:14px;color:var(--mute)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 26px;border-radius:999px;font-family:var(--ui);font-weight:600;font-size:15px;text-decoration:none}
+.btn.p{background:var(--ink);color:var(--paper)}.btn.s{border:1.5px solid var(--mem);color:var(--mem)}
+.btn:focus-visible,.card:focus-visible,.tile:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+.band{background:var(--card);border-top:1px solid var(--rule)}
+.band:last-of-type{border-bottom:1px solid var(--rule)}
+.band .wrap{padding-top:52px;padding-bottom:60px}
+.rowh{display:flex;align-items:baseline;gap:8px 18px;flex-wrap:wrap;margin:0 0 26px}
+h2{margin:0;font-family:var(--disp);font-weight:500;font-size:32px}
+.rowh p{margin:0;font-family:var(--ui);font-size:14px;color:var(--mute)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px 22px}
+.card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .im{overflow:hidden;aspect-ratio:3/2;border-bottom:4px solid var(--c)}
+.card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.card:hover img{transform:scale(1.03)}
+.k{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--kc)}
+.t{font-size:17px;line-height:1.35;font-weight:500}
+.card.ph{cursor:default}
+.card.ph .im{background:repeating-linear-gradient(135deg,var(--ph) 0 10px,transparent 10px 20px),var(--card);border:1px dashed var(--rule);border-bottom:4px solid var(--mute);display:grid;place-items:center}
+.card.ph .im span{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:var(--card);padding:4px 10px;border-radius:999px}
+.card.ph .k{color:var(--mute)}.card.ph .t{color:var(--mute)}
+.arch .wrap{padding-top:64px;padding-bottom:72px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.tile{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--rule);transition:transform .25s}
+.tile:hover{transform:translateY(-4px)}
+.tile>i{height:6px;background:var(--c)}
+.tile>span{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px}
+.tile b{display:flex;align-items:baseline;gap:8px;font-weight:400}
+.tile b em{font-style:normal;font-family:var(--disp);font-size:40px;line-height:1;color:var(--c)}
+.tile b small{font-family:var(--ui);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.tile .th{font-size:15.5px;line-height:1.35}.tile .se{font-family:var(--ui);font-size:12.5px;color:var(--mute)}
+.more{margin:36px 0 0;font-family:var(--ui);font-weight:600;font-size:15px}
+footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-size:13px;line-height:1.6;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.card img,.tile{transition:none}.cover{transform:none}}
+@media (max-width:600px){.cur{padding-top:32px;gap:32px}.cover{transform:none;padding:10px}h2{font-size:27px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="brand" href="./"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g1" x1="26" y1="1" x2="26" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".47" stop-color="#357686"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path fill="url(#g1)" d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z"/></svg><span><small>The</small> American Bahá'í</span></a>
+<nav aria-label="Site"><a href="#current">Current issue</a><a href="#special">Special reports</a><a href="#archive">Archive</a><a href="#">About</a><a class="mem" href="../member/">Members</a></nav>
+</div></header>
+
+<main>
+<section id="current" class="wrap cur" aria-labelledby="cur-h">
+<figure class="cover"><img src="../img/cover-print-v57n5.jpg" alt="Cover of The American Bahá'í, Volume 57, Number 5, October/November/December 2026: Juliet Bogan's painting of a green valley of terraced fields and small houses under an orange ridge, with two young women in the foreground"><figcaption>Cover painting by Juliet Bogan</figcaption></figure>
+<div class="intro">
+<p class="eyebrow">Current issue · Volume 57, Number 5 · The Arts Issue</p>
+<h1 id="cur-h">Creative expression and the transformation of communities</h1>
+<p class="dek">From music and visual art to the creative practices woven into grassroots efforts.</p>
+<p class="meta">October / November / December 2026</p>
+<div class="cta"><a class="btn p" href="../">Read the issue</a><a class="btn s" href="../member/">Full edition for members</a></div>
+</div>
+</section>
+
+<section class="band" aria-labelledby="in-h"><div class="wrap">
+<div class="rowh"><h2 id="in-h">In this issue</h2></div>
+<div class="cards">
+<a class="card" href="../#gregory" style="--c:#e8532a;--kc:#b8401c"><div class="im"><img src="../img/gregory-group-hd.jpg" alt="Summer of Service participants at the Louis Gregory Bahá'í Museum in Charleston" loading="lazy"></div><span class="k">Race amity · Print pages 20–23</span><span class="t">The Louis Gregory Bahá'í Institute continues legacy of race amity work</span></a>
+<a class="card" href="../#newyorkers" style="--c:#f05a7e;--kc:#b8304f"><div class="im"><img src="../img/ny-park.jpg" alt="Painting with children at the plaza in Crown Heights, Brooklyn" loading="lazy"></div><span class="k">Community · Print pages 24–26</span><span class="t">New Yorkers create more unified communities through the arts</span></a>
+<a class="card" href="../#twoartists" style="--c:#b07a4a;--kc:#8a5a30"><div class="im"><img src="../img/ta-portrait.jpg" alt="Portrait by Maya Mansour" loading="lazy" style="object-position:50% 25%"></div><span class="k">In conversation · Print pages 27–29</span><span class="t">Two artists reimagine the role of art through a spiritual framework</span></a>
+<a class="card" href="../#abs" style="--c:#c9462c;--kc:#a8361f"><div class="im"><img src="../img/abs-stage-duo.jpg" alt="A panel at the Association's 50th annual conference in Ottawa" loading="lazy"></div><span class="k">Scholarship · Print pages 16–19</span><span class="t">Association for Bahá'í Studies at 50</span></a>
+</div>
+</div></section>
+
+<section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
+<div class="rowh"><h2 id="sp-h">Special reports</h2><p>Placeholders: reports published between issues will appear here.</p></div>
+<div class="cards">
+<div class="card ph" role="group" aria-label="Special report placeholder 1"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 2"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 3"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 4"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+</div>
+</div></section>
+
+<section id="archive" class="arch" aria-labelledby="ar-h"><div class="wrap">
+<div class="rowh"><h2 id="ar-h">Earlier issues</h2></div>
+<div class="tiles">
+<a class="tile" href="#" style="--c:#3f7f61"><i></i><span><b><em>4</em><small>Vol. 57 · No. 4</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+<a class="tile" href="#" style="--c:#b5654a"><i></i><span><b><em>3</em><small>Vol. 57 · No. 3</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+<a class="tile" href="#" style="--c:#2f4f6e"><i></i><span><b><em>2</em><small>Vol. 57 · No. 2</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+<a class="tile" href="#" style="--c:#9a7b3a"><i></i><span><b><em>1</em><small>Vol. 57 · No. 1</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+<a class="tile" href="#" style="--c:#6d5a8f"><i></i><span><b><em>5</em><small>Vol. 56 · No. 5</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+</div>
+<p class="more"><a href="#">Browse every issue →</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap">Published by the National Spiritual Assembly of the Bahá'ís of the United States, 1233 Central St., Evanston, IL 60201.</div></footer>
+</body>
+</html>

@@ -6,6 +6,7 @@ TAB online: the October/November/December 2026 issue of The American Bahá'í, a
 - `member/` the full edition: the same six features plus the National Spiritual Assembly's mid-year letter and the departments (Ḥuqúqu'lláh, Abiding in God's Law, the Fund, Rhythm of Bahá'í Life, the Bookstore, notices).
 - `alt/` the curated edition with the colour-index phone menu; `member/alt/` the same for the full edition. Both are written by the same build as the main pages, so they stay in step.
 - `alt/plates/`, `alt/reader/` two earlier presentations, kept for reference.
+- `newstand/` the cover-stand landing page (a study): current cover, In this issue, Special reports (placeholders) and earlier issues.
 - `ideas/` treatments set aside for later use.
 - `audio/` story readings, as they are added.
 - `img/` art and photographs.
