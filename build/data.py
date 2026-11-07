@@ -78,7 +78,7 @@ _PM = [('SEATTLE', 'WA', 1210, 250, -12), ('IDAHO FALLS', 'ID', 1440, 420, 8), (
 ENDEAVOR_POSTMARKS = ('<svg viewBox="0 0 1600 923">'
     '<g class="adr"><text x="60" y="560">To every soul who holds</text><text x="60" y="628">“the promise of America</text><text x="60" y="696">in their heart”</text></g>'
     '<text class="ttl" x="62" y="758">A COMMON ENDEAVOR</text>'
-    + "".join(f'<g class="pm" style="--d:{.5+i*.25:.2f}s" transform="translate({x} {y}) rotate({r})"><g class="pmi"><circle r="62"/><circle r="44"/>'
+    + "".join(f'<g class="pm" style="--d:{.4+i*.18:.2f}s" transform="translate({x} {y}) rotate({r})"><g class="pmi"><circle r="62"/><circle r="44"/>'
               f'<path id="pma{i}" d="M -51 0 A 51 51 0 0 1 51 0" fill="none" stroke="none"/><text class="pmt"><textPath href="#pma{i}" startOffset="50%" text-anchor="middle">{c}</textPath></text>'
               f'<text class="pms" y="9" text-anchor="middle">{s}</text><text class="pmy" y="30" text-anchor="middle">2026</text>'
               f'<path class="wv" d="M 70 -16 q 18 -9 36 0 t 36 0 t 36 0 M 70 0 q 18 -9 36 0 t 36 0 t 36 0 M 70 16 q 18 -9 36 0 t 36 0 t 36 0"/></g></g>'

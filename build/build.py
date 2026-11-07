@@ -864,8 +864,8 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:760px){{.prose>.mnote{{grid-column:auto;grid-row:auto;margin:0 0 1.4em 1em;max-width:none}}}}
 @media (prefers-reduced-motion:no-preference){{
 .ovready .mnote .mq{{clip-path:inset(0 100% 0 0)}} .ovready .mnote .mw{{opacity:0}}
-.ovready .mnote.go .mq{{clip-path:inset(0 0 0 0);transition:clip-path 1.4s cubic-bezier(.5,.1,.4,1)}} .ovready .mnote.go .mw{{opacity:1;transition:opacity .6s 1.2s}}
-.ovready .mnh{{background-size:0 .3em}} .ovready .mnh.go{{background-size:100% .3em;transition:background-size .8s .9s}} .ovready .mnh.go.on{{background-size:100% 1.1em;transition:background-size .4s,background-position .3s}}
+.ovready .mnote.go .mq{{clip-path:inset(0 0 0 0);transition:clip-path 1.4s cubic-bezier(.5,.1,.4,1)}} .ovready .mnote.go .mw{{opacity:1;transition:opacity .5s .9s}}
+.ovready .mnh{{background-size:0 .3em}} .ovready .mnh.go{{background-size:100% .3em;transition:background-size .7s .5s}} .ovready .mnh.go.on{{background-size:100% 1.1em;transition:background-size .4s,background-position .3s}}
 }}
 /* A common endeavor: postmarks on the quilt */
 .evo .ov{{text-shadow:none}}
@@ -879,7 +879,7 @@ main,.head{{position:relative;z-index:1}}
 .ovready .evo.go .pm{{opacity:1;transition:opacity .15s;transition-delay:var(--d)}}
 .ovready .evo.go .pmi{{transform:none;transition:transform .25s cubic-bezier(.3,1.4,.5,1);transition-delay:var(--d)}}
 .ovready .evo .adr{{clip-path:inset(0 100% 0 0)}} .ovready .evo.go .adr{{clip-path:inset(0 0 0 0);transition:clip-path 1.8s cubic-bezier(.5,.1,.4,1) .2s}}
-.ovready .evo .ttl{{opacity:0}} .ovready .evo.go .ttl{{opacity:1;transition:opacity .8s 2.6s}}
+.ovready .evo .ttl{{opacity:0}} .ovready .evo.go .ttl{{opacity:1;transition:opacity .8s 2s}}
 }}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
 .figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
@@ -1153,7 +1153,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ovready .ov .pen{{clip-path:inset(0 63% 0 0)}} .ovready .ov .pen text{{fill-opacity:0;stroke-width:1.6;stroke-dasharray:420;stroke-dashoffset:420}}
 .ovready .ovw.go .ov .pen{{animation:penclip 2.2s cubic-bezier(.5,.1,.4,1) .3s forwards}}
 .ovready .ovw.go .ov .pen text{{animation:pendraw 2.6s cubic-bezier(.45,.05,.3,1) .3s forwards,penfill .9s ease-out 2.2s forwards}}
-.ovready .ovw.go .ov .sweep{{animation:sweep 2.4s cubic-bezier(.4,.1,.3,1) 2.9s both}}
+.ovready .ovw.go .ov .sweep{{animation:sweep 1.8s cubic-bezier(.4,.1,.3,1) 2.3s both}}
 }}
 @keyframes penclip{{to{{clip-path:inset(0 0 0 0)}}}} @keyframes pendraw{{to{{stroke-dashoffset:0}}}} @keyframes penfill{{to{{fill-opacity:1;stroke-width:0}}}}
 @keyframes sweep{{from{{background-position:120% 0}}to{{background-position:-20% 0}}}}
@@ -1410,14 +1410,25 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
   (function(){{var V=[].slice.call(document.querySelectorAll('.verb'));if(!V.length||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
     V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%3)}})}});
-    function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.92-r.top)/(h*0.5);v.dataset.f=String(Math.max(0,Math.min(2,Math.floor(p*3))))}})}}
+    function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.8-r.top)/(h*0.4);v.dataset.f=String(Math.max(0,Math.min(2,Math.floor(p*3))))}})}}
     addEventListener('scroll',tick,{{passive:true}});addEventListener('resize',tick);tick();}})();
   [].forEach.call(document.querySelectorAll('.chart ol.tlx'),function(ol){{var svg=ol.parentNode.querySelector('svg.tl2');if(!svg)return;
     function lit(li,on){{li.classList.toggle('lit',on);[].forEach.call(svg.querySelectorAll('[data-pt^="'+li.dataset.y+':"]'),function(e){{e.classList.toggle('lit',on)}})}}
     [].forEach.call(ol.querySelectorAll('li[data-y]'),function(li){{['mouseenter','focus'].forEach(function(t){{li.addEventListener(t,function(){{lit(li,true)}})}});['mouseleave','blur'].forEach(function(t){{li.addEventListener(t,function(){{lit(li,false)}})}})}});}});
-  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.mnote,.mnh'));
-  if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
-  else W.forEach(function(w){{w.classList.add('go')}});
+  /* play each piece when it reaches the reading band (above the lowest quarter of the screen);
+     a piece scrolled past before it had time to finish resets, and plays again when the reader returns */
+  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.mnote'));
+  function mark(n,on){{if(!n.classList.contains('mnote'))return;var m=document.getElementById(n.getAttribute('data-for'));if(m)m.classList.toggle('go',on)}}
+  if('IntersectionObserver' in window&&!rm){{var t0=new WeakMap(),FULL=2600;
+    var io=new IntersectionObserver(function(es){{es.forEach(function(e){{var el=e.target;
+      if(e.isIntersecting){{if(!el.classList.contains('go')){{el.classList.add('go');mark(el,true);t0.set(el,performance.now())}}}}
+      else if(el.classList.contains('go')&&!el.dataset.done){{if(performance.now()-t0.get(el)<FULL){{el.classList.remove('go');mark(el,false)}}else el.dataset.done=1}}
+      if(el.classList.contains('go')&&performance.now()-(t0.get(el)||0)>=FULL)el.dataset.done=1;}})}},{{rootMargin:'0px 0px -25% 0px',threshold:.2}});
+    W.forEach(function(w){{io.observe(w)}});
+    setInterval(function(){{W.forEach(function(w){{if(w.classList.contains('go')&&!w.dataset.done&&performance.now()-t0.get(w)>=FULL){{w.dataset.done=1;io.unobserve(w)}}}})}},500);}}
+  else W.forEach(function(w){{w.classList.add('go');mark(w,true)}});
+  /* looping diagrams start from their first step when they come into view */
+  if('IntersectionObserver' in window&&!rm){{var rio=new IntersectionObserver(function(es){{es.forEach(function(e){{if(!e.isIntersecting)return;var v=e.target;if(v.setCurrentTime)v.setCurrentTime(0);rio.unobserve(v)}})}},{{rootMargin:'0px 0px -25% 0px',threshold:.3}});[].forEach.call(document.querySelectorAll('.rsvg'),function(v){{rio.observe(v)}});}}
   var ny=document.querySelector('.ovw.nyo'); if(ny&&!rm){{var tick=function(){{var r=ny.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight+r.height);p=Math.max(0,Math.min(1,p))-.5;ny.style.setProperty('--dr',(p*24).toFixed(1))}};addEventListener('scroll',tick,{{passive:true}});tick();}}
 }})();
 (function(){{[].forEach.call(document.querySelectorAll('figure.ringf'),function(f){{var v=f.querySelector('.rsvg'),li=[].slice.call(f.querySelectorAll('.rcols li'));if(!v||!v.getCurrentTime)return;var last=-1;setInterval(function(){{var k=Math.floor((v.getCurrentTime()%16)/4);if(k!==last){{last=k;li.forEach(function(x,i){{x.classList.toggle('on',i===k)}});}}}},150);}});}})();
