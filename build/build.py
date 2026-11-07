@@ -169,7 +169,7 @@ def chart_html(c):
         for i, e in enumerate(ev):
             y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""; x = xs[i]; ty = T[i % len(T)]; k = kind(y)
             parts.append(f'<path d="M{x:.1f} {LY+6} V{LY+12} L{lx[i]:.1f} {ty-16} V{ty-12}" class="cfan"/>')
-            parts.append(f'<g class="k-{k}"><circle cx="{x:.1f}" cy="{LY}" r="5.5" class="cdotk"/><circle cx="{x:.1f}" cy="{LY}" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><text x="{lx[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk">{y}</text></g>')
+            parts.append(f'<g class="k-{k}"><circle cx="{x:.1f}" cy="{LY}" r="5.5" class="cdotk"/><circle cx="{x:.1f}" cy="{LY}" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><text x="{lx[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk"{pop(f"{y}: {lab}", story)}>{y}</text></g>')
             rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
         K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
         used = {kind(e[0]) for e in ev}
@@ -190,7 +190,7 @@ def chart_html(c):
             for i, e in enumerate(evs):
                 ty = T[i % len(T)]; k = kind(e[0]); story = e[2] if len(e) > 2 else ""
                 q.append(f'<path d="M{rx[i]:.1f} {RY+5} V{RY+10} L{rl[i]:.1f} {ty-13} V{ty-10}" class="cfan"/>')
-                q.append(f'<g class="k-{k}"><circle cx="{rx[i]:.1f}" cy="{RY}" r="4" class="cdotk"/><circle cx="{rx[i]:.1f}" cy="{RY}" r="9" class="ghost hit"{pop(f"{e[0]}: {e[1]}", story)}/><text x="{rl[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk">{e[0]}</text></g>')
+                q.append(f'<g class="k-{k}"><circle cx="{rx[i]:.1f}" cy="{RY}" r="4" class="cdotk"/><circle cx="{rx[i]:.1f}" cy="{RY}" r="9" class="ghost hit"{pop(f"{e[0]}: {e[1]}", story)}/><text x="{rl[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk"{pop(f"{e[0]}: {e[1]}", story)}>{e[0]}</text></g>')
             return f'<svg viewBox="0 0 {RW} {T[-1] + 6}" width="100%" aria-hidden="true">{"".join(q)}</svg>'
         eras = c.get("eras", [])
         life = [e for e in ev if e[0] <= b0]; later = [e for e in ev if e[0] > b0]
@@ -788,7 +788,7 @@ main,.head{{position:relative;z-index:1}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}}} :root[data-theme="dark"] .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}
 .chart .tlrows{{display:none}} .chart .tlrl{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:10px 0 0}}
 @media (max-width:600px){{.chart svg.tl2{{display:none}} .chart .tlrows{{display:block}} .chart .tlrows svg+.tlrl{{margin-top:4px}}}}
-.chart .cdotk{{fill:var(--k)}} .chart .cvk{{font-family:var(--ui);font-weight:700;font-size:12px;fill:var(--k);stroke:var(--paper);stroke-width:3px;paint-order:stroke;stroke-linejoin:round;font-variant-numeric:tabular-nums}} .chart .cfan{{fill:none;stroke:var(--rule);stroke-width:1}} .chart .cbrk{{stroke:var(--mute);stroke-width:1.5;fill:none}}
+.chart .cdotk{{fill:var(--k)}} .chart text.cvk[data-pb]{{pointer-events:auto;cursor:pointer}} .chart text.cvk[data-pb]:hover,.chart text.cvk[data-pb]:focus-visible{{text-decoration:underline;outline:none}} .chart .cvk{{font-family:var(--ui);font-weight:700;font-size:12px;fill:var(--k);stroke:var(--paper);stroke-width:3px;paint-order:stroke;stroke-linejoin:round;font-variant-numeric:tabular-nums}} .chart .cfan{{fill:none;stroke:var(--rule);stroke-width:1}} .chart .cbrk{{stroke:var(--mute);stroke-width:1.5;fill:none}}
 .chart .hit:hover+.cvk,.chart g:hover .cdotk{{stroke:var(--paper);stroke-width:2}}
 .chart .k-life{{--k:var(--k-life)}} .chart .k-teach{{--k:var(--k-teach)}} .chart .k-serve{{--k:var(--k-serve)}} .chart .k-write{{--k:var(--k-write)}} .chart .k-legacy{{--k:var(--k-legacy)}}
 .chart .kkey{{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--ui);font-size:12px;color:var(--mute);margin:0 0 16px}} .chart .kkey i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--k);margin-right:6px}}
