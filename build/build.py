@@ -228,7 +228,7 @@ def chart_html(c):
             parts.append(f'<text x="{tx:.1f}" y="{ty:.1f}" text-anchor="{anc}" class="cml">{esc(t)}</text>')
         tot = TOP + PH + 6 if insets else H + 10
         svg = f'<svg viewBox="-10 -6 {W + 20} {tot + 6}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}{"".join(panels)}</svg>'
-        if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>Reported to the National Assembly; numbers count nearby communities</span></p>'
+        if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>Reported to the National Assembly</span></p>'
     elif c["kind"] == "pictogram":
         rows = c["rows"]; W = 600; parts = []; rowh = 40
         for r, row in enumerate(rows):
