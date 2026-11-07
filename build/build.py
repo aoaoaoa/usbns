@@ -43,7 +43,7 @@ def body_html(blocks):
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
-            out.append('<p class="figsent">' + "".join((f'<b class="{"has" if pops.get(p) else ""}{" wd" if len(p) > 8 else ""}"{pop(p, pops.get(p, ""))}>{esc(p)}</b>' if i % 2 else esc(p)) for i, p in enumerate(parts)) + '</p>')
+            out.append(f'<p class="figsent{" " + b[3] if len(b) > 3 else ""}">' + "".join((f'<b class="{"has" if pops.get(p) else ""}{" wd" if len(p) > 8 else ""}"{pop(p, pops.get(p, ""))}>{esc(p)}</b>' if i % 2 else esc(p)) for i, p in enumerate(parts)) + '</p>')
         elif k == "portraits":
             out.append('<div class="portraits">' + "".join(f'<figure class="{cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in b[1]) + '</div>')
         elif k == "band":
@@ -644,7 +644,7 @@ main,.head{{position:relative;z-index:1}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
 .figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
-.figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
+.prose>.figsent.lg{{font-size:clamp(26px,2.9vw,36px);line-height:1.35}} .figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
 
 /* photo frames: a thin border cut from the cover painting */
 .prose .photo.pair{{display:flex!important;gap:20px;align-items:flex-start}} .prose .photo.pair>div{{min-width:0}}
