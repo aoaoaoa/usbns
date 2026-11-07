@@ -655,7 +655,7 @@ DOCK = '''<div class="dock" id="dock" role="region" aria-label="Audio player" hi
   </div>
 </div>'''
 
-def build_tab(member=False):
+def build_tab(member=False, menu="contents"):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
@@ -699,7 +699,7 @@ def build_tab(member=False):
     head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
     lead = ""; depts = ""; dindex = ""; dhead = ""
-    rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]]) for a in ARTICLES]
+    rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]], a["kicker"], a["title"]) for a in ARTICLES]
     if member:
         from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
         L = LETTER
@@ -743,7 +743,19 @@ def build_tab(member=False):
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
         dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + f'<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
-        rows += [("letter", "Letter from the National Assembly", "2", "var(--mem)")] + [(s, t, p, "var(--mem)") for s, t, p in D]
+        recs = {"huquq": HUQUQ, "abiding": ABIDING, "fund": FUND, "rhythm": RHYTHM, "books": BOOKS}
+        rows += [("letter", "Letter", "2", "var(--mem)", L["kicker"], L["title"])] + [(s, t, p, "var(--mem)", recs[s]["kicker"] if s in recs else "Announcements", t) for s, t, p in D]
+    import re as _re
+    vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
+    when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
+    if menu == "bands":
+        light = {"#e9a21f", "#f05a7e"}
+        sheet = ('<div class="rhs rhs-b" role="navigation" id="rhs" aria-label="Contents">' + f'<p class="rhi">{esc(ISSUE["theme"])}</p>'
+                 + "".join(f'<a href="#{s}" style="--tint:{t}" class="{"dk" if t in light else ""}" data-name="{esc(n)}"><span class="cur">Reading</span><span class="nm">{esc(n)}</span><span class="pp">p.&#8201;{p}</span><i class="bar"></i></a>' for s, n, p, t, k, ti in rows) + '</div>')
+    else:
+        sheet = ('<div class="rhs rhs-c" role="navigation" id="rhs" aria-label="Contents">' + f'<div class="rhm"><span>{vol}</span><span>{when}</span></div><p class="rhtt">{esc(ISSUE["theme"])}</p>'
+                 + "".join(f'<a href="#{s}" style="--tint:{t}" data-name="{esc(n)}"><span class="pn">{p}</span><span class="rx"><span class="k">{esc(k)}</span><span class="tt">{esc(ti)}</span><span class="rd" aria-hidden="true"><i></i></span></span></a>' for s, n, p, t, k, ti in rows)
+                 + '<div class="rhf"><a href="#top">Back to the cover</a><a href="#front">About this issue</a></div></div>')
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
@@ -1014,7 +1026,29 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhp{{display:block;position:absolute;left:0;bottom:-1px;height:3px;width:var(--rp,0%);background:var(--rt,transparent);transition:width .15s}}
 .head .rhs{{display:block;position:absolute;left:0;right:0;top:100%;max-height:calc(100dvh - 70px);overflow-y:auto;background:var(--bar);border-bottom:1px solid var(--barrule);box-shadow:0 14px 24px rgb(0 0 0/.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility 0s .18s}}
 .head.open .rhs{{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}}
-.head .rhs a{{display:flex;align-items:baseline;gap:10px;padding:13px 16px 13px 14px;border-left:4px solid var(--tint);border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none;font-family:var(--disp);font-size:18px;line-height:1.25}}
+.head .rhs-x{{display:none}}
+.head .rhs-c{{padding:16px 18px 6px}}
+.head .rhs-c .rhm{{display:flex;justify-content:space-between;font-family:"Bodoni Moda",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--ink);padding-bottom:8px}}
+.head .rhs-c .rhtt{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:29px;line-height:1.1;margin:10px 0 10px;color:var(--ink)}}
+.head .rhs-c a[data-name]{{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none}}
+.head .rhs-c .pn{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:25px;line-height:1;color:var(--tint);font-variant-numeric:lining-nums}}
+.head .rhs-c .k{{display:block;font-family:var(--ui);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}}
+.head .rhs-c .tt{{display:block;font-family:var(--text);font-size:16px;line-height:1.3}}
+.head .rhs-c .rd{{display:none;height:3px;background:var(--barrule);margin-top:8px;border-radius:2px;overflow:hidden}} .head .rhs-c .rd i{{display:block;height:100%;width:var(--rp,0%);background:var(--tint)}}
+.head .rhs-c a.on .tt{{font-weight:600}} .head .rhs-c a.on .rd{{display:block}}
+.head .rhs-c .rhf{{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--ink);margin-top:2px;padding:12px 0 8px;font-family:var(--ui);font-size:13.5px}}
+.head .rhs-c .rhf a{{color:var(--mute);min-height:32px;display:flex;align-items:center}}
+.head .rhs-b{{padding:10px;background:var(--paper)}}
+.head .rhs-b .rhi{{font-family:"Bodoni Moda",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:4px 6px 8px}}
+.head .rhs-b a[data-name]{{position:relative;overflow:hidden;display:flex;align-items:center;flex-wrap:wrap;gap:0 12px;min-height:54px;margin-bottom:6px;padding:0 16px;border-radius:8px;background:var(--tint);color:#fff;text-decoration:none}}
+.head .rhs-b a.dk{{color:#1d1a16}}
+.head .rhs-b .nm{{font-family:var(--ui);font-weight:700;font-size:19px}}
+.head .rhs-b .pp{{margin-left:auto;font-family:var(--ui);font-size:13px;opacity:.9}}
+.head .rhs-b .cur{{display:none;width:100%;font-family:var(--ui);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.9}}
+.head .rhs-b .bar{{position:absolute;left:0;bottom:0;height:4px;width:var(--rp,0%);background:currentColor;opacity:.85;display:none}}
+.head .rhs-b a.on{{min-height:84px;align-content:center;background:var(--tint)}} .head .rhs-b a.on .cur,.head .rhs-b a.on .bar{{display:block}}
+.head .rhs a:focus-visible{{outline:2px solid var(--ink);outline-offset:-2px}}
+.head .rhs-x a{{display:flex;align-items:baseline;gap:10px;padding:13px 16px 13px 14px;border-left:4px solid var(--tint);border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none;font-family:var(--disp);font-size:18px;line-height:1.25}}
 .head .rhs a small{{margin-left:auto;flex:none;font-family:var(--ui);font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}} .head .rhs a.on{{background:var(--tabon)}}
 }}
 @media (prefers-reduced-motion:reduce){{.head .rhs,.head .rhp,.head .rht svg{{transition:none}}}}
@@ -1220,7 +1254,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 }}
 {LBX_CSS}
 </style>
-<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span><button class="rh" type="button" aria-expanded="false" aria-controls="rhs"><small>The American Bahá'í</small><b><i></i><span>{esc(ISSUE["theme"])}</span></b></button><button class="rht" type="button" aria-label="Contents" aria-expanded="false" aria-controls="rhs"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div><i class="rhp" aria-hidden="true"></i><div class="rhs" role="navigation" id="rhs" aria-label="Contents">{"".join(f'<a href="#{s}" style="--tint:{t}">{esc(n)}<small>p.&#8201;{p}</small></a>' for s, n, p, t in rows)}</div></div>
+<div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span><button class="rh" type="button" aria-expanded="false" aria-controls="rhs"><small>The American Bahá'í</small><b><i></i><span>{esc(ISSUE["theme"])}</span></b></button><button class="rht" type="button" aria-label="Contents" aria-expanded="false" aria-controls="rhs"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div><i class="rhp" aria-hidden="true"></i>{sheet}</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland" vector-effect="non-scaling-stroke"/><path d="{USMAP["states"]}" class="cstate" vector-effect="non-scaling-stroke"/></g></defs></svg>
 <div class="popup" role="dialog" aria-modal="false" aria-live="polite" hidden><button type="button" aria-label="Close">×</button><b></b><p></p></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -1236,7 +1270,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </header>
 <main>
 <div class="wrap">
-<section class="front">
+<section class="front" id="front">
   <div>
     <h2>Features</h2>
     <ol class="index">{index}</ol>
@@ -1272,12 +1306,12 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   var secs=[].slice.call(document.querySelectorAll('article.story'));
   var ind=document.querySelector('.head .ind'), inn=document.querySelector('.head .in');
   var cur=null, brand=document.querySelector('.head .brand');
-  var hd=document.querySelector('.head'), rhs=[].slice.call(document.querySelectorAll('.head .rhs a')), rhn=document.querySelector('.head .rh span'); var RH0=rhn.textContent;
+  var hd=document.querySelector('.head'), rhs=[].slice.call(document.querySelectorAll('.head .rhs a[data-name]')), rhn=document.querySelector('.head .rh span'); var RH0=rhn.textContent;
   function rhSet(id){{var l=rhs.filter(function(x){{return x.getAttribute('href')==='#'+id}})[0]||rhs.filter(function(x){{return x.getAttribute('href')==='#'+(alias[id]||id)}})[0];
-    rhs.forEach(function(x){{x.classList.toggle('on',x===l)}});hd.classList.toggle('inside',!!l);rhn.textContent=l?l.firstChild.textContent:RH0;if(l)hd.style.setProperty('--rt',l.style.getPropertyValue('--tint'));}}
+    rhs.forEach(function(x){{x.classList.toggle('on',x===l);if(x===l)x.setAttribute('aria-current','location');else x.removeAttribute('aria-current')}});hd.classList.toggle('inside',!!l);rhn.textContent=l?l.dataset.name:RH0;if(l)hd.style.setProperty('--rt',l.style.getPropertyValue('--tint'));}}
   function rhOpen(o){{hd.classList.toggle('open',o);var on=o&&document.querySelector('.head .rhs a.on');if(on)on.parentNode.scrollTop=on.offsetTop-on.parentNode.clientHeight/3;[].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.setAttribute('aria-expanded',o)}});}}
   [].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.addEventListener('click',function(){{rhOpen(!hd.classList.contains('open'))}})}});
-  rhs.forEach(function(x){{x.addEventListener('click',function(){{rhOpen(false)}})}});
+  [].forEach.call(document.querySelectorAll('.head .rhs a'),function(x){{x.addEventListener('click',function(){{rhOpen(false)}})}});
   // lazy images above a target can push it down mid-jump; settle on it once they load
   [].forEach.call(document.querySelectorAll('.head a[href^="#"]'),function(x){{x.addEventListener('click',function(){{var t=document.getElementById(x.getAttribute('href').slice(1));if(!t)return;
     var n=0,iv=setInterval(function(){{var d=t.getBoundingClientRect().top-hd.offsetHeight;if(++n>20||Math.abs(d)<3&&n>4){{clearInterval(iv);return}}if(n>1&&Math.abs(d)>=3)scrollTo({{top:scrollY+d,behavior:'auto'}});}},250);}})}});
@@ -1685,6 +1719,11 @@ with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
 os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
 with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
+# the colour-index menu variant: same build, so it follows every change to the main pages
+os.makedirs(os.path.join(SITE, "alt"), exist_ok=True)
+with open(os.path.join(SITE, "alt", "index.html"), "w") as f: f.write(standalone(build_tab(menu="bands")).replace('href="FAVICON"', 'href="../favicon.svg"'))
+os.makedirs(os.path.join(SITE, "member", "alt"), exist_ok=True)
+with open(os.path.join(SITE, "member", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
