@@ -306,6 +306,22 @@ def concept_html(c):
         if c.get("bracket"):
             a, b, note = c["bracket"]; xa, xb = xs[a], xs[b]
             P.append(f'<path d="M{xa:.1f},{y-22} L{xa:.1f},{y-40} L{xb:.1f},{y-40} L{xb:.1f},{y-22}" class="cbr"/><text x="{(xa+xb)/2:.1f}" y="{y-48}" text-anchor="middle" class="cv">{esc(note)}</text>')
+    elif kind == "twoway":
+        # one band between people and technology; which way the weight runs is the difference
+        W = 600; H = 230; P2 = []
+        uid = id(c) % 100000
+        P2.append(f'<defs><marker id="tw{uid}" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="28" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" class="cb"/></marker>'
+                  f'<marker id="tx{uid}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>')
+        for k, (title, story, sub) in enumerate(c["panels"]):
+            y = 26 + k * 112
+            fwd = k == 1
+            big = f'<line x1="{160 if fwd else 440}" y1="{y+38}" x2="{420 if fwd else 180}" y2="{y+38}" class="twb" marker-end="url(#tw{uid})"/>'
+            small = f'<line x1="{450 if fwd else 150}" y1="{y+64}" x2="{150 if fwd else 450}" y2="{y+64}" class="cline{"" if fwd else " twd"}" marker-end="url(#tx{uid})"/>'
+            P2.append(f'<g class="hit"{pop(title, story)}><rect x="0" y="{y-14}" width="{W}" height="104" class="ghost"/>'
+                      f'<text x="40" y="{y}" class="twk">{esc(title)}</text>'
+                      f'<text x="40" y="{y+44}" class="cv">People</text><text x="{W-40}" y="{y+44}" text-anchor="end" class="cv">Technology</text>'
+                      f'{big}{small}<text x="{W/2}" y="{y+86}" text-anchor="middle" class="cl">{esc(sub)}</text></g>')
+        P.extend(P2)
     elif kind == "contrast":
         H = 250
         for k, panel in enumerate(c["panels"]):
@@ -591,7 +607,8 @@ main,.head{{position:relative;z-index:1}}
 
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
 .chart .cclu{{fill:color-mix(in oklab,var(--mute) 70%,var(--paper));stroke:var(--paper);stroke-width:1.5}} .chart text.ccnt{{font-family:var(--ui);font-weight:700;font-size:10.5px;fill:#fff}} .chart .rep:hover .cclu{{fill:var(--ink)}}
-.chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart text.cml{{font-family:var(--ui);font-size:11.5px;fill:var(--mute);pointer-events:none}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
+.chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart .twb{{stroke:var(--accent);stroke-width:14}} .chart .twd{{stroke-dasharray:3 5}} .chart text.twk{{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;fill:var(--mute)}}
+.chart text.cml{{font-family:var(--ui);font-size:11.5px;fill:var(--mute);pointer-events:none}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
 .chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
 .chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.75;width:8px;height:8px}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
