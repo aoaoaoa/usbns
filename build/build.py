@@ -53,13 +53,6 @@ def body_html(blocks):
             # mounted print: a soft photograph shown at its sharp size on an off-white card
             f, cap, w = b[1], b[2], b[3]; side = b[4] if len(b) > 4 else ""
             out.append(f'<figure class="mountp {side}" style="--w:{w}px"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>')
-        elif k == "strip":
-            # contact strip: soft photographs shown small on one mount, read as a set
-            its = b[1]; n = len(its)
-            imgs = "".join(f'<div style="--ar:{IMGAR.get(f,1.4):.3f}"><img src="img/{f}" alt="{esc(c)}" loading="lazy"><span>{i+1}</span></div>' for i, (f, c) in enumerate(its))
-            caps = "".join(f'<li><b>{i+1}</b> {esc(c)}</li>' for i, (f, c) in enumerate(its)) if n > 1 else ""
-            cap = f'<figcaption><ol>{caps}</ol></figcaption>' if n > 1 else f'<figcaption>{esc(its[0][1])}</figcaption>'
-            out.append(f'<figure class="strip n{n}">{"<div class=row>" + imgs + "</div>"}{cap}</figure>')
         elif k == "img":
             w = b[3] if len(b) > 3 else None
             cls = "photo small" if w else "photo"
@@ -276,73 +269,12 @@ def concept_html(c):
         ring = f'<svg class="rsvg" viewBox="-70 70 740 460" aria-hidden="true">{"".join(P2)}</svg>'
         cols = "".join(f'<li{" class=on" if i == 0 else ""}><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
         return f'<figure class="chart concept ringf{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="rwrap">{ring}<ol class="rcols">{cols}</ol></div></figure>'
-    if kind == "ticker":
-        st = c["steps"]
-        seq = "".join(f'<span class="tw t{i%4}">{esc(l)}</span><i class="tsep" aria-hidden="true"></i>' for i, (l, _) in enumerate(st))
-        track = f'<div class="ttrack">{seq * 4}</div>'
-        cols = "".join(f'<li><b>0{i+1}</b><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
-        note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-        return f'<figure class="chart concept ticker{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="tband" aria-hidden="true">{track}</div><ol class="tcols">{cols}</ol>{note}</figure>'
     arrow = '<defs><marker id="ah{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>'.format(i=id(c) % 100000)
     mk = f'url(#ah{id(c) % 100000})'
-    if c.get("bold"):
-        arrow += '<defs><marker id="ahb{i}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carrb"/></marker></defs>'.format(i=id(c) % 100000)
-        mk = f'url(#ahb{id(c) % 100000})'
     def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
         return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
     H = 300
-    if kind == "ascent":
-        # the four practices as a rising wave: each return to action begins higher than the last
-        st = c["steps"]; W = 760; H = 400; n = len(st)
-        pts = [(70 + k * 155, 290 - k * 46 + (38 if k % 2 else -18)) for k in range(n + 1)]
-        d = f"M{pts[0][0]},{pts[0][1]}"
-        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-            mx = (x0 + x1) / 2; d += f" C{mx:.0f},{y0} {mx:.0f},{y1} {x1},{y1}"
-        P.append(f'<line x1="{pts[0][0]}" y1="{pts[0][1]+40}" x2="{pts[-1][0]}" y2="{pts[-1][1]+40}" class="casc-guide"/>')
-        P.append(f'<path d="{d}" pathLength="1" class="casc"/>')
-        for k, (x, y) in enumerate(pts):
-            up = k % 2 == 0
-            lab, story = st[k % n]
-            again = k == n
-            ly = y - 30 if up else y + 54
-            P.append(f'<g class="hit{" again" if again else ""}"{pop(lab + (" again" if again else ""), c.get("again","") if again else story)}><rect x="{x-8}" y="{y-8}" width="16" height="16" class="cnode" transform="rotate(45 {x} {y})"/>'
-                     f'<text x="{x}" y="{ly - 34 if up else ly + 26}" text-anchor="middle" class="csn">{"↺" if again else f"0{k+1}"}</text>'
-                     f'<text x="{x}" y="{ly}" text-anchor="middle" class="csw">{esc(lab)}</text></g>')
-    elif kind == "spiral":
-        # learning as a widening spiral: no arrows; the line thickens as it grows, returning to its start one turn higher
-        st = c["steps"]; W = 760; cx, cy = 380, 236; r0, r1 = 10, 170; T = 3 * 2 * math.pi; N = 360
-        rad = lambda t: r0 + (r1 - r0) * (t / T) ** 1.15
-        pt = lambda t, rr: (cx + rr * math.sin(t), cy - rr * math.cos(t))
-        pts = [pt(T * k / N, rad(T * k / N)) for k in range(N + 1)]
-        for k in range(N):
-            f = k / N
-            P.append(f'<line x1="{pts[k][0]:.1f}" y1="{pts[k][1]:.1f}" x2="{pts[k+1][0]:.1f}" y2="{pts[k+1][1]:.1f}" class="csp" style="stroke-width:{.8 + 13*f**2:.2f};stroke:color-mix(in oklab,var(--accent) {12 + 88*f**1.3:.0f}%,var(--paper))"/>')
-        d = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
-        P.append(f'<path id="sp{id(c)%100000}" d="{d}" fill="none" stroke="none"/><circle r="6.5" class="ctrav"><animateMotion dur="12s" repeatCount="indefinite"><mpath href="#sp{id(c)%100000}"/></animateMotion></circle>')
-        place = [(0, "middle"), (math.pi/2, "start"), (math.pi, "middle"), (3*math.pi/2, "end")]
-        for i, (lab, story) in enumerate(st):
-            a, anc = place[i % 4]; t = T if a == 0 else 2 * 2 * math.pi + a; x, y = pt(a, rad(t) + (22 if a == 0 else 30))
-            if anc == "middle" and a == 0: y -= 4
-            if anc == "middle" and a > 0: y += 42
-            if anc != "middle": y += 13
-            P.append(f'<g class="hit"{pop(lab, story)}><text x="{x:.1f}" y="{y - 40:.1f}" text-anchor="{anc}" class="csn">0{i+1}</text><text x="{x:.1f}" y="{y:.1f}" text-anchor="{anc}" class="csw">{esc(lab)}</text></g>')
-        H = 450
-    elif kind == "cycle":
-        st = c["steps"]; n = len(st); bold = c.get("bold")
-        cx, cy, r = (300, 190, 128) if bold else (300, 150, 100); H = 380 if bold else 300
-        gap = .26 if bold else .32
-        for i, (lab, story) in enumerate(st):
-            a = -math.pi/2 + 2*math.pi*i/n; b = -math.pi/2 + 2*math.pi*(i+1)/n
-            pa = (cx + r*math.cos(a + gap), cy + r*math.sin(a + gap)); pb = (cx + r*math.cos(b - gap), cy + r*math.sin(b - gap))
-            P.append(f'<path d="M{pa[0]:.1f},{pa[1]:.1f} A{r},{r} 0 0 1 {pb[0]:.1f},{pb[1]:.1f}" class="cline{" cbold" if bold else ""}" marker-end="{mk}"/>')
-        for i, (lab, story) in enumerate(st):
-            a = -math.pi/2 + 2*math.pi*i/n; x, y = cx + r*math.cos(a), cy + r*math.sin(a)
-            off = 34 if bold else 26
-            lx, ly = cx + (r + off)*math.cos(a), cy + (r + off)*math.sin(a)
-            anc = "start" if math.cos(a) > .3 else ("end" if math.cos(a) < -.3 else "middle")
-            P.append(f'<g class="hit"{pop(lab, story)}><circle cx="{x:.1f}" cy="{y:.1f}" r="{24 if bold else 16}" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="{15 if bold else 9}" class="cdot{" big" if bold else ""}"/><text x="{lx:.1f}" y="{ly + (8 if bold else 5):.1f}" text-anchor="{anc}" class="cv{" cvbig" if bold else ""}">{esc(lab)}</text></g>')
-        P.append(lines(c.get("center", ""), cx, cy - (6 if bold else 4), "cv" if bold else "cl", lh=22 if bold else 17))
-    elif kind == "rings":
+    if kind == "rings":
         rs = c["rings"]; n = len(rs); cx, cy = 300, 175; step = 160 / n; H = 350
         for i in range(n - 1, -1, -1):
             lab, story = rs[i]; R = step * (i + 1)
@@ -407,7 +339,7 @@ def concept_html(c):
         P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}{" spiral" if kind in ("spiral","ascent") else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
+    return f'<figure class="chart concept{size_cls(c)}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -596,53 +528,18 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
-/* CARS wheel */
-.wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
-.wnum{{font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.14em;fill:var(--paper)}}
-.wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
-.wfill{{stroke-linecap:butt}}
-.whair{{fill:none;stroke:var(--rule);stroke-width:1}}
-.chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif!important;font-weight:500!important;font-size:clamp(24px,2.4vw,34px)!important;letter-spacing:-.01em!important;font-variation-settings:"opsz" 48}}
-.rcols h5{{font-family:"Bodoni Moda",var(--text),serif!important;font-style:normal!important;font-weight:500!important;font-size:24px!important}}
-@media (prefers-reduced-motion:reduce){{.wdot{{display:none}}}}
-/* CARS ring: the four practices set on a turning circle */
-.chart.ringf .ct{{font-family:var(--text);font-weight:600;font-size:clamp(22px,2.2vw,30px);line-height:1.2;letter-spacing:-.015em;max-width:28ch;margin-bottom:18px}}
-.rwrap{{display:grid;grid-template-columns:1fr;gap:clamp(20px,3vw,44px);align-items:center}}
+/* CARS wheel: four phases, each filling in turn */
+.chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.2;letter-spacing:-.01em;max-width:28ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
+.rwrap{{display:grid;gap:clamp(20px,3vw,44px)}}
 .rsvg{{display:block;width:100%;max-width:620px;height:auto;overflow:visible;margin:0 auto}}
-.rtxt{{font-family:var(--text);font-style:normal;font-weight:500;font-size:64px;fill:var(--ink);letter-spacing:.01em;font-variation-settings:"opsz" 72}}
-
-@keyframes rspin{{to{{transform:rotate(360deg)}}}}
-
-.rsep{{font-size:24px;fill:var(--accent);font-style:normal}} .rhair{{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.55}}
-.rtick line{{stroke:var(--accent);stroke-width:3}}
-.rc{{font-family:var(--text);font-weight:600;font-size:46px;fill:var(--accent);opacity:0;letter-spacing:-.01em;animation:rcyc 12s infinite}}
-.rc1{{animation-delay:3s}} .rc2{{animation-delay:6s}} .rc3{{animation-delay:9s}}
-@keyframes rcyc{{0%{{opacity:0}} 4%,21%{{opacity:1}} 25%,100%{{opacity:0}}}}
+.wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
+.wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
+.whair{{fill:none;stroke:var(--rule);stroke-width:1}}
 .rcols{{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px 26px}}
-.rcols li{{border-top:2px solid var(--rule);padding-top:10px;opacity:.5;transition:opacity .5s,border-color .5s}} .rcols li.on{{opacity:1;border-color:var(--accent)}} .rcols li h5{{transition:color .5s}} .rcols li.on h5{{color:var(--accent)!important}}
-.rcols b{{font-family:var(--ui);font-size:12px;letter-spacing:.16em;color:var(--accent)}}
-.rcols h5{{font-family:var(--text);font-style:italic;font-weight:600;font-size:22px;margin:2px 0 6px;color:var(--ink)}}
+.rcols li{{border-top:2px solid var(--rule);padding-top:10px;opacity:.5;transition:opacity .5s,border-color .5s}} .rcols li.on{{opacity:1;border-color:var(--accent)}}
+.rcols h5{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:24px;margin:2px 0 6px;color:var(--ink);transition:color .5s}} .rcols li.on h5{{color:var(--accent)}}
 .rcols p{{font-family:var(--ui);font-size:13.5px;line-height:1.45;color:var(--mute);margin:0}}
 @media (max-width:760px){{.rcols{{grid-template-columns:1fr 1fr}}}}
-@media (prefers-reduced-motion:reduce){{.rc{{animation:none}} .rc0{{opacity:1}}}}
-
-/* CARS ticker: the four practices in unbroken procession */
-.chart.ticker .ct{{font-family:var(--disp);font-weight:800;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.025em;max-width:26ch;margin-bottom:18px}}
-.tband{{overflow:hidden;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:clamp(10px,1.4vw,18px) 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}}
-.ttrack{{display:flex;align-items:center;width:max-content;animation:tick 36s linear infinite}}
-.chart.ticker:hover .ttrack{{animation-play-state:paused}}
-@keyframes tick{{to{{transform:translateX(-50%)}}}}
-.tw{{font-family:var(--disp);font-weight:800;font-size:clamp(34px,4.6vw,64px);line-height:1;letter-spacing:-.045em;padding:0 .18em;white-space:nowrap}}
-.tw.t0{{color:var(--accent)}} .tw.t2{{color:var(--ink)}}
-.tw.t1,.tw.t3{{color:transparent;-webkit-text-stroke:1.5px var(--ink)}}
-.tsep{{display:inline-block;width:.32em;height:.32em;font-size:clamp(34px,4.6vw,64px);background:var(--accent);transform:rotate(45deg);margin:0 .3em;flex:none}}
-.tcols{{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 24px}}
-.tcols li{{border-top:3px solid var(--accent);padding-top:10px}}
-.tcols b{{font-family:var(--ui);font-size:12px;letter-spacing:.16em;color:var(--accent)}}
-.tcols h5{{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.02em;margin:4px 0 6px;color:var(--ink)}}
-.tcols p{{font-family:var(--ui);font-size:13.5px;line-height:1.45;color:var(--mute);margin:0}}
-@media (max-width:760px){{.tcols{{grid-template-columns:1fr 1fr}}}}
-@media (prefers-reduced-motion:reduce){{.ttrack{{animation:none}}}}
 
 /* mounted prints */
 .prose>.mountp{{grid-column:2;justify-self:start;width:calc(var(--w) + 44px);max-width:100%;box-sizing:border-box;margin:2.2em 0;background:#fdfcf9;border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
@@ -651,18 +548,6 @@ main,.head{{position:relative;z-index:1}}
 .mountp img{{display:block;width:100%;height:auto}}
 .mountp figcaption{{font-family:var(--ui);font-size:12.5px;line-height:1.45;color:var(--mute);margin-top:12px;padding-bottom:6px;text-wrap:pretty}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.mountp{{background:#1f1c17}}}} :root[data-theme="dark"] .prose>.mountp{{background:#1f1c17}}
-
-/* contact strip: soft photographs mounted small, as a set */
-.prose>.strip{{grid-column:2;margin:2.2em 0;background:var(--card,#fdfcf9);border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
-.prose>.strip::after{{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;background:var(--accent)}}
-.strip .row{{display:flex;gap:12px;height:clamp(140px,17vw,190px)}} .strip .row>div{{position:relative;flex:var(--ar,1) 1 0;min-width:0}}
-.strip.n1 .row{{height:auto}} .strip.n1 .row>div{{max-width:320px}} .strip.n1 .row>div span{{display:none}}
-.strip img{{display:block;width:100%;height:100%;object-fit:cover}} .strip.n1 img{{height:auto}}
-.strip .row span{{position:absolute;left:6px;top:6px;font-family:var(--ui);font-weight:700;font-size:11px;color:#fff;background:rgba(20,16,10,.55);border-radius:999px;width:18px;height:18px;display:grid;place-items:center}}
-.strip figcaption{{font-family:var(--ui);font-size:12.5px;line-height:1.45;color:var(--mute);margin-top:12px;padding-bottom:6px}}
-.strip ol{{list-style:none;margin:0;padding:0;display:grid;gap:3px}} .strip ol b{{color:var(--ink);margin-right:4px}}
-@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.strip{{background:#1f1c17}}}} :root[data-theme="dark"] .prose>.strip{{background:#1f1c17}}
-@media (max-width:640px){{.strip .row{{height:auto;flex-wrap:wrap}} .strip .row>div{{flex:1 1 40%;height:120px}}}}
 
 /* bands: full-bleed rooms for high-resolution sets */
 .prose>.band{{grid-column:1/-1;width:100vw;margin:clamp(48px,7vw,96px) 0 clamp(48px,7vw,96px) calc(50% - 50vw);padding:clamp(40px,6vw,88px) 0;position:relative}}
@@ -683,24 +568,11 @@ main,.head{{position:relative;z-index:1}}
 .prose>.portraits{{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2vw,28px);margin:clamp(40px,6vw,80px) 0;align-items:start}}
 .portraits figure{{margin:0}} .portraits img{{display:block;width:100%;height:auto}}
 .portraits figcaption{{font-family:var(--ui);font-size:13px;color:var(--mute);margin-top:10px;line-height:1.45}}
-.portraits .q1{{grid-column:2/7}} .portraits .q2{{grid-column:7/12;margin-top:clamp(60px,9vw,140px)}} .portraits .p1{{grid-column:1/6}} .portraits .p2{{grid-column:6/9;margin-top:clamp(60px,9vw,140px)}} .portraits .p3{{grid-column:9/13;margin-top:clamp(20px,3vw,44px)}}
+.portraits .q1{{grid-column:2/7}} .portraits .q2{{grid-column:7/12;margin-top:clamp(60px,9vw,140px)}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .band.wall{{background:#4a3436;color:#ecd6d8}}}}
 :root[data-theme="dark"] .band.wall{{background:#4a3436;color:#ecd6d8}}
 @media (max-width:760px){{.band .bin>.bi,.portraits>figure{{grid-column:1/-1!important;grid-row:auto!important;margin-top:0!important;transform:none!important}}}}
 
-.chart .carrb{{fill:var(--accent)}}
-.chart .casc{{fill:none;stroke:var(--accent);stroke-width:7;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}}
-.chart .casc-guide{{stroke:var(--accent);stroke-width:1;stroke-dasharray:2 6;opacity:.45}}
-.chart .cnode{{fill:var(--paper);stroke:var(--accent);stroke-width:3}} .chart .again text.csw{{opacity:.38}} .chart .again .cnode{{opacity:.5}}
-@media (prefers-reduced-motion:no-preference){{.chart.spiral:not(.in) .casc{{stroke-dashoffset:1}} .chart.spiral .casc{{transition:stroke-dashoffset 2.4s cubic-bezier(.45,0,.2,1)}} .chart.spiral:not(.in) .hit{{opacity:0}} .chart.spiral .hit{{transition:opacity .6s}} .chart.spiral .hit:nth-of-type(2){{transition-delay:.5s}} .chart.spiral .hit:nth-of-type(3){{transition-delay:1s}} .chart.spiral .hit:nth-of-type(4){{transition-delay:1.5s}} .chart.spiral .hit:nth-of-type(5){{transition-delay:2s}}}}
-.chart .csp{{stroke-linecap:round}} .chart .ctrav{{fill:var(--accent);stroke:var(--paper);stroke-width:3}}
-.chart text.csw{{font-family:var(--disp);font-weight:800;font-size:40px;letter-spacing:-.045em;fill:var(--ink)}}
-.chart text.csn{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.18em;fill:var(--accent)}}
-.chart text.csc{{font-family:var(--text);font-style:italic;font-size:19px;fill:var(--mute)}}
-.chart .hit:hover text.csw{{fill:var(--accent)}}
-.chart.spiral .ct{{font-family:var(--disp);font-weight:800;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.025em;max-width:24ch;margin-bottom:22px}} .chart.spiral .cn{{margin-top:22px}}
-@media (prefers-reduced-motion:reduce){{.chart .ctrav{{display:none}}}} .chart.bold .ct{{font-size:clamp(17px,1.6vw,20px);line-height:1.35;max-width:40ch;letter-spacing:.01em}}
-.chart .cline.cbold{{stroke:var(--accent);stroke-width:5;opacity:.85}} .chart text.cvbig{{font-size:25px;font-weight:800;letter-spacing:-.01em}}
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
 .chart .cclu{{fill:color-mix(in oklab,var(--mute) 70%,var(--paper));stroke:var(--paper);stroke-width:1.5}} .chart text.ccnt{{font-family:var(--ui);font-weight:700;font-size:10.5px;fill:#fff}} .chart .rep:hover .cclu{{fill:var(--ink)}}
 .chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart text.cml{{font-family:var(--ui);font-size:11.5px;fill:var(--mute);pointer-events:none}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
@@ -1027,7 +899,6 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <script>
 (function(){{[].forEach.call(document.querySelectorAll('figure.ringf'),function(f){{var v=f.querySelector('.rsvg'),li=[].slice.call(f.querySelectorAll('.rcols li'));if(!v||!v.getCurrentTime)return;var last=-1;setInterval(function(){{var k=Math.floor((v.getCurrentTime()%16)/4);if(k!==last){{last=k;li.forEach(function(x,i){{x.classList.toggle('on',i===k)}});}}}},150);}});}})();
 (function(){{var R=[].slice.call(document.querySelectorAll('.rsvg'));var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;R.forEach(function(v){{if(rm&&v.pauseAnimations){{v.pauseAnimations();v.setCurrentTime(3.9);}}var f=v.closest('figure');f.addEventListener('mouseenter',function(){{v.pauseAnimations&&v.pauseAnimations()}});f.addEventListener('mouseleave',function(){{if(!rm&&v.unpauseAnimations)v.unpauseAnimations()}});}});}})();
-(function(){{var f=[].slice.call(document.querySelectorAll('.chart.spiral'));if(!f.length)return;if(!('IntersectionObserver' in window)){{f.forEach(function(x){{x.classList.add('in')}});return;}}var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('in');io.unobserve(e.target);}}}});}},{{threshold:.35}});f.forEach(function(x){{io.observe(x)}});}})();
 (function(){{ /* trim the empty bands above and below each diagram */
   [].forEach.call(document.querySelectorAll('.chart>svg[viewBox]'),function(svg){{
     try{{var vb=svg.viewBox.baseVal,bb=svg.getBBox();if(!bb.height)return;var y=Math.max(vb.y,bb.y-6),h=Math.min(vb.y+vb.height,bb.y+bb.height+6)-y;
