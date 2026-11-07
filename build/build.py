@@ -210,10 +210,10 @@ def concept_html(c):
         rs = c["rings"]; n = len(rs); cx, cy = 300, 175; step = 160 / n; H = 350
         for i in range(n - 1, -1, -1):
             lab, story = rs[i]; R = step * (i + 1)
-            P.append(f'<circle cx="{cx}" cy="{cy}" r="{R:.1f}" class="carea hit" style="opacity:{.95 - i*.17:.2f}"{pop(lab, story)}/>')
+            P.append(f'<circle cx="{cx}" cy="{cy}" r="{R:.1f}" class="carea hit cringf" style="fill:color-mix(in oklab,var(--accent) {100 - i*(78/max(1,n-1)):.0f}%,var(--paper))"{pop(lab, story)}/>')
         for i, (lab, story) in enumerate(rs):
             R0 = step * i; R1 = step * (i + 1); y = cy if i == 0 else cy - (R0 + R1)/2
-            P.append(lines(lab, cx, y + (4 if i == 0 else 5) - (8 if "|" in lab else 0), "cring", lh=15))
+            P.append(lines(lab, cx, y + (4 if i == 0 else 5) - (8 if "|" in lab else 0), "cring cin" if i == 0 else "cring", lh=15))
     elif kind == "path":
         st = c["steps"]; n = len(st); x0, x1 = 70, 530; y = 110 if c.get("bracket") else 50; H = y + 90
         xs = [x0 + (x1 - x0) * i / (n - 1) for i in range(n)]
@@ -434,7 +434,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .cline{{fill:none;stroke:var(--mute);stroke-width:1.6}} .chart .carr{{fill:var(--mute)}} .chart .carea{{fill:var(--accent)}} .chart .cdotm{{fill:var(--mute);opacity:.55}}
 .chart .csq{{fill:var(--paper);stroke:var(--accent);stroke-width:2.5}} .chart .cdot.big{{stroke:var(--paper);stroke-width:3}}
 .chart .cbr{{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3}} .chart .cpanel{{fill:transparent;stroke:transparent}}
-.chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
+.chart .cringf{{stroke:var(--paper);stroke-width:2.5}} .chart text.cin{{fill:#fff}} .chart .cring{{font-family:var(--ui);font-weight:600;font-size:13.5px;fill:var(--ink)}} .chart circle.carea.hit:hover{{filter:brightness(1.08)}}
 .chart .cstrand{{fill:none;stroke:var(--accent);stroke-width:5;opacity:.7}} .chart .ghostline{{fill:none;stroke:transparent;stroke-width:22}} .chart .cjoin{{stroke:var(--accent);stroke-width:16;stroke-linecap:round}}
 .chart g.hit:hover .cstrand{{opacity:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
