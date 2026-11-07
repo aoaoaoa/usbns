@@ -213,7 +213,19 @@ def chart_html(c):
                          f'<g class="hit"{pop(m["name"], m["story"])}><rect x="{px+MW}" y="{py+34+q*14.5:.1f}" width="{PW-MW-6}" height="14" class="ghost"/><text x="{px+MW+4}" y="{py+45+q*14.5:.1f}" class="cil"><tspan class="cin9">{q+1}</tspan> {esc(m["name"].split(",")[0].replace("County South", "South").replace(" County", " Co."))}</text></g>')
             g.append(f'</g><rect x="{px}" y="{py}" width="{PW}" height="{PH}" class="ciframe"/><text x="{px+10}" y="{py+20}" class="cit">{esc(ititle)}</text>')
             panels.append("".join(g))
-        for cl in cluster([it for it in items if it["name"] not in used], 15): parts.append(draw(cl, I, I))
+        LBL = c.get("labels", {})
+        for cl in cluster([it for it in items if it["name"] not in used], 15):
+            parts.append(draw(cl, I, I))
+            hd = cl[0]
+            if hd["feat"]: continue
+            key = hd["name"]; t, side = LBL.get(key, (None, None)) if isinstance(LBL.get(key), (list, tuple)) else (LBL.get(key), None)
+            if t is None: continue
+            n = len(cl); cx = sum(m["x"] for m in cl) / n; cy = sum(m["y"] for m in cl) / n
+            r = (6.5 + 2.2 * math.sqrt(n)) if n > 1 else 4.2
+            side = side or ("end" if cx > W * .62 else "start")
+            if side in ("above", "below"): tx, ty, anc = cx, (cy - r - 5 if side == "above" else cy + r + 12), "middle"
+            else: tx, ty, anc = cx + (-(r + 5) if side == "end" else (r + 5)), cy + 4, side
+            parts.append(f'<text x="{tx:.1f}" y="{ty:.1f}" text-anchor="{anc}" class="cml">{esc(t)}</text>')
         tot = TOP + PH + 6 if insets else H + 10
         svg = f'<svg viewBox="-10 -6 {W + 20} {tot + 6}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}{"".join(panels)}</svg>'
         if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>Reported to the National Assembly; numbers count nearby communities</span></p>'
@@ -629,7 +641,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .cline.cbold{{stroke:var(--accent);stroke-width:5;opacity:.85}} .chart text.cvbig{{font-size:25px;font-weight:800;letter-spacing:-.01em}}
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
 .chart .cclu{{fill:color-mix(in oklab,var(--mute) 70%,var(--paper));stroke:var(--paper);stroke-width:1.5}} .chart text.ccnt{{font-family:var(--ui);font-weight:700;font-size:10.5px;fill:#fff}} .chart .rep:hover .cclu{{fill:var(--ink)}}
-.chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
+.chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart text.cml{{font-family:var(--ui);font-size:11.5px;fill:var(--mute);pointer-events:none}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
 .chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
 .chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.75;width:8px;height:8px}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
