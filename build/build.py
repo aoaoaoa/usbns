@@ -259,7 +259,10 @@ def concept_html(c):
             P2.append(f'<text x="{nx:.1f}" y="{ny + 5:.1f}" text-anchor="middle" class="wnum">0{i+1}</text>')
             P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword">{esc(l)}</text>')
         orbit = f'M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}'
-        P2.append(f'<circle r="10" class="wdot"><animateMotion dur="16s" repeatCount="indefinite" path="{orbit}"/></circle>')
+        h = gap / 2 + 3; kt = [0.0]; vals = ["0"]
+        for i in range(n):
+            kt += [(i * 360 / n + h) / 360, ((i + 1) * 360 / n - h) / 360]; vals += ["1", "0"]
+        P2.append(f'<circle r="5.5" class="wdot"><animateMotion dur="16s" repeatCount="indefinite" path="{orbit}"/><animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="{";".join(f"{k:.4f}" for k in kt)}" values="{";".join(vals)}"/></circle>')
         P2.append(f'<circle cx="300" cy="300" r="{R-SW/2-14}" class="whair"/>')
         ring = f'<svg class="rsvg" viewBox="-70 70 740 460" aria-hidden="true">{"".join(P2)}</svg>'
         cols = "".join(f'<li><b>0{i+1}</b><h5>{esc(l)}</h5><p>{esc(t)}</p></li>' for i, (l, t) in enumerate(st))
@@ -588,7 +591,7 @@ main,.head{{position:relative;z-index:1}}
 .wseg{{fill:none;stroke-width:46;stroke-linecap:butt}}
 .wnum{{font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.14em;fill:#fff}}
 .wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
-.wdot{{fill:var(--paper);stroke:var(--ink);stroke-width:3}}
+.wdot{{fill:var(--paper);opacity:.85}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
 .chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif!important;font-weight:500!important;font-size:clamp(24px,2.4vw,34px)!important;letter-spacing:-.01em!important;font-variation-settings:"opsz" 48}}
 .rcols h5{{font-family:"Bodoni Moda",var(--text),serif!important;font-style:normal!important;font-weight:500!important;font-size:24px!important}}
