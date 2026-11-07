@@ -161,15 +161,16 @@ def chart_html(c):
             parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
         svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
     elif c["kind"] == "ribbon":
-        months = c["months"]; n = len(months); W = 620; cw = W / n; parts = []
+        months = c["months"]; n = len(months); W = 620; GAP = 18; cw = (W - GAP) / n; parts = []
         for i, (name, mean) in enumerate(months):
-            hue = (135 + 330 * i / (n - 1)) % 360; x = i * cw
+            hue = (135 + 330 * i / (n - 1)) % 360; x = i * cw + (GAP if i == n - 1 else 0)
             base = c.get("starts", [None]*n)[i]; st = c.get("stories", {}).get(name, "")
             parts.append(f'<g class="hit"{pop(f"{name}, {mean}", month_body(c, i, name, base, st))}><rect x="{x+1:.1f}" y="26" width="{cw-2:.1f}" height="120" rx="3" style="fill:oklch(.62 .11 {hue:.0f})"/>'
                          f'<text x="{x+cw/2:.1f}" y="44" text-anchor="middle" class="cvin">{i+1}</text>'
                          f'<text transform="translate({x+cw/2+4:.1f},136) rotate(-90)" class="crib">{esc(mean)}</text></g>')
-        xa = (n - 1) * cw
-        parts.append(f'<rect x="{xa-3:.1f}" y="18" width="5" height="136" rx="2" class="cink"/>')
+        xa = (n - 1) * cw + GAP / 2
+        ah = "The intercalary days, four or five, before the last month: days of hospitality, charity and gift-giving."
+        parts.append(f'<g class="hit"{pop("Ayyám-i-Há", ah)}><rect x="{xa-9:.1f}" y="26" width="18" height="120" class="ghost"/>' + "".join(f'<circle cx="{xa:.1f}" cy="{58 + k*18}" r="4.5" class="cayy"/>' for k in range(4)) + '</g>')
         parts.append(f'<text x="0" y="172" class="cn2">Naw-Rúz · March 21</text><text x="{xa:.1f}" y="172" text-anchor="middle" class="cn2">Ayyám-i-Há</text><text x="{W}" y="190" text-anchor="end" class="cn2">‘Alá’, the month of fasting</text>')
         svg = f'<svg viewBox="0 0 {W} 196" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "ring":
@@ -631,7 +632,7 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
 /* infographic refresh */
-.chart text.crib{{font-family:var(--ui);font-weight:600;font-size:11.5px;fill:#fff}} .chart .cink{{fill:var(--ink)}}
+.chart .cayy{{fill:#c9a227}} .chart text.crib{{font-family:var(--ui);font-weight:600;font-size:11.5px;fill:#fff}} .chart .cink{{fill:var(--ink)}}
 .chart .hit:hover rect[style]{{filter:brightness(1.08)}}
 .chart text.cyr{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
 .chart .cground{{stroke:var(--rule);stroke-width:2}}
