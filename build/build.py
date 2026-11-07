@@ -41,6 +41,9 @@ def body_html(blocks):
         elif k == "chart": out.append(chart_html(b[1]))
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
+        elif k == "sentence":
+            parts = b[1]; pops = b[2] if len(b) > 2 else {}
+            out.append('<p class="figsent">' + "".join((f'<b class="{"has" if pops.get(p) else ""}{" wd" if len(p) > 8 else ""}"{pop(p, pops.get(p, ""))}>{esc(p)}</b>' if i % 2 else esc(p)) for i, p in enumerate(parts)) + '</p>')
         elif k == "portraits":
             out.append('<div class="portraits">' + "".join(f'<figure class="{cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in b[1]) + '</div>')
         elif k == "band":
@@ -81,6 +84,21 @@ def size_cls(c):
 def size_sty(c):
     return f' style="--cw:{c["w"]}px"' if c.get("w") else ""
 
+def month_body(c, i, name, base, st):
+    import datetime as _dt
+    n = len(c["months"]); starts = c.get("starts", [None]*n)
+    if base is None and i == n - 1 and starts[i-1]:
+        base = (_dt.datetime.strptime(starts[i-1], "%B %d, %Y") + _dt.timedelta(days=19 + 4)).strftime("%B %-d, %Y")
+    lines = [f"Month {i+1} of 19."]
+    if base:
+        d0 = _dt.datetime.strptime(base, "%B %d, %Y")
+        lines.append(f"Feast of {name}: {base}, the month's first day, beginning at sunset the evening before.")
+        hd = c.get("holy", {}).get(name, [])
+        if hd:
+            lines.append("Holy Days: " + "; ".join(f"{h} ({(d0 + _dt.timedelta(days=day-1)).strftime('%B %-d')})" for day, h in hd) + ".")
+    if st: lines.append(st)
+    return "\n".join(lines)
+
 def chart_html(c):
     """Small inline SVG charts drawn to scale from the record's numbers."""
     def money(v): return f"${v:,.0f}"
@@ -116,6 +134,16 @@ def chart_html(c):
                 parts.append(f'<rect x="{x}" y="{y+6}" width="{w}" height="22" class="cb hit" style="opacity:{1 - j*.3}"{pop(f"{lab}, {bl}: {v} clusters", story)}/><text x="{x+w/2}" y="{y+22}" text-anchor="middle" class="cvin">{v}</text><text x="{x+w/2}" y="{y+40}" text-anchor="middle" class="cn2">{esc(bl)}</text>')
                 x += w + 6
         svg = f'<svg viewBox="0 0 {W} {len(rows)*rowh+4}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
+    elif c["kind"] == "timeline" and c.get("style") == "steps":
+        import textwrap as _tw
+        ev = c["events"]; n = len(ev); W = 640; cw = W / n; parts = [f'<line x1="0" y1="58" x2="{W}" y2="58" class="cax"/>']; mx = 0
+        for i, e in enumerate(ev):
+            y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""; x = i * cw
+            ws = _tw.wrap(lab, max(12, int(cw / 7.4)))[:9]; mx = max(mx, len(ws))
+            txt = "".join(f'<text x="{x:.1f}" y="{86 + 16*k}" class="cstep">{esc(w)}</text>' for k, w in enumerate(ws))
+            parts.append(f'<g class="hit"{pop(f"{y}: {lab}", story)}><rect x="{x:.1f}" y="0" width="{cw-6:.1f}" height="{90 + 16*9}" class="ghost"/>'
+                         f'<text x="{x:.1f}" y="40" class="cyr">{y}</text><circle cx="{x+6:.1f}" cy="58" r="{6.5 if story else 5}" class="cdot"/>{txt}</g>')
+        svg = f'<svg viewBox="0 0 {W} {80 + 16*mx + 8}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "timeline":
         ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
         X = lambda y: pad + (W - 2*pad) * (y - y0) / (y1 - y0)
@@ -132,6 +160,18 @@ def chart_html(c):
         for t in c.get("ticks", []):
             parts.append(f'<text x="{X(t):.1f}" y="92" text-anchor="middle" class="cn2">{t}</text>')
         svg = f'<svg viewBox="0 0 {W} 96" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg><ol class="tl">{"".join(rows)}</ol>'
+    elif c["kind"] == "ribbon":
+        months = c["months"]; n = len(months); W = 620; cw = W / n; parts = []
+        for i, (name, mean) in enumerate(months):
+            hue = (135 + 330 * i / (n - 1)) % 360; x = i * cw
+            base = c.get("starts", [None]*n)[i]; st = c.get("stories", {}).get(name, "")
+            parts.append(f'<g class="hit"{pop(f"{name}, {mean}", month_body(c, i, name, base, st))}><rect x="{x+1:.1f}" y="26" width="{cw-2:.1f}" height="120" rx="3" style="fill:oklch(.62 .11 {hue:.0f})"/>'
+                         f'<text x="{x+cw/2:.1f}" y="44" text-anchor="middle" class="cvin">{i+1}</text>'
+                         f'<text transform="translate({x+cw/2+4:.1f},136) rotate(-90)" class="crib">{esc(mean)}</text></g>')
+        xa = (n - 1) * cw
+        parts.append(f'<rect x="{xa-3:.1f}" y="18" width="5" height="136" rx="2" class="cink"/>')
+        parts.append(f'<text x="0" y="172" class="cn2">Naw-Rúz · March 21</text><text x="{xa:.1f}" y="172" text-anchor="middle" class="cn2">Ayyám-i-Há</text><text x="{W}" y="190" text-anchor="end" class="cn2">‘Alá’, the month of fasting</text>')
+        svg = f'<svg viewBox="0 0 {W} 196" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "ring":
         import math
         months = c["months"]; hi = set(c.get("highlight", [])); n = len(months); cx = cy = 210; r0, r1 = 118, 160
@@ -142,19 +182,7 @@ def chart_html(c):
             d = f"M{p(r1,a0)} A{r1},{r1} 0 0 1 {p(r1,a1)} L{p(r0,a1)} A{r0},{r0} 0 0 0 {p(r0,a0)} Z"
             st = c.get("stories", {}).get(name, "")
             base = c.get("starts", [None]*n)[i]
-            import datetime as _dt
-            starts = c.get("starts", [None]*n)
-            if base is None and i == n - 1 and starts[i-1]:
-                base = (_dt.datetime.strptime(starts[i-1], "%B %d, %Y") + _dt.timedelta(days=19 + 4)).strftime("%B %-d, %Y")
-            lines = [f"Month {i+1} of 19."]
-            if base:
-                d0 = _dt.datetime.strptime(base, "%B %d, %Y")
-                lines.append(f"Feast of {name}: {base}, the month's first day, beginning at sunset the evening before.")
-                hd = c.get("holy", {}).get(name, [])
-                if hd:
-                    lines.append("Holy Days: " + "; ".join(f"{h} ({(d0 + _dt.timedelta(days=day-1)).strftime('%B %-d')})" for day, h in hd) + ".")
-            if st: lines.append(st)
-            body = "\n".join(lines)
+            body = month_body(c, i, name, base, st)
             hue = (135 + 330 * i / (n - 1)) % 360
             parts.append(f'<path d="{d}" class="cseg hit" style="fill:oklch(.62 .11 {hue:.0f})"{pop(f"{name}, {mean}", body)}/>')
             am = (a0 + a1) / 2; tx, ty = cx + 174*math.cos(am), cy + 174*math.sin(am)
@@ -283,6 +311,8 @@ def concept_html(c):
         return f'<figure class="chart concept ringf{size_cls(c)}"{size_sty(c)}><p class="ct">{esc(c["title"])}</p><div class="rwrap">{ring}<ol class="rcols">{cols}</ol></div></figure>'
     arrow = '<defs><marker id="ah{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="carr"/></marker></defs>'.format(i=id(c) % 100000)
     mk = f'url(#ah{id(c) % 100000})'
+    arrow += '<defs><marker id="aa{i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" class="cb"/></marker></defs>'.format(i=id(c) % 100000)
+    mka = f'url(#aa{id(c) % 100000})'
     def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
         return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
     H = 300
@@ -294,6 +324,41 @@ def concept_html(c):
         for i, (lab, story) in enumerate(rs):
             R0 = step * i; R1 = step * (i + 1); y = cy if i == 0 else cy - (R0 + R1)/2
             P.append(lines(lab, cx, y + (4 if i == 0 else 5) - (8 if "|" in lab else 0), "cring cin" if i == 0 else "cring", lh=15))
+    elif kind == "arches":
+        rs = c["rings"]; n = len(rs); cols = c.get("colors", []); cx, base = 300, 262; W = 600; H = 280
+        for i in range(n - 1, -1, -1):
+            lab, story = rs[i]; r = 78 + i * 72; col = cols[i] if i < len(cols) else "var(--accent)"
+            P.append(f'<path d="M{cx-r},{base} A{r},{r} 0 0 1 {cx+r},{base} Z" class="hit" style="fill:{col}"{pop(lab, story)}/>')
+        for i, (lab, story) in enumerate(rs):
+            r = 78 + i * 72; y = base - (r * .45 if i == 0 else r - 34)
+            P.append(lines(lab, cx, y, "cring" + (" cin" if i == 0 else ""), lh=15))
+        P.append(f'<line x1="{cx-300}" y1="{base}" x2="{cx+300}" y2="{base}" class="cground"/>')
+    elif kind == "stepper":
+        st = c["steps"]; n = len(st); thr = c.get("threshold"); W = 600; gap = 66; H = 30 + n * gap
+        P.append(f'<line x1="56" y1="26" x2="56" y2="{30 + (n-1)*gap}" class="cspine"/>')
+        for i, s_ in enumerate(st):
+            lab, story = s_[0], s_[1]; y = 30 + i * gap; past = thr is not None and i >= thr
+            P.append(f'<g class="hit"{pop(lab.replace("|", " "), story)}><rect x="20" y="{y-24}" width="560" height="{gap-6}" class="ghost"/>'
+                     f'<circle cx="56" cy="{y}" r="{14 if past else 11}" class="{"cdot" if past else "cdotm"}"/><text x="56" y="{y+4.5}" text-anchor="middle" class="cvin">{i+1}</text>'
+                     f'<text x="90" y="{y+6}" class="cstl{" on" if past else ""}">{esc(lab.replace("|", " "))}</text></g>')
+            if thr is not None and i == thr - 1:
+                yy = y + gap / 2
+                P.append(f'<line x1="20" y1="{yy}" x2="580" y2="{yy}" class="cthr"/><text x="580" y="{yy+16}" text-anchor="end" class="cthrl">{esc(c.get("threshold_label","threshold"))}</text>')
+        H = 30 + (n - 1) * gap + 30
+    elif kind == "overlap":
+        st = c["strands"]; W = 600; H = 300; cs = [(250, 105), (350, 105), (300, 192)]
+        for (x, y), (lab, story) in zip(cs, st):
+            P.append(f'<circle cx="{x}" cy="{y}" r="88" class="carea hit cven"{pop(lab.replace("|"," "), story)}/>')
+        for (x, y), (lab, _), (dx, dy) in zip(cs, st, [(-62, -30), (62, -30), (0, 48)]):
+            P.append(lines(lab, x + dx, y + dy, "cring", lh=15))
+        jl, js = c["joined"]
+        P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><circle cx="300" cy="134" r="30" class="ghost"/>{lines(jl, 300, 130, "cv", lh=16)}</g>')
+    elif kind == "chevrons":
+        st = c["steps"]; n = len(st); W = 620; cw = W / n; H = 110
+        for i, s_ in enumerate(st):
+            lab, story = s_[0], s_[1]; x = i * cw
+            d = f"M{x+(0 if i == 0 else 0)},10 h{cw-20} l20,45 l-20,45 h{-(cw-20)}" + (" l20,-45 Z" if i else " Z")
+            P.append(f'<g class="hit"{pop(lab.replace("|"," "), story)}><path d="{d}" class="carea" style="opacity:{.38 + .62*i/max(1,n-1):.2f}"/>{lines(lab, x + cw/2 + (8 if i else 0), 52 - (8 if "|" in lab else 0), "cring cin", lh=16)}</g>')
     elif kind == "path":
         st = c["steps"]; n = len(st); x0, x1 = 70, 530; y = 110 if c.get("bracket") else 50; H = y + 90
         xs = [x0 + (x1 - x0) * i / (n - 1) for i in range(n)]
@@ -323,9 +388,9 @@ def concept_html(c):
                       f'{big}{small}<text x="{W/2}" y="{y+86}" text-anchor="middle" class="cl">{esc(sub)}</text></g>')
         P.extend(P2)
     elif kind == "contrast":
-        H = 250
+        H = 262 if any(len(p) > 3 for p in c["panels"]) or c.get("arrows") else 250
         for k, panel in enumerate(c["panels"]):
-            title, story, sch = panel; ox = k * 310; cx, cy = ox + 145, 100
+            title, story, sch = panel[:3]; ox = k * 310; cx, cy = ox + 145, 100
             g = []
             if sch in ("outside", "inside"):
                 g.append(f'<circle cx="{cx+(20 if sch=="outside" else 0)}" cy="{cy}" r="72" class="carea" style="opacity:.25"/>')
@@ -338,10 +403,17 @@ def concept_html(c):
             elif sch == "apart":
                 for dx, dy in [(-70,-20),(0,40),(70,-20)]:
                     g.append(f'<circle cx="{cx+dx}" cy="{cy+dy}" r="26" class="carea" style="opacity:.55"/>')
+                    if c.get("arrows"):
+                        L = math.hypot(dx, dy); ux, uy = dx/L, dy/L
+                        g.append(f'<line x1="{cx+dx+ux*30:.1f}" y1="{cy+dy+uy*30:.1f}" x2="{cx+dx+ux*56:.1f}" y2="{cy+dy+uy*56:.1f}" class="cpull" marker-end="{mka}"/>')
                     g.append(f'<line x1="{cx+dx*0.55:.0f}" y1="{cy+dy*0.55:.0f}" x2="{cx+dx*1.55:.0f}" y2="{cy+dy*1.55+(-14 if dy<0 else 14):.0f}" class="cline" marker-end="{mk}"/>' if False else "")
                 g.append(f'<line x1="{cx-40}" y1="{cy-10}" x2="{cx-12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/><line x1="{cx+40}" y1="{cy-10}" x2="{cx+12}" y2="{cy+18}" class="cline" marker-start="{mk}" marker-end="{mk}"/>')
             elif sch == "whole":
                 g.append(f'<circle cx="{cx}" cy="{cy}" r="80" class="carea" style="opacity:.25"/>')
+                if c.get("arrows"):
+                    for dx, dy in [(-34,-18),(0,32),(34,-18)]:
+                        L = math.hypot(dx, dy); ux, uy = dx/L, dy/L
+                        g.append(f'<line x1="{cx+ux*112:.1f}" y1="{cy+uy*112:.1f}" x2="{cx+ux*86:.1f}" y2="{cy+uy*86:.1f}" class="cpull" marker-end="{mka}"/>')
                 for dx, dy in [(-34,-18),(0,32),(34,-18)]: g.append(f'<circle cx="{cx+dx}" cy="{cy+dy}" r="30" class="carea" style="opacity:.6"/>')
             elif sch == "oneway":
                 g.append(f'<rect x="{cx-110}" y="{cy-26}" width="80" height="52" class="carea" style="opacity:.6"/><line x1="{cx-24}" y1="{cy}" x2="{cx+60}" y2="{cy}" class="cline" marker-end="{mk}"/><circle cx="{cx+78}" cy="{cy}" r="10" class="cdot"/>')
@@ -351,7 +423,9 @@ def concept_html(c):
                     a = pts[i]; b = pts[(i+1) % 4]
                     g.append(f'<path d="M{a[0]+(b[0]-a[0])*.22:.1f},{a[1]+(b[1]-a[1])*.22:.1f} Q{cx+(a[0]+b[0]-2*cx)*.9:.1f},{cy+(a[1]+b[1]-2*cy)*.9:.1f} {a[0]+(b[0]-a[0])*.78:.1f},{a[1]+(b[1]-a[1])*.78:.1f}" class="cline" marker-end="{mk}"/>')
                 for x, y in pts: g.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="10" class="cdot"/>')
-            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{"".join(g)}{lines(title, cx, 206, "cv")}</g>')
+            word = panel[3] if len(panel) > 3 else None
+            label = (f'<text x="{cx}" y="196" text-anchor="middle" class="cpre">{esc(word[0])}</text><text x="{cx}" y="238" text-anchor="middle" class="cword{" hollow" if k == 0 else ""}">{esc(word[1])}</text>') if word else lines(title, cx, 238 if c.get("arrows") else 206, "cv")
+            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{"".join(g)}{label}</g>')
     elif kind == "spectrum":
         pts = c["points"]; n = len(pts); x0, x1 = 60, 560; y = 40; H = 120
         P.append(f'<line x1="{x0}" y1="{y}" x2="{x1}" y2="{y}" class="cline" marker-end="{mk}"/>')
@@ -556,6 +630,21 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+/* infographic refresh */
+.chart text.crib{{font-family:var(--ui);font-weight:600;font-size:11.5px;fill:#fff}} .chart .cink{{fill:var(--ink)}}
+.chart .hit:hover rect[style]{{filter:brightness(1.08)}}
+.chart text.cyr{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
+.chart .cground{{stroke:var(--rule);stroke-width:2}}
+.chart .cspine{{stroke:var(--rule);stroke-width:3}} .chart text.cstl{{font-family:var(--ui);font-size:15.5px;fill:var(--mute)}} .chart text.cstl.on{{fill:var(--ink);font-weight:700}}
+.chart .cthr{{stroke:var(--accent);stroke-width:2;stroke-dasharray:6 6}} .chart text.cthrl{{font-family:var(--ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;fill:var(--accent)}}
+.chart .cven{{opacity:.26}} .chart .cven:hover{{opacity:.4}}
+.chart .cpull{{stroke:var(--accent);stroke-width:2.5;fill:none}}
+.chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
+.chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:46px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.3}}
+.prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
+.figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
+.figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
+
 /* photo frames: a thin border cut from the cover painting */
 .prose .photo.pair{{display:flex!important;gap:20px;align-items:flex-start}} .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{flex-direction:column}}}}
