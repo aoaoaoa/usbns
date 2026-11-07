@@ -389,7 +389,7 @@ def concept_html(c):
                       f'{big}{small}<text x="{W/2}" y="{y+86}" text-anchor="middle" class="cl">{esc(sub)}</text></g>')
         P.extend(P2)
     elif kind == "contrast":
-        H = (282 if any(len(p) > 3 and len(p[3]) > 2 for p in c["panels"]) else 262) if any(len(p) > 3 for p in c["panels"]) or c.get("arrows") else 250
+        H = (326 if any(len(p) > 3 and len(p[3]) > 2 for p in c["panels"]) else 262) if any(len(p) > 3 for p in c["panels"]) or c.get("arrows") else 250
         for k, panel in enumerate(c["panels"]):
             title, story, sch = panel[:3]; ox = k * 310; cx, cy = ox + 145, 100
             g = []
@@ -425,8 +425,8 @@ def concept_html(c):
                     g.append(f'<path d="M{a[0]+(b[0]-a[0])*.22:.1f},{a[1]+(b[1]-a[1])*.22:.1f} Q{cx+(a[0]+b[0]-2*cx)*.9:.1f},{cy+(a[1]+b[1]-2*cy)*.9:.1f} {a[0]+(b[0]-a[0])*.78:.1f},{a[1]+(b[1]-a[1])*.78:.1f}" class="cline" marker-end="{mk}"/>')
                 for x, y in pts: g.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="10" class="cdot"/>')
             word = panel[3] if len(panel) > 3 else None
-            label = (f'<text x="{cx}" y="6" text-anchor="middle" class="cpre">{esc(word[0])}</text><text x="{cx}" y="48" text-anchor="middle" class="cword{" hollow" if k == 0 else ""}">{esc(word[1])}</text>' + (f'<text x="{cx}" y="74" text-anchor="middle" class="csubw">{esc(word[2])}</text>' if len(word) > 2 else '')) if word else lines(title, cx, 238 if c.get("arrows") else 206, "cv")
-            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{(f'<g transform="translate(0 70)">' + "".join(g) + '</g>') if word else "".join(g)}{label}</g>')
+            label = (f'<text x="{cx}" y="22" text-anchor="middle" class="cpre">{esc(word[0])}</text><text x="{cx}" y="84" text-anchor="middle" class="cword{" hollow" if k == 0 else ""}">{esc(word[1])}</text>' + (f'<text x="{cx}" y="112" text-anchor="middle" class="csubw">{esc(word[2])}</text>' if len(word) > 2 else '')) if word else lines(title, cx, 238 if c.get("arrows") else 206, "cv")
+            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{(f'<g transform="translate(0 112)">' + "".join(g) + '</g>') if word else "".join(g)}{label}</g>')
     elif kind == "spectrum":
         pts = c["points"]; n = len(pts); x0, x1 = 60, 560; y = 40; H = 120
         P.append(f'<line x1="{x0}" y1="{y}" x2="{x1}" y2="{y}" class="cline" marker-end="{mk}"/>')
@@ -641,7 +641,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .cven{{opacity:.26}} .chart .cven:hover{{opacity:.4}}
 .chart .cpull{{stroke:var(--accent);stroke-width:2.5;fill:none}}
 .chart text.csubw{{font-family:var(--text);font-style:italic;font-size:15px;fill:var(--mute)}} .chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
-.chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:46px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.3}}
+.chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
 .figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
 .figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
