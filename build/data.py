@@ -32,7 +32,10 @@ VOICES = [
 
 GREGORY_EVENTS = [
     (1874,"Born in Charleston, South Carolina","Born to a family that valued education, he went on to Avery Institute in Charleston, Fisk University and Howard University Law School."),
+    (1881,"Witnesses the lynching of his grandfather","About 1881, as a young boy in Charleston."),
+    (1896,"Graduates from Fisk University","About 1896."),
     (1902,"Law degree from Howard University","He received his law degree in the spring and was admitted to practice that October."),
+    (1906,"Vice president of the Howard law alumni association",""),
     (1907,"Hears Lua Getsinger speak on the Bahá'í Faith","The same year he was elected vice president of the Bethel Literary and Historical Society."),
     (1909,"Becomes a Bahá'í in Washington, D.C.","He began teaching the Bahá'í Faith at once within his professional, academic and social circles. As President of the Bethel Literary and Historical Society he arranged four landmark presentations."),
     (1910,"First independent travel-teaching journey","He shaped his talks and newspaper articles to each audience, on racial amity and unity, comparative religion and the Bahá'í principles. “In every city, people were found who accepted the great Message.”"),
@@ -56,6 +59,7 @@ GREGORY_EVENTS = [
     (1942,"Speaks at Black schools and colleges","He spoke at Black schools and colleges in several states, and served on the first assembly development committee."),
     (1944,"All-America Convention","He served on its planning committee and wrote the convention's report for Bahá'í News that September. That winter he toured the Bahá'í communities of South Carolina."),
     (1948,"Suffers a stroke","In December."),
+    (1950,"Corresponds with Judge J. Waties Waring","In 1950 and 1951. Waring's dissent in a South Carolina school segregation case helped prepare the ground for Brown v. Board of Education."),
     (1951,"Passes away; named a Hand of the Cause of God","He died in Eliot, Maine, on July 30. Shoghi Effendi, Guardian of the Bahá'í Faith, appointed him a Hand of the Cause after his passing."),
     (1972,"Louis Gregory Bahá'í Institute dedicated in Hemingway","An education and retreat center a few hours north of Charleston, where his childhood home is now a Bahá'í museum."),
     (1982,"Biography: To Move the World","Gayle Morrison's To Move the World: Louis G. Gregory and the Advancement of Racial Unity in America."),
@@ -63,7 +67,7 @@ GREGORY_EVENTS = [
     (2003,"His boyhood home opens as a museum in Charleston","The Charleston Bahá'í community bought the house at auction in 1989. The Louis G. Gregory Bahá'í Museum was dedicated in February 2003."),
     (2022,"Institute's 50th anniversary","Friends who had trained at the Institute decades earlier returned to celebrate, and to consider its future."),
     (2026,"Summer of Service hosts 25 youth","Youth of diverse races and faiths studied, prayed and “built friendships across what society deems as impermeable racial walls.”")]
-GREGORY_KINDS = {1907: 'life', 1929: 'life', 1902: 'life', 1916: 'teach', 1917: 'teach', 1924: 'teach', 1940: 'serve', 1942: 'teach', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'teach', 1911: 'write', 1912: 'life', 1913: 'teach', 1919: 'teach', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'teach', 1937: 'teach', 1939: 'teach', 1951: 'life'}  # every later year is "legacy"
+GREGORY_KINDS = {1881: 'life', 1896: 'life', 1906: 'life', 1950: 'life', 1907: 'life', 1929: 'life', 1902: 'life', 1916: 'teach', 1917: 'teach', 1924: 'teach', 1940: 'serve', 1942: 'teach', 1944: 'serve', 1948: 'life', 1874: 'life', 1909: 'life', 1910: 'teach', 1911: 'write', 1912: 'life', 1913: 'teach', 1919: 'teach', 1920: 'life', 1921: 'serve', 1922: 'serve', 1927: 'serve', 1928: 'write', 1931: 'teach', 1937: 'teach', 1939: 'teach', 1951: 'life'}  # every later year is "legacy"
 
 ARTICLES = [
 dict(
