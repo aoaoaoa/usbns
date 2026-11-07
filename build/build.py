@@ -47,6 +47,13 @@ def body_html(blocks):
             c = b[1]; items = "".join(f'<figure class="bi {cl}"><img src="img/{f}" alt="{esc(cap)}" loading="lazy"><figcaption>{esc(cap)}</figcaption></figure>' for f, cap, cl in c["items"])
             lab = f'<p class="blab">{esc(c["label"])}</p>' if c.get("label") else ""
             out.append(f'<section class="band {c["tone"]}"><div class="bin">{lab}{items}</div></section>')
+        elif k == "strip":
+            # contact strip: soft photographs shown small on one mount, read as a set
+            its = b[1]; n = len(its)
+            imgs = "".join(f'<div style="--ar:{IMGAR.get(f,1.4):.3f}"><img src="img/{f}" alt="{esc(c)}" loading="lazy"><span>{i+1}</span></div>' for i, (f, c) in enumerate(its))
+            caps = "".join(f'<li><b>{i+1}</b> {esc(c)}</li>' for i, (f, c) in enumerate(its)) if n > 1 else ""
+            cap = f'<figcaption><ol>{caps}</ol></figcaption>' if n > 1 else f'<figcaption>{esc(its[0][1])}</figcaption>'
+            out.append(f'<figure class="strip n{n}">{"<div class=row>" + imgs + "</div>"}{cap}</figure>')
         elif k == "img":
             w = b[3] if len(b) > 3 else None
             cls = "photo small" if w else "photo"
@@ -56,6 +63,15 @@ def body_html(blocks):
 
 import json as _json
 USMAP = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "usmap.json")))
+
+def _imgar():
+    from PIL import Image as _I
+    d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "img"); r = {}
+    for f in os.listdir(d):
+        try: w, h = _I.open(os.path.join(d, f)).size; r[f] = w / h
+        except Exception: pass
+    return r
+IMGAR = _imgar()
 
 def pop(title, body):
     """Attributes that make an element open the shared popup."""
@@ -138,17 +154,65 @@ def chart_html(c):
         parts.append(f'<text x="{cx}" y="{cy-6}" text-anchor="middle" class="cbig">19</text><text x="{cx}" y="{cy+18}" text-anchor="middle" class="cn2">months of 19 days</text><text x="{cx}" y="{cy+32}" text-anchor="middle" class="cn2">plus Ayyám-i-Há</text>')
         svg = f'<svg viewBox="-60 0 540 420" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
     elif c["kind"] == "map":
-        M = USMAP; parts = [f'<use href="#usmap"/>']
-        for name, story in c.get("reports", []):
-            x, y = M["places"][name]
-            parts.append(f'<g class="hit pin rep"{pop(name, story)}><circle cx="{x}" cy="{y}" r="9" class="ghost"/><circle cx="{x}" cy="{y}" r="4.2" class="crep"/></g>')
-        for i, pl in enumerate(c["places"]):
-            name, lab, story = pl[0], pl[1], pl[2] if len(pl) > 2 else ""
-            x, y = M["places"][name]; side = pl[3] if len(pl) > 3 else ("end" if x > M["w"] * .6 else "start")
-            dx = -9 if side == "end" else 9
-            parts.append(f'<g class="hit pin"{pop(name, story)}><circle cx="{x}" cy="{y}" r="13" class="ghost"/><circle cx="{x}" cy="{y}" r="6.5" class="cdot big"/><text x="{x+dx*1.15:.0f}" y="{y+4}" text-anchor="{side}" class="cl on">{esc(lab)}</text></g>')
-        svg = f'<svg viewBox="-40 -10 {M["w"]+80} {M["h"]+20}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}</svg>'
-        if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span></p>'
+        import math
+        M = USMAP; W, H = M["w"], M["h"]
+        items = [dict(name=n, x=M["places"][n][0], y=M["places"][n][1], story=st, feat=False) for n, st in c.get("reports", [])]
+        for pl in c["places"]:
+            x, y = M["places"][pl[0]]
+            items.append(dict(name=pl[0], x=x, y=y, story=pl[2] if len(pl) > 2 else "", feat=True, lab=pl[1], side=pl[3] if len(pl) > 3 else ("end" if x > W * .6 else "start")))
+        def cluster(its, R):
+            cs = []
+            for it in sorted(its, key=lambda t: not t["feat"]):
+                for cl in cs:
+                    if math.hypot(it["x"] - cl[0]["x"], it["y"] - cl[0]["y"]) < R: cl.append(it); break
+                else: cs.append([it])
+            return cs
+        def body(cl): return "\n\n".join(f'{m["name"]}. {m["story"]}' for m in cl) if len(cl) > 1 else cl[0]["story"]
+        def draw(cl, X, Y, lab=False):
+            head = cl[0]; x, y = X(head["x"]), Y(head["y"]); n = len(cl)
+            if head["feat"]:
+                dx = -9 if head["side"] == "end" else 9
+                t = head["lab"] + (f" and {n-1} nearby" if n > 1 else "")
+                badge = f'<text x="{x}" y="{y+3.6}" text-anchor="middle" class="ccnt">{n}</text>' if n > 1 else ""
+                return f'<g class="hit pin"{pop(t, body(cl))}><circle cx="{x:.1f}" cy="{y:.1f}" r="13" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="{8 if n > 1 else 6.5}" class="cdot big"/>{badge}<text x="{x+dx*(1.4 if n > 1 else 1.15):.0f}" y="{y+4:.0f}" text-anchor="{head["side"]}" class="cl on">{esc(head["lab"])}</text></g>'
+            short = lambda m: m["name"].split(",")[0].replace(" County", " Co.")
+            if n == 1:
+                tl = (f'<text x="{x-8:.1f}" y="{y+4:.1f}" text-anchor="end" class="cil">' if x > lab else f'<text x="{x+8:.1f}" y="{y+4:.1f}" class="cil">') + esc(short(head)) + '</text>' if lab else ""
+                return f'<g class="hit pin rep"{pop(head["name"], head["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="4.2" class="crep"/>{tl}</g>'
+            cx = sum(X(m["x"]) for m in cl) / n; cy = sum(Y(m["y"]) for m in cl) / n; r = 6.5 + 2.2 * math.sqrt(n)
+            return f'<g class="hit pin rep"{pop(f"{n} communities", body(cl))}><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r+4:.1f}" class="ghost"/><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" class="cclu"/><text x="{cx:.1f}" y="{cy+3.8:.1f}" text-anchor="middle" class="ccnt">{n}</text>{(f'<text x="{cx-r-5:.1f}" y="{cy+4:.1f}" text-anchor="end" class="cil">' if cx > lab else f'<text x="{cx+r+5:.1f}" y="{cy+4:.1f}" class="cil">') + esc(" · ".join(short(m) for m in cl)) + '</text>' if lab else ""}</g>'
+        I = lambda v: v
+        parts = ['<use href="#usmap"/>']; insets = c.get("insets", []); used = set(); panels = []
+        PW, PH, GAP, TOP = 290, 170, 20, H + 34
+        for j, (ititle, names) in enumerate(insets):
+            mem = [it for it in items if it["name"] in names]; used |= {m["name"] for m in mem}
+            xs = [m["x"] for m in mem]; ys = [m["y"] for m in mem]
+            bx0, bx1, by0, by1 = min(xs), max(xs), min(ys), max(ys); cxm, cym = (bx0 + bx1) / 2, (by0 + by1) / 2
+            MW = 168; k = min((MW - 30) / max(bx1 - bx0, 1), (PH - 56) / max(by1 - by0, 1), 60)
+            hw, hh = PW / 2 / k, PH / 2 / k
+            px = j * (PW + GAP); py = TOP
+            parts.append(f'<rect x="{cxm-hw:.1f}" y="{cym-hh:.1f}" width="{2*hw:.1f}" height="{2*hh:.1f}" class="cibox"/>')
+            parts.append(f'<path d="M{cxm-hw:.1f},{cym+hh:.1f} L{px:.1f},{py:.1f} M{cxm+hw:.1f},{cym+hh:.1f} L{px+PW:.1f},{py:.1f}" class="cilead"/>')
+            X = lambda v, cxm=cxm, k=k, px=px: px + MW / 2 + (v - cxm) * k
+            Y = lambda v, cym=cym, k=k, py=py: py + PH / 2 + (v - cym) * k
+            g = [f'<clipPath id="ci{j}"><rect x="{px}" y="{py}" width="{PW}" height="{PH}"/></clipPath><g clip-path="url(#ci{j})"><rect x="{px}" y="{py}" width="{PW}" height="{PH}" class="cipanel"/><use href="#usmap" transform="translate({px + MW/2 - cxm*k:.2f},{py + PH/2 - cym*k:.2f}) scale({k:.3f})" class="cizoom"/>']
+            mem = sorted(mem, key=lambda m: (m["y"], m["x"]))
+            P2 = [[X(m["x"]), Y(m["y"])] for m in mem]
+            for _ in range(60):
+                for a_ in range(len(P2)):
+                    for b_ in range(a_ + 1, len(P2)):
+                        ddx = P2[b_][0] - P2[a_][0]; ddy = P2[b_][1] - P2[a_][1]; dd = math.hypot(ddx, ddy) or .01
+                        if dd < 15: f_ = (15 - dd) / 2 / dd; P2[a_][0] -= ddx * f_; P2[a_][1] -= ddy * f_; P2[b_][0] += ddx * f_; P2[b_][1] += ddy * f_
+            for q, m in enumerate(mem):
+                x, y = P2[q]
+                g.append(f'<g class="hit pin rep"{pop(m["name"], m["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="6.5" class="cclu"/><text x="{x:.1f}" y="{y+3.4:.1f}" text-anchor="middle" class="ccnt cn9">{q+1}</text></g>'
+                         f'<g class="hit"{pop(m["name"], m["story"])}><rect x="{px+MW}" y="{py+34+q*14.5:.1f}" width="{PW-MW-6}" height="14" class="ghost"/><text x="{px+MW+4}" y="{py+45+q*14.5:.1f}" class="cil"><tspan class="cin9">{q+1}</tspan> {esc(m["name"].split(",")[0].replace("County South", "South").replace(" County", " Co."))}</text></g>')
+            g.append(f'</g><rect x="{px}" y="{py}" width="{PW}" height="{PH}" class="ciframe"/><text x="{px+10}" y="{py+20}" class="cit">{esc(ititle)}</text>')
+            panels.append("".join(g))
+        for cl in cluster([it for it in items if it["name"] not in used], 15): parts.append(draw(cl, I, I))
+        tot = TOP + PH + 6 if insets else H + 10
+        svg = f'<svg viewBox="-10 -6 {W + 20} {tot + 6}" width="100%" role="img" aria-label="{esc(c["title"])}">{"".join(parts)}{"".join(panels)}</svg>'
+        if c.get("reports"): svg += '<p class="key"><span><i></i>In this issue</span><span><i class="g"></i>Reported to the National Assembly; numbers count nearby communities</span></p>'
     elif c["kind"] == "pictogram":
         rows = c["rows"]; W = 600; parts = []; rowh = 40
         for r, row in enumerate(rows):
@@ -466,7 +530,7 @@ main,.head{{position:relative;z-index:1}}
 .popup{{position:fixed;z-index:30;max-width:min(340px,calc(100vw - 32px));background:var(--tabon-white);color:var(--ink);border:1px solid var(--rule);border-top:3px solid var(--pa,var(--accent));box-shadow:0 10px 30px rgba(30,25,15,.16);padding:14px 16px 14px;font-family:var(--ui);font-size:14px;line-height:1.5;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}}
 .popup.show{{opacity:1;transform:none;pointer-events:auto}}
 .popup b{{display:block;font-family:var(--disp);font-weight:700;font-size:15.5px;letter-spacing:-.01em;margin:0 18px 6px 0}}
-.popup p{{margin:0;color:var(--ink)}}
+.popup p{{margin:0;color:var(--ink);white-space:pre-line}}
 .popup button{{position:absolute;top:6px;right:6px;border:0;background:none;font-size:18px;line-height:1;color:var(--mute);cursor:pointer;padding:4px 6px}}
 @media (prefers-reduced-motion:reduce){{.popup{{transition:none}}}}
 .chart .cax{{stroke:var(--rule);stroke-width:2}} .chart .cdot{{fill:var(--accent)}} .chart .cstem{{stroke:var(--rule);stroke-width:1}} .chart .cera{{fill:var(--accent);opacity:.18}}
@@ -477,6 +541,18 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
+/* contact strip: soft photographs mounted small, as a set */
+.prose>.strip{{grid-column:2;margin:2.2em 0;background:var(--card,#fdfcf9);border:1px solid var(--rule);padding:20px 20px 14px;position:relative;box-shadow:0 10px 24px -18px rgba(40,25,10,.35)}}
+.prose>.strip::after{{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;background:var(--accent)}}
+.strip .row{{display:flex;gap:12px;height:clamp(140px,17vw,190px)}} .strip .row>div{{position:relative;flex:var(--ar,1) 1 0;min-width:0}}
+.strip.n1 .row{{height:auto}} .strip.n1 .row>div{{max-width:320px}} .strip.n1 .row>div span{{display:none}}
+.strip img{{display:block;width:100%;height:100%;object-fit:cover}} .strip.n1 img{{height:auto}}
+.strip .row span{{position:absolute;left:6px;top:6px;font-family:var(--ui);font-weight:700;font-size:11px;color:#fff;background:rgba(20,16,10,.55);border-radius:999px;width:18px;height:18px;display:grid;place-items:center}}
+.strip figcaption{{font-family:var(--ui);font-size:12.5px;line-height:1.45;color:var(--mute);margin-top:12px;padding-bottom:6px}}
+.strip ol{{list-style:none;margin:0;padding:0;display:grid;gap:3px}} .strip ol b{{color:var(--ink);margin-right:4px}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.strip{{background:#1f1c17}}}} :root[data-theme="dark"] .prose>.strip{{background:#1f1c17}}
+@media (max-width:640px){{.strip .row{{height:auto;flex-wrap:wrap}} .strip .row>div{{flex:1 1 40%;height:120px}}}}
+
 /* bands: full-bleed rooms for high-resolution sets */
 .prose>.band{{grid-column:1/-1;width:100vw;margin:clamp(48px,7vw,96px) 0 clamp(48px,7vw,96px) calc(50% - 50vw);padding:clamp(40px,6vw,88px) 0;position:relative}}
 .band .bin{{max-width:1240px;margin:0 auto;{GUT}display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(14px,2.2vw,32px);align-items:start}}
@@ -515,6 +591,8 @@ main,.head{{position:relative;z-index:1}}
 @media (prefers-reduced-motion:reduce){{.chart .ctrav{{display:none}}}} .chart.bold .ct{{font-size:clamp(17px,1.6vw,20px);line-height:1.35;max-width:40ch;letter-spacing:.01em}}
 .chart .cline.cbold{{stroke:var(--accent);stroke-width:5;opacity:.85}} .chart text.cvbig{{font-size:25px;font-weight:800;letter-spacing:-.01em}}
 @media (min-width:981px){{.prose>.chart.span{{grid-column:2/4}}}}
+.chart .cclu{{fill:color-mix(in oklab,var(--mute) 70%,var(--paper));stroke:var(--paper);stroke-width:1.5}} .chart text.ccnt{{font-family:var(--ui);font-weight:700;font-size:10.5px;fill:#fff}} .chart .rep:hover .cclu{{fill:var(--ink)}}
+.chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
 .chart .crep{{fill:var(--mute);opacity:.75;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:5}}
 .chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.75;width:8px;height:8px}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
@@ -800,7 +878,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 }}
 </style>
 <div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span></div></div>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland"/><path d="{USMAP["states"]}" class="cstate"/></g></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland" vector-effect="non-scaling-stroke"/><path d="{USMAP["states"]}" class="cstate" vector-effect="non-scaling-stroke"/></g></defs></svg>
 <div class="popup" role="dialog" aria-modal="false" aria-live="polite" hidden><button type="button" aria-label="Close">×</button><b></b><p></p></div>
 <div class="terraces" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <header class="cover wrap" id="top">
