@@ -246,18 +246,20 @@ def concept_html(c):
     kind = c["form"]; W = 600; P = []
     if kind == "ring":
         import math as _m
-        st = c["steps"]; n = len(st); R = 170; SW = 40; gap = 6
+        st = c["steps"]; n = len(st); R = 170; SW = 40; gap = 6; lo = .22; lw = .4
         def pt(r, deg): t = _m.radians(deg - 90); return 300 + r * _m.cos(t), 300 + r * _m.sin(t)
         P2 = []
         for i, (l, _) in enumerate(st):
             a0, a1 = i * 360 / n + gap / 2, (i + 1) * 360 / n - gap / 2
             (x0, y0), (x1, y1) = pt(R, a0), pt(R, a1)
             mix = 100 - i * 18
-            P2.append(f'<path d="M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}" class="wseg" style="stroke:color-mix(in oklab,var(--accent) {mix}%,var(--paper))"/>')
+            on = f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{i/n:.4f};{(i+1)/n:.4f}" values="{lo};1;{lo}"/>' if i else f'<animate attributeName="opacity" dur="16s" repeatCount="indefinite" calcMode="discrete" keyTimes="0;{1/n:.4f}" values="1;{lo}"/>'
+            P2.append(f'<path d="M{x0:.1f},{y0:.1f} A{R},{R} 0 0,1 {x1:.1f},{y1:.1f}" class="wseg" opacity="{lo}">{on}</path>')
             mid = (a0 + a1) / 2; tx, ty = pt(R + SW / 2 + 22, mid); anc = "start" if 0 < mid < 180 else "end"
             nx, ny = pt(R, (a0 + a1) / 2)
             P2.append(f'<text x="{nx:.1f}" y="{ny + 5:.1f}" text-anchor="middle" class="wnum">0{i+1}</text>')
-            P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword">{esc(l)}</text>')
+            onw = on.replace(f'values="{lo};1;{lo}"', f'values="{lw};1;{lw}"').replace(f'values="1;{lo}"', f'values="1;{lw}"')
+            P2.append(f'<text x="{tx:.1f}" y="{ty + 13:.1f}" text-anchor="{anc}" class="wword" opacity="{lw}">{esc(l)}{onw}</text>')
         orbit = f'M300,{300-R} A{R},{R} 0 0,1 300,{300+R} A{R},{R} 0 0,1 300,{300-R}'
         h = gap / 2 + 3; kt = [0.0]; vals = ["0"]
         for i in range(n):
@@ -588,8 +590,8 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
 .prose .chart.sized{{max-width:var(--cw)}}
 /* CARS wheel */
-.wseg{{fill:none;stroke-width:46;stroke-linecap:butt}}
-.wnum{{font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.14em;fill:#fff}}
+.wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
+.wnum{{font-family:var(--ui);font-weight:700;font-size:15px;letter-spacing:.14em;fill:var(--paper)}}
 .wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
 .wdot{{fill:var(--paper);opacity:.85}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
