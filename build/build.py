@@ -172,7 +172,24 @@ def concept_html(c):
     def lines(txt, x, y, cls="cl", anchor="middle", lh=17):
         return "".join(f'<text x="{x}" y="{y + k*lh}" text-anchor="{anchor}" class="{cls}">{esc(t)}</text>' for k, t in enumerate(txt.split("|")))
     H = 300
-    if kind == "spiral":
+    if kind == "ascent":
+        # the four practices as a rising wave: each return to action begins higher than the last
+        st = c["steps"]; W = 760; H = 400; n = len(st)
+        pts = [(70 + k * 155, 290 - k * 46 + (38 if k % 2 else -18)) for k in range(n + 1)]
+        d = f"M{pts[0][0]},{pts[0][1]}"
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            mx = (x0 + x1) / 2; d += f" C{mx:.0f},{y0} {mx:.0f},{y1} {x1},{y1}"
+        P.append(f'<line x1="{pts[0][0]}" y1="{pts[0][1]+40}" x2="{pts[-1][0]}" y2="{pts[-1][1]+40}" class="casc-guide"/>')
+        P.append(f'<path d="{d}" pathLength="1" class="casc"/>')
+        for k, (x, y) in enumerate(pts):
+            up = k % 2 == 0
+            lab, story = st[k % n]
+            again = k == n
+            ly = y - 30 if up else y + 54
+            P.append(f'<g class="hit{" again" if again else ""}"{pop(lab + (" again" if again else ""), c.get("again","") if again else story)}><rect x="{x-8}" y="{y-8}" width="16" height="16" class="cnode" transform="rotate(45 {x} {y})"/>'
+                     f'<text x="{x}" y="{ly - 34 if up else ly + 26}" text-anchor="middle" class="csn">{"↺" if again else f"0{k+1}"}</text>'
+                     f'<text x="{x}" y="{ly}" text-anchor="middle" class="csw">{esc(lab)}</text></g>')
+    elif kind == "spiral":
         # learning as a widening spiral: no arrows; the line thickens as it grows, returning to its start one turn higher
         st = c["steps"]; W = 760; cx, cy = 380, 236; r0, r1 = 10, 170; T = 3 * 2 * math.pi; N = 360
         rad = lambda t: r0 + (r1 - r0) * (t / T) ** 1.15
@@ -271,7 +288,7 @@ def concept_html(c):
         P.append(f'<g class="hit"{pop(jl.replace("|"," "), js)}><line x1="{xj}" y1="{yj}" x2="585" y2="{yj}" class="cjoin"/>{lines(jl, 472, yj + 34, "cv")}</g>')
     svg = f'<svg viewBox="0 -10 {W} {H + 10}" width="100%" role="img" aria-label="{esc(c["title"])}">{arrow}{"".join(P)}</svg>'
     title = f'<p class="ct">{esc(c["title"])}</p>'; note = f'<p class="cn">{esc(c["note"])}</p>' if c.get("note") else ""
-    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}{" spiral" if kind == "spiral" else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
+    return f'<figure class="chart concept{size_cls(c)}{" bold" if c.get("bold") else ""}{" spiral" if kind in ("spiral","ascent") else ""}"{size_sty(c)}>{title}{svg}{note}</figure>'
 
 def first_para_dropcap(h):
     return h.replace("<p>", '<p class="first">', 1)
@@ -485,6 +502,10 @@ main,.head{{position:relative;z-index:1}}
 @media (max-width:760px){{.band .bin>.bi,.portraits>figure{{grid-column:1/-1!important;grid-row:auto!important;margin-top:0!important;transform:none!important}}}}
 
 .chart .carrb{{fill:var(--accent)}}
+.chart .casc{{fill:none;stroke:var(--accent);stroke-width:7;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}}
+.chart .casc-guide{{stroke:var(--accent);stroke-width:1;stroke-dasharray:2 6;opacity:.45}}
+.chart .cnode{{fill:var(--paper);stroke:var(--accent);stroke-width:3}} .chart .again text.csw{{opacity:.38}} .chart .again .cnode{{opacity:.5}}
+@media (prefers-reduced-motion:no-preference){{.chart.spiral:not(.in) .casc{{stroke-dashoffset:1}} .chart.spiral .casc{{transition:stroke-dashoffset 2.4s cubic-bezier(.45,0,.2,1)}} .chart.spiral:not(.in) .hit{{opacity:0}} .chart.spiral .hit{{transition:opacity .6s}} .chart.spiral .hit:nth-of-type(2){{transition-delay:.5s}} .chart.spiral .hit:nth-of-type(3){{transition-delay:1s}} .chart.spiral .hit:nth-of-type(4){{transition-delay:1.5s}} .chart.spiral .hit:nth-of-type(5){{transition-delay:2s}}}}
 .chart .csp{{stroke-linecap:round}} .chart .ctrav{{fill:var(--accent);stroke:var(--paper);stroke-width:3}}
 .chart text.csw{{font-family:var(--disp);font-weight:800;font-size:40px;letter-spacing:-.045em;fill:var(--ink)}}
 .chart text.csn{{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.18em;fill:var(--accent)}}
@@ -815,6 +836,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 </main>
 {DOCK}
 <script>
+(function(){{var f=[].slice.call(document.querySelectorAll('.chart.spiral'));if(!f.length)return;if(!('IntersectionObserver' in window)){{f.forEach(function(x){{x.classList.add('in')}});return;}}var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('in');io.unobserve(e.target);}}}});}},{{threshold:.35}});f.forEach(function(x){{io.observe(x)}});}})();
 (function(){{ /* trim the empty bands above and below each diagram */
   [].forEach.call(document.querySelectorAll('.chart>svg[viewBox]'),function(svg){{
     try{{var vb=svg.viewBox.baseVal,bb=svg.getBBox();if(!bb.height)return;var y=Math.max(vb.y,bb.y-6),h=Math.min(vb.y+vb.height,bb.y+bb.height+6)-y;
