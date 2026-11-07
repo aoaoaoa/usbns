@@ -143,10 +143,11 @@ def chart_html(c):
             st = c.get("stories", {}).get(name, "")
             base = c.get("starts", [None]*n)[i]
             body = " ".join(x for x in [f"Month {i+1} of 19." , f"First day: {base}, beginning at sunset the evening before." if base else "", st] if x)
-            parts.append(f'<path d="{d}" class="{"cseg on" if name in hi else "cseg"} hit"{pop(f"{name}, {mean}", body)}/>')
+            hue = (135 + 330 * i / (n - 1)) % 360
+            parts.append(f'<path d="{d}" class="cseg hit" style="fill:oklch(.62 .11 {hue:.0f})"{pop(f"{name}, {mean}", body)}/>')
             am = (a0 + a1) / 2; tx, ty = cx + 174*math.cos(am), cy + 174*math.sin(am)
             anchor = "start" if math.cos(am) > .15 else ("end" if math.cos(am) < -.15 else "middle")
-            parts.append(f'<text x="{tx:.1f}" y="{ty+4:.1f}" text-anchor="{anchor}" class="{"cl on" if name in hi else "cl"}">{esc(mean)}</text>')
+            parts.append(f'<text x="{tx:.1f}" y="{ty+4:.1f}" text-anchor="{anchor}" class="cl">{esc(mean)}</text>')
             nx, ny = cx + (r0+r1)/2*math.cos(am), cy + (r0+r1)/2*math.sin(am)
             parts.append(f'<text x="{nx:.1f}" y="{ny+4:.1f}" text-anchor="middle" class="cvin">{i+1}</text>')
         parts.append(f'<text x="{cx}" y="{cy-6}" text-anchor="middle" class="cbig">19</text><text x="{cx}" y="{cy+18}" text-anchor="middle" class="cn2">months of 19 days</text><text x="{cx}" y="{cy+32}" text-anchor="middle" class="cn2">plus Ayyám-i-Há</text>')
