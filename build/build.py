@@ -663,7 +663,10 @@ def build_tab(member=False, menu="contents"):
         art = ""
         if a.get("art"):
             if a["slug"] == "comic":
-                art = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
+                art = ('<div class="cletter" aria-hidden="true"><svg viewBox="0 0 1600 560"><line class="guide" x1="120" y1="120" x2="1480" y2="120"/><line class="guide" x1="120" y1="250" x2="1480" y2="250"/><line class="guide" x1="120" y1="330" x2="1480" y2="330"/><line class="guide" x1="120" y1="460" x2="1480" y2="460"/>'
+                       '<text class="cnote" x="120" y="100">rough · Sparkling spirits · 130 pt</text><text class="pencil" x="800" y="250" text-anchor="middle">SPARKLING</text><text class="pencil" x="800" y="460" text-anchor="middle">SPIRITS</text>'
+                       '<text class="cink" x="800" y="250" text-anchor="middle">SPARKLING</text><text class="cink" x="800" y="460" text-anchor="middle">SPIRITS</text><text class="csub" x="800" y="535" text-anchor="middle">ADVENTURES IN PIONEERING · INDIANAPOLIS</text></svg></div>')
+                art += f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
                 if a.get("art_width"): cls += " capped"
@@ -673,7 +676,8 @@ def build_tab(member=False, menu="contents"):
                 ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
                 art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
         else:
-            art = '<div class="numeral" aria-hidden="true">50</div>'
+            art = (f'<div class="fnote" role="img" aria-label="50 years: the Association for Bahá\'í Studies, founded in 1975"><div class="fbig" aria-hidden="true"><span>50</span><sup>1</sup></div><div class="frule" aria-hidden="true"></div>'
+                   f'<p class="fnt" aria-hidden="true"><sup>1</sup> Years since the founding of the <i>Association for Bahá\'í Studies</i>, 1975. {esc(a.get("dek", "").rstrip(".") + ".")}</p></div>')
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
         by = (f'<p class="by{" nob" if a["byline"].startswith(("Adapted","Story")) else ""}">{esc(a["byline"])}</p>') if a.get("byline") else ""
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
@@ -759,7 +763,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -1124,6 +1128,33 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 }}
 @keyframes penclip{{to{{clip-path:inset(0 0 0 0)}}}} @keyframes pendraw{{to{{stroke-dashoffset:0}}}} @keyframes penfill{{to{{fill-opacity:1;stroke-width:0}}}}
 @keyframes sweep{{from{{background-position:120% 0}}to{{background-position:-20% 0}}}}
+/* ABS at 50: a footnote, as in a scholarly paper */
+.fnote{{margin:0 0 clamp(28px,4vw,48px);color:var(--ink)}}
+.fbig{{font-family:"Fraunces",var(--text),serif;font-weight:300;font-size:clamp(140px,26vw,330px);line-height:.8;letter-spacing:-.04em;color:var(--accent);font-variation-settings:"opsz" 144}}
+.fbig sup{{font-size:.22em;vertical-align:top;position:relative;top:.35em;margin-left:.06em;font-weight:500}}
+.frule{{width:min(28%,220px);height:1.5px;background:var(--ink);margin:clamp(18px,3vw,32px) 0 10px;transform-origin:left}}
+.fnt{{font-family:"Fraunces",var(--text),serif;font-size:clamp(15px,1.6vw,18px);line-height:1.5;max-width:52ch;margin:0;font-variation-settings:"opsz" 12}}
+.fnt sup{{font-size:.7em}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .fbig span{{display:inline-block;opacity:0;transform:translateY(.12em)}} .ovready .fbig sup,.ovready .fnt{{opacity:0}} .ovready .frule{{transform:scaleX(0)}}
+.ovready .fnote.go .fbig span{{opacity:1;transform:none;transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}}
+.ovready .fnote.go .fbig sup{{opacity:1;transition:opacity .6s 1s}} .ovready .fnote.go .frule{{transform:none;transition:transform .6s 1.4s}} .ovready .fnote.go .fnt{{opacity:1;transition:opacity .8s 1.8s}}
+}}
+/* Comic: the title as a letterer's pencil rough, then inked */
+.cletter{{margin:0 0 clamp(16px,2.4vw,28px);background:#fffdf6;border:1px solid var(--rule);border-radius:4px}}
+.cletter svg{{display:block;width:100%;height:auto}}
+.cletter .guide{{stroke:#7fb4d0;stroke-width:1.2;stroke-dasharray:4 4;opacity:0}}
+.cletter .cnote{{font-family:var(--ui);font-size:15px;fill:#5d8fa8;opacity:0}}
+.cletter .pencil{{font-family:"Bangers",cursive;font-size:150px;letter-spacing:4px;fill:none;stroke:#9a958c;stroke-width:1.3;opacity:0}}
+.cletter .cink{{font-family:"Bangers",cursive;font-size:150px;letter-spacing:4px;fill:#1d1a16}}
+.cletter .csub{{font-family:"Bangers",cursive;font-size:34px;letter-spacing:3px;fill:#a8361f}}
+@media (prefers-reduced-motion:no-preference){{
+.ovready .cletter .guide,.ovready .cletter .cnote{{opacity:1}} .ovready .cletter .pencil{{opacity:1;stroke-dasharray:900;stroke-dashoffset:900}}
+.ovready .cletter .cink{{clip-path:inset(0 100% 0 0)}} .ovready .cletter .csub{{opacity:0}}
+.ovready .cletter.go .pencil{{animation:penc 1.8s ease forwards}} .ovready .cletter.go .cink{{animation:inkk 1.6s cubic-bezier(.5,.1,.4,1) 1.7s forwards}}
+.ovready .cletter.go .guide,.ovready .cletter.go .cnote{{opacity:0;transition:opacity .8s 3.2s}} .ovready .cletter.go .csub{{opacity:1;transition:opacity .6s 3.3s}}
+}}
+@keyframes penc{{to{{stroke-dashoffset:0}}}} @keyframes inkk{{to{{clip-path:inset(0 0 0 0)}}}}
 /* Louis Gregory: a broadside, the name pressed in letter by letter */
 .gro .ov{{text-shadow:none;color:#1d1a16}}
 .gro .ov span{{animation:none!important}}
@@ -1150,7 +1181,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .numeral{{font-family:var(--disp);font-weight:800;font-size:clamp(160px,28vw,360px);line-height:.8;color:var(--accent);margin:0 0 .05em -.03em;letter-spacing:-.06em}}
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
-.story>.plate,.story>.numeral{{grid-column:1/-1}}
+.story>.plate,.story>.numeral,.story>.fnote,.story>.cletter{{grid-column:1/-1}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead>*{{position:relative;z-index:1}}
 .torn{{position:absolute;inset:-14% -2% -10% 46%;z-index:0!important;pointer-events:none;opacity:.5}}
@@ -1330,7 +1361,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
-  var W=[].slice.call(document.querySelectorAll('.ovw'));
+  var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.cletter'));
   if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
   else W.forEach(function(w){{w.classList.add('go')}});
   var ny=document.querySelector('.ovw.nyo'); if(ny&&!rm){{var tick=function(){{var r=ny.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight+r.height);p=Math.max(0,Math.min(1,p))-.5;ny.style.setProperty('--dr',(p*24).toFixed(1))}};addEventListener('scroll',tick,{{passive:true}});tick();}}
