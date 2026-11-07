@@ -177,12 +177,14 @@ def chart_html(c):
             for n in range(len(idx) - 1, -1, -1):
                 i = idx[n]; lim = lx[idx[n+1]] - SP if n < len(idx) - 1 else W - pad - 12
                 if lx[i] > lim: lx[i] = lim
-        rows = []
+        rows = []; eras = c.get("eras", [])
         for i, e in enumerate(ev):
             y, lab = e[0], e[1]; story = e[2] if len(e) > 2 else ""; x = xs[i]; ty = T[i % len(T)]; k = kind(y)
             parts.append(f'<path d="M{x:.1f} {LY+6} V{LY+12} L{lx[i]:.1f} {ty-16} V{ty-12}" class="cfan"/>')
             parts.append(f'<g class="k-{k}"><circle cx="{x:.1f}" cy="{LY}" r="5.5" class="cdotk"/><circle cx="{x:.1f}" cy="{LY}" r="11" class="ghost hit"{pop(f"{y}: {lab}", story)}/><text x="{lx[i]:.1f}" y="{ty}" text-anchor="middle" class="cvk"{pop(f"{y}: {lab}", story)}>{y}</text></g>')
-            rows.append(f'<li{" class=has" if story else ""}{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
+            if i == 0 and eras: rows.append(f'<li class="era">{esc(eras[0][2])} · {ev[0][0]}–{max(e[0] for e in ev if e[0] < b0)}</li>')
+            if len(eras) > 1 and y > b0 and ev[i-1][0] < b0: rows.append(f'<li class="era e2">{esc(eras[1][2])} · {y}–{ev[-1][0]}</li>')
+            rows.append(f'<li class="k-{k}{" has" if story else ""}" data-y="{y}"{pop(f"{y}: {lab}", story)}><b>{y}</b><span>{esc(lab)}</span></li>')
         K = {"life": "Life", "teach": "Teaching journeys", "serve": "Service and institutions", "write": "Writings", "legacy": "Legacy"}
         used = {kind(e[0]) for e in ev}
         key = ('<p class="kkey">' + "".join(f'<span><i class="k-{k}"></i>{v}</span>' for k, v in K.items() if k in used) + '</p>') if c.get("kinds") else ""
@@ -208,7 +210,7 @@ def chart_html(c):
         life = [e for e in ev if e[0] <= b0]; later = [e for e in ev if e[0] > b0]
         rows2 = (f'<div class="tlrows"><p class="tlrl">{esc(eras[0][2]) if eras else ""}, {life[0][0]}–{life[-1][0]}</p>' + row(life, (y0 // 10) * 10, b0 + 3, [t for t in range(1880, b0, 20)], eras[0][:2] if eras else None, (62, 78, 94, 110))
                  + f'<p class="tlrl">{esc(eras[1][2]) if len(eras) > 1 else ""}, {later[0][0]}–{later[-1][0]}</p>' + row(later, later[0][0] - 6, y1, [t for t in (1960, 1980, 2000, 2020) if later[0][0] - 6 < t < y1], (later[0][0], later[-1][0]), (62, 78)) + '</div>') if later else ""
-        svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg>{rows2}<ol class="tl">{"".join(rows)}</ol>'
+        svg = key + f'<svg viewBox="0 0 {W} 124" width="100%" role="img" aria-label="{esc(c["title"])}" class="tl2">{"".join(parts)}</svg>{rows2}<ol class="tl tlx">{"".join(rows)}</ol>'
     elif c["kind"] == "timeline":
         ev = c["events"]; y0 = c.get("start", ev[0][0]); y1 = c.get("end", ev[-1][0]); W = 600; pad = 14
         X = lambda y: pad + (W - 2*pad) * (y - y0) / (y1 - y0)
@@ -900,6 +902,16 @@ main,.head{{position:relative;z-index:1}}
 .chart .cno{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}}
 .chart{{--k-life:var(--ink);--k-teach:var(--accent);--k-serve:#265b76;--k-write:#9a6a12;--k-legacy:#8a8072}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}}} :root[data-theme="dark"] .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}
+/* the chronology under the two-scale timeline: a card that reads down, linked to the line */
+.chart .tlx{{display:block;columns:3 240px;column-gap:34px;column-rule:1px solid color-mix(in oklab,var(--rule) 70%,transparent);background:var(--tlcard);border:1px solid var(--rule);border-radius:6px;padding:16px 22px 18px;margin-top:18px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 8px 24px -16px rgba(40,30,20,.25)}}
+.chart{{--tlcard:#fffdf9}} @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--tlcard:#1f1c17}}}} :root[data-theme="dark"] .chart{{--tlcard:#1f1c17}}
+.chart .tlx li{{break-inside:avoid;border-radius:4px;margin:0 -8px;padding:5px 8px;transition:background .15s}}
+.chart .tlx li b{{display:flex;align-items:baseline;gap:6px;color:var(--ink)}} .chart .tlx li b::before{{content:"";width:6px;height:6px;border-radius:50%;background:var(--k,var(--ink));flex:none;position:relative;top:-1px}}
+.chart .tlx li.has span{{text-decoration:none;color:var(--ink)}} .chart .tlx li.has span::after{{content:" +";color:var(--mute);font-size:.85em}}
+.chart .tlx li.k-legacy span{{color:var(--mute)}}
+.chart .tlx li.era{{display:block;column-span:all;margin:0 0 6px;padding:2px 0 8px;border-radius:0;border-bottom:1px solid var(--rule);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}} .chart .tlx li.era.e2{{margin-top:14px}}
+.chart .tlx li.lit{{background:color-mix(in oklab,var(--accent) 12%,transparent)}}
+.chart svg.tl2 .lit{{stroke:var(--accent)!important;stroke-width:3px!important}} .chart svg.tl2 text.lit{{fill:var(--accent)!important;stroke:none!important}}
 .chart .tlrows{{display:none}} .chart .tlrl{{font-family:var(--ui);font-size:12px;color:var(--mute);margin:10px 0 0}}
 @media (max-width:600px){{.chart svg.tl2{{display:none}} .chart .tlrows{{display:block}} .chart .tlrows svg+.tlrl{{margin-top:4px}}}}
 .chart .cdotk{{fill:var(--k)}} .chart text.cvk[data-pb]{{pointer-events:auto;cursor:pointer}} .chart text.cvk[data-pb]:hover,.chart text.cvk[data-pb]:focus-visible{{text-decoration:underline;outline:none}} .chart .cvk{{font-family:var(--ui);font-weight:700;font-size:12px;fill:var(--k);stroke:var(--paper);stroke-width:3px;paint-order:stroke;stroke-linejoin:round;font-variant-numeric:tabular-nums}} .chart .cfan{{fill:none;stroke:var(--rule);stroke-width:1}} .chart .cbrk{{stroke:var(--mute);stroke-width:1.5;fill:none}}
@@ -1336,6 +1348,9 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%3)}})}});
     function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.92-r.top)/(h*0.5);v.dataset.f=String(Math.max(0,Math.min(2,Math.floor(p*3))))}})}}
     addEventListener('scroll',tick,{{passive:true}});addEventListener('resize',tick);tick();}})();
+  [].forEach.call(document.querySelectorAll('.chart ol.tlx'),function(ol){{var svg=ol.parentNode.querySelector('svg.tl2');if(!svg)return;
+    function lit(li,on){{li.classList.toggle('lit',on);[].forEach.call(svg.querySelectorAll('[data-pt^="'+li.dataset.y+':"]'),function(e){{e.classList.toggle('lit',on)}})}}
+    [].forEach.call(ol.querySelectorAll('li[data-y]'),function(li){{['mouseenter','focus'].forEach(function(t){{li.addEventListener(t,function(){{lit(li,true)}})}});['mouseleave','blur'].forEach(function(t){{li.addEventListener(t,function(){{lit(li,false)}})}})}});}});
   var W=[].slice.call(document.querySelectorAll('.ovw,.fnote,.csplash,.mnote,.mnh'));
   if('IntersectionObserver' in window){{var io=new IntersectionObserver(function(es){{es.forEach(function(e){{if(e.isIntersecting){{e.target.classList.add('go');io.unobserve(e.target)}}}})}},{{threshold:.35}});W.forEach(function(w){{io.observe(w)}})}}
   else W.forEach(function(w){{w.classList.add('go')}});
