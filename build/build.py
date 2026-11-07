@@ -425,8 +425,8 @@ def concept_html(c):
                     g.append(f'<path d="M{a[0]+(b[0]-a[0])*.22:.1f},{a[1]+(b[1]-a[1])*.22:.1f} Q{cx+(a[0]+b[0]-2*cx)*.9:.1f},{cy+(a[1]+b[1]-2*cy)*.9:.1f} {a[0]+(b[0]-a[0])*.78:.1f},{a[1]+(b[1]-a[1])*.78:.1f}" class="cline" marker-end="{mk}"/>')
                 for x, y in pts: g.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="10" class="cdot"/>')
             word = panel[3] if len(panel) > 3 else None
-            label = (f'<text x="{cx}" y="196" text-anchor="middle" class="cpre">{esc(word[0])}</text><text x="{cx}" y="238" text-anchor="middle" class="cword{" hollow" if k == 0 else ""}">{esc(word[1])}</text>' + (f'<text x="{cx}" y="264" text-anchor="middle" class="csubw">{esc(word[2])}</text>' if len(word) > 2 else '')) if word else lines(title, cx, 238 if c.get("arrows") else 206, "cv")
-            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{"".join(g)}{label}</g>')
+            label = (f'<text x="{cx}" y="6" text-anchor="middle" class="cpre">{esc(word[0])}</text><text x="{cx}" y="48" text-anchor="middle" class="cword{" hollow" if k == 0 else ""}">{esc(word[1])}</text>' + (f'<text x="{cx}" y="74" text-anchor="middle" class="csubw">{esc(word[2])}</text>' if len(word) > 2 else '')) if word else lines(title, cx, 238 if c.get("arrows") else 206, "cv")
+            P.append(f'<g class="hit"{pop(title.replace("|"," "), story)}><rect x="{ox}" y="0" width="290" height="{H}" class="cpanel"/>{(f'<g transform="translate(0 70)">' + "".join(g) + '</g>') if word else "".join(g)}{label}</g>')
     elif kind == "spectrum":
         pts = c["points"]; n = len(pts); x0, x1 = 60, 560; y = 40; H = 120
         P.append(f'<line x1="{x0}" y1="{y}" x2="{x1}" y2="{y}" class="cline" marker-end="{mk}"/>')
