@@ -276,12 +276,12 @@ def chart_html(c):
                 dx = -9 if head["side"] == "end" else 9
                 t = head["lab"] + (f" and {n-1} nearby" if n > 1 else "")
                 badge = f'<text x="{x}" y="{y+3.6}" text-anchor="middle" class="ccnt">{n}</text>' if n > 1 else ""
-                return f'<g class="hit pin"{pop(t, body(cl))}><circle cx="{x:.1f}" cy="{y:.1f}" r="13" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="{8.8 if n > 1 else 7.2}" class="cdot big"/>{badge}<text x="{x+dx*(1.4 if n > 1 else 1.15):.0f}" y="{y+4:.0f}" text-anchor="{head["side"]}" class="cl on">{esc(head["lab"])}</text></g>'
+                return f'<g class="hit pin"{pop(t, body(cl))}><circle cx="{x:.1f}" cy="{y:.1f}" r="13" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="{9.6 if n > 1 else 8}" class="cdot big"/>{badge}<text x="{x+dx*(1.4 if n > 1 else 1.15):.0f}" y="{y+4:.0f}" text-anchor="{head["side"]}" class="cl on">{esc(head["lab"])}</text></g>'
             short = lambda m: m["name"].split(",")[0].replace(" County", " Co.")
             if n == 1:
-                tl = (f'<text x="{x-9.5:.1f}" y="{y+4:.1f}" text-anchor="end" class="cil">' if x > lab else f'<text x="{x+9.5:.1f}" y="{y+4:.1f}" class="cil">') + esc(short(head)) + '</text>' if lab else ""
-                return f'<g class="hit pin rep"{pop(head["name"], head["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="5.2" class="crep"/>{tl}</g>'
-            cx = sum(X(m["x"]) for m in cl) / n; cy = sum(Y(m["y"]) for m in cl) / n; r = 7.3 + 2.2 * math.sqrt(n)
+                tl = (f'<text x="{x-10.5:.1f}" y="{y+4:.1f}" text-anchor="end" class="cil">' if x > lab else f'<text x="{x+10.5:.1f}" y="{y+4:.1f}" class="cil">') + esc(short(head)) + '</text>' if lab else ""
+                return f'<g class="hit pin rep"{pop(head["name"], head["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="6" class="crep"/>{tl}</g>'
+            cx = sum(X(m["x"]) for m in cl) / n; cy = sum(Y(m["y"]) for m in cl) / n; r = 8.1 + 2.2 * math.sqrt(n)
             return f'<g class="hit pin rep"{pop(f"{n} communities", body(cl))}><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r+4:.1f}" class="ghost"/><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" class="cclu"/><text x="{cx:.1f}" y="{cy+3.8:.1f}" text-anchor="middle" class="ccnt">{n}</text>{(f'<text x="{cx-r-5:.1f}" y="{cy+4:.1f}" text-anchor="end" class="cil">' if cx > lab else f'<text x="{cx+r+5:.1f}" y="{cy+4:.1f}" class="cil">') + esc(" · ".join(short(m) for m in cl)) + '</text>' if lab else ""}</g>'
         I = lambda v: v
         regs = "".join(f'<path d="{r["d"]}" class="rf hit t{r["tone"]}" data-click{pop(r["name"] + " region", ", ".join(r["states"]) + ".")}/>' for r in USREG["regions"])
@@ -309,7 +309,7 @@ def chart_html(c):
                         if dd < 15: f_ = (15 - dd) / 2 / dd; P2[a_][0] -= ddx * f_; P2[a_][1] -= ddy * f_; P2[b_][0] += ddx * f_; P2[b_][1] += ddy * f_
             for q, m in enumerate(mem):
                 x, y = P2[q]
-                g.append(f'<g class="hit pin rep"{pop(m["name"], m["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="7.2" class="cclu"/><text x="{x:.1f}" y="{y+3.4:.1f}" text-anchor="middle" class="ccnt cn9">{q+1}</text></g>'
+                g.append(f'<g class="hit pin rep"{pop(m["name"], m["story"])}><circle cx="{x:.1f}" cy="{y:.1f}" r="9" class="ghost"/><circle cx="{x:.1f}" cy="{y:.1f}" r="7.8" class="cclu"/><text x="{x:.1f}" y="{y+3.4:.1f}" text-anchor="middle" class="ccnt cn9">{q+1}</text></g>'
                          f'<g class="hit"{pop(m["name"], m["story"])}><rect x="{px+MW}" y="{py+34+q*14.5:.1f}" width="{PW-MW-6}" height="14" class="ghost"/><text x="{px+MW+4}" y="{py+45+q*14.5:.1f}" class="cil"><tspan class="cin9">{q+1}</tspan> {esc(m["name"].split(",")[0].replace("County South", "South").replace(" County", " Co."))}</text></g>')
             g.append(f'</g><rect x="{px}" y="{py}" width="{PW}" height="{PH}" class="ciframe"/><text x="{px+10}" y="{py+20}" class="cit">{esc(ititle)}</text>')
             panels.append("".join(g))
@@ -321,7 +321,7 @@ def chart_html(c):
             key = hd["name"]; t, side = LBL.get(key, (None, None)) if isinstance(LBL.get(key), (list, tuple)) else (LBL.get(key), None)
             if t is None: continue
             n = len(cl); cx = sum(m["x"] for m in cl) / n; cy = sum(m["y"] for m in cl) / n
-            r = (7.3 + 2.2 * math.sqrt(n)) if n > 1 else 5.2
+            r = (8.1 + 2.2 * math.sqrt(n)) if n > 1 else 6
             side = side or ("end" if cx > W * .62 else "start")
             if side in ("above", "below"): tx, ty, anc = cx, (cy - r - 5 if side == "above" else cy + r + 12), "middle"
             else: tx, ty, anc = cx + (-(r + 5) if side == "end" else (r + 5)), cy + 4, side
@@ -815,7 +815,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .ghost{{fill:transparent}} .chart .hit{{cursor:pointer;outline:none}}
 .chart .hit:hover .cb,.chart .hit:focus-visible .cb,.chart rect.hit:hover,.chart path.hit:hover{{filter:brightness(1.12)}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
-.chart .pin:hover .cdot,.chart .pin:focus-visible .cdot{{r:9.4}}
+.chart .pin:hover .cdot,.chart .pin:focus-visible .cdot{{r:10.2}}
 .cland{{fill:var(--cream);stroke:var(--rule);stroke-width:1}} .cstate{{fill:none;stroke:var(--rule);stroke-width:.6}}
 .creg .rf{{stroke:none;opacity:.85;transition:opacity .2s}} .chart .creg .rf.hit:hover,.chart .creg .rf.hit:focus-visible{{opacity:1;filter:saturate(1.6) brightness(.97)}} .creg .cstate,.creg .rb{{pointer-events:none}} .creg .ta{{fill:#efe4d0}} .creg .tb{{fill:#e3eadb}} .creg .tc{{fill:#f1ddd5}} .creg .td{{fill:#dde6ee}}
 .creg .rb{{fill:none;stroke:color-mix(in oklab,var(--ink) 45%,transparent);stroke-width:1.6;stroke-linejoin:round;vector-effect:non-scaling-stroke}}
@@ -947,8 +947,8 @@ main,.head{{position:relative;z-index:1}}
 .chart .cclu{{fill:color-mix(in oklab,var(--mute) 70%,var(--paper));stroke:var(--paper);stroke-width:1.5}} .chart text.ccnt{{font-family:var(--ui);font-weight:700;font-size:10.5px;fill:#fff}} .chart .rep:hover .cclu{{fill:var(--ink)}}
 .chart .cibox{{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.5}} .chart .cilead{{fill:none;stroke:var(--ink);stroke-width:.6;opacity:.3}} .chart .cipanel{{fill:var(--paper)}} .chart .ciframe{{fill:none;stroke:var(--rule);stroke-width:1}} .chart text.ccnt.cn9{{font-size:8.5px}} .chart .cin9{{font-weight:700;fill:var(--ink)}} .chart .twb{{stroke:var(--accent);stroke-width:14}} .chart .twd{{stroke-dasharray:3 5}} .chart text.twk{{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;fill:var(--mute)}}
 .chart text.cml{{font-family:var(--ui);font-size:11.5px;fill:var(--mute);pointer-events:none}} .chart text.cil{{font-family:var(--ui);font-size:10.5px;fill:var(--mute)}} .chart text.cit{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--mute)}} .cizoom .cland,.cizoom .cstate{{vector-effect:non-scaling-stroke}}
-.chart .crep{{fill:var(--mute);stroke:var(--paper);stroke-width:1.5;opacity:.9;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:6.2}}
-.chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.9;width:9px;height:9px;box-shadow:0 0 0 1.5px var(--paper),0 0 0 2.5px var(--rule)}}
+.chart .crep{{fill:var(--mute);stroke:var(--paper);stroke-width:1.5;opacity:.9;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:7}}
+.chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.9;width:10px;height:10px;box-shadow:0 0 0 1.5px var(--paper),0 0 0 2.5px var(--rule)}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
 .chart .cno{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}}
 .chart{{--k-life:var(--ink);--k-teach:var(--accent);--k-serve:#265b76;--k-write:#9a6a12;--k-legacy:#8a8072}}
