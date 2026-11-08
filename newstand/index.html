@@ -55,6 +55,13 @@ h2{margin:0;font-family:var(--disp);font-weight:800;font-size:30px;letter-spacin
 .card.ph .im i:first-child{-webkit-mask:linear-gradient(115deg,#000 5%,transparent 75%);mask:linear-gradient(115deg,#000 5%,transparent 75%)}
 .card.ph .im i+i{--c:var(--c2);transform:translate(3px,2px) rotate(15deg) scale(1.4);-webkit-mask:linear-gradient(295deg,#000 5%,transparent 70%);mask:linear-gradient(295deg,#000 5%,transparent 70%)}
 .card.ph .k{color:var(--mute)}.card.ph .t{color:var(--mute)}
+.next{border-top:1px solid var(--rule)}.next .wrap{padding-top:52px;padding-bottom:56px}
+.slate{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
+.slate li{border-top:2px solid var(--ink);padding-top:14px;display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:start}
+.slate b{grid-row:1/4;font-family:var(--disp);font-weight:800;font-size:52px;line-height:.9;letter-spacing:-.03em;color:var(--c)}
+.slate h3{margin:0;font-family:var(--disp);font-weight:700;font-size:21px;line-height:1.2}
+.slate span{font-family:var(--ui);font-size:13px;color:var(--mute);line-height:1.5}
+.arch{border-top:1px solid var(--rule)}
 .arch .wrap{padding-top:64px;padding-bottom:72px}
 .tiles{display:flex;flex-wrap:wrap;padding-left:30px;row-gap:24px}
 .tile{width:150px;margin-left:-30px;text-decoration:none;transform:rotate(var(--r));transition:transform .25s}
@@ -77,9 +84,9 @@ footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-siz
 
 <main>
 <section id="current" class="wrap cur" aria-labelledby="cur-h">
-<figure class="cover"><img src="../img/cover-print-v57n5.jpg" alt="Cover of The American Bahá'í, Volume 57, Number 5, October/November/December 2026: Juliet Bogan's painting of a green valley of terraced fields and small houses under an orange ridge, with two young women in the foreground"><figcaption>Cover painting by Juliet Bogan</figcaption></figure>
+<figure class="cover"><img src="../img/cover-print-v57n5.jpg" alt="Cover of The American Bahá'í, No. 00, October/November/December 2026: Juliet Bogan's painting of a green valley of terraced fields and small houses under an orange ridge, with two young women in the foreground"><figcaption>Cover painting by Juliet Bogan</figcaption></figure>
 <div class="intro">
-<p class="eyebrow">Current issue · Volume 57, Number 5 · <b>The Arts Issue</b></p>
+<p class="eyebrow">Current issue · No. 00 · <b>The Arts Issue</b></p>
 <h1 id="cur-h">Creative expression and the transformation of communities</h1>
 <p class="dek">From music and visual art to the creative practices woven into grassroots efforts.</p>
 <p class="meta">October / November / December 2026</p>
@@ -98,6 +105,15 @@ footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-siz
 </div></section>
 
 
+
+<section id="next" class="next" aria-labelledby="nx-h"><div class="wrap">
+<div class="rowh"><h2 id="nx-h">Coming in 2027</h2></div>
+<ol class="slate">
+<li style="--c:#1b5e6b"><b>01</b><h3>Education</h3><span>Winter 2027</span><span>In homes February 2027</span></li>
+<li style="--c:#c9462c"><b>02</b><h3>National Convention</h3><span>Spring 2027</span><span>In homes May 2027</span></li>
+<li style="--c:#e9a21f"><b>03</b><h3>Race Unity</h3><span>Summer 2027</span><span>In homes August 2027</span></li>
+</ol>
+</div></section>
 
 <section id="archive" class="arch" aria-labelledby="ar-h"><div class="wrap">
 <div class="rowh"><h2 id="ar-h">Earlier issues</h2></div>
