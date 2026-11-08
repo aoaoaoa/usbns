@@ -927,7 +927,7 @@ main,.head{{position:relative;z-index:1}}
 /* CARS wheel: four phases, each filling in turn */
 .chart.ringf .ct{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:clamp(19px,1.75vw,24px);line-height:1.25;letter-spacing:-.005em;max-width:34ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
 .rwrap{{display:grid;gap:clamp(20px,3vw,44px)}}
-.rsvg{{display:block;width:100%;max-width:480px;height:auto;overflow:visible;margin:0 auto}}
+.rsvg{{display:block;width:100%;max-width:410px;height:auto;overflow:visible;margin:0 auto}}
 .wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
 .wword{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
