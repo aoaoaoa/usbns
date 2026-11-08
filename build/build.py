@@ -761,7 +761,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Caveat:wght@500..700&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -856,7 +856,7 @@ main,.head{{position:relative;z-index:1}}
 .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 .prose>.mnote{{grid-column:1;grid-row:span 2;align-self:start;margin:.3em 0 1.6em;max-width:24ch;transform:rotate(var(--mr,-1.5deg));color:#2c4a72;cursor:default}}
 .prose>.mnote:nth-of-type(even){{--mr:1.2deg}}
-.mnote .mq{{display:block;font-family:"Caveat",cursive;font-size:clamp(21px,1.9vw,25px);line-height:1.08}}
+.mnote .mq{{display:block;font-family:"Reenie Beanie",cursive;font-size:clamp(25px,2.3vw,31px);line-height:1}}
 .mnote .mw{{display:block;font-family:var(--ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-top:6px;line-height:1.45}}
 .mnh{{background:none;color:inherit;background-image:linear-gradient(color-mix(in oklab,#e7b84a 70%,transparent),color-mix(in oklab,#e7b84a 70%,transparent));background-repeat:no-repeat;background-position:0 92%;background-size:100% .3em;transition:background-size .7s,background-position .3s}}
 .mnh.on{{background-size:100% 1.1em;background-position:0 70%}}
@@ -870,7 +870,7 @@ main,.head{{position:relative;z-index:1}}
 /* A common endeavor: postmarks on the quilt */
 .evo .ov{{text-shadow:none}}
 .evo svg{{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 1px 1.5px rgba(10,30,40,.85)) drop-shadow(0 0 6px rgba(10,30,40,.5))}}
-.evo .adr text{{font-family:"Caveat",cursive;font-size:60px;font-weight:600;fill:#fbf3e2}}
+.evo .adr text{{font-family:"Reenie Beanie",cursive;font-size:74px;font-weight:400;fill:#fbf3e2}}
 .evo .ttl{{font-family:var(--ui);font-size:22px;letter-spacing:5px;fill:#fbf3e2}}
 .evo .pm circle,.evo .pm .wv{{fill:none;stroke:#fbf3e2;stroke-width:3}}
 .evo .pm text{{fill:#fbf3e2;font-family:var(--ui);font-weight:700}} .evo .pmt{{font-size:14px;letter-spacing:2px}} .evo .pms{{font-size:21px}} .evo .pmy{{font-size:13px}}
