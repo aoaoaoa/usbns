@@ -284,7 +284,7 @@ def chart_html(c):
             cx = sum(X(m["x"]) for m in cl) / n; cy = sum(Y(m["y"]) for m in cl) / n; r = 6.5 + 2.2 * math.sqrt(n)
             return f'<g class="hit pin rep"{pop(f"{n} communities", body(cl))}><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r+4:.1f}" class="ghost"/><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" class="cclu"/><text x="{cx:.1f}" y="{cy+3.8:.1f}" text-anchor="middle" class="ccnt">{n}</text>{(f'<text x="{cx-r-5:.1f}" y="{cy+4:.1f}" text-anchor="end" class="cil">' if cx > lab else f'<text x="{cx+r+5:.1f}" y="{cy+4:.1f}" class="cil">') + esc(" · ".join(short(m) for m in cl)) + '</text>' if lab else ""}</g>'
         I = lambda v: v
-        regs = "".join(f'<path d="{r["d"]}" class="rf hit t{r["tone"]}"{pop(r["name"] + " region", ", ".join(r["states"]) + ".")}/>' for r in USREG["regions"])
+        regs = "".join(f'<path d="{r["d"]}" class="rf hit t{r["tone"]}" data-click{pop(r["name"] + " region", ", ".join(r["states"]) + ".")}/>' for r in USREG["regions"])
         rnames = "".join(f'<text x="{r["label"][0]}" y="{r["label"][1]}" class="rn">{esc(r["name"])}</text>' for r in USREG["regions"])
         parts = ['<use href="#usmap"/>', f'<g class="creg">{regs}<path d="{USMAP["states"]}" class="cstate"/><path d="{USREG["inner"]}" class="rb"/>{rnames}</g>']; insets = c.get("insets", []); used = set(); panels = []
         PW, PH, GAP, TOP = 290, 170, 20, H + 34
@@ -1497,13 +1497,13 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     box.hidden=false; place(el); requestAnimationFrame(function(){{box.classList.add('show')}});}}
   function hide(){{box.classList.remove('show');cur=null;pinned=false;setTimeout(function(){{if(!cur)box.hidden=true}},160);}}
   var hov=matchMedia('(hover: hover)').matches;
-  document.addEventListener('mouseover',function(e){{if(!hov||pinned)return;var el=e.target.closest('[data-pb]');if(el&&el!==cur)show(el);}});
+  document.addEventListener('mouseover',function(e){{if(!hov||pinned)return;var el=e.target.closest('[data-pb]');if(el&&el.hasAttribute('data-click'))el=null;if(el&&el!==cur)show(el);}});
   document.addEventListener('mouseout',function(e){{if(!hov||pinned)return;var el=e.target.closest('[data-pb]');if(el&&!el.contains(e.relatedTarget)&&!box.contains(e.relatedTarget))hide();}});
   document.addEventListener('click',function(e){{var el=e.target.closest('[data-pb]');if(el){{e.preventDefault();(cur===el&&pinned)?hide():show(el,true);return;}}
     if(e.target.closest('.popup button')||!box.contains(e.target))hide();}});
   document.addEventListener('keydown',function(e){{if(e.key==='Escape'&&cur){{var c=cur;hide();c.focus();return;}}
     var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&(e.key==='Enter'||e.key===' ')){{e.preventDefault();show(el,true);}}}});
-  document.addEventListener('focusin',function(e){{var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&!pinned)show(el);}});
+  document.addEventListener('focusin',function(e){{var el=e.target.closest&&e.target.closest('[data-pb]');if(el&&!pinned&&!(hov&&el.hasAttribute('data-click')&&e.target.matches(':hover')))show(el);}});
   addEventListener('scroll',function(){{if(cur)place(cur)}},{{passive:true}}); addEventListener('resize',function(){{if(cur)place(cur)}});
 }})();
 
