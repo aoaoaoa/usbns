@@ -672,7 +672,8 @@ def prayer_html(pr):
               f'<text x="50" y="72" text-anchor="middle" font-family="Literata,serif" font-weight="600" font-size="72" fill="var(--gilt2)">{esc(first)}</text></svg></span>')
     lines = [x.strip() for x in _r.split(r"(?<=[.])\s+", rest)]
     body = "".join(f'<span class="ln">{esc(x)}</span>' for x in lines)
-    return f'<blockquote class="passage prayer illum">{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
+    corner = lambda n: f'<svg class="jc jc{n}" viewBox="0 0 40 40" aria-hidden="true"><polygon points="{_star9(20,20,18,11)}" fill="var(--gilt)"/><circle cx="20" cy="20" r="5" fill="var(--lap)"/></svg>'
+    return f'<blockquote class="passage prayer illum">{"".join(corner(n) for n in range(1,5))}{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
 
 def build_tab(member=False, menu="contents"):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
@@ -1058,7 +1059,9 @@ main,.head{{position:relative;z-index:1}}
 .members .passage.lead cite,.members .passage.prayer cite{{justify-content:center}} .members .passage.lead cite::after,.members .passage.prayer cite::after{{content:"";flex:none;width:18px;height:1px;background:var(--gilt)}}
 .members .passage.prayer p{{font-size:20px}}
 .members{{--lap:#23406f}} @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .members{{--lap:#2c4c80}}}} :root[data-theme="dark"] .members{{--lap:#2c4c80}}
-.members .passage.prayer.illum{{background:var(--tabon-white,#fdfcf9);text-align:left;margin-top:2em;padding:30px clamp(20px,4vw,40px) 30px;border:2px solid var(--gilt);box-shadow:inset 0 0 0 5px var(--tabon-white,#fdfcf9),inset 0 0 0 6px color-mix(in oklab,var(--gilt) 55%,transparent)}}
+.members .passage.prayer.illum{{position:relative;background:var(--tabon-white,#fdfcf9);text-align:left;margin:2.4em 0;padding:40px clamp(26px,5vw,52px) 36px;border:3px solid var(--gilt);box-shadow:inset 0 0 0 4px var(--tabon-white,#fdfcf9),inset 0 0 0 6px var(--lap),inset 0 0 0 9px var(--tabon-white,#fdfcf9),inset 0 0 0 10px var(--ver)}}
+.members{{--ver:#b5452c}} @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .members{{--ver:#d8735a}}}} :root[data-theme="dark"] .members{{--ver:#d8735a}}
+.members .passage.prayer.illum .jc{{position:absolute;width:30px;height:30px}} .members .passage.prayer.illum .jc1{{left:-16px;top:-16px}} .members .passage.prayer.illum .jc2{{right:-16px;top:-16px}} .members .passage.prayer.illum .jc3{{left:-16px;bottom:-16px}} .members .passage.prayer.illum .jc4{{right:-16px;bottom:-16px}}
 .members .passage.prayer.illum::before{{content:none}}
 .visit{{padding-top:0!important;margin-top:clamp(40px,6vw,72px)}} .visit .prose{{grid-row:1}} .members .passage.prayer.illum .rose{{display:block;width:84px;height:84px;margin:0 auto 22px}}
 .members .passage.prayer.illum p::first-letter{{all:unset}}
