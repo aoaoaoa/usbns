@@ -541,7 +541,7 @@ LBX_CSS = r'''
 .lbx [hidden]{display:none!important}
 .lbx .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .lbx-bar{display:flex;align-items:center;gap:12px;padding:max(10px,env(safe-area-inset-top,0px)) 14px 10px}
-.lbx-n{margin:0;font-family:"Bodoni Moda",var(--text),serif;font-size:19px;font-variant-numeric:lining-nums}
+.lbx-n{margin:0;font-family:"Literata",var(--text),serif;font-size:19px;font-variant-numeric:lining-nums}
 .lbx-n span{opacity:.7}
 .lbx button{font:inherit;color:inherit;cursor:pointer}
 .lbx-x,.lbx-nav{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.1)}
@@ -765,7 +765,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -841,14 +841,14 @@ main,.head{{position:relative;z-index:1}}
 .prose .chart.sized{{max-width:var(--cw)}}
 /* infographic refresh */
 .chart .hit:hover rect[style]{{filter:brightness(1.08)}}
-.chart text.cyr{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
+.chart text.cyr{{font-family:"Literata",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
 .chart .cground{{stroke:var(--rule);stroke-width:2}}
 .chart .cspine{{stroke:var(--rule);stroke-width:3}} .chart text.cstl{{font-family:var(--ui);font-size:15.5px;fill:var(--mute)}} .chart text.cstl.on{{fill:var(--ink);font-weight:700}}
 .chart .cthr{{stroke:var(--accent);stroke-width:2;stroke-dasharray:6 6}} .chart text.cthrl{{font-family:var(--ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;fill:var(--accent)}}
 .chart .cven{{opacity:.26}} .chart .cven:hover{{opacity:.4}}
 .chart .cpull{{stroke:var(--accent);stroke-width:2.5;fill:none}}
 .chart text.csubw{{font-family:var(--text);font-style:italic;font-size:15px;fill:var(--mute)}} .chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
-.chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
+.chart text.cword{{font-family:"Literata",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.verb{{grid-column:2;margin:clamp(28px,4vw,48px) 0;padding:0 0 0 .1em}}
 .prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Literata",var(--text),serif;font-variation-settings:"opsz" 72;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:700;letter-spacing:-.025em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
 .verb .sx{{display:inline-block;color:var(--accent);font-style:italic}} .verb .s2{{display:inline-block;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}}
@@ -891,7 +891,7 @@ main,.head{{position:relative;z-index:1}}
 .ovready .evo .ttl{{opacity:0}} .ovready .evo.go .ttl{{opacity:1;transition:opacity .8s 2s}}
 }}
 .prose>.figsent{{font-family:var(--text);font-size:clamp(21px,2vw,26px);line-height:1.45;margin:1.6em 0 1.8em;text-wrap:pretty}}
-.figsent b{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
+.figsent b{{font-family:"Literata",var(--text),serif;font-weight:600;font-size:1.55em;line-height:1;color:var(--accent);letter-spacing:-.01em}}
 .prose>.figsent.lg{{font-size:clamp(26px,2.9vw,36px);line-height:1.35}} .figsent b.wd{{font-size:1.15em}} .figsent b.has{{cursor:pointer;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:6px;text-decoration-color:color-mix(in oklab,var(--accent) 50%,transparent)}}
 
 /* photo frames: a thin border cut from the cover painting */
@@ -900,15 +900,15 @@ main,.head{{position:relative;z-index:1}}
 .prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{{box-sizing:border-box;padding:6px;background:#2f5a2a url(img/motif-uhj.jpg) center/cover;border-radius:0!important}}
 
 /* CARS wheel: four phases, each filling in turn */
-.chart.ringf .ct{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.2;letter-spacing:-.01em;max-width:28ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
+.chart.ringf .ct{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.2;letter-spacing:-.01em;max-width:28ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
 .rwrap{{display:grid;gap:clamp(20px,3vw,44px)}}
 .rsvg{{display:block;width:100%;max-width:620px;height:auto;overflow:visible;margin:0 auto}}
 .wseg{{fill:none;stroke:var(--accent);stroke-width:40;stroke-linecap:butt}}
-.wword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
+.wword{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
 .rcols{{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px 26px}}
 .rcols li{{border-top:2px solid var(--rule);padding-top:10px;opacity:.5;transition:opacity .5s,border-color .5s}} .rcols li.on{{opacity:1;border-color:var(--accent)}}
-.rcols h5{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:24px;margin:2px 0 6px;color:var(--ink);transition:color .5s}} .rcols li.on h5{{color:var(--accent)}}
+.rcols h5{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:24px;margin:2px 0 6px;color:var(--ink);transition:color .5s}} .rcols li.on h5{{color:var(--accent)}}
 .rcols p{{font-family:var(--ui);font-size:13.5px;line-height:1.45;color:var(--mute);margin:0}}
 @media (max-width:760px){{.rcols{{grid-template-columns:1fr 1fr}}}}
 
@@ -1071,10 +1071,10 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhs{{display:block;position:absolute;left:0;right:0;top:100%;max-height:calc(100dvh - 70px);overflow-y:auto;background:var(--bar);border-bottom:1px solid var(--barrule);box-shadow:0 14px 24px rgb(0 0 0/.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility 0s .18s}}
 .head.open .rhs{{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .18s}}
 .head .rhs-c{{padding:16px 18px 6px}}
-.head .rhs-c .rhm{{display:flex;justify-content:space-between;font-family:"Bodoni Moda",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--ink);padding-bottom:8px}}
-.head .rhs-c .rhtt{{font-family:"Bodoni Moda",var(--text),serif;font-weight:500;font-size:29px;line-height:1.1;margin:10px 0 10px;color:var(--ink)}}
+.head .rhs-c .rhm{{display:flex;justify-content:space-between;font-family:"Literata",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--ink);padding-bottom:8px}}
+.head .rhs-c .rhtt{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:29px;line-height:1.1;margin:10px 0 10px;color:var(--ink)}}
 .head .rhs-c a[data-name]{{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid var(--barrule);color:var(--ink);text-decoration:none}}
-.head .rhs-c .pn{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:25px;line-height:1;color:var(--tint);font-variant-numeric:lining-nums}}
+.head .rhs-c .pn{{font-family:"Literata",var(--text),serif;font-weight:600;font-size:25px;line-height:1;color:var(--tint);font-variant-numeric:lining-nums}}
 .head .rhs-c .k{{display:block;font-family:var(--ui);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}}
 .head .rhs-c .tt{{display:block;font-family:var(--text);font-size:16px;line-height:1.3}}
 .head .rhs-c .rd{{display:none;height:3px;background:var(--barrule);margin-top:8px;border-radius:2px;overflow:hidden}} .head .rhs-c .rd i{{display:block;height:100%;width:var(--rp,0%);background:var(--tint)}}
@@ -1082,7 +1082,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhs-c .rhf{{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--ink);margin-top:2px;padding:12px 0 8px;font-family:var(--ui);font-size:13.5px}}
 .head .rhs-c .rhf a{{color:var(--mute);min-height:32px;display:flex;align-items:center}}
 .head .rhs-b{{padding:10px;background:var(--paper)}}
-.head .rhs-b .rhi{{font-family:"Bodoni Moda",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:4px 6px 8px}}
+.head .rhs-b .rhi{{font-family:"Literata",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:4px 6px 8px}}
 .head .rhs-b a[data-name]{{position:relative;overflow:hidden;display:flex;align-items:center;flex-wrap:wrap;gap:0 12px;min-height:54px;margin-bottom:6px;padding:0 16px;border-radius:8px;background:var(--tint);color:#fff;text-decoration:none}}
 .head .rhs-b a.dk{{color:#1d1a16}}
 .head .rhs-b .nm{{font-family:var(--ui);font-weight:700;font-size:19px}}
@@ -1138,12 +1138,12 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ovw img{{max-height:none;background:none}}
 .ov{{position:absolute;inset:0;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(20,6,2,.35),0 6px 28px rgba(30,10,5,.55)}}
 .ov span{{position:absolute;white-space:nowrap;line-height:.9}}
-.ov .t1{{left:2%;top:5%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
+.ov .t1{{left:2%;top:5%;font-family:"Literata",serif;font-weight:500;font-size:20cqw;letter-spacing:-.03em;font-variation-settings:"opsz" 48}}
 .ov .t1 i{{font-style:italic}}
 .ov .t2{{left:36%;top:17%;font-family:"Pinyon Script",cursive;font-size:17cqw}}
-.ov .t3{{right:8%;top:29%;font-family:"Bodoni Moda",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
-.ov .byl{{left:9%;top:58%;font-family:"Bodoni Moda",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
-.ov .sub{{right:1.5%;top:50%;font-family:"Bodoni Moda",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
+.ov .t3{{right:8%;top:29%;font-family:"Literata",serif;font-weight:500;font-size:15.5cqw;letter-spacing:-.035em;font-variation-settings:"opsz" 48}}
+.ov .byl{{left:9%;top:58%;font-family:"Literata",serif;font-weight:600;font-size:3.2cqw;letter-spacing:.02em;font-variation-settings:"opsz" 11}}
+.ov .sub{{right:1.5%;top:50%;font-family:"Literata",serif;font-style:italic;font-weight:400;font-size:4.8cqw;line-height:1.12;text-align:right;white-space:normal;width:48%;font-variation-settings:"opsz" 18}}
 @media (prefers-reduced-motion:no-preference){{.ov span:not(.nyb){{animation:ovin 1.6s cubic-bezier(.2,.7,.2,1) both}} .nyo .n2{{animation-delay:.25s}} .nyo .n3{{animation-delay:.5s}} .ov .t2{{animation-delay:.25s}} .ov .t3{{animation-delay:.45s}} .ov .byl,.ov .sub{{animation-delay:.7s}}}}
 @keyframes ovin{{from{{opacity:0;filter:blur(6px)}}}}
 /* New Yorkers: the two words drift apart a few pixels as the image scrolls past; the bold words wash in with the story color */
@@ -1580,12 +1580,12 @@ def build_plates():
     nav = "".join(f'<a href="#{a["slug"]}">{esc(a["short"])}</a>' for a in ARTICLES)
     return f'''<title>{esc(ISSUE["title"])} Plates</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&family=DM+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a dark gallery. Each feature is hung as a plate on a charcoal wall, its illustration at full width with a caption strip in mono; the headline follows in Bodoni italic, and the text runs in one lit column. One deliberate theme. */
+/* Layout: a dark gallery. Each feature is hung as a plate on a charcoal wall, its illustration at full width with a caption strip in mono; the headline follows in Literata italic, and the text runs in one lit column. One deliberate theme. */
 :root{{
   --wall:#141312; --card:#1c1a18; --fg:#f1ebe0; --dim:#a69d8e; --rule:#2c2926; --gold:#d6b25e; --rose:#e8a3a3;
-  --disp:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif; --text:"Source Serif 4",Georgia,serif; --mono:"DM Mono","SF Mono",Menlo,monospace;
+  --disp:"Literata",Georgia,serif; --text:"Source Serif 4",Georgia,serif; --mono:"DM Mono","SF Mono",Menlo,monospace;
   color-scheme:dark;
 }}
 *{{box-sizing:border-box}}
