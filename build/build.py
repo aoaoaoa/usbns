@@ -1010,6 +1010,18 @@ main,.head{{position:relative;z-index:1}}
 .kicker-top{{font-family:var(--ui);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px}}
 .reg{{grid-column:1/-1;font-family:var(--disp);font-weight:800;font-size:clamp(34px,5vw,64px);letter-spacing:-.035em;margin:clamp(64px,10vw,140px) 0 0;padding-top:28px;border-top:3px solid var(--ink)}}
 .letter .shead h2{{font-size:clamp(40px,5.6vw,78px);max-width:18ch}}
+/* The mid-year letter: graphics a size larger, with stronger color */
+.letter{{--accent:#46347e;--acc2:#b8862e}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .letter{{--accent:#a993ea;--acc2:#e2b85c}}}} :root[data-theme="dark"] .letter{{--accent:#a993ea;--acc2:#e2b85c}}
+.letter .prose>.chart{{grid-column:2/4;max-width:760px;background:var(--tabon-white,#fff);border:1px solid var(--rule);border-top:3px solid var(--accent);padding:clamp(18px,2.4vw,28px) clamp(18px,2.6vw,32px) clamp(14px,2vw,22px);margin:2.4em 0}}
+.letter .prose>.chart.sized{{max-width:760px}}
+.letter .chart .ct{{font-size:17px;color:var(--ink);margin-bottom:14px}}
+.letter .chart .cn{{color:color-mix(in oklab,var(--ink) 70%,var(--mute))}}
+.letter .chart text.cl{{fill:var(--ink)}}
+.letter .chart g.hit:first-of-type .cb{{fill:color-mix(in oklab,var(--accent) 35%,var(--rule))}}
+.letter .chart .ctrack{{fill:color-mix(in oklab,var(--accent) 16%,var(--rule))}} .letter .chart .ctick{{stroke:var(--acc2);stroke-width:2.5}}
+.letter .chart .cthr{{stroke:var(--acc2)}} .letter .chart .cdotm{{opacity:.85}}
+.letter .figsent b{{color:var(--accent)}} .letter .figsent{{grid-column:2/4;max-width:760px}}
 .prose .salute{{font-style:italic;margin-bottom:1.2em}}
 .prose .sign{{margin-top:2em;font-style:italic}} .prose .sign b{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--accent)}}
 .prose .ext{{margin:1.4em 0 1.6em;padding:0 0 0 20px;border-left:2px solid var(--rule);font-size:.94em}}
