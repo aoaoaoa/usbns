@@ -863,7 +863,7 @@ main,.head{{position:relative;z-index:1}}
 .chart .tl li{{display:grid;grid-template-columns:3.4em 1fr;gap:10px;font-family:var(--ui);font-size:14px;line-height:1.45;color:var(--mute)}} .chart .tl b{{color:var(--ink);font-variant-numeric:tabular-nums}}
 .prose .chart.wide{{max-width:none}}
 .prose .chart{{margin:1.8em 0 2.2em;max-width:600px}}
-.prose .chart.sized{{max-width:var(--cw)}}
+.prose .chart.sized{{max-width:var(--cw)}} .prose>.chart:not(.span){{max-width:min(var(--cw,520px),520px)}} .letter .prose>.chart:not(.span){{max-width:580px}}
 /* infographic refresh */
 .chart .hit:hover rect[style]{{filter:brightness(1.08)}}
 .chart text.cyr{{font-family:"Literata",var(--text),serif;font-weight:600;font-size:22px;fill:var(--ink)}} .chart text.cstep{{font-family:var(--ui);font-size:12.5px;fill:var(--mute)}}
@@ -1014,8 +1014,8 @@ main,.head{{position:relative;z-index:1}}
 /* The mid-year letter: graphics a size larger, with stronger color */
 .letter{{--accent:#46347e;--acc2:#b8862e}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .letter{{--accent:#a993ea;--acc2:#e2b85c}}}} :root[data-theme="dark"] .letter{{--accent:#a993ea;--acc2:#e2b85c}}
-.letter .prose>.chart{{grid-column:2/4;max-width:760px;background:var(--tabon-white,#fff);border:1px solid var(--rule);border-top:3px solid var(--accent);padding:clamp(18px,2.4vw,28px) clamp(18px,2.6vw,32px) clamp(14px,2vw,22px);margin:2.4em 0}}
-.letter .prose>.chart.sized{{max-width:760px}}
+.letter .prose>.chart{{grid-column:2/4;max-width:580px;background:var(--tabon-white,#fff);border:1px solid var(--rule);border-top:3px solid var(--accent);padding:clamp(18px,2.4vw,28px) clamp(18px,2.6vw,32px) clamp(14px,2vw,22px);margin:2.4em 0}}
+.letter .prose>.chart.sized{{max-width:580px}}
 .letter .chart .ct{{font-size:17px;color:var(--ink);margin-bottom:14px}}
 .letter .chart .cn{{color:color-mix(in oklab,var(--ink) 70%,var(--mute))}}
 .letter .chart text.cl{{fill:var(--ink)}}
