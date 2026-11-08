@@ -49,19 +49,16 @@ h2{margin:0;font-family:var(--disp);font-weight:800;font-size:30px;letter-spacin
 .k{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--kc)}
 .t{font-size:17px;line-height:1.35;font-weight:500}
 .card.ph{cursor:default}
-.card.ph .im{background:repeating-linear-gradient(135deg,var(--ph) 0 10px,transparent 10px 20px),var(--card);border:1px dashed var(--rule);border-bottom:4px solid var(--mute);display:grid;place-items:center}
-.card.ph .im span{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:var(--card);padding:4px 10px;border-radius:999px}
+.card.ph .im{background:radial-gradient(circle,var(--c) 34%,transparent 36%) 0 0/12px 12px,radial-gradient(circle,var(--c) 34%,transparent 36%) 6px 6px/12px 12px;-webkit-mask:linear-gradient(115deg,#000 10%,transparent 85%);mask:linear-gradient(115deg,#000 10%,transparent 85%)}
 .card.ph .k{color:var(--mute)}.card.ph .t{color:var(--mute)}
 .arch .wrap{padding-top:64px;padding-bottom:72px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
-.tile{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--rule);transition:transform .25s}
-.tile:hover{transform:translateY(-4px)}
-.tile>i{height:6px;background:var(--c)}
-.tile>span{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px}
-.tile b{display:flex;align-items:baseline;gap:8px;font-weight:400}
-.tile b em{font-style:normal;font-family:var(--disp);font-weight:800;font-size:38px;line-height:1;color:var(--c)}
-.tile b small{font-family:var(--ui);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
-.tile .th{font-size:15.5px;line-height:1.35}.tile .se{font-family:var(--ui);font-size:12.5px;color:var(--mute)}
+.tiles{display:flex;flex-wrap:wrap;padding-left:30px;row-gap:24px}
+.tile{width:150px;margin-left:-30px;text-decoration:none;transform:rotate(var(--r));transition:transform .25s}
+.tile:hover,.tile:focus-visible{transform:rotate(0) translateY(-10px);z-index:2}
+.tile .cv{aspect-ratio:1468/1912;background:var(--c);border:6px solid var(--card);box-shadow:0 8px 18px rgba(0,0,0,.18);display:flex;flex-direction:column;justify-content:space-between;padding:10px;color:#fff;font-family:var(--disp);font-weight:800}
+.tile .cv small{font-family:var(--ui);font-weight:600;font-size:11px;letter-spacing:.1em;white-space:nowrap}
+.tile .cv em{font-style:normal;font-size:56px;line-height:1}
+@media (max-width:600px){.tile{width:118px}.tile .cv{padding:8px}.tile .cv small{font-size:9px;letter-spacing:.06em}.tile .cv em{font-size:44px}}
 .more{margin:36px 0 0;font-family:var(--ui);font-weight:600;font-size:15px}
 footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-size:13px;line-height:1.6;color:var(--mute)}
 @media (prefers-reduced-motion:reduce){.card img,.tile{transition:none}.cover{transform:none}}
@@ -101,11 +98,11 @@ footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-siz
 <section id="archive" class="arch" aria-labelledby="ar-h"><div class="wrap">
 <div class="rowh"><h2 id="ar-h">Earlier issues</h2></div>
 <div class="tiles">
-<a class="tile" href="#" style="--c:#3f7f61"><i></i><span><b><em>4</em><small>Vol. 57 · No. 4</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
-<a class="tile" href="#" style="--c:#b5654a"><i></i><span><b><em>3</em><small>Vol. 57 · No. 3</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
-<a class="tile" href="#" style="--c:#2f4f6e"><i></i><span><b><em>2</em><small>Vol. 57 · No. 2</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
-<a class="tile" href="#" style="--c:#9a7b3a"><i></i><span><b><em>1</em><small>Vol. 57 · No. 1</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
-<a class="tile" href="#" style="--c:#6d5a8f"><i></i><span><b><em>5</em><small>Vol. 56 · No. 5</small></b><span class="th">[Issue theme]</span><span class="se">[Season]</span></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 4: [Issue theme], [Season]" style="--c:#3f7f61;--r:-6deg"><span class="cv"><small>Vol. 57 · No. 4</small><em>4</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 3: [Issue theme], [Season]" style="--c:#b5654a;--r:-2deg"><span class="cv"><small>Vol. 57 · No. 3</small><em>3</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 2: [Issue theme], [Season]" style="--c:#2f4f6e;--r:3deg"><span class="cv"><small>Vol. 57 · No. 2</small><em>2</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 1: [Issue theme], [Season]" style="--c:#9a7b3a;--r:-4deg"><span class="cv"><small>Vol. 57 · No. 1</small><em>1</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 5: [Issue theme], [Season]" style="--c:#6d5a8f;--r:5deg"><span class="cv"><small>Vol. 56 · No. 5</small><em>5</em></span></a>
 </div>
 <p class="more"><a href="#">Browse every issue →</a></p>
 </div></section>
@@ -113,10 +110,10 @@ footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-siz
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Special reports</h2></div>
 <div class="cards">
-<div class="card ph" role="group" aria-label="Special report placeholder 1"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
-<div class="card ph" role="group" aria-label="Special report placeholder 2"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
-<div class="card ph" role="group" aria-label="Special report placeholder 3"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
-<div class="card ph" role="group" aria-label="Special report placeholder 4"><div class="im"><span>Image</span></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 1"><div class="im" style="--c:#e8532a"></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 2"><div class="im" style="--c:#1b5e6b"></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 3"><div class="im" style="--c:#e9a21f"></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
+<div class="card ph" role="group" aria-label="Special report placeholder 4"><div class="im" style="--c:#f05a7e"></div><span class="k">[Section] · [Date]</span><span class="t">[Special report title]</span></div>
 </div>
 </div></section>
 </main>
