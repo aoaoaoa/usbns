@@ -753,7 +753,6 @@ def build_tab(member=False, menu="contents"):
         rhythm = dept_open(R) + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
   <p class="note">{esc(R["note"])}</p>
-  {prayer_html(R["prayer"])}
 </div></article>'''
         B = BOOKS
         def book(it):
@@ -765,7 +764,7 @@ def build_tab(member=False, menu="contents"):
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + comic_story + abide + fund + rhythm + books + notices
+        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>' + huq + comic_story + abide + fund + rhythm + books + notices
         lead = ""
         D = [("huquq","Ḥuqúqu'lláh","30"),("comic",comic_rec["short"],comic_rec["pages"].split("–")[0]),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
         dindex = '<h2 style="margin-top:36px;color:var(--mem)">The full issue</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
@@ -1048,7 +1047,7 @@ main,.head{{position:relative;z-index:1}}
 .members{{--lap:#23406f}} @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .members{{--lap:#2c4c80}}}} :root[data-theme="dark"] .members{{--lap:#2c4c80}}
 .members .passage.prayer.illum{{background:none;text-align:left;padding:28px clamp(4px,2vw,16px) 30px;border-top:2px solid var(--gilt);border-bottom:2px solid var(--gilt)}}
 .members .passage.prayer.illum::before{{content:none}}
-.members .passage.prayer.illum .rose{{display:block;width:84px;height:84px;margin:0 auto 22px}}
+.visit{{padding-top:0!important;margin-top:clamp(40px,6vw,72px)}} .visit .prose{{grid-row:1}} .members .passage.prayer.illum .rose{{display:block;width:84px;height:84px;margin:0 auto 22px}}
 .members .passage.prayer.illum p::first-letter{{all:unset}}
 .members .passage.prayer.illum .vbox{{float:left;width:5em;height:5em;margin:.35em .9em .2em 0}} .members .passage.prayer.illum .vbox svg{{display:block;width:100%;height:100%}}
 .members .passage.prayer.illum .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
