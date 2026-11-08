@@ -44,6 +44,7 @@ def body_html(blocks):
             out.append(f'<figure class="photo pair{" capped" if w else ""}"{st}>' + "".join(f'<div style="flex:{IMGAR.get(f, 1):.3f} 1 12px"><img src="img/{f}" alt="{esc(c)}" loading="lazy"><figcaption>{esc(c)}</figcaption></div>' for f,c in prs) + '</figure>')
         elif k == "ext": out.append(f'<blockquote class="ext"><p>{qesc(b[1])}</p></blockquote>')
         elif k == "ext2": out.append(f'<blockquote class="ext ext2"><p>{qesc(b[1])}</p></blockquote>')
+        elif k == "extw": out.append(f'<blockquote class="ext sacred"><p>{qesc(b[1])}</p></blockquote>')  # the Writings or the Universal House of Justice
         elif k == "list": out.append('<ul class="qs">' + "".join(f"<li>{qesc(x)}</li>" for x in b[1]) + "</ul>")
         elif k == "kv": out.append('<dl class="kv">' + "".join(f"<dt>{esc(x)}</dt><dd>{esc(y)}</dd>" for x,y in b[1]) + "</dl>")
         elif k == "chart": out.append(chart_html(b[1]))
@@ -1013,6 +1014,20 @@ main,.head{{position:relative;z-index:1}}
 .calendar .hd li{{padding:12px 0;border-top:1px solid var(--rule);display:grid;gap:4px}} .calendar .hd b{{font-family:var(--disp);font-size:17px;letter-spacing:-.01em}} .calendar .hd span{{font-family:var(--ui);font-size:13px;color:var(--mute);line-height:1.5}}
 .calendar .feast li{{padding:12px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline}} .calendar .feast b{{font-family:var(--disp);font-size:17px}} .calendar .feast i{{color:var(--mute);font-size:14px}} .calendar .feast span{{font-family:var(--ui);font-size:13px;font-variant-numeric:tabular-nums}}
 .passage.prayer{{border-top:3px solid var(--accent);margin-top:1.6em}} .passage.prayer p{{font-style:italic;font-size:19px;line-height:1.5}}
+/* Illumination: passages from the Writings and the Universal House of Justice in the full edition */
+.members{{--gilt:#a47628;--gilt2:#d9b562;--star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23b8893a' d='M22.0121%2012.0305L23.9836%208.64366L25.9552%2012.0305L27.4999%2014.6878L30.3894%2013.6493L34.0717%2012.3258L33.4077%2016.1878L32.8894%2019.2183L35.7688%2020.2839L39.4375%2021.6414L36.4531%2024.1731L34.1089%2026.1584L35.6333%2028.8292L37.5744%2032.233L33.6618%2032.25L30.5927%2032.2636L30.0473%2035.2907L29.3529%2039.1459L26.3447%2036.6414L23.9836%2034.6731L21.6225%2036.6414L18.6144%2039.1459L17.92%2035.2907L17.3746%2032.2636L14.3055%2032.25L10.3929%2032.233L12.334%2028.8292L13.8583%2026.1584L11.5142%2024.1731L8.52977%2021.6414L12.2018%2020.2839L15.0812%2019.2183L14.5629%2016.1878L13.899%2012.3258L17.5812%2013.6493L20.4708%2014.6878L22.0155%2012.0305H22.0121ZM18.523%209.3733L8.32652%205.70475L10.1626%2016.4016L0%2020.1584L8.26894%2027.1697L2.89294%2036.5905L13.7262%2036.638L15.6537%2047.3179L23.9836%2040.3778L32.3136%2047.3179L34.241%2036.638L45.0743%2036.5905L39.6983%2027.1697L47.9673%2020.1584L37.8047%2016.4016L39.6408%205.70475L29.4443%209.3733L23.9803%200L18.523%209.3767V9.3733Z'/%3E%3C/svg%3E")}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .members{{--gilt:#d4b062;--gilt2:#f0d690}}}} :root[data-theme="dark"] .members{{--gilt:#d4b062;--gilt2:#f0d690}}
+.members .passage,.members .ext.sacred{{position:relative;border:0;padding:2px 0 0 24px;margin:0 0 1.9em}}
+.members .passage::before,.members .ext.sacred::before{{content:"";position:absolute;left:0;top:.4em;bottom:.2em;width:1.5px;background:linear-gradient(var(--gilt2),var(--gilt) 55%,transparent)}}
+.members .passage p::first-letter,.members .ext.sacred p::first-letter{{float:left;font-family:"Literata",serif;font-weight:600;font-size:2.6em;line-height:.82;margin:.1em .1em 0 0;color:var(--gilt);font-variation-settings:"opsz" 72}}
+.members .passage cite{{display:flex;align-items:center;gap:10px;margin-top:10px}} .members .passage cite::before{{content:"";flex:none;width:18px;height:1px;background:var(--gilt)}}
+.members .passage.lead,.members .passage.prayer{{padding:46px clamp(18px,5vw,48px) 30px;margin:0 0 2.4em;text-align:center;background:radial-gradient(120% 90% at 50% 0,color-mix(in oklab,var(--gilt2) 16%,transparent),transparent 70%);border-top:1px solid color-mix(in oklab,var(--gilt) 55%,transparent);border-bottom:1px solid color-mix(in oklab,var(--gilt) 55%,transparent)}}
+.members .passage.lead::before,.members .passage.prayer::before{{left:50%;top:-11px;bottom:auto;width:22px;height:22px;margin-left:-11px;background:var(--paper) var(--star) center/18px no-repeat;border-radius:50%}}
+.members .passage.lead p::first-letter,.members .passage.prayer p::first-letter{{float:none;font-size:1.5em;line-height:1;margin:0}}
+.members .passage.lead cite,.members .passage.prayer cite{{justify-content:center}} .members .passage.lead cite::after,.members .passage.prayer cite::after{{content:"";flex:none;width:18px;height:1px;background:var(--gilt)}}
+.members .passage.prayer p{{font-size:20px}}
+.members.compilation h3::before,.members .compilation h3::before{{content:"";display:block;width:16px;height:16px;margin:0 0 12px;background:var(--star) center/contain no-repeat}}
+
 .shelf .books{{list-style:none;margin:0 0 1.6em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 28px}}
 .shelf .books li{{border-top:1px solid var(--rule);padding-top:12px}}
 .shelf li h3{{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.015em;text-transform:none;color:inherit;padding-top:0;border-top:0;line-height:1.6;margin:0 0 4px}}
