@@ -754,7 +754,7 @@ def build_tab(member=False, menu="contents"):
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
     when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
-    SECRET = '<div class="rhx" aria-hidden="true"><a href="https://aoaoaoa.github.io/usbns/newstand/" tabindex="-1"></a><a href="https://aoaoaoa.github.io/usbns/member/" tabindex="-1"></a></div>'  # unmarked: left goes to the newsstand, right to the full edition
+    SECRET = f'<div class="rhx" aria-hidden="true"><a href="https://aoaoaoa.github.io/usbns/newstand/" tabindex="-1"></a><a href="https://aoaoaoa.github.io/usbns/{"" if member else "member/"}" tabindex="-1"></a></div>'  # unmarked: left goes to the newsstand, right to the other edition
     if menu == "bands":
         light = {"#e9a21f", "#f05a7e"}
         sheet = ('<div class="rhs rhs-b" role="navigation" id="rhs" aria-label="Contents">' + f'<p class="rhi">{esc(ISSUE["theme"])}</p>'
