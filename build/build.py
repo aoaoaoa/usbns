@@ -1015,7 +1015,7 @@ main,.head{{position:relative;z-index:1}}
 .letter{{--accent:#46347e;--acc2:#b8862e}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .letter{{--accent:#a993ea;--acc2:#e2b85c}}}} :root[data-theme="dark"] .letter{{--accent:#a993ea;--acc2:#e2b85c}}
 .letter .prose>.chart{{grid-column:2/4;max-width:760px;background:var(--tabon-white,#fff);border:1px solid var(--rule);border-top:3px solid var(--accent);padding:clamp(18px,2.4vw,28px) clamp(18px,2.6vw,32px) clamp(14px,2vw,22px);margin:2.4em 0}}
-.letter .prose>.chart.sized{{max-width:760px}}
+.letter .prose>.chart.sized{{max-width:760px}} .letter .prose>.chart:has(svg[aria-label^="Enrollments per cycle"]){{max-width:620px}}
 .letter .chart .ct{{font-size:17px;color:var(--ink);margin-bottom:14px}}
 .letter .chart .cn{{color:color-mix(in oklab,var(--ink) 70%,var(--mute))}}
 .letter .chart text.cl{{fill:var(--ink)}}
