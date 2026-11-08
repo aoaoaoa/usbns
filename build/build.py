@@ -284,9 +284,9 @@ def chart_html(c):
             cx = sum(X(m["x"]) for m in cl) / n; cy = sum(Y(m["y"]) for m in cl) / n; r = 6.5 + 2.2 * math.sqrt(n)
             return f'<g class="hit pin rep"{pop(f"{n} communities", body(cl))}><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r+4:.1f}" class="ghost"/><circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" class="cclu"/><text x="{cx:.1f}" y="{cy+3.8:.1f}" text-anchor="middle" class="ccnt">{n}</text>{(f'<text x="{cx-r-5:.1f}" y="{cy+4:.1f}" text-anchor="end" class="cil">' if cx > lab else f'<text x="{cx+r+5:.1f}" y="{cy+4:.1f}" class="cil">') + esc(" · ".join(short(m) for m in cl)) + '</text>' if lab else ""}</g>'
         I = lambda v: v
-        regs = "".join(f'<path d="{r["d"]}" class="rf t{r["tone"]}"/>' for r in USREG["regions"])
+        regs = "".join(f'<path d="{r["d"]}" class="rf hit t{r["tone"]}"{pop(r["name"] + " region", ", ".join(r["states"]) + ".")}/>' for r in USREG["regions"])
         rnames = "".join(f'<text x="{r["label"][0]}" y="{r["label"][1]}" class="rn">{esc(r["name"])}</text>' for r in USREG["regions"])
-        parts = ['<use href="#usmap"/>', f'<g class="creg" aria-hidden="true">{regs}<path d="{USMAP["states"]}" class="cstate"/><path d="{USREG["inner"]}" class="rb"/>{rnames}</g>']; insets = c.get("insets", []); used = set(); panels = []
+        parts = ['<use href="#usmap"/>', f'<g class="creg">{regs}<path d="{USMAP["states"]}" class="cstate"/><path d="{USREG["inner"]}" class="rb"/>{rnames}</g>']; insets = c.get("insets", []); used = set(); panels = []
         PW, PH, GAP, TOP = 290, 170, 20, H + 34
         for j, (ititle, names) in enumerate(insets):
             mem = [it for it in items if it["name"] in names]; used |= {m["name"] for m in mem}
@@ -817,7 +817,7 @@ main,.head{{position:relative;z-index:1}}
 .chart path.hit:focus-visible,.chart rect.hit:focus-visible,.chart .hit:focus-visible .cdot{{stroke:var(--ink);stroke-width:2}}
 .chart .pin:hover .cdot,.chart .pin:focus-visible .cdot{{r:7.5}}
 .cland{{fill:var(--cream);stroke:var(--rule);stroke-width:1}} .cstate{{fill:none;stroke:var(--rule);stroke-width:.6}}
-.creg .rf{{stroke:none;opacity:.85}} .creg .ta{{fill:#efe4d0}} .creg .tb{{fill:#e3eadb}} .creg .tc{{fill:#f1ddd5}} .creg .td{{fill:#dde6ee}}
+.creg .rf{{stroke:none;opacity:.85;transition:opacity .2s}} .chart .creg .rf.hit:hover,.chart .creg .rf.hit:focus-visible{{opacity:1;filter:saturate(1.6) brightness(.97)}} .creg .cstate,.creg .rb{{pointer-events:none}} .creg .ta{{fill:#efe4d0}} .creg .tb{{fill:#e3eadb}} .creg .tc{{fill:#f1ddd5}} .creg .td{{fill:#dde6ee}}
 .creg .rb{{fill:none;stroke:color-mix(in oklab,var(--ink) 45%,transparent);stroke-width:1.6;stroke-linejoin:round;vector-effect:non-scaling-stroke}}
 .chart .creg text.rn{{font-family:"Literata",serif;font-size:11px;font-weight:600;font-style:italic;letter-spacing:.02em;fill:color-mix(in oklab,var(--ink) 62%,transparent);text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .creg .ta{{fill:#2c251b}} :root:not([data-theme="light"]) .creg .tb{{fill:#1e2720}} :root:not([data-theme="light"]) .creg .tc{{fill:#2d201c}} :root:not([data-theme="light"]) .creg .td{{fill:#1b232b}}}}
