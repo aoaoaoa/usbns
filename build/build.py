@@ -842,7 +842,7 @@ main,.head{{position:relative;z-index:1}}
 .chart text.csubw{{font-family:var(--text);font-style:italic;font-size:15px;fill:var(--mute)}} .chart text.cpre{{font-family:var(--ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;fill:var(--mute)}}
 .chart text.cword{{font-family:"Bodoni Moda",var(--text),serif;font-weight:600;font-size:72px;fill:var(--accent)}} .chart text.cword.hollow{{fill:none;stroke:var(--accent);stroke-width:1.6}}
 .prose>.verb{{grid-column:2;margin:clamp(28px,4vw,48px) 0;padding:0 0 0 .1em}}
-.prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:500;letter-spacing:-.01em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
+.prose>.verb p{{margin:0;max-width:none}} .verb .vw{{font-family:"Literata",var(--text),serif;font-variation-settings:"opsz" 72;font-size:clamp(44px,6.4vw,84px);line-height:1;font-weight:700;letter-spacing:-.025em;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}}
 .verb .sx{{display:inline-block;color:var(--accent);font-style:italic}} .verb .s2{{display:inline-block;transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}}
 .verb:not([data-f="2"]) .s2{{opacity:0;transform:translateX(-.15em)}}
 .verb .pos{{display:inline-flex;flex-direction:column;gap:.15em;vertical-align:top;margin:.12em 0 0 .5em;font-family:var(--ui);font-size:clamp(11px,1.1vw,13px);font-style:normal;letter-spacing:.14em;text-transform:uppercase;line-height:1.1;color:var(--mute)}}
@@ -850,7 +850,7 @@ main,.head{{position:relative;z-index:1}}
 .verb .pv{{font-weight:600;color:var(--accent);transition:opacity .35s .15s,transform .35s .15s}}
 .verb[data-f="0"] .pn{{--k:0}} .verb[data-f="0"] .pv{{opacity:0;transform:translateY(-.3em)}}
 .verb .vq{{margin-left:-.42em;display:inline-block;width:.42em}}
-.verb .vr{{font-family:"Bodoni Moda",var(--text),serif;font-size:clamp(22px,2.9vw,36px);line-height:1.15;margin-top:.1em;transition:opacity .5s,transform .5s}}
+.verb .vr{{font-family:"Literata",var(--text),serif;font-variation-settings:"opsz" 36;font-size:clamp(22px,2.9vw,36px);line-height:1.15;margin-top:.1em;transition:opacity .5s,transform .5s}}
 .verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1em;transition:opacity .5s .15s}}
 .verb:not([data-f="2"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="2"]) cite{{opacity:0}}
 @media (max-width:760px){{.prose>.verb{{grid-column:auto}} .verb .vq{{margin-left:0;width:auto}}}}
