@@ -197,8 +197,8 @@ dict(
         ("a","Paleczny","When I think about what has given me a sense of certitude about the Bahá'í Faith, it's not only what's written in the Writings. It is the actual beauty of the Writings that gives me a sense of knowing."),
         ("band",{"tone":"wall","items":[
             ("ta-cover.jpg","The 183 B.E. calendar, subtitled “A Year of Answers,” co-designed with Natal and published by Studio Kam Kam.","w1"),
-            ("ta-mashiyyat.jpg","Mashíyyat (Will), the sixteenth month: September 27 to October 15, opening with its Feast.","w2"),
-            ("ta-framed.jpg","A framed photograph by Mansour, hung on the exhibition's pink wall.","w3"),
+            ("ta-mashiyyat.jpg","Mashíyyat (Will), the sixteenth month.","w2"),
+            ("ta-framed.jpg","A framed photograph by Mansour.","w3"),
             ("ta-stack.jpg","Calendars set out for visitors to take.","w4")]}),
     ]),
 dict(
