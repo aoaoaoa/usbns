@@ -655,6 +655,25 @@ DOCK = '''<div class="dock" id="dock" role="region" aria-label="Audio player" hi
   </div>
 </div>'''
 
+def _star9(cx, cy, R, r, rot=-90):
+    import math
+    return " ".join(f"{cx+(R if i%2==0 else r)*math.cos(math.radians(rot+i*20)):.2f},{cy+(R if i%2==0 else r)*math.sin(math.radians(rot+i*20)):.2f}" for i in range(18))
+
+def prayer_html(pr):
+    """An illuminated prayer: a gilt rosette above, a lapis versal, and each sentence on its own line."""
+    import re as _r
+    text, src = pr
+    rose = (f'<svg class="rose" viewBox="0 0 120 120" aria-hidden="true"><polygon points="{_star9(60,60,56,40)}" fill="none" stroke="var(--gilt)" stroke-width="1.2"/>'
+            f'<polygon points="{_star9(60,60,46,33,-70)}" fill="var(--gilt)" opacity=".22"/><polygon points="{_star9(60,60,38,27)}" fill="none" stroke="var(--gilt)" stroke-width="1"/>'
+            f'<circle cx="60" cy="60" r="16" fill="var(--lap)"/><polygon points="{_star9(60,60,13,7)}" fill="var(--gilt2)"/></svg>')
+    first, rest = text[0], text[1:]
+    versal = (f'<span class="vbox" aria-hidden="true"><svg viewBox="0 0 100 100"><rect x="2" y="2" width="96" height="96" fill="var(--lap)" stroke="var(--gilt)" stroke-width="2.5"/>'
+              f'<rect x="8" y="8" width="84" height="84" fill="none" stroke="var(--gilt2)" stroke-width=".8"/><polygon points="{_star9(50,52,40,28)}" fill="none" stroke="var(--gilt)" stroke-width=".8" opacity=".55"/>'
+              f'<text x="50" y="72" text-anchor="middle" font-family="Literata,serif" font-weight="600" font-size="72" fill="var(--gilt2)">{esc(first)}</text></svg></span>')
+    lines = [x.strip() for x in _r.split(r"(?<=[.])\s+", rest)]
+    body = "".join(f'<span class="ln">{esc(x)}</span>' for x in lines)
+    return f'<blockquote class="passage prayer illum">{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
+
 def build_tab(member=False, menu="contents"):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
@@ -734,7 +753,7 @@ def build_tab(member=False, menu="contents"):
         rhythm = dept_open(R) + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
   <p class="note">{esc(R["note"])}</p>
-  <blockquote class="passage prayer"><p>{esc(R["prayer"][0])}</p><cite>{esc(R["prayer"][1])}</cite></blockquote>
+  {prayer_html(R["prayer"])}
 </div></article>'''
         B = BOOKS
         def book(it):
@@ -1026,6 +1045,15 @@ main,.head{{position:relative;z-index:1}}
 .members .passage.lead p::first-letter,.members .passage.prayer p::first-letter{{float:none;font-size:1.5em;line-height:1;margin:0}}
 .members .passage.lead cite,.members .passage.prayer cite{{justify-content:center}} .members .passage.lead cite::after,.members .passage.prayer cite::after{{content:"";flex:none;width:18px;height:1px;background:var(--gilt)}}
 .members .passage.prayer p{{font-size:20px}}
+.members{{--lap:#23406f}} @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .members{{--lap:#2c4c80}}}} :root[data-theme="dark"] .members{{--lap:#2c4c80}}
+.members .passage.prayer.illum{{background:none;text-align:left;padding:28px clamp(4px,2vw,16px) 30px;border-top:2px solid var(--gilt);border-bottom:2px solid var(--gilt)}}
+.members .passage.prayer.illum::before{{content:none}}
+.members .passage.prayer.illum .rose{{display:block;width:84px;height:84px;margin:0 auto 22px}}
+.members .passage.prayer.illum p::first-letter{{all:unset}}
+.members .passage.prayer.illum .vbox{{float:left;width:5em;height:5em;margin:.35em .9em .2em 0}} .members .passage.prayer.illum .vbox svg{{display:block;width:100%;height:100%}}
+.members .passage.prayer.illum .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+.members .passage.prayer.illum .ln{{display:block;margin:0 0 .55em}}
+.members .passage.prayer.illum cite{{justify-content:center;clear:both;padding-top:8px}}
 .members.compilation h3::before,.members .compilation h3::before{{content:"";display:block;width:16px;height:16px;margin:0 0 12px;background:var(--star) center/contain no-repeat}}
 
 .shelf .books{{list-style:none;margin:0 0 1.6em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 28px}}
