@@ -524,6 +524,22 @@ SHARE_JS = r"""<script>
 })();
 </script>"""
 
+SURVEY_FORM = "https://form.typeform.com/to/NfIWSbQl"
+SVY_HTML = ('<dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div>'
+    '<button class="shx" type="button" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>'
+    '<div class="svf"><iframe title="TAB Reader Survey" allow="camera; microphone; autoplay; encrypted-media; fullscreen" data-src="' + SURVEY_FORM + '?typeform-medium=embed-snippet"></iframe></div></dialog>')
+SVY_JS = r"""<script>
+(function(){var d=document.querySelector('.svydlg');if(!d||!d.showModal)return;var f=d.querySelector('iframe'),opener=null;
+  function open(o){opener=o||null;if(!f.src)f.src=f.dataset.src;if(!d.open)d.showModal();}
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-survey]');if(!b)return;e.preventDefault();open(b);});
+  d.querySelector('.shx').addEventListener('click',function(){d.close()});
+  d.addEventListener('click',function(e){if(e.target===d)d.close()});
+  d.addEventListener('close',function(){if(location.hash==='#survey')history.replaceState(null,'',location.pathname+location.search);if(opener)opener.focus()});
+  function hash(){if(location.hash==='#survey')open();}
+  addEventListener('hashchange',hash);hash();
+})();
+</script>"""
+
 def listen(a):
     """Launcher for a feature's audio reading; playback runs in the docked player."""
     if not a.get("audio"): return ""
@@ -763,7 +779,7 @@ def build_tab(member=False, menu="contents"):
             return f'<li><h3>{h}</h3>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
         bk = "".join(book(it) for it in B["items"])
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
-        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
+        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
         lead = ""
@@ -1341,7 +1357,17 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .sharebtn:hover{{border-color:var(--accent);color:var(--accent)}} .sharebtn:focus-visible{{outline:2px solid var(--accent);outline-offset:2px}} .sharebtn svg{{width:18px;height:18px}}
 @media (max-width:980px){{.sharebtn{{margin-top:0}}}}
 .sharedlg{{border:0;border-radius:14px;padding:22px 22px 18px;width:min(440px,calc(100vw - 32px));background:var(--bar);color:var(--ink);box-shadow:0 24px 60px rgba(20,16,10,.28)}}
-.sharedlg::backdrop{{background:rgba(20,16,10,.38)}}
+.sharedlg::backdrop,.svydlg::backdrop{{background:rgba(20,16,10,.38)}}
+.svydlg{{border:0;border-radius:14px;padding:0;width:min(760px,calc(100vw - 32px));height:min(720px,calc(100dvh - 48px));background:var(--bar);color:var(--ink);box-shadow:0 24px 60px rgba(20,16,10,.28);overflow:hidden}}
+.svydlg[open]{{display:flex;flex-direction:column}}
+.svydlg .svh{{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:18px 18px 14px 22px;border-bottom:1px solid var(--rule)}}
+.svydlg .shk{{margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
+.svydlg h2{{margin:0;font-family:var(--disp);font-size:20px;line-height:1.2;letter-spacing:-.01em}}
+.svydlg .shx{{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer}} .svydlg .shx svg{{width:20px;height:20px}} .svydlg .shx:hover{{background:var(--tabon)}}
+.svydlg .svf{{flex:1;min-height:0}} .svydlg iframe{{display:block;width:100%;height:100%;border:0;background:#fff}}
+@media (max-width:640px){{.svydlg{{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}} .svydlg .svh{{padding-top:max(14px,env(safe-area-inset-top,0px))}}}}
+.notices .svb{{display:inline-flex;align-items:center;gap:8px;margin:4px 0 10px;padding:9px 16px;border:0;border-radius:999px;background:var(--accent);color:var(--paper);font:600 14px/1 var(--ui);cursor:pointer}}
+.notices .svb:hover{{filter:brightness(1.08)}} .notices .svb:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}}
 .sharedlg .shd{{display:grid;grid-template-columns:1fr auto;align-items:start;gap:2px 12px;margin-bottom:18px}}
 .sharedlg .shk{{grid-column:1;margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
 .sharedlg h2{{grid-column:1;margin:0;font-family:var(--disp);font-size:20px;line-height:1.2;letter-spacing:-.01em}}
@@ -1483,7 +1509,9 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {DOCK}
 {LBX_HTML}
 {SHARE_HTML}
+{SVY_HTML}
 {SHARE_JS}
+{SVY_JS}
 {LBX_JS}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
