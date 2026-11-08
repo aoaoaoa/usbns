@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex"><title>The American Bahá'í · Newsstand</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..900;1,7..72,300..700&display=swap">
+<style>
+:root{--paper:#f5f1e8;--card:#fdfcf9;--ink:#1d1a16;--soft:#3d3831;--mute:#6a635a;--rule:#d9d2c4;--link:#1b5e6b;--mem:#5b4a8a;--ph:#e7e1d4;--ui:"Bricolage Grotesque",system-ui,sans-serif;--text:"Literata",Georgia,serif;--disp:"Literata",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15130f;--card:#1f1c17;--ink:#efe9dd;--soft:#cfc7b8;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;--mem:#b3a3dd;--ph:#2a251e;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15130f;--card:#1f1c17;--ink:#efe9dd;--soft:#cfc7b8;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;--mem:#b3a3dd;--ph:#2a251e;color-scheme:dark}
+*{box-sizing:border-box}
+html{overflow-x:clip}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text)}
+a{color:var(--link)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media (min-width:700px){.wrap{padding-left:24px;padding-right:24px}}
+header{border-bottom:1px solid var(--rule);background:var(--card)}
+header .wrap{min-height:64px;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}
+.brand span{font-weight:600;font-size:19px;letter-spacing:-.015em}.brand small{font-size:inherit;font-variant-caps:all-small-caps;letter-spacing:.06em;font-weight:500}
+nav{margin-left:auto;display:flex;gap:6px 22px;flex-wrap:wrap;font-family:var(--ui);font-size:14.5px;font-weight:600}
+nav a{color:var(--ink);text-decoration:none;padding:6px 0}nav a.mem{color:var(--mem)}nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.cur{display:flex;flex-wrap:wrap;gap:48px 56px;align-items:center;padding-top:56px;padding-bottom:64px}
+.cover{margin:0;flex:1 1 360px;max-width:500px;background:var(--card);padding:16px;box-shadow:0 1px 0 var(--rule),0 24px 48px rgba(29,26,22,.16);transform:rotate(-1.2deg)}
+.cover img{display:block;width:100%;height:auto;aspect-ratio:1468/1912}
+.cover figcaption{font-family:var(--ui);font-size:12px;color:var(--mute);margin-top:10px}
+.intro{flex:1 1 380px;display:flex;flex-direction:column;gap:20px}
+.eyebrow{margin:0;font-family:var(--ui);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.eyebrow b{font-weight:700;color:var(--ink)}
+h1{margin:0;font-family:var(--disp);font-weight:800;font-size:clamp(34px,4.6vw,58px);line-height:1.06;letter-spacing:-.02em;font-variation-settings:"opsz" 72}
+.dek{margin:0;font-size:19px;line-height:1.6;color:var(--soft);max-width:34em}
+.meta{margin:0;font-family:var(--ui);font-size:14px;color:var(--mute)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 26px;border-radius:999px;font-family:var(--ui);font-weight:600;font-size:15px;text-decoration:none}
+.btn.p{background:var(--ink);color:var(--paper)}.btn.s{border:1.5px solid var(--mem);color:var(--mem)}
+.btn:focus-visible,.card:focus-visible,.tile:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+.band{background:var(--card);border-top:1px solid var(--rule)}
+.band:last-of-type{border-bottom:1px solid var(--rule)}
+.band .wrap{padding-top:52px;padding-bottom:60px}
+.rowh{display:flex;align-items:baseline;gap:8px 18px;flex-wrap:wrap;margin:0 0 26px}
+h2{margin:0;font-family:var(--disp);font-weight:800;font-size:30px;letter-spacing:-.015em;font-variation-settings:"opsz" 72}
+.rowh p{margin:0;font-family:var(--ui);font-size:14px;color:var(--mute)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px 22px}
+.card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--ink)}
+.card .im{overflow:hidden;aspect-ratio:3/2;border-bottom:4px solid var(--c)}
+.card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.card:hover img{transform:scale(1.03)}
+.k{font-family:var(--ui);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--kc)}
+.t{font-size:17px;line-height:1.35;font-weight:500}
+.card.ph{cursor:default}
+.card.ph .im{position:relative;overflow:hidden;background:none}
+.card.ph .im i{position:absolute;inset:0;background:radial-gradient(circle,var(--c) 34%,transparent 36%) 0 0/12px 12px,radial-gradient(circle,var(--c) 34%,transparent 36%) 6px 6px/12px 12px;mix-blend-mode:multiply}
+.card.ph .im i:first-child{-webkit-mask:linear-gradient(115deg,#000 5%,transparent 75%);mask:linear-gradient(115deg,#000 5%,transparent 75%)}
+.card.ph .im i+i{--c:var(--c2);transform:translate(3px,2px) rotate(15deg) scale(1.4);-webkit-mask:linear-gradient(295deg,#000 5%,transparent 70%);mask:linear-gradient(295deg,#000 5%,transparent 70%)}
+.card.ph .k{color:var(--mute)}.card.ph .t{color:var(--mute)}
+.next{border-top:1px solid var(--rule)}.next .wrap{padding-top:52px;padding-bottom:56px}
+.slate{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px}
+.slate li{border-top:2px solid var(--ink);padding-top:14px;display:grid;grid-template-columns:auto 1fr;column-gap:16px;align-items:start}
+.slate b{grid-row:1/4;font-family:var(--disp);font-weight:800;font-size:52px;line-height:.9;letter-spacing:-.03em;color:var(--c)}
+.slate h3{margin:0;font-family:var(--disp);font-weight:700;font-size:21px;line-height:1.2}
+.slate span{font-family:var(--ui);font-size:13px;color:var(--mute);line-height:1.5}
+.arch{border-top:1px solid var(--rule)}
+.arch .wrap{padding-top:64px;padding-bottom:72px}
+.tiles{display:flex;flex-wrap:wrap;padding-left:30px;row-gap:24px}
+.tile{width:150px;margin-left:-30px;text-decoration:none;transform:rotate(var(--r));transition:transform .25s}
+.tile:hover,.tile:focus-visible{transform:rotate(0) translateY(-10px);z-index:2}
+.tile .cv{aspect-ratio:1468/1912;background:var(--c);border:6px solid var(--card);box-shadow:0 8px 18px rgba(0,0,0,.18);display:flex;flex-direction:column;justify-content:space-between;padding:10px;color:#fff;font-family:var(--disp);font-weight:800}
+.tile .cv small{font-family:var(--ui);font-weight:600;font-size:11px;letter-spacing:.1em;white-space:nowrap}
+.tile .cv em{font-style:normal;font-size:56px;line-height:1}
+@media (max-width:600px){.tile{width:118px}.tile .cv{padding:8px}.tile .cv small{font-size:9px;letter-spacing:.06em}.tile .cv em{font-size:44px}}
+.more{margin:36px 0 0;font-family:var(--ui);font-weight:600;font-size:15px}
+footer .wrap{padding-top:32px;padding-bottom:40px;font-family:var(--ui);font-size:13px;line-height:1.6;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){.card img,.tile{transition:none}.cover{transform:none}}
+@media (max-width:600px){.cur{padding-top:32px;gap:32px}.cover{transform:none;padding:10px}h2{font-size:27px}}
+/* survey */
+.svy{--navy:#222e4c;--blush:#f2cfc6;--gold:#b8782e;--stamp:#fbf7ef}
+.svy .wrap{padding-top:64px;padding-bottom:72px}
+.svbrand{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:300;line-height:1.02;margin:0;color:var(--blush)}.svbrand b{font-weight:700}
+.svbtn{display:inline-flex;align-items:center;justify-content:center;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;background:var(--blush);color:var(--navy);padding:12px 28px;border-radius:3px;white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.svbtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.25)}
+.svbtn:focus-visible{outline:2px solid var(--blush);outline-offset:3px}
+.svmin{display:flex;align-items:center;justify-content:center;gap:6px;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:17px;color:var(--blush);opacity:.85;margin:12px 0 0}
+.svmin svg{width:15px;height:15px;flex:none}
+img.mo{display:block;width:100%;height:100%;object-fit:cover}
+.svydlg{border:0;border-radius:14px;padding:0;width:min(760px,calc(100vw - 32px));height:min(720px,calc(100dvh - 48px));background:var(--card);color:var(--ink);box-shadow:0 24px 60px rgba(20,16,10,.28);overflow:hidden}
+.svydlg[open]{display:flex;flex-direction:column}.svydlg::backdrop{background:rgba(20,16,10,.38)}
+.svydlg .svh{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:18px 18px 14px 22px;border-bottom:1px solid var(--rule)}
+.svydlg .shk{margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.svydlg h2{font-size:20px;line-height:1.2}
+.svydlg .shx{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer}.svydlg .shx svg{width:20px;height:20px}.svydlg .shx:hover{background:var(--ph)}
+.svydlg .svf{flex:1;min-height:0}.svydlg iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+@media (max-width:640px){.svydlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}.svydlg .svh{padding-top:max(14px,env(safe-area-inset-top,0px))}}
+@media (prefers-reduced-motion:reduce){.svbtn{transition:none}}
+/* B: a wall of the motif, one tile asks */
+.wall{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.wall>*{aspect-ratio:1;overflow:hidden;border-radius:2px}
+.wall .ask{grid-column:3/5;grid-row:1/3;aspect-ratio:auto;background:var(--navy);color:var(--blush);padding:clamp(20px,3vw,36px);display:flex;flex-direction:column;justify-content:flex-end;gap:14px}
+.wall .ask .svbrand{font-size:clamp(32px,3.8vw,52px)}
+.wall .ask p.l{margin:0;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:19px;color:var(--blush);opacity:.92}
+.wall .ask .go{display:flex;flex-direction:column;align-items:flex-start}.wall .ask .svmin{justify-content:flex-start}
+.wall a.t{display:block;transition:transform .25s}.wall a.t:hover{transform:scale(1.03)}
+.wall a.t:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+@media (max-width:900px){.wall{grid-template-columns:repeat(4,1fr)}.wall .ask{grid-column:2/4}.wall a.x4,.wall a.x5,.wall a.x6{display:none}}
+@media (max-width:600px){.wall{grid-template-columns:repeat(3,1fr)}.wall .ask{grid-column:1/-1;grid-row:2}.wall a.x4,.wall a.x5{display:block}.wall a.x6{display:none}}
+@media (prefers-reduced-motion:reduce){.wall a.t{transition:none}}
+/* /survey */
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="brand" href="../"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g1" x1="26" y1="1" x2="26" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".47" stop-color="#357686"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path fill="url(#g1)" d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z"/></svg><span><small>The</small> American Bahá'í</span></a>
+<nav aria-label="Site"><a href="#">About</a><a class="mem" href="../../member/">Members</a></nav>
+</div></header>
+
+<main>
+<section id="current" class="wrap cur" aria-labelledby="cur-h">
+<figure class="cover"><img src="../../img/cover-print-v57n5.jpg" alt="Cover of The American Bahá'í, No. 00, October/November/December 2026: Juliet Bogan's painting of a green valley of terraced fields and small houses under an orange ridge, with two young women in the foreground"><figcaption>Cover painting by Juliet Bogan</figcaption></figure>
+<div class="intro">
+<p class="eyebrow">Current issue · No. 00 · <b>The Arts Issue</b></p>
+<h1 id="cur-h">Creative expression and the transformation of communities</h1>
+<p class="dek">From music and visual art to the creative practices woven into grassroots efforts.</p>
+<p class="meta">October / November / December 2026</p>
+<div class="cta"><a class="btn p" href="../../">Read the issue</a></div>
+</div>
+</section>
+
+<section class="band" aria-labelledby="in-h"><div class="wrap">
+<div class="rowh"><h2 id="in-h">In this issue</h2></div>
+<div class="cards">
+<a class="card" href="../../#gregory" style="--c:#e8532a;--kc:#b8401c"><div class="im"><img src="../../img/gregory-group-hd.jpg" alt="Summer of Service participants at the Louis Gregory Bahá'í Museum in Charleston" loading="lazy"></div><span class="k">Race amity · Print pages 20–23</span><span class="t">The Louis Gregory Bahá'í Institute continues legacy of race amity work</span></a>
+<a class="card" href="../../#newyorkers" style="--c:#f05a7e;--kc:#b8304f"><div class="im"><img src="../../img/ny-park.jpg" alt="Painting with children at the plaza in Crown Heights, Brooklyn" loading="lazy"></div><span class="k">Community · Print pages 24–26</span><span class="t">New Yorkers create more unified communities through the arts</span></a>
+<a class="card" href="../../#twoartists" style="--c:#b07a4a;--kc:#8a5a30"><div class="im"><img src="../../img/ta-portrait.jpg" alt="Portrait by Maya Mansour" loading="lazy" style="object-position:50% 25%"></div><span class="k">In conversation · Print pages 27–29</span><span class="t">Two artists reimagine the role of art through a spiritual framework</span></a>
+<a class="card" href="../../#abs" style="--c:#c9462c;--kc:#a8361f"><div class="im"><img src="../../img/abs-stage-duo.jpg" alt="A panel at the Association's 50th annual conference in Ottawa" loading="lazy"></div><span class="k">Scholarship · Print pages 16–19</span><span class="t">Association for Bahá'í Studies at 50</span></a>
+</div>
+</div></section>
+
+
+
+
+
+
+
+<!-- survey -->
+<section id="survey" class="svy" aria-labelledby="svy-h2"><div class="wrap"><div class="rowh"><h2 id="svy-h2">Reader survey</h2><p>Help shape the future of The American Bahá’í.</p></div><div class="wall"><a class="t " href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m02.webp" alt="" loading="lazy"></a><a class="t " href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m04.webp" alt="" loading="lazy"></a><div class="ask"><h3 class="svbrand">Tell us what<br>you <b>read</b></h3><p class="l">What you enjoy, what you’d like next, and how we can reach more readers.</p><div class="go"><a class="svbtn" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener">Give feedback</a><p class="svmin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Takes 5 minutes</p></div></div><a class="t x5" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m06.webp" alt="" loading="lazy"></a><a class="t x6" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m09.webp" alt="" loading="lazy"></a><a class="t " href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m11.webp" alt="" loading="lazy"></a><a class="t " href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m05.webp" alt="" loading="lazy"></a><a class="t x4" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m10.webp" alt="" loading="lazy"></a><a class="t x6" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="../../img/motif/m12.webp" alt="" loading="lazy"></a></div></div></section>
+<!-- /survey -->
+<!-- Coming in 2027: hidden for now
+<section id="next" class="next" aria-labelledby="nx-h"><div class="wrap">
+<div class="rowh"><h2 id="nx-h">Coming in 2027</h2></div>
+<ol class="slate">
+<li style="--c:#1b5e6b"><b>01</b><h3>Education</h3><span>Winter 2027</span><span>In homes February 2027</span></li>
+<li style="--c:#c9462c"><b>02</b><h3>National Convention</h3><span>Spring 2027</span><span>In homes May 2027</span></li>
+<li style="--c:#e9a21f"><b>03</b><h3>Race Unity</h3><span>Summer 2027</span><span>In homes August 2027</span></li>
+</ol>
+</div></section>
+-->
+
+<section id="archive" class="arch" aria-labelledby="ar-h"><div class="wrap">
+<div class="rowh"><h2 id="ar-h">Earlier issues</h2></div>
+<div class="tiles">
+<a class="tile" href="#" aria-label="Vol. 57 · No. 4: [Issue theme], [Season]" style="--c:#3f7f61;--r:-6deg"><span class="cv"><small>Vol. 57 · No. 4</small><em>4</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 3: [Issue theme], [Season]" style="--c:#b5654a;--r:-2deg"><span class="cv"><small>Vol. 57 · No. 3</small><em>3</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 2: [Issue theme], [Season]" style="--c:#2f4f6e;--r:3deg"><span class="cv"><small>Vol. 57 · No. 2</small><em>2</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 57 · No. 1: [Issue theme], [Season]" style="--c:#9a7b3a;--r:-4deg"><span class="cv"><small>Vol. 57 · No. 1</small><em>1</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 5: [Issue theme], [Season]" style="--c:#6d5a8f;--r:5deg"><span class="cv"><small>Vol. 56 · No. 5</small><em>5</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 4: [Issue theme], [Season]" style="--c:#1b5e6b;--r:-3deg"><span class="cv"><small>Vol. 56 · No. 4</small><em>4</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 3: [Issue theme], [Season]" style="--c:#c9462c;--r:2deg"><span class="cv"><small>Vol. 56 · No. 3</small><em>3</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 2: [Issue theme], [Season]" style="--c:#5f8f3a;--r:-5deg"><span class="cv"><small>Vol. 56 · No. 2</small><em>2</em></span></a>
+<a class="tile" href="#" aria-label="Vol. 56 · No. 1: [Issue theme], [Season]" style="--c:#8a5a30;--r:4deg"><span class="cv"><small>Vol. 56 · No. 1</small><em>1</em></span></a>
+</div>
+<p class="more"><a href="#">Browse every issue →</a></p>
+</div></section>
+
+<section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
+<div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
+<div class="cards">
+<div class="card ph" role="group" aria-label="Featured report placeholder 1"><div class="im" style="--c:#e8532a;--c2:#1b5e6b" aria-hidden="true"><i></i><i></i></div><span class="k">[Section] · [Date]</span><span class="t">[Featured report title]</span></div>
+<div class="card ph" role="group" aria-label="Featured report placeholder 2"><div class="im" style="--c:#1b5e6b;--c2:#e9a21f" aria-hidden="true"><i></i><i></i></div><span class="k">[Section] · [Date]</span><span class="t">[Featured report title]</span></div>
+<div class="card ph" role="group" aria-label="Featured report placeholder 3"><div class="im" style="--c:#e9a21f;--c2:#f05a7e" aria-hidden="true"><i></i><i></i></div><span class="k">[Section] · [Date]</span><span class="t">[Featured report title]</span></div>
+<div class="card ph" role="group" aria-label="Featured report placeholder 4"><div class="im" style="--c:#f05a7e;--c2:#1b5e6b" aria-hidden="true"><i></i><i></i></div><span class="k">[Section] · [Date]</span><span class="t">[Featured report title]</span></div>
+</div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Published by the National Spiritual Assembly of the Bahá'ís of the United States, 1233 Central St., Evanston, IL 60201.</div></footer>
+<!-- svydlg --><dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div><button class="shx" type="button" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><div class="svf"><iframe title="TAB Reader Survey" allow="camera; microphone; autoplay; encrypted-media; fullscreen" data-src="https://form.typeform.com/to/NfIWSbQl?typeform-medium=embed-snippet"></iframe></div></dialog><script>(function(){var d=document.querySelector('.svydlg');if(!d||!d.showModal)return;var f=d.querySelector('iframe'),op=null;function open(o){op=o||null;if(!f.src)f.src=f.dataset.src;if(!d.open)d.showModal()}document.addEventListener('click',function(e){var b=e.target.closest('[data-survey]');if(!b)return;e.preventDefault();open(b)});d.querySelector('.shx').addEventListener('click',function(){d.close()});d.addEventListener('click',function(e){if(e.target===d)d.close()});d.addEventListener('close',function(){if(op)op.focus()});if(location.hash==='#take-survey')open();})();</script><!-- /svydlg -->
+</body>
+</html>

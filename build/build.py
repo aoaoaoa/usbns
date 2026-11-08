@@ -540,6 +540,31 @@ SVY_JS = r"""<script>
 })();
 </script>"""
 
+ASK_Q = ["What do you enjoy reading most?", "Which stories, ideas and resources matter to you?", "What should we write about next?"]
+ASK_HTML = ('<section class="ask" aria-labelledby="ask-h"><div class="askq"><h2 class="askb" id="ask-h">Reader <b>Survey</b></h2>'
+    '<p class="askr" aria-live="off">' + ASK_Q[0] + '</p>'
+    '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
+    f'<div class="askg"><a class="askbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a><span class="askm">Takes 5 minutes</span></div></div>'
+    '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section>')
+NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Reader survey"><span class="ndot"><img src="img/motif/dot03.webp" alt=""></span>'
+    '<span class="ntx"><b>Finished the story?</b> Tell us what you’d like to read next.</span>'
+    f'<a class="nbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a>'
+    '<button class="nx" type="button" aria-label="Dismiss"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>')
+ASK_JS = r"""<script>
+(function(){var el=document.querySelector('.askr');if(el&&!matchMedia('(prefers-reduced-motion:reduce)').matches){var Q=""" + __import__("json").dumps(ASK_Q) + r""",i=0;
+  setInterval(function(){el.style.opacity=0;setTimeout(function(){i=(i+1)%Q.length;el.textContent=Q[i];el.style.opacity=1},400)},3400);}
+  var n=document.querySelector('.nudge');if(!n||!('IntersectionObserver' in window))return;var K='tab-survey-nudge',off=false;
+  try{off=!!localStorage.getItem(K)}catch(e){}if(off)return;
+  function stop(){off=true;n.classList.remove('on');setTimeout(function(){n.hidden=true},300);try{localStorage.setItem(K,'1')}catch(e){}}
+  n.querySelector('.nx').addEventListener('click',stop);n.querySelector('.nbtn').addEventListener('click',stop);
+  var dock=document.getElementById('dock');function place(){var h=(dock&&!dock.hidden&&dock.classList.contains('on'))?dock.querySelector('.dk').getBoundingClientRect().height+14:0;n.style.setProperty('--dh',h+'px')}
+  var arts=[].slice.call(document.querySelectorAll('article.story:not(.dept):not(.letter)')),vis=new Set();
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)vis.add(e.target);else vis.delete(e.target)});
+    if(off)return;place();if(vis.size){n.hidden=false;requestAnimationFrame(function(){n.classList.add('on')})}else n.classList.remove('on');},{rootMargin:'0px 0px -10% 0px'});
+  arts.forEach(function(a){var s=document.createElement('div');s.className='nsent';s.setAttribute('aria-hidden','true');a.appendChild(s);io.observe(s)});
+})();
+</script>"""
+
 def listen(a):
     """Launcher for a feature's audio reading; playback runs in the docked player."""
     if not a.get("audio"): return ""
@@ -779,7 +804,7 @@ def build_tab(member=False, menu="contents"):
             return f'<li><h3>{h}</h3>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
         bk = "".join(book(it) for it in B["items"])
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
-        nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
+        nt = "".join(f'''<li{' class="svn"' if "1052" in n["src"] else ""}>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}{('<a class="svm" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><img src="img/motif/m09.webp" alt="" loading="lazy"></a>') if "1052" in n["src"] else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
         lead = ""
@@ -805,7 +830,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -1366,8 +1391,32 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .svydlg .shx{{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer}} .svydlg .shx svg{{width:20px;height:20px}} .svydlg .shx:hover{{background:var(--tabon)}}
 .svydlg .svf{{flex:1;min-height:0}} .svydlg iframe{{display:block;width:100%;height:100%;border:0;background:#fff}}
 @media (max-width:640px){{.svydlg{{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}} .svydlg .svh{{padding-top:max(14px,env(safe-area-inset-top,0px))}}}}
-.notices .svb{{display:inline-flex;align-items:center;gap:8px;margin:4px 0 10px;padding:9px 16px;border:0;border-radius:999px;background:var(--accent);color:var(--paper);font:600 14px/1 var(--ui);cursor:pointer}}
-.notices .svb:hover{{filter:brightness(1.08)}} .notices .svb:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}}
+.notices .svb{{display:flex;width:max-content;text-decoration:none;align-items:center;gap:8px;margin:6px 0 12px;padding:9px 16px;border:0;border-radius:999px;background:var(--accent);color:var(--paper);font:600 14px/1 var(--ui);cursor:pointer}}
+.notices .svb:hover{{filter:brightness(1.08)}}
+.notices li.svn .svm{{display:block;aspect-ratio:1;overflow:hidden;margin:0 0 14px;border-radius:2px}} .notices li.svn .svm img{{width:100%;height:100%;object-fit:cover;border:0;margin:0}}
+.ask{{--navy:#222e4c;--blush:#f2cfc6;display:grid;grid-template-columns:1.15fr .85fr;background:var(--blush);color:var(--navy);margin:8px 0 56px;border-radius:4px;overflow:hidden}}
+.ask .askq{{padding:clamp(24px,4vw,48px);min-width:0}}
+.ask .askb{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:300;font-size:clamp(32px,3.6vw,46px);line-height:1;letter-spacing:0;text-transform:none;margin:0 0 14px;padding:0;border:0;color:inherit}} .ask .askb b{{font-weight:700}}
+.ask .askr{{font-family:"Literata",var(--text),serif;font-style:italic;font-size:clamp(22px,2.4vw,30px);line-height:1.25;min-height:2.6em;margin:0 0 18px;transition:opacity .4s}}
+.ask .askc{{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}}
+.ask .askc a{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:18px;text-decoration:none;color:var(--navy);border:1.5px solid var(--navy);border-radius:999px;padding:5px 14px}}
+.ask .askc a:hover,.ask .askc a:focus-visible{{background:var(--navy);color:var(--blush)}}
+.ask .askg{{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}}
+.ask .askbtn,.nudge .nbtn{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:700;font-size:20px;letter-spacing:.02em;text-transform:uppercase;text-decoration:none;background:var(--navy);color:var(--blush);padding:10px 22px;border-radius:3px;white-space:nowrap;transition:transform .2s,box-shadow .2s}}
+.ask .askbtn:hover{{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.18)}}
+.ask .askm{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:17px}}
+.ask .aski{{min-height:280px;position:relative}} .ask .aski img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
+@media (max-width:720px){{.ask{{grid-template-columns:1fr}} .ask .aski{{min-height:0;aspect-ratio:16/9;order:-1}}}}
+.nudge{{--navy:#222e4c;--blush:#f2cfc6;position:fixed;z-index:9;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + var(--dh,0px));transform:translate(-50%,24px);opacity:0;transition:transform .3s,opacity .3s,bottom .3s;
+  display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100vw - 32px);background:var(--navy);color:var(--blush);border-radius:999px;padding:7px 8px 7px 7px;box-shadow:0 10px 26px rgba(0,0,0,.25)}}
+.nudge.on{{transform:translate(-50%,0);opacity:1}}
+.nudge .ndot{{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:none}} .nudge .ndot img{{width:100%;height:100%;object-fit:cover;display:block}}
+.nudge .ntx{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:18px;line-height:1.15;min-width:0}} .nudge .ntx b{{display:block;font-size:20px}}
+.nudge .nbtn{{background:var(--blush);color:var(--navy);font-size:17px;padding:9px 16px;border-radius:999px}}
+.nudge .nx{{flex:none;width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--blush);cursor:pointer;display:grid;place-items:center}} .nudge .nx svg{{width:18px;height:18px}} .nudge .nx:hover{{background:rgba(255,255,255,.12)}}
+.nudge a:focus-visible,.nudge button:focus-visible,.ask a:focus-visible{{outline:2px solid var(--accent,#1b5e6b);outline-offset:3px}}
+@media (max-width:520px){{.nudge{{gap:8px}} .nudge .ntx b{{display:none}} .nudge .ntx{{font-size:16px}} .nudge .nbtn{{font-size:15px;padding:8px 12px}}}}
+@media (prefers-reduced-motion:reduce){{.nudge,.ask .askbtn{{transition:none}}}} .notices .svb:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}}
 .sharedlg .shd{{display:grid;grid-template-columns:1fr auto;align-items:start;gap:2px 12px;margin-bottom:18px}}
 .sharedlg .shk{{grid-column:1;margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
 .sharedlg h2{{grid-column:1;margin:0;font-family:var(--disp);font-size:20px;line-height:1.2;letter-spacing:-.01em}}
@@ -1500,6 +1549,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="about"><b>About the cover.</b> “{esc(ISSUE["cover_note"])}” <i>Juliet Bogan</i></p>
   </div>
 </section>
+{ASK_HTML}
 {lead}
 {"".join(secs)}
 {depts}
@@ -1512,6 +1562,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {SVY_HTML}
 {SHARE_JS}
 {SVY_JS}
+{NUDGE_HTML}
+{ASK_JS}
 {LBX_JS}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
