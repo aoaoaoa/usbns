@@ -754,7 +754,6 @@ def build_tab(member=False, menu="contents"):
         rhythm = dept_open(R) + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
   <p class="note">{esc(R["note"])}</p>
-  {prayer_html(R["prayer"])}
 </div></article>'''
         B = BOOKS
         def book(it):
@@ -766,9 +765,9 @@ def build_tab(member=False, menu="contents"):
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + comic_story + abide + fund + rhythm + books + notices
+        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
         lead = ""
-        D = [("huquq","Ḥuqúqu'lláh","30"),("comic",comic_rec["short"],comic_rec["pages"].split("–")[0]),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
+        D = [("abiding","Abiding in God's Law","32"),("huquq","Ḥuqúqu'lláh","30"),("comic",comic_rec["short"],comic_rec["pages"].split("–")[0]),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
         dindex = '<h2 style="margin-top:36px;color:var(--mem)">The full issue</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
         dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in FEAT) + '<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
