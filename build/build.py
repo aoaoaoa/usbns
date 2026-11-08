@@ -690,7 +690,7 @@ def build_tab(member=False, menu="contents"):
     {share(a)}
     {listen(a)}
   </aside>'''
-        secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
+        story = f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead{"" if dek else " nodek"}">{torn}
     <h2>{esc(a["title"])}</h2>
@@ -698,14 +698,18 @@ def build_tab(member=False, menu="contents"):
   </header>
   {"" if a["slug"] == "comic" else margin}
   <div class="prose">{margin + after_first(first_para_dropcap(body_html(a["body"])), below) if a["slug"] == "comic" else first_para_dropcap(body_html(a["body"]))}</div>
-</article>''')
+</article>'''
+        if a["slug"] == "comic":  # the comic lives in the full edition, among the departments
+            comic_story = story; comic_rec = a; continue
+        secs.append(story)
         if i < len(VOICES):
             v = VOICES[i]
             secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
-    head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in ARTICLES)
-    index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in ARTICLES)
+    FEAT = [a for a in ARTICLES if a["slug"] != "comic"]
+    head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in FEAT)
+    index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in FEAT)
     lead = ""; depts = ""; dindex = ""; dhead = ""
-    rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]], a["kicker"], a["title"]) for a in ARTICLES]
+    rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]], a["kicker"], a["title"]) for a in FEAT]
     if member:
         from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
         L = LETTER
@@ -728,7 +732,6 @@ def build_tab(member=False, menu="contents"):
         fs = "".join(f'<li><b>{esc(n)}</b><i>{esc(m)}</i><span>{esc(d)}</span></li>' for n,m,d in R["feasts"])
         rhythm = dept_open(R) + f'''<div class="prose calendar">
   <div class="cal"><div><h3>Holy Days</h3><ul class="hd">{hd}</ul></div><div><h3>Upcoming Feasts</h3><ul class="feast">{fs}</ul></div></div>
-  {chart_html(R["ring"]) if R.get("ring") else ""}
   <p class="note">{esc(R["note"])}</p>
   <blockquote class="passage prayer"><p>{esc(R["prayer"][0])}</p><cite>{esc(R["prayer"][1])}</cite></blockquote>
 </div></article>'''
@@ -742,14 +745,14 @@ def build_tab(member=False, menu="contents"):
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p><cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
-        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + abide + fund + rhythm + books + notices
+        depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + huq + comic_story + abide + fund + rhythm + books + notices
         lead = ""
-        D = [("huquq","Ḥuqúqu'lláh","30"),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
+        D = [("huquq","Ḥuqúqu'lláh","30"),("comic",comic_rec["short"],comic_rec["pages"].split("–")[0]),("abiding","Abiding in God's Law","32"),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
         dindex = '<h2 style="margin-top:36px;color:var(--mem)">The full issue</h2><ol class="index mem">' + f'<li><a href="#letter"><span class="t">{esc(L["title"])}</span><span class="pg">2</span></a></li>' + "".join(f'<li><a href="#{s}"><span class="t">{esc(t)}</span><span class="pg">{p}</span></a></li>' for s,t,p in D) + '</ol>'
         shorts = {"gregory":"Gregory","newyorkers":"New Yorkers","twoartists":"Two artists","abs":"ABS","endeavor":"Endeavor","comic":"Comic"}
-        dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in ARTICLES) + '<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
+        dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in FEAT) + '<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#huquq" class="mem" style="--tint:var(--mem)"><span>Departments</span><i class="fill"></i></a>'
         head = dhead
-        recs = {"huquq": HUQUQ, "abiding": ABIDING, "fund": FUND, "rhythm": RHYTHM, "books": BOOKS}
+        recs = {"huquq": HUQUQ, "comic": comic_rec, "abiding": ABIDING, "fund": FUND, "rhythm": RHYTHM, "books": BOOKS}
         rows += [("letter", "Letter", "2", "var(--mem)", L["kicker"], L["title"])] + [(s, t, p, "var(--mem)", recs[s]["kicker"] if s in recs else "Announcements", t) for s, t, p in D]
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
