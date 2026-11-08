@@ -680,20 +680,21 @@ def build_tab(member=False, menu="contents"):
         blooms = '<div class="blooms" aria-hidden="true"><i></i><i></i><i></i></div>' if a["slug"] == "newyorkers" else ""
         pal = {"gregory":("#f26b2b","#2448c8","#f05a7e","#f3c623"),"newyorkers":("#2448c8","#f05a7e","#f3c623","#5f8f3a"),"twoartists":("#b07a4a","#e9a21f","#2f6a4a","#f26b2b"),"abs":("#c9462c","#1b5e6b","#e9a21f","#2448c8"),"endeavor":("#1b5e6b","#e9a21f","#9ec3cc","#f26b2b"),"comic":("#f3c623","#2448c8","#f26b2b","#5f8f3a")}[a["slug"]]
         torn = f'<div class="torn" data-v="{i % 6}" aria-hidden="true" style="--a:{pal[0]};--b:{pal[1]};--c:{pal[2]};--d:{pal[3]}"><i></i><i></i><i></i><i></i></div>'
+        margin = f'''<aside class="margin">
+    <p class="kicker">{esc(a["kicker"])}</p>
+    {by}
+    <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
+    {share(a)}
+    {listen(a)}
+  </aside>'''
         secs.append(f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead{"" if dek else " nodek"}">{torn}
     <h2>{esc(a["title"])}</h2>
     {dek}
   </header>
-  <aside class="margin">
-    <p class="kicker">{esc(a["kicker"])}</p>
-    {by}
-    <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
-    {share(a)}
-    {listen(a)}
-  </aside>
-  <div class="prose">{after_first(first_para_dropcap(body_html(a["body"])), below) if a["slug"] == "comic" else first_para_dropcap(body_html(a["body"]))}</div>
+  {"" if a["slug"] == "comic" else margin}
+  <div class="prose">{margin + after_first(first_para_dropcap(body_html(a["body"])), below) if a["slug"] == "comic" else first_para_dropcap(body_html(a["body"]))}</div>
 </article>''')
         if i < len(VOICES):
             v = VOICES[i]
@@ -1247,6 +1248,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .shead.hov .torn i{{animation:none}}
 .shead h2{{font-family:var(--disp);font-size:clamp(50px,9vw,104px);line-height:.92;font-weight:700;letter-spacing:-.035em;font-variation-settings:"opsz" 96;hyphens:none;overflow-wrap:normal;margin:0 0 22px;text-wrap:balance;max-width:14ch}}
 .dek{{font-family:var(--disp);font-weight:300;font-size:clamp(20px,2vw,28px);margin:0;color:var(--mute);max-width:34ch}}
+.prose>.margin{{grid-row:1;grid-column:1;padding-bottom:clamp(24px,3vw,40px)}}
 .margin{{grid-column:1;grid-row:3;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);line-height:1.6;align-self:start}}
 .margin p{{margin:0}}
 .kicker{{color:var(--accent);font-weight:600;margin-bottom:10px!important}}
