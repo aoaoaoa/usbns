@@ -1082,7 +1082,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhs-c a.on .tt{{font-weight:600}} .head .rhs-c a.on .rd{{display:block}}
 .head .rhs-c .rhf{{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--ink);margin-top:2px;padding:12px 0 8px;font-family:var(--ui);font-size:13.5px}}
 .head .rhs-c .rhf a{{color:var(--mute);min-height:32px;display:flex;align-items:center}}
-.head .rhx{{display:flex;justify-content:space-between;height:64px}} .head .rhx a{{display:block;width:38%;height:100%;-webkit-tap-highlight-color:transparent;outline:none}}
+.head .rhx{{display:flex;justify-content:space-between;height:28px}} .head .rhx a{{display:block;width:38%;height:100%;-webkit-tap-highlight-color:transparent;outline:none}}
 .head .rhs-b{{padding:10px;background:var(--paper)}}
 .head .rhs-b .rhi{{font-family:"Literata",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:4px 6px 8px}}
 .head .rhs-b a[data-name]{{position:relative;overflow:hidden;display:flex;align-items:center;flex-wrap:wrap;gap:0 12px;min-height:54px;margin-bottom:6px;padding:0 16px;border-radius:8px;background:var(--tint);color:#fff;text-decoration:none}}
