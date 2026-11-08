@@ -754,14 +754,15 @@ def build_tab(member=False, menu="contents"):
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
     when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
+    SECRET = '<div class="rhx" aria-hidden="true"><a href="https://aoaoaoa.github.io/usbns/newstand/" tabindex="-1"></a><a href="https://aoaoaoa.github.io/usbns/member/" tabindex="-1"></a></div>'  # unmarked: left goes to the newsstand, right to the full edition
     if menu == "bands":
         light = {"#e9a21f", "#f05a7e"}
         sheet = ('<div class="rhs rhs-b" role="navigation" id="rhs" aria-label="Contents">' + f'<p class="rhi">{esc(ISSUE["theme"])}</p>'
-                 + "".join(f'<a href="#{s}" style="--tint:{t}" class="{"dk" if t in light else ""}" data-name="{esc(n)}"><span class="cur">Reading</span><span class="nm">{esc(n)}</span><span class="pp">p.&#8201;{p}</span><i class="bar"></i></a>' for s, n, p, t, k, ti in rows) + '</div>')
+                 + "".join(f'<a href="#{s}" style="--tint:{t}" class="{"dk" if t in light else ""}" data-name="{esc(n)}"><span class="cur">Reading</span><span class="nm">{esc(n)}</span><span class="pp">p.&#8201;{p}</span><i class="bar"></i></a>' for s, n, p, t, k, ti in rows) + SECRET + '</div>')
     else:
         sheet = ('<div class="rhs rhs-c" role="navigation" id="rhs" aria-label="Contents">' + f'<div class="rhm"><span>{vol}</span><span>{when}</span></div><p class="rhtt">{esc(ISSUE["theme"])}</p>'
                  + "".join(f'<a href="#{s}" style="--tint:{t}" data-name="{esc(n)}"><span class="pn">{p}</span><span class="rx"><span class="k">{esc(k)}</span><span class="tt">{esc(ti)}</span><span class="rd" aria-hidden="true"><i></i></span></span></a>' for s, n, p, t, k, ti in rows)
-                 + '<div class="rhf"><a href="#top">Back to the cover</a><a href="#front">About this issue</a></div></div>')
+                 + '<div class="rhf"><a href="#top">Back to the cover</a><a href="#front">About this issue</a></div>' + SECRET + '</div>')
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
@@ -1081,6 +1082,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .head .rhs-c a.on .tt{{font-weight:600}} .head .rhs-c a.on .rd{{display:block}}
 .head .rhs-c .rhf{{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--ink);margin-top:2px;padding:12px 0 8px;font-family:var(--ui);font-size:13.5px}}
 .head .rhs-c .rhf a{{color:var(--mute);min-height:32px;display:flex;align-items:center}}
+.head .rhx{{display:flex;justify-content:space-between;height:64px}} .head .rhx a{{display:block;width:38%;height:100%;-webkit-tap-highlight-color:transparent;outline:none}}
 .head .rhs-b{{padding:10px;background:var(--paper)}}
 .head .rhs-b .rhi{{font-family:"Literata",var(--text),serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:4px 6px 8px}}
 .head .rhs-b a[data-name]{{position:relative;overflow:hidden;display:flex;align-items:center;flex-wrap:wrap;gap:0 12px;min-height:54px;margin-bottom:6px;padding:0 16px;border-radius:8px;background:var(--tint);color:#fff;text-decoration:none}}
