@@ -3,7 +3,7 @@
 Outputs:
   out/tab.html, out/plates.html, out/reader.html   artifact pages (no html/head/body skeleton)
   site/                                            GitHub Pages tree: index.html (TAB), alt/plates, alt/reader, img/
-Images are read from out/img/.
+Images are read from out/img/ (subfolders included) and mirrored to site/img/.
 """
 import html, os, re, shutil, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -86,6 +86,13 @@ def _imgar():
         except Exception: pass
     return r
 IMGAR = _imgar()
+def _dims(f):
+    """width/height attributes so lazy images reserve their space before they load."""
+    try:
+        from PIL import Image as _I
+        w, h = _I.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", "img", f)).size
+        return f' width="{w}" height="{h}"'
+    except Exception: return ""
 
 def pop(title, body):
     """Attributes that make an element open the shared popup."""
@@ -546,7 +553,7 @@ ASK_HTML = ('<section class="ask" aria-labelledby="ask-h"><div class="askq"><h2 
     '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
     f'<div class="askg"><a class="askbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a><span class="askm">Takes 5 minutes</span></div></div>'
     '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section>')
-NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Reader survey"><span class="ndot"><img src="img/motif/dot03.webp" alt=""></span>'
+NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Reader survey"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
     '<span class="ntx"><b>Finished the story?</b> Tell us what you’d like to read next.</span>'
     f'<a class="nbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a>'
     '<button class="nx" type="button" aria-label="Dismiss"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>')
@@ -689,7 +696,7 @@ DOCK = '''<div class="dock" id="dock" role="region" aria-label="Audio player" hi
     <button class="ds" type="button" aria-label="Playback speed">1×</button>
     <button class="dj" type="button" data-j="-15" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
     <button class="dj" type="button" data-j="15" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
-    <a class="dt" href="#"></a>
+    <a class="dt" href="#" tabindex="-1" aria-label="Story being read"></a>
     <span class="dtime">0:00 / 0:00</span>
     <div class="dbar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i><b></b></div>
     <button class="dx" type="button" aria-label="Close player"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button>
@@ -725,7 +732,7 @@ def build_tab(member=False, menu="contents"):
         if a.get("art"):
             if a["slug"] == "comic":
                 art = ('<div class="csplash" aria-hidden="true"><div class="burst"></div><div class="k">Adventures in pioneering · Indianapolis</div><div class="tt">Sparkling spirits!</div></div>')
-                below = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
+                below = f'''<figure class="plate comic"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"{_dims(a["art"])} loading="lazy"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"{_dims(a["art2"])} loading="lazy"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'''
             else:
                 cls = "plate bare" if a.get("art_transparent") else "plate"
                 if a.get("art_width"): cls += " capped"
@@ -733,7 +740,7 @@ def build_tab(member=False, menu="contents"):
                 ov = a.get("art_overlay")
                 ov_open = f'<div class="ovw {ov.get("cls","")}" style="--ar:{ov["ar"]}">' if ov else ""
                 ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
-                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}">{ov_close}{cap}</figure>'''
+                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"{_dims(a["art"])}{"" if a is ARTICLES[0] else ' loading="lazy" decoding="async"'}>{ov_close}{cap}</figure>'''
                 if a.get("art_extra"):  # seen only in the lightbox, opened from a link in the caption
                     x = a["art_extra"]
                     art += f'<figure class="lbx-only" hidden><img id="{x["id"]}" src="img/{x["file"]}" alt="{esc(x["alt"])}" loading="lazy"><figcaption>{esc(x["caption"])}</figcaption></figure>'
@@ -804,7 +811,7 @@ def build_tab(member=False, menu="contents"):
             return f'<li><h3>{h}</h3>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
         bk = "".join(book(it) for it in B["items"])
         books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
-        nt = "".join(f'''<li{' class="svn"' if "1052" in n["src"] else ""}>{('<img src="img/'+n["img"]+'" alt="'+esc(n["title"])+' cover">') if n.get("img") else ""}{('<a class="svm" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><img src="img/motif/m09.webp" alt="" loading="lazy"></a>') if "1052" in n["src"] else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
+        nt = "".join(f'''<li{' class="svn"' if "1052" in n["src"] else ""}>{('<img src="img/'+n["img"]+'" alt="'+esc(n.get("alt") or n["title"]+" cover")+'" loading="lazy">') if n.get("img") else ""}{('<a class="svm" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><img src="img/motif/m09.webp" alt="" loading="lazy"></a>') if "1052" in n["src"] else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
         lead = ""
@@ -830,7 +837,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&family=Bangers&family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&{"family=Bangers&" if member else ""}family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -840,13 +847,13 @@ def build_tab(member=False, menu="contents"):
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;--mem:#b3a3e0;color-scheme:dark}}}}
 :root[data-theme="dark"]{{--paper:#15130f;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--accent:#7fc0c9;--cream:#1c1915;--bar:#221e19;--tabon:#15130f;--barrule:#2f2a22;--tabon-white:#1f1c17;--mem:#b3a3e0;color-scheme:dark}}
 *{{box-sizing:border-box}}
+:where(img){{height:auto}}
 html{{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){{html{{scroll-behavior:auto}}}}
 html{{overflow-x:clip}}
 body{{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55}}
 .story,#top{{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}}
 .wrap{{max-width:1120px;margin:0 auto;{GUT}}}
-.ui{{font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase}}
 /* motion: terraces behind the open right third; brush strokes under the masthead on load; watercolor blooms in the New Yorkers margin. All off under reduced motion. */
 .terraces{{position:fixed;top:0;right:0;bottom:0;width:30%;z-index:0;pointer-events:none;opacity:.32;filter:blur(44px) saturate(.85)}}
 .terraces i{{position:absolute;left:-20%;right:-20%;height:34%;border-radius:50% 50% 40% 40%/60% 60% 40% 40%;animation:drift 28s ease-in-out infinite alternate}}
@@ -1015,7 +1022,6 @@ main,.head{{position:relative;z-index:1}}
 .chart .crep{{fill:var(--mute);stroke:var(--paper);stroke-width:1.5;opacity:.9;transition:opacity .15s}} .chart .rep:hover .crep,.chart .rep:focus-visible .crep{{opacity:1;r:7}}
 .chart .key{{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--ui);font-size:13px;color:var(--mute);margin:10px 0 0}} .chart .key i{{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:0}} .chart .key i.g{{background:var(--mute);opacity:.9;width:10px;height:10px;box-shadow:0 0 0 1.5px var(--paper),0 0 0 2.5px var(--rule)}}
 .chart .ct{{font-family:var(--ui);font-weight:600;font-size:15px;letter-spacing:.04em;margin:0 0 10px;color:var(--ink)}}
-.chart .cno{{font-family:var(--ui);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 4px}}
 .chart{{--k-life:var(--ink);--k-teach:var(--accent);--k-serve:#265b76;--k-write:#9a6a12;--k-legacy:#8a8072}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}}} :root[data-theme="dark"] .chart{{--k-serve:#7fb4d0;--k-write:#d9a94a}}
 /* the chronology under the two-scale timeline: a card that reads down, linked to the line */
@@ -1132,6 +1138,7 @@ main,.head{{position:relative;z-index:1}}
 .dept .prose.shelf,.dept .prose.calendar{{grid-column:1/-1;display:block;max-width:none}}
 .dept .prose.calendar{{max-width:72ch;grid-column:2/4}}
 .dept .prose.shelf{{grid-column:2/4}}
+#rhythm,#books{{zoom:.85}}
 .dept .margin,.letter .margin{{grid-row:2}}
 .dept .prose,.letter .prose{{grid-row:2}}
 .dept .shead,.letter .shead{{grid-row:1}}
@@ -1610,9 +1617,13 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   function rhOpen(o){{hd.classList.toggle('open',o);var on=o&&document.querySelector('.head .rhs a.on');if(on)on.parentNode.scrollTop=on.offsetTop-on.parentNode.clientHeight/3;[].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.setAttribute('aria-expanded',o)}});}}
   [].forEach.call(document.querySelectorAll('.head .rh,.head .rht'),function(b){{b.addEventListener('click',function(){{rhOpen(!hd.classList.contains('open'))}})}});
   [].forEach.call(document.querySelectorAll('.head .rhs a'),function(x){{x.addEventListener('click',function(){{rhOpen(false)}})}});
-  // lazy images above a target can push it down mid-jump; settle on it once they load
-  [].forEach.call(document.querySelectorAll('.head a[href^="#"]'),function(x){{x.addEventListener('click',function(){{var t=document.getElementById(x.getAttribute('href').slice(1));if(!t)return;
-    var n=0,iv=setInterval(function(){{var d=t.getBoundingClientRect().top-hd.offsetHeight;if(++n>20||Math.abs(d)<3&&n>4){{clearInterval(iv);return}}if(n>1&&Math.abs(d)>=3)scrollTo({{top:scrollY+d,behavior:'auto'}});}},250);}})}});
+  // late-loading content above a target can push it down mid-jump; settle on it, for in-page links and for links arriving from outside
+  var sIv=null;function settle(id){{var t=id&&document.getElementById(id);if(!t||id==='survey')return;clearInterval(sIv);
+    var n=0,stop=function(){{clearInterval(sIv);removeEventListener('wheel',stop);removeEventListener('touchstart',stop);removeEventListener('keydown',stop)}};
+    addEventListener('wheel',stop,{{passive:true}});addEventListener('touchstart',stop,{{passive:true}});addEventListener('keydown',stop);
+    sIv=setInterval(function(){{var d=t.getBoundingClientRect().top-hd.offsetHeight;if(++n>24||Math.abs(d)<3&&n>4){{stop();return}}if(n>1&&Math.abs(d)>=3)scrollTo({{top:scrollY+d,behavior:'auto'}});}},250);}}
+  document.addEventListener('click',function(e){{var x=e.target.closest('a[href^="#"]');if(x&&x.getAttribute('href').length>1)settle(x.getAttribute('href').slice(1))}});
+  if(location.hash.length>1)settle(decodeURIComponent(location.hash.slice(1)));
   document.addEventListener('keydown',function(e){{if(e.key==='Escape')rhOpen(false)}});
   document.addEventListener('click',function(e){{if(!e.target.closest('.head'))rhOpen(false)}});
   function place(a){{if(!a||!ind)return;var r=a.getBoundingClientRect(),b=inn.getBoundingClientRect();ind.style.left=(r.left-b.left+inn.scrollLeft)+'px';ind.style.width=r.width+'px';}}
@@ -1995,6 +2006,18 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
 </script>
 '''
 
+_DIMS = {}
+def _add_dims(page):
+    """Give every local raster image its width/height so lazy loading never shifts the page under a reader."""
+    def fix(m):
+        tag, f = m.group(0), m.group(1)
+        if " width=" in tag or f.endswith(".svg"): return tag
+        if f not in _DIMS: _DIMS[f] = _dims(f)
+        return tag[:-1] + _DIMS[f] + ">" if _DIMS[f] else tag
+    return re.sub(r'<img src="img/([^"]+)"[^>]*>', fix, page)
+_build_tab = build_tab
+def build_tab(*a, **k): return _add_dims(_build_tab(*a, **k))
+
 for name, fn in [("tab", build_tab), ("plates", build_plates), ("reader", build_reader)]:
     with open(os.path.join(OUT, f"{name}.html"), "w") as f: f.write(fn())
 with open(os.path.join(OUT, "member.html"), "w") as f: f.write(build_tab(member=True))
@@ -2026,6 +2049,7 @@ for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
-for f in os.listdir(os.path.join(OUT, "img")): shutil.copy(os.path.join(OUT, "img", f), os.path.join(SITE, "img", f))
+# out/img is the source of truth: mirror it into site/img, dropping anything no longer there
+shutil.rmtree(os.path.join(SITE, "img")); shutil.copytree(os.path.join(OUT, "img"), os.path.join(SITE, "img"))
 open(os.path.join(SITE, ".nojekyll"), "w").close()
 print("built out/ and site/")
