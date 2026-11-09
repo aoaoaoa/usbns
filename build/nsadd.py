@@ -43,6 +43,7 @@ CSS_ADD = r'''/* nsadd */
 .dl>summary:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
 .dl .panel{border-top:1px solid var(--rule);background:var(--card)}
 .dl .panel .wrap{padding-top:14px;padding-bottom:16px}
+.dl .calft{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px}.dl .calft p{margin-bottom:0}.dl .caltag{margin:0 0 0 auto;text-align:right;font:italic 400 13px "Literata",Georgia,serif;color:var(--mute)}
 .cal{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:stretch}
 .today{background:#222e4c;color:#f2cfc6;border-radius:4px;padding:12px 16px;display:grid;align-content:center;gap:2px;min-width:170px}
 .today .k{font:700 10px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin-bottom:4px}
@@ -233,7 +234,7 @@ def calendar_html():
             '<div class="panel"><div class="wrap"><div class="cal">'
             '<div class="today"><span class="k">In the Badí‘ calendar</span><div><div class="d" id="cal-d"></div><div class="m" id="cal-m"></div></div><div class="y" id="cal-y"></div>'
             '<svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg></div>'
-            '<div><ul class="up" id="cal-up"></ul><p class="calnote">Each Bahá’í day begins at sunset the evening before.</p></div>'
+            '<div><ul class="up" id="cal-up"></ul><div class="calft"><p class="calnote">Each Bahá’í day begins at sunset the evening before.</p><p class="caltag">The Rhythm of Bahá’í Life</p></div></div>'
             '</div></div></div></details>\n'
             "<script>(function(){var M=" + mo + ",E=" + ev + ";"
             "var d=new Date();var mid=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);"
