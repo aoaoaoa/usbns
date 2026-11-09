@@ -548,6 +548,8 @@ SVY_JS = r"""<script>
 </script>"""
 
 ASK_Q = ["What do you enjoy reading most?", "Which stories, ideas and resources matter to you?", "What should we write about next?"]
+L_CSS = '\n/* one issue: story color, chapter frames, running head (curated) */\n.story{--ac2:color-mix(in oklab,var(--accent) 55%,#1d1a16)}\n:root[data-theme="dark"] .story{--ac2:color-mix(in oklab,var(--accent) 60%,#fff)}\n@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .story{--ac2:color-mix(in oklab,var(--accent) 60%,#fff)}}\n.story .torn{--a:var(--accent)!important;--b:color-mix(in oklab,var(--accent) 45%,#fff)!important;--c:var(--ac2)!important;--d:color-mix(in oklab,var(--accent) 25%,#fff)!important}\n.story .shead h2{color:var(--ac2)}\n.story .prose .pull{border-left-color:var(--accent)}.story .prose .pull p{color:var(--ac2)}\n.story .plate figcaption,.story .prose .photo figcaption{border-left:3px solid var(--accent);padding-left:10px}\n.chap{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:6px 22px;border-top:6px solid var(--accent);padding-top:16px;margin:0 0 clamp(28px,4vw,48px);font:600 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}\n.chap .n{font:800 clamp(64px,9vw,120px)/.78 var(--disp);letter-spacing:-.05em;color:var(--accent);grid-row:1/3}\n.chap .k{color:var(--ink)}.chap .of{grid-column:3;grid-row:1/3;align-self:end}\n.rhd{position:fixed;top:0;left:0;right:0;z-index:6;height:58px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px));background:var(--bar);border-bottom:1px solid var(--barrule,var(--rule));font:600 12px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);visibility:hidden;opacity:0;transition:opacity .25s,visibility .25s}\nhtml.rhon .rhd{visibility:visible;opacity:1}html.rhon .head{visibility:hidden}\n.rhd a{color:inherit;text-decoration:none}.rhd .w{font:700 15px var(--disp);letter-spacing:-.01em;text-transform:none;color:var(--ink)}\n.rhd .t{color:var(--ink);text-transform:none;letter-spacing:0;font:600 14px var(--ui);max-width:56vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n.rhd .r{justify-self:end;display:flex;gap:16px}.rhd .r a:hover,.rhd .w:hover{color:var(--accent)}\n.rhd i{position:absolute;left:0;bottom:-1px;height:3px;width:var(--p,0);background:var(--c,var(--accent))}\n@media (max-width:700px){.rhd{height:55px;grid-template-columns:minmax(0,1fr) auto}.rhd .w{display:none}.rhd .t{max-width:none}}\n@media (prefers-reduced-motion:reduce){.rhd{transition:none}}\n'
+L_JS = '<script>(function(){var S=[].slice.call(document.querySelectorAll(\'article.story\'));if(!S.length)return;var r=document.createElement(\'div\');r.className=\'rhd\';r.setAttribute(\'aria-hidden\',\'true\');\nr.innerHTML=\'<a class="w" href="#top" tabindex="-1">The American Bahá’í</a><span class="t"></span><span class="r"><span class="n"></span><a href="#front" tabindex="-1">Contents</a></span><i></i>\';document.body.appendChild(r);\nvar T=r.querySelector(\'.t\'),N=r.querySelector(\'.n\'),H=document.documentElement,q=0;\nfunction u(){q=0;var y=70,c=-1;S.forEach(function(s,i){if(s.getBoundingClientRect().top<y)c=i});var on=c>=0&&S[c].getBoundingClientRect().bottom>y;H.classList.toggle(\'rhon\',on);if(!on)return;\nvar s=S[c],b=s.getBoundingClientRect();T.textContent=s.querySelector(\'.shead h2\').textContent;N.textContent=(c+1)+\' of \'+S.length;r.style.setProperty(\'--c\',s.style.getPropertyValue(\'--accent\'));r.style.setProperty(\'--p\',Math.min(100,Math.max(0,(y-b.top)/b.height*100))+\'%\')}\naddEventListener(\'scroll\',function(){if(!q){q=1;requestAnimationFrame(u)}},{passive:true});addEventListener(\'resize\',u);u()})();</script>'
 ASK_HTML = ('<div class="askw"><section class="ask" aria-labelledby="ask-h"><div class="askq"><h2 class="askb" id="ask-h">Reader <b>Survey</b></h2>'
     '<p class="askr" aria-live="off">' + ASK_Q[0] + '</p>'
     '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
@@ -759,7 +761,10 @@ def build_tab(member=False, menu="contents"):
     {share(a)}
     {listen(a)}
   </aside>'''
-        story = f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
+        _feat = [x for x in ARTICLES if x["slug"] != "comic"]
+        chap = "" if member or a["slug"] == "comic" else (f'<div class="chap" aria-hidden="true"><span class="n">{_feat.index(a) + 1}</span><span class="k">{esc(a["kicker"])}</span>'
+                f'<span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span><span class="of">{_feat.index(a) + 1} of {len(_feat)}</span></div>')
+        story = f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}{chap}
   {art}
   <header class="shead{"" if dek else " nodek"}">{torn}
     <h2>{esc(a["title"])}</h2>
@@ -773,7 +778,7 @@ def build_tab(member=False, menu="contents"):
         secs.append(story)
         if i < len(VOICES):
             v = VOICES[i]
-            secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)]}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
+            secs.append(f'''</div><aside class="voice" style="--band:{bands[i % len(bands)] if member else "color-mix(in oklab," + tints[a["slug"]] + " 58%,#1d1a16)"}"><div class="vin"><p>{esc(v[0])}</p><cite>{esc(v[1])}</cite></div></aside><div class="wrap">''')
     FEAT = [a for a in ARTICLES if a["slug"] != "comic"]
     head = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{esc(a["short"])}</span><i class="fill"></i></a>' for a in FEAT)
     index = "".join(f'<li><a href="#{a["slug"]}"><span class="t">{esc(a["title"])}</span><span class="pg">{a["pages"].split("–")[0]}</span></a></li>' for a in FEAT)
@@ -1554,6 +1559,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 {LBX_CSS}
+{"" if member else L_CSS}
 </style>
 <div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span><button class="rh" type="button" aria-expanded="false" aria-controls="rhs"><small>The American Bahá'í</small><b><i></i><span>{esc(ISSUE["theme"])}</span></b></button><button class="rht" type="button" aria-label="Contents" aria-expanded="false" aria-controls="rhs"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button></div><i class="rhp" aria-hidden="true"></i>{sheet}</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland" vector-effect="non-scaling-stroke"/><path d="{USMAP["states"]}" class="cstate" vector-effect="non-scaling-stroke"/></g></defs></svg>
@@ -1598,6 +1604,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {SVY_JS}
 {NUDGE_HTML}
 {ASK_JS}
+{"" if member else L_JS}
 {LBX_JS}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
