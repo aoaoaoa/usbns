@@ -128,6 +128,7 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 @media (max-width:600px){.fstamp{width:108px}}
 @media (prefers-reduced-motion:reduce){.fstamp,.fstamp.on{transition:none}}
 /* colo */
+/* navy and blush */
 .colo{position:relative;z-index:2;background:var(--card,var(--bar,#fdfcf9));border-top:1px solid var(--rule);text-align:center;color:var(--ink);font-family:var(--ui)}
 .colo .ci{max-width:1240px;margin:0 auto;padding:52px max(16px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;justify-items:center;gap:18px}
 .colo .cw{font:700 26px/1 "Literata",Georgia,serif;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
@@ -148,6 +149,18 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 .colo a:focus-visible{outline:2px solid var(--link,var(--accent));outline-offset:3px;border-radius:2px}
 @media (max-width:640px){.colo ul{flex-direction:column;align-items:center;gap:2px}.colo li+li::before{content:none}.colo li{padding-left:.16em}}
 @media (prefers-reduced-motion:reduce){.colo .cs a{transition:none}}
+.colo{background:#222e4c;border-top:0;color:#f2cfc6}
+.colo .ci{gap:18px;padding-top:44px;padding-bottom:calc(38px + env(safe-area-inset-bottom,0px))}
+.colo .cw{color:#f2cfc6}.colo .cr{display:none}
+.colo nav a{color:#f2cfc6;font:700 17px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.08em}
+.colo li{font-size:17px}.colo li+li::before{content:"";margin:0 13px}
+.colo nav a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.colo .cs>span:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.colo .cs a{color:#f2cfc6;border-color:rgba(242,207,198,.35)}
+.colo .cs a:hover{background:#f2cfc6;color:#222e4c;border-color:#f2cfc6}
+.colo .cp{color:rgba(242,207,198,.75)}
+.colo a:focus-visible{outline-color:#f2cfc6}
+@media (max-width:640px){.colo nav a{font-size:16px}}
 /* /colo */
 /* /survey */
 /* nsadd */
@@ -453,6 +466,8 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 
 
 
+
+
 <!-- Featured Reports: hidden for now
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
@@ -465,6 +480,7 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 </div></section>
 -->
 </main>
+
 
 
 
