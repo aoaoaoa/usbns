@@ -73,22 +73,21 @@ CSS_ADD = r'''/* nsadd */
 .secx .wrap{padding-top:52px;padding-bottom:60px}
 
 /* listen */
-.ls .lsi{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:12px;text-align:left;font:inherit;cursor:pointer;color:var(--ink);border:1px solid var(--rule);border-radius:40px 10px 10px 40px;padding:8px 14px 8px 8px;background:var(--paper);min-width:0}
-.ls .lsi.on{border-color:var(--c)}
-.ls .pbt{position:relative;width:56px;height:56px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 0 0 3px var(--c)}
-.ls .pbt img{width:100%;height:100%;object-fit:cover;display:block}
-.ls .pp{position:absolute;inset:0;display:grid;place-items:center;background:rgba(29,26,22,.45);color:#fff}
-.ls .pp svg{width:15px;height:15px;fill:currentColor}.ls .ia{display:none}.ls .lsi.on[aria-pressed=true] .ia{display:block}.ls .lsi.on[aria-pressed=true] .ip{display:none}
-.ls .r{display:grid;gap:4px;min-width:0}
-.ls .t{font:600 14px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ls .wv{display:block;width:100%;height:30px}
-.ls .wv .fg{opacity:.55;clip-path:inset(0 100% 0 0);transition:clip-path .25s linear}
-.ls .wv .br{transform-box:fill-box;transform-origin:center;transform:scaleY(var(--v))}
-.ls .lsi[aria-pressed=true] .wv .br{animation:breathe .9s ease-in-out var(--d) infinite alternate}
+.ls .lsi{display:grid;gap:10px;align-content:start;text-align:left;font:inherit;cursor:pointer;color:var(--ink);background:none;border:0;padding:0;min-width:0}
+.ls .art{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.ls .art .fg{opacity:.55;clip-path:inset(0 100% 0 0);transition:clip-path .25s linear}
+.ls .art .br{transform-box:fill-box;transform-origin:center;transform:scaleY(var(--v))}
+.ls .lsi[aria-pressed=true] .art .br{animation:breathe .9s ease-in-out var(--d) infinite alternate}
 @keyframes breathe{from{transform:scaleY(calc(var(--v) * .35))}to{transform:scaleY(1)}}
-@media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .wv .br{animation:none}}
-.ls .tm{display:flex;justify-content:space-between;gap:8px;font:11px var(--ui);color:var(--mute);font-variant-numeric:tabular-nums}
-.ls .tm .lst{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ls .rw{display:flex;align-items:center;gap:10px;min-width:0}
+.ls .pb{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--c);color:var(--c);display:grid;place-items:center;flex:none;transition:background .2s,color .2s}
+.ls .lsi:hover .pb,.ls .lsi[aria-pressed=true] .pb{background:var(--c);color:#fff}
+.ls .pb svg{width:13px;height:13px;fill:currentColor}.ls .ia{display:none}.ls .lsi[aria-pressed=true] .ia{display:block}.ls .lsi[aria-pressed=true] .ip{display:none}
+.ls .r{display:grid;min-width:0}
+.ls .t{font:600 15px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ls .tm{font:600 10.5px/1.3 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:4px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .art .br{animation:none}}
 /* contents page */
 .toc{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
 .toc a{display:grid;grid-template-columns:96px minmax(0,1fr) 120px;gap:20px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
@@ -207,15 +206,15 @@ def listen_html(pre):
         has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
         sl = a['slug']; im = f'{pre}img/{THUMB[sl]}'
         import hashlib as _h
-        bb = _h.md5(sl.encode()).digest() * 4; n = 22; Wd, Hd, gp = 160, 30, 2; bw = (Wd - (n-1)*gp) / n
-        vs = [0.25 + 0.75 * ((bb[i] % 100 + bb[i+1] % 100) / 200) for i in range(n)]
+        bb = _h.md5(sl.encode()).digest() * 8; n = 22; Wd, Hd, gp = 240, 180, 3; bw = (Wd - (n-1)*gp) / n
+        raw = [(bb[i] % 100) / 100 for i in range(n+2)]
+        vs = [0.2 + 0.8 * ((raw[i] + raw[i+1] + raw[i+2]) / 3) ** 0.9 for i in range(n)]
         rects = ''.join(f'<rect class="br" style="--d:{(i*137)%900}ms;--v:{v:.2f}" x="{i*(bw+gp):.1f}" y="0" width="{bw:.1f}" height="{Hd}" rx="{bw/2:.1f}"/>' for i, v in enumerate(vs))
-        wv = (f'<svg class="wv" viewBox="0 0 {Wd} {Hd}" preserveAspectRatio="none" aria-hidden="true"><defs><clipPath id="br-{sl}">{rects}</clipPath></defs>'
-              f'<g clip-path="url(#br-{sl})"><image href="{im}" width="{Wd}" height="{Hd*4}" y="-{Hd*1.5}" preserveAspectRatio="xMidYMid slice"/><rect class="fg" width="{Wd}" height="{Hd}" fill="var(--c)"/></g></svg>')
-        items.append(f'<button type="button" class="lsi" style="--c:{TINT[sl]}" data-src="{pre}audio/{sl}.mp3" data-title="{a["title"]}" data-href="{pre}#{sl}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
-                     f'<span class="pbt"><img src="{im}" alt="" loading="lazy"><span class="pp"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span></span>'
-                     f'<span class="r"><span class="t">{a["short"]}</span>{wv}'
-                     f'<span class="tm"><span class="lc">0:00</span><span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></button>')
+        art = (f'<svg class="art" viewBox="0 0 {Wd} {Hd}" aria-hidden="true"><defs><clipPath id="br-{sl}">{rects}</clipPath></defs>'
+               f'<g clip-path="url(#br-{sl})"><image href="{im}" width="{Wd}" height="{Hd}" preserveAspectRatio="xMidYMid slice"/><rect class="fg" width="{Wd}" height="{Hd}" fill="var(--c)"/></g></svg>')
+        items.append(f'<button type="button" class="lsi" style="--c:{TINT[sl]}" data-src="{pre}audio/{sl}.mp3" data-title="{a["title"]}" data-href="{pre}#{sl}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">{art}'
+                     f'<span class="rw"><span class="pb"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span>'
+                     f'<span class="r"><span class="t">{a["short"]}</span><span class="tm"><span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></span></button>')
     player = ('<div class="nsp" hidden role="region" aria-label="Audio player"><div class="nsk">'
               '<button type="button" class="np" aria-label="Play"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></button>'
               '<div class="nm"><span class="nk"></span><span class="nt"></span><span class="nb" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></span></div>'
@@ -224,7 +223,7 @@ def listen_html(pre):
     js = r"""<script>(function(){var P=document.querySelector('.nsp');if(!P)return;var au=new Audio(),cur=null,np=P.querySelector('.np'),nb=P.querySelector('.nb'),tm=P.querySelector('.ntime');
 var fmt=function(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 function st(){var pl=cur&&!au.paused&&!cur.na;P.classList.toggle('pl',!!pl);np.setAttribute('aria-label',pl?'Pause':'Play');document.querySelectorAll('.lsi').forEach(function(b){b.classList.toggle('on',b===(cur&&cur.b));b.setAttribute('aria-pressed',b===(cur&&cur.b)&&pl?'true':'false')})}
-function sync(){if(!cur)return;var fg=cur.b.querySelector('.fg'),lc=cur.b.querySelector('.lc');if(!cur.na&&au.duration){var pc=au.currentTime/au.duration*100;fg.style.clipPath='inset(0 '+(100-pc)+'% 0 0)';lc.textContent=fmt(au.currentTime);cur.b.querySelector('.lst').textContent=fmt(au.duration)}if(cur.na){tm.textContent='Reading coming soon';nb.querySelector('i').style.width='0';return}var p=au.duration?au.currentTime/au.duration*100:0;nb.querySelector('i').style.width=p+'%';nb.setAttribute('aria-valuenow',Math.round(p));tm.textContent=fmt(au.currentTime)+(au.duration?' / '+fmt(au.duration):'')}
+function sync(){if(!cur)return;var fg=cur.b.querySelector('.fg'),lc=cur.b.querySelector('.lc');if(!cur.na&&au.duration){var pc=au.currentTime/au.duration*100;fg.style.clipPath='inset(0 '+(100-pc)+'% 0 0)';cur.b.querySelector('.lst').textContent=fmt(au.currentTime)+' / '+fmt(au.duration)}if(cur.na){tm.textContent='Reading coming soon';nb.querySelector('i').style.width='0';return}var p=au.duration?au.currentTime/au.duration*100:0;nb.querySelector('i').style.width=p+'%';nb.setAttribute('aria-valuenow',Math.round(p));tm.textContent=fmt(au.currentTime)+(au.duration?' / '+fmt(au.duration):'')}
 function open(b){if(cur&&cur.b===b){if(cur.na)return;if(au.paused)au.play().catch(function(){});else au.pause();return}
  au.pause();cur={b:b,na:false};P.querySelector('.nt').textContent=b.dataset.title;P.querySelector('.nk').textContent=b.dataset.kicker;P.querySelector('.nr').href=b.dataset.href;
  P.hidden=false;document.documentElement.classList.add('nsplay');requestAnimationFrame(function(){P.classList.add('up')});au.src=b.dataset.src;tm.textContent='Loading…';var r=au.play();if(r&&r.catch)r.catch(function(){});st();}
