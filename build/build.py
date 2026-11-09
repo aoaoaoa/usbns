@@ -573,7 +573,7 @@ ASK_HTML = ('<div class="askw"><section class="ask" aria-labelledby="ask-h"><div
     '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
     f'<div class="askg"><a class="askbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a><span class="askm">Takes 5 minutes</span></div></div>'
     '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section></div>')
-NUDGE_LINES = [("Tell us what you enjoy reading and share your ideas for future topics.", "Takes 5 minutes."),
+NUDGE_LINES = [("Share your ideas to shape the magazine’s future.", "Takes 5 minutes."),
                ("Know a story like these?", "Send story ideas, photos and field notes from where you live."),
                ("Have the next stories sent to you.", "By email, as they’re published.")]
 NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Take part"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
