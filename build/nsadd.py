@@ -91,6 +91,17 @@ CSS_ADD = r'''/* nsadd */
 .ls .tm{font:600 10.5px/1.3 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:4px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .art .br{animation:none}}
+/* earlier issues: four, balanced */
+.arch .wrap{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);grid-template-areas:"h t" "m t";column-gap:clamp(24px,5vw,72px);align-content:start}
+.arch .rowh{grid-area:h;align-self:end;margin:0 0 12px}.arch .more{grid-area:m;align-self:start;margin:0}
+.arch .tiles{grid-area:t;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.6vw,36px);padding:6px 4px 0}
+.arch .tile{width:auto;margin:0;transform:rotate(calc(var(--r) * .4))}
+.arch .tile:nth-child(n+5){display:none}
+.arch .tile:hover,.arch .tile:focus-visible{transform:rotate(0) translateY(-8px)}
+.arch .tile .cv{padding:12px}
+.arch .tile .cv small{font-size:12px}.arch .tile .cv em{font-size:clamp(44px,6vw,72px)}
+@media (max-width:860px){.arch .wrap{grid-template-columns:1fr;grid-template-areas:"h" "t" "m"}.arch .more{margin-top:28px}}
+@media (max-width:600px){.arch .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 18px}}
 /* read / listen switch */
 .swh{justify-content:space-between;align-items:center}
 .sw{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px}
