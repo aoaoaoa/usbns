@@ -1598,7 +1598,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="sub">{SUB}</p>
     <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span>{'<span><a href="../">Curated edition</a></span>' if member else ''}</div>
   </div>
-  <figure class="painting"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
+  <figure class="painting"><div class="mat"><img src="img/cover-paint-v2.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <main>
 <div class="wrap">
@@ -1913,7 +1913,7 @@ a:focus-visible{{outline:2px solid var(--gold);outline-offset:3px}}
     <cite>{esc(ISSUE["epigraph_src"])}</cite>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
   </div>
-  <figure class="img"><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><b>Cover</b><span>Painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
+  <figure class="img"><div class="mat"><img src="img/cover-paint-v2.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><b>Cover</b><span>Painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
 <div class="wrap">{"".join(chapters)}</div>
 <footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue. Plate 3 reproduces the printed opener with its title as set in the magazine.</footer>
@@ -2050,7 +2050,7 @@ a:focus-visible{{outline:2px solid var(--fg);outline-offset:3px}}
     <h1>Six features from the arts issue</h1>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
   </div>
-  <figure><div class="mat"><img src="img/cover-paint.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption>Cover painting by {esc(ISSUE["cover_artist"])} · Oil on canvas</figcaption></figure>
+  <figure><div class="mat"><img src="img/cover-paint-v2.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption>Cover painting by {esc(ISSUE["cover_artist"])} · Oil on canvas</figcaption></figure>
 </header>
 {"".join(arts)}
 <footer class="colophon">{esc(ISSUE["publisher"])}<br>Feature texts transcribed from the printed issue.<br>“{esc(ISSUE["epigraph"])}” {esc(ISSUE["epigraph_src"])}</footer>
