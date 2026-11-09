@@ -852,15 +852,14 @@ def build_tab(member=False, menu="contents"):
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
     when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
-    SECRET = ''  # hidden landing / other-edition links removed
     if menu == "bands":
         light = {"#e9a21f", "#f05a7e"}
         sheet = ('<div class="rhs rhs-b" role="navigation" id="rhs" aria-label="Contents">' + f'<p class="rhi">{esc(ISSUE["theme"])}</p>'
-                 + "".join(f'<a href="#{s}" style="--tint:{t}" class="{"dk" if t in light else ""}" data-name="{esc(n)}"><span class="cur">Reading</span><span class="nm">{esc(n)}</span><span class="pp">p.&#8201;{p}</span><i class="bar"></i></a>' for s, n, p, t, k, ti in rows) + SECRET + '</div>')
+                 + "".join(f'<a href="#{s}" style="--tint:{t}" class="{"dk" if t in light else ""}" data-name="{esc(n)}"><span class="cur">Reading</span><span class="nm">{esc(n)}</span><span class="pp">p.&#8201;{p}</span><i class="bar"></i></a>' for s, n, p, t, k, ti in rows)+ '</div>')
     else:
         sheet = ('<div class="rhs rhs-c" role="navigation" id="rhs" aria-label="Contents">' + f'<div class="rhm"><span>{vol}</span><span>{when}</span></div><p class="rhtt">{esc(ISSUE["theme"])}</p>'
                  + "".join(f'<a href="#{s}" style="--tint:{t}" data-name="{esc(n)}"><span class="pn">{p}</span><span class="rx"><span class="k">{esc(k)}</span><span class="tt">{esc(ti)}</span><span class="rd" aria-hidden="true"><i></i></span></span></a>' for s, n, p, t, k, ti in rows)
-                 + '<div class="rhf"><a href="#top">Back to the cover</a></div>' + SECRET + '</div>')
+                 + '<div class="rhf"><a href="#top">Back to the cover</a></div></div>')
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
@@ -2106,7 +2105,7 @@ os.makedirs(SITE, exist_ok=True)
 with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="../img/', 'href="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
 os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
-with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
+with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
 # /test/: the curated edition as it stands, with trial treatments layered on (masthead: story-color stripes in "Bahá’í", gold italic "The", letterpress)
 TEST_CSS = ('<style>/* test */.cover .mast .the{font:italic 400 clamp(22px,2.6vw,34px)/1 "Literata",Georgia,serif;letter-spacing:0;margin:0 0 -.12em .06em;color:#b8782e;text-shadow:0 1px 0 rgba(255,255,255,.85),0 -1px 1px rgba(0,0,0,.35)}'
@@ -2123,7 +2122,7 @@ os.makedirs(os.path.join(SITE, "test"), exist_ok=True)
 with open(os.path.join(SITE, "test", "index.html"), "w") as f: f.write(build_test())
 if os.path.exists(os.path.join(SITE, "alt", "index.html")): os.remove(os.path.join(SITE, "alt", "index.html"))
 os.makedirs(os.path.join(SITE, "members", "alt"), exist_ok=True)
-with open(os.path.join(SITE, "members", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
+with open(os.path.join(SITE, "members", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('data-src="audio/', 'data-src="../../audio/').replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))

@@ -352,7 +352,12 @@ SW_JS = ("<!-- nsadd:swjs --><script>(function(){var t=document.querySelectorAll
 
 def add_sections(h, pre, FORM):
     h = _clean(h)
-    h = h.replace('</style>', CSS_ADD + '</style>', 1)
+    # only the styles of sections that are on: the dateline strip, airmail strip and browse by theme are off for now
+    _css = CSS_ADD
+    for _a, _b in (('/* dateline above the header */', '/* airmail survey strip */'), ('/* airmail survey strip */', '/* shared one-line rows */'), ('/* browse by theme */', '/* submit your story */')):
+        _i, _j = _css.find(_a), _css.find(_b)
+        if 0 <= _i < _j: _css = _css[:_i] + _css[_j:]
+    h = h.replace('</style>', _css + '</style>', 1)
     # dateline calendar above the header
     # Badí‘ strip above the header: off for now (kept in ideas/badi-strip); restore by uncommenting
     # h = h.replace('<header>', calendar_html() + '<header>', 1)
