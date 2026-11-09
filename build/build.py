@@ -2103,8 +2103,20 @@ shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg")
 os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
 with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
-os.makedirs(os.path.join(SITE, "alt"), exist_ok=True)
-with open(os.path.join(SITE, "alt", "index.html"), "w") as f: f.write(standalone(build_tab(menu="bands")).replace('href="FAVICON"', 'href="../favicon.svg"'))
+# /test/: the curated edition as it stands, with trial treatments layered on (masthead: story-color stripes in "Bahá’í", gold italic "The", letterpress)
+TEST_CSS = ('<style>/* test */.cover .mast .the{font:italic 400 clamp(22px,2.6vw,34px)/1 "Literata",Georgia,serif;letter-spacing:0;margin:0 0 -.12em .06em;color:#b8782e;text-shadow:0 1px 0 rgba(255,255,255,.85),0 -1px 1px rgba(0,0,0,.35)}'
+    '.cover h1{color:#25201b;text-shadow:0 1.5px 0 rgba(255,255,255,.85),0 -1px 1px rgba(0,0,0,.45),0 -2px 5px rgba(0,0,0,.08)}'
+    '.cover h1 .fl{position:relative;background:repeating-linear-gradient(115deg,#e8532a 0 34px,#f05a7e 34px 68px,#b07a4a 68px 102px,#c9462c 102px 136px,#1b5e6b 136px 170px);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 1.5px 0 rgba(255,255,255,.9)) drop-shadow(0 -1px .6px rgba(0,0,0,.55))}'
+    '.cover .mast .sub{text-shadow:0 1px 0 rgba(255,255,255,.8)}'
+    '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cover h1{color:var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.6),0 -1px 1px rgba(255,255,255,.12)}:root:not([data-theme="light"]) .cover h1 .fl{filter:none}}'
+    ':root[data-theme="dark"] .cover h1{color:var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.6)}:root[data-theme="dark"] .cover h1 .fl{filter:none}</style>')
+def build_test():
+    h = standalone(build_tab()).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/')
+    h = h.replace("Bahá’í</h1>", '<span class="fl">Bahá’í</span></h1>', 1).replace('</head>', TEST_CSS + '<meta name="robots" content="noindex"></head>', 1)
+    return h
+os.makedirs(os.path.join(SITE, "test"), exist_ok=True)
+with open(os.path.join(SITE, "test", "index.html"), "w") as f: f.write(build_test())
+if os.path.exists(os.path.join(SITE, "alt", "index.html")): os.remove(os.path.join(SITE, "alt", "index.html"))
 os.makedirs(os.path.join(SITE, "members", "alt"), exist_ok=True)
 with open(os.path.join(SITE, "members", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
