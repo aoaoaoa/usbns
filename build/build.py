@@ -562,9 +562,12 @@ ASK_HTML = ('<div class="askw"><section class="ask" aria-labelledby="ask-h"><div
     '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
     f'<div class="askg"><a class="askbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a><span class="askm">Takes 5 minutes</span></div></div>'
     '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section></div>')
-NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Reader survey"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
-    '<span class="ntx"><b>Finished the story?</b> Tell us what you’d like to read next.</span>'
-    f'<a class="nbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a>'
+NUDGE_LINES = [("Tell us what you enjoy reading and share your ideas for future topics.", "Takes 5 minutes."),
+               ("Know a story like these?", "Send story ideas, photos and field notes from where you live."),
+               ("Have the next stories sent to you.", "By email, as they’re published.")]
+NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Take part"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
+    f'<span class="ntx" aria-live="polite"><b>{NUDGE_LINES[0][0]}</b><span class="nl">{NUDGE_LINES[0][1]}</span></span>'
+    f'<span class="n3"><a class="on" data-k="0" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Reader survey</a><a data-k="1" href="#">Contribute</a><a data-k="2" href="/usbns/magazine/landing/#subscribe">Subscribe</a></span>'
     '<button class="nx" type="button" aria-label="Dismiss"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>')
 ASK_JS = r"""<script>
 (function(){var el=document.querySelector('.askr');if(el&&!matchMedia('(prefers-reduced-motion:reduce)').matches){var Q=""" + __import__("json").dumps(ASK_Q) + r""",i=0;
@@ -572,7 +575,7 @@ ASK_JS = r"""<script>
   var n=document.querySelector('.nudge');if(!n||!('IntersectionObserver' in window))return;var K='tab-survey-nudge',off=false;
   try{off=!!localStorage.getItem(K)}catch(e){}if(off)return;
   function stop(){off=true;n.classList.remove('on');setTimeout(function(){n.hidden=true},300);try{localStorage.setItem(K,'1')}catch(e){}}
-  n.querySelector('.nx').addEventListener('click',stop);n.querySelector('.nbtn').addEventListener('click',stop);
+  n.querySelector('.nx').addEventListener('click',stop);var L=""" + __import__("json").dumps(NUDGE_LINES) + r""",C=[].slice.call(n.querySelectorAll('.n3 a')),B=n.querySelector('.ntx b'),S=n.querySelector('.ntx .nl'),cur=0,held=false;function show(k){if(k===cur)return;cur=k;B.textContent=L[k][0];S.textContent=L[k][1];C.forEach(function(c,i){c.classList.toggle('on',i===k)})}C.forEach(function(c,i){c.addEventListener('click',stop);c.addEventListener('mouseenter',function(){held=true;show(i)});c.addEventListener('focus',function(){held=true;show(i)});c.addEventListener('mouseleave',function(){held=false});c.addEventListener('blur',function(){held=false})});if(!matchMedia('(prefers-reduced-motion:reduce)').matches)setInterval(function(){if(!held&&n.classList.contains('on'))show((cur+1)%3)},5000);
   var dock=document.getElementById('dock');function place(){var h=(dock&&!dock.hidden&&dock.classList.contains('on'))?dock.querySelector('.dk').getBoundingClientRect().height+14:0;n.style.setProperty('--dh',h+'px')}
   var arts=[].slice.call(document.querySelectorAll('article.story:not(.dept):not(.letter)')),vis=new Set();
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)vis.add(e.target);else vis.delete(e.target)});
@@ -1464,10 +1467,10 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .nudge.on{{transform:translate(-50%,0);opacity:1}}
 .nudge .ndot{{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:none}} .nudge .ndot img{{width:100%;height:100%;object-fit:cover;display:block}}
 .nudge .ntx{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:18px;line-height:1.15;min-width:0}} .nudge .ntx b{{display:block;font-size:20px}}
-.nudge .nbtn{{background:var(--blush);color:var(--navy);font-size:17px;padding:9px 16px;border-radius:999px}}
+.nudge .ntx{{width:min(36ch,46vw);min-height:3.4em;display:flex;flex-direction:column;justify-content:center}} .nudge .ntx b{{font-size:17px;line-height:1.15}} .nudge .nl{{display:block;font:13px/1.35 var(--ui);opacity:.8;margin-top:2px}} .nudge .n3{{display:flex;gap:6px;flex:none}} .nudge .n3 a{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:700;font-size:15px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--blush);border:1px solid rgba(242,207,198,.45);padding:8px 13px;border-radius:999px;white-space:nowrap;transition:background .2s,color .2s}} .nudge .n3 a.on,.nudge .n3 a:hover{{background:var(--blush);color:var(--navy);border-color:var(--blush)}}
 .nudge .nx{{flex:none;width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--blush);cursor:pointer;display:grid;place-items:center}} .nudge .nx svg{{width:18px;height:18px}} .nudge .nx:hover{{background:rgba(255,255,255,.12)}}
 .nudge a:focus-visible,.nudge button:focus-visible,.ask a:focus-visible{{outline:2px solid var(--accent,#1b5e6b);outline-offset:3px}}
-@media (max-width:520px){{.nudge{{gap:8px}} .nudge .ntx b{{display:none}} .nudge .ntx{{font-size:16px}} .nudge .nbtn{{font-size:15px;padding:8px 12px}}}}
+@media (max-width:640px){{.nudge{{flex-wrap:wrap;gap:8px 10px;border-radius:22px;padding:10px 8px 10px 10px;width:calc(100vw - 24px)}} .nudge .ndot{{width:36px;height:36px}} .nudge .ntx{{flex:1 1 0;width:auto}} .nudge .ntx b{{font-size:15.5px}} .nudge .nl{{font-size:12px}} .nudge .ntx{{min-height:5.6em}} .nudge .n3{{order:3;flex-basis:100%;justify-content:space-between;gap:5px}} .nudge .n3 a{{flex:1 1 0;min-width:0;text-align:center;font-size:13px;letter-spacing:.02em;padding:8px 3px}}}}
 @media (prefers-reduced-motion:reduce){{.nudge,.ask .askbtn{{transition:none}}}} .notices .svb:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}}
 .sharedlg .shd{{display:grid;grid-template-columns:1fr auto;align-items:start;gap:2px 12px;margin-bottom:18px}}
 .sharedlg .shk{{grid-column:1;margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}}
