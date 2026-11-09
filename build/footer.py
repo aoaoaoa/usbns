@@ -4,7 +4,6 @@ Fill in LINKS and FOLLOW with the real addresses; everything else follows."""
 
 LINKS = [  # (label, href)
     ("About", "#"),
-    ("Submit your story", "#"),
     ("Contact", "#"),
     ("Terms of use", "#"),
     ("Privacy policy", "#"),
@@ -22,6 +21,11 @@ def _icon(name):
     """Font Awesome Free brand icon (CC BY 4.0, license note kept inside the SVG), drawn in currentColor."""
     svg = open(_os.path.join(_ICONS, name + ".svg")).read().strip()
     return svg.replace("<svg ", '<svg aria-hidden="true" focusable="false" ', 1)
+ASKS = [  # (label, link text, href, extra attributes)
+    ("Reader survey", "Give feedback", "https://form.typeform.com/to/NfIWSbQl", ' data-survey'),
+    ("Contribute", "Submit your story", "#", ''),
+    ("Every issue", "Subscribe", "/usbns/magazine/landing/#subscribe", ''),
+]
 PUBLISHER = "Published by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201."
 
 _MARK = ('<svg class="cm" width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="colo-g" x1="26" y1="1" x2="26" y2="48" gradientUnits="userSpaceOnUse">'
@@ -35,6 +39,7 @@ def footer_html(home="./"):
     return (f'<footer class="colo"><div class="ci">'
             f'<a class="cw" href="{home}">{_MARK}<span><small>The</small> American Bahá’í</span></a>'
             '<div class="cr" aria-hidden="true"></div>'
+            '<div class="c3">' + ''.join(f'<div><span>{l}</span><a href="{h}"{x}>{t}</a></div>' for l, t, h, x in ASKS) + '</div>'
             f'<nav aria-label="Footer"><ul>{nav}</ul></nav>'
             f'<div class="cs"><span>Follow us</span><span class="ic">{fol}</span></div>'
             f'<p class="cp">{PUBLISHER}</p></div></footer>')
@@ -73,4 +78,6 @@ FOOTER_CSS = """
 .colo .cp{color:rgba(242,207,198,.75)}
 .colo a:focus-visible{outline-color:#f2cfc6}
 @media (max-width:640px){.colo nav a{font-size:16px}}
+.colo .c3{display:grid;grid-template-columns:repeat(3,auto);justify-content:center}.colo .c3>div{padding:4px 28px;text-align:center}.colo .c3>div+div{border-left:1px solid rgba(242,207,198,.3)}.colo .c3 span{display:block;font:700 11px var(--ui);letter-spacing:.18em;text-transform:uppercase;color:rgba(242,207,198,.7);margin-bottom:6px}.colo .c3 a{font:italic 600 18px "Literata",Georgia,serif;color:#fff;text-decoration:none}.colo .c3 a:hover{text-decoration:underline;text-underline-offset:4px}
+@media (max-width:600px){.colo .c3{grid-template-columns:1fr;gap:14px}.colo .c3>div+div{border-left:0}}
 """
