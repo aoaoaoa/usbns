@@ -4,7 +4,7 @@ Fill in LINKS and FOLLOW with the real addresses; everything else follows."""
 
 LINKS = [  # (label, href)
     ("About", "#"),
-    ("Contact", "#"),
+    ("Contact", "/usbns/magazine/contact/"),
     ("Terms of use", "#"),
     ("Privacy policy", "/usbns/magazine/privacy/"),
 ]
