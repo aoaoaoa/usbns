@@ -52,8 +52,7 @@ def body_html(blocks):
         elif k == "concept": out.append(concept_html(b[1]))
         elif k == "figures": out.append('<div class="figs">' + "".join(f'<div{" class=has" if len(f) > 2 else ""}{pop(f[0] + " " + f[1], f[2] if len(f) > 2 else "")}><b{" class=wd" if len(f[0]) > 8 else ""}>{esc(f[0])}</b><span>{esc(f[1])}</span></div>' for f in b[1]) + "</div>")
         elif k == "verb":
-            out.append('<blockquote class="verb" data-f="2"><p class="vw" aria-hidden="true"><span class="vq">“</span>neighbor<span class="sx">&#8203;<span class="s2">ing</span></span><span class="pos"><s class="pn">noun</s><b class="pv">verb</b></span></p>'
-                       f'<p class="vr"><span class="vh">“Neighboring </span>has become a verb.”</p><cite>{esc(b[1])}</cite></blockquote>')
+            out.append(f'<blockquote class="verb vc" data-f="2"><p>“Neighboring has become a <em>verb.</em>”</p><span class="rl" aria-hidden="true"></span><cite>{esc(b[1])}</cite></blockquote>')
         elif k == "sentence":
             parts = b[1]; pops = b[2] if len(b) > 2 else {}
             out.append(f'<p class="figsent{" " + b[3] if len(b) > 3 else ""}">' + "".join((f'<b class="{"has" if pops.get(p) else ""}{" wd" if len(p) > 8 else ""}"{pop(p, pops.get(p, ""))}>{esc(p)}</b>' if i % 2 else esc(p)) for i, p in enumerate(parts)) + '</p>')
@@ -838,7 +837,7 @@ def build_tab(member=False, menu="contents"):
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&{"family=Bangers&" if member else ""}family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..700;1,7..72,300..700&family=Pinyon+Script&family=Big+Shoulders+Display:wght@800..900&family=Fraunces:opsz,wght@9..144,300..600&{"family=Bangers&" if member else ""}family=Reenie+Beanie&family=Libre+Caslon+Text:ital@0;1&display=swap">
 <style>
 /* Layout: one long page. Running head with color tabs; masthead with the framed cover painting; index and front matter; each feature on a three-column field (margin, text, open) opened by its art; a colored band between features carries one passage from the issue's pages on the arts. */
 :root{{
@@ -935,6 +934,12 @@ main,.head{{position:relative;z-index:1}}
 .verb cite{{display:block;font-family:var(--ui);font-style:normal;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-top:1em;transition:opacity .5s .15s}}
 .verb:not([data-f="2"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="2"]) cite{{opacity:0}}
 @media (max-width:760px){{.prose>.verb{{grid-column:auto}} .verb .vq{{margin-left:0;width:auto}}}}
+/* display, centered, in Newsreader */
+.verb.vc{{text-align:center;margin-left:auto;margin-right:auto;max-width:680px}}
+.verb.vc p{{font-family:"Newsreader",var(--text),serif;font-optical-sizing:auto;font-weight:400;font-size:clamp(38px,6.2vw,74px);line-height:1.02;letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance;color:var(--ink)}}
+.verb.vc em{{font-style:italic;color:var(--accent)}}
+.verb.vc .rl{{display:block;width:80px;height:3px;background:#b8782e;margin:0 auto 14px}}
+.verb.vc cite{{margin:0}}
 .vh{{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 .prose>.mnote{{grid-column:1;grid-row:span 2;align-self:start;margin:.3em 0 1.6em;max-width:24ch;transform:rotate(var(--mr,-1.5deg));color:#2c4a72;cursor:default}}
 .prose>.mnote:nth-of-type(even){{--mr:1.2deg}}
@@ -1598,7 +1603,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 <script>
 (function(){{ /* opening lettering: play once in view; New Yorkers drifts with scroll */
   var rm=matchMedia('(prefers-reduced-motion: reduce)').matches; document.documentElement.classList.add('ovready');
-  (function(){{var V=[].slice.call(document.querySelectorAll('.verb'));if(!V.length||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  (function(){{var V=[].slice.call(document.querySelectorAll('.verb:not(.vc)'));if(!V.length||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
     V.forEach(function(v){{v.dataset.f='0';v.querySelector('.vw').addEventListener('click',function(){{v.dataset.hold=1;v.dataset.f=String((+v.dataset.f+1)%3)}})}});
     function tick(){{V.forEach(function(v){{if(v.dataset.hold)return;var r=v.getBoundingClientRect(),h=innerHeight;var p=(h*0.8-r.top)/(h*0.4);v.dataset.f=String(Math.max(0,Math.min(2,Math.floor(p*3))))}})}}
     addEventListener('scroll',tick,{{passive:true}});addEventListener('resize',tick);tick();}})();
