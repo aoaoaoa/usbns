@@ -1327,7 +1327,17 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
 .story>.plate,.story>.fnote,.story>.csplash{{grid-column:1/-1}}
-.story>.plate:has(.evo){{justify-self:center;width:min(100%,800px)}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,960px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
+.story>.plate:has(.evo){{justify-self:center;width:min(100%,800px)}}
+/* the quilt as a paper envelope, tilted */
+.ovw.evo{{background:#fffdf6;padding:14px;box-sizing:content-box;width:min(calc(100% - 28px),calc(92vh * var(--ar)));transform:rotate(-1.4deg);box-shadow:0 2px 3px rgba(0,0,0,.08),0 18px 36px rgba(29,26,22,.22);margin:10px auto 18px}}
+.ovw.evo>img{{display:block;width:100%;height:auto}}
+.ovw.evo .ov{{inset:14px}}
+.ovw.evo::after{{content:"";position:absolute;left:14px;right:14px;top:14px;height:46%;z-index:2;pointer-events:none;background:linear-gradient(to bottom right,transparent 49.5%,rgba(255,253,246,.7) 50%,transparent 50.8%) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49.5%,rgba(255,253,246,.7) 50%,transparent 50.8%) right/50% 100% no-repeat}}
+.ovw.evo::before{{content:"183 B.E.";position:absolute;top:28px;right:28px;z-index:3;width:clamp(52px,10cqw,84px);aspect-ratio:84/112;box-sizing:border-box;padding:6px 6px 0;display:flex;align-items:flex-end;justify-content:center;white-space:nowrap;font:700 clamp(7px,1.2cqw,10px)/1.6 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.08em;color:#222e4c;
+  background:url(img/motif/m12.webp) center 6px/calc(100% - 12px) calc(100% - 26px) no-repeat,#fffdf6;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));--r:3.5px;
+  -webkit-mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat;
+  mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat}}
+@media (prefers-reduced-motion:reduce){{.ovw.evo{{transform:none}}}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,960px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead.nodek{{margin-bottom:clamp(20px,2.6vw,36px)}}
 .shead>*{{position:relative;z-index:1}}
