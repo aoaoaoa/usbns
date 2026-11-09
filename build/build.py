@@ -2103,11 +2103,13 @@ def standalone(body):
     return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<link rel="icon" type="image/svg+xml" href="FAVICON">\n'
+            '<link rel="apple-touch-icon" href="/usbns/magazine/apple-touch-icon.png">\n<meta name="apple-mobile-web-app-title" content="Am. Bahá’í">\n'
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
 with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="../img/', 'href="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
+shutil.copy(os.path.join(HERE, "apple-touch-icon.png"), os.path.join(SITE, "apple-touch-icon.png"))
 os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
 with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
