@@ -5,7 +5,7 @@ Fill in LINKS and FOLLOW with the real addresses; everything else follows."""
 LINKS = [  # (label, href)
     ("About", "#"),
     ("Contact", "/usbns/magazine/contact/"),
-    ("Terms of use", "#"),
+    ("Terms of use", "/usbns/magazine/terms/"),
     ("Privacy policy", "/usbns/magazine/privacy/"),
 ]
 FOLLOW = [  # (label, href, icon file in icons/)

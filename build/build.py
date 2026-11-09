@@ -2159,6 +2159,7 @@ def build_page(title, h1, body):
         "main{max-width:720px;margin:0 auto;padding:48px 16px 72px}main h1{font:800 clamp(32px,5vw,46px)/1.05 var(--text);margin:0 0 30px}"
         "main h2{font:700 13px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:36px 0 12px;padding-top:16px;border-top:1px solid var(--rule)}"
         "main p{font:18px/1.65 var(--text);margin:0 0 1.1em;text-wrap:pretty}"
+        "main ul.tl{margin:0 0 1.4em;padding-left:1.2em;font:18px/1.65 var(--text)}main ul.tl li{margin:0 0 .8em;padding-left:.3em}main ul.tl li::marker{color:#b8782e}main a{color:var(--link)}"
         ".ct{margin:22px 0 30px;padding:20px 22px;background:var(--card);border:1px solid var(--rule);border-left:4px solid #222e4c}.ct h3{margin:0;font:700 20px/1.25 var(--text)}.ct .r{margin:2px 0 12px;font:14px var(--ui);color:var(--mute)}.ct dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font:16px/1.5 var(--ui)}.ct dt{color:var(--mute)}.ct dd{margin:0}.ct a{color:var(--link)}")
     return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
             '<title>Privacy policy · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
@@ -2175,6 +2176,20 @@ CONTACT = ('<h2>National and local</h2><p>Editors, journalists, and other media 
     + _office("Bah\u00e1\u2019\u00ed Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
     + '<p>For information on any of the content on this site, contact the Communications Editor.</p>'
     + _office("Bah\u00e1\u2019\u00ed Office of Communications", "Communications Editor", "(847) 733-3438", "Communications@bahai.us"))
-for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "Contacts", CONTACT)):
+NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
+TERMS = ('<h2>Copyright</h2>'
+    '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
+    '<p>While retaining full legal protection for the Content under all applicable national and international laws, the National Assembly grants use of the Content under the terms of the <a href="http://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</p>'
+    '<h2>Terms of Use</h2>'
+    '<p>You are welcome to access and use the Content of this website subject to the following conditions:</p><ul class="tl">'
+    '<li>The Content may not be used in a way that misrepresents the intent of the original source.</li>'
+    '<li>If you wish to use any Content, it must be accompanied by the following notice: “Copyright © ' + NSA + '” together with attribution to bahai.us, where appropriate. Attribution must also include the name of the individual author of the Content, in cases where an individual author is named.</li>'
+    '<li>Audio-visual content including video clips, audio clips, maps, and photographs may be cropped and edited for size. No other editing is permitted. Each user of the audio-visual content is given a limited, non-exclusive license to use, reproduce, distribute, link, and/or display this content provided the intent, character, nature, or meaning of the content remains unaltered, and the individual author is credited, in cases where an individual author is named.</li>'
+    '<li>Any use for a commercial purpose requires permission prior to use. For inquiries, please email <a href="mailto:termsofuse@bahai.us">termsofuse@bahai.us</a>.</li>'
+    '<li>The ' + NSA + ' reserves the right to withdraw permission to use the Content at any time and for any use. In such circumstances, the use of the Content should cease immediately.</li>'
+    '<li>The ' + NSA + ' does not endorse or take responsibility for third-party uses of the Content. Further, the ' + NSA + ' will not be responsible or liable to any person or organization for any direct, incidental, consequential, indirect, or punitive damages that may result from access to or use of the Content.</li></ul>'
+    '<p>These conditions may be revised at any time without notice.</p>'
+    '<p>To obtain permission to use content for commercial purposes and other uses not covered by this license, please <a href="https://www.bahai.us/contact/">contact us</a>.</p>')
+for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "Contacts", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
