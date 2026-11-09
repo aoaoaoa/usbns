@@ -164,7 +164,7 @@ def calendar_html():
             '<div class="panel"><div class="wrap"><div class="cal">'
             '<div class="today"><span class="k">In the Badí‘ calendar</span><div><div class="d" id="cal-d"></div><div class="m" id="cal-m"></div></div><div class="y" id="cal-y"></div>'
             '<svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg></div>'
-            '<div><ul class="up" id="cal-up"></ul><p class="calnote">From the issue’s Rhythm of Bahá’í Life listing. Each Bahá’í day begins at sunset the evening before.</p></div>'
+            '<div><ul class="up" id="cal-up"></ul><p class="calnote">Each Bahá’í day begins at sunset the evening before.</p></div>'
             '</div></div></div></details>\n'
             "<script>(function(){var M=" + mo + ",E=" + ev + ";"
             "var d=new Date();var mid=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);"
