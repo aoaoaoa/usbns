@@ -82,7 +82,12 @@ CSS_ADD = r'''/* nsadd */
 .ls .pp svg{width:15px;height:15px;fill:currentColor}.ls .ia{display:none}.ls .lsi.on[aria-pressed=true] .ia{display:block}.ls .lsi.on[aria-pressed=true] .ip{display:none}
 .ls .r{display:grid;gap:4px;min-width:0}
 .ls .t{font:600 14px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ls .wv{display:block;width:100%;height:22px}.ls .wv .bg{fill:var(--c);opacity:.3}.ls .wv .fg{fill:var(--c);clip-path:inset(0 100% 0 0);transition:clip-path .25s linear}
+.ls .wv{display:block;width:100%;height:30px}
+.ls .wv .fg{opacity:.55;clip-path:inset(0 100% 0 0);transition:clip-path .25s linear}
+.ls .wv .br{transform-box:fill-box;transform-origin:center;transform:scaleY(var(--v))}
+.ls .lsi[aria-pressed=true] .wv .br{animation:breathe .9s ease-in-out var(--d) infinite alternate}
+@keyframes breathe{from{transform:scaleY(calc(var(--v) * .35))}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .wv .br{animation:none}}
 .ls .tm{display:flex;justify-content:space-between;gap:8px;font:11px var(--ui);color:var(--mute);font-variant-numeric:tabular-nums}
 .ls .tm .lst{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* contents page */
@@ -201,10 +206,16 @@ def listen_html(pre):
     items = []
     for a in FEATS:
         has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
-        W, Hh, r = _bars(a['slug'])
-        items.append(f'<button type="button" class="lsi" style="--c:{TINT[a["slug"]]}" data-src="{pre}audio/{a["slug"]}.mp3" data-title="{a["title"]}" data-href="{pre}#{a["slug"]}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
-                     f'<span class="pbt"><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"><span class="pp"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span></span>'
-                     f'<span class="r"><span class="t">{a["short"]}</span><svg class="wv" viewBox="0 0 {W} {Hh}" preserveAspectRatio="none" aria-hidden="true"><g class="bg">{r}</g><g class="fg">{r}</g></svg>'
+        sl = a['slug']; im = f'{pre}img/{THUMB[sl]}'
+        import hashlib as _h
+        bb = _h.md5(sl.encode()).digest() * 4; n = 22; Wd, Hd, gp = 160, 30, 2; bw = (Wd - (n-1)*gp) / n
+        vs = [0.25 + 0.75 * ((bb[i] % 100 + bb[i+1] % 100) / 200) for i in range(n)]
+        rects = ''.join(f'<rect class="br" style="--d:{(i*137)%900}ms;--v:{v:.2f}" x="{i*(bw+gp):.1f}" y="0" width="{bw:.1f}" height="{Hd}" rx="{bw/2:.1f}"/>' for i, v in enumerate(vs))
+        wv = (f'<svg class="wv" viewBox="0 0 {Wd} {Hd}" preserveAspectRatio="none" aria-hidden="true"><defs><clipPath id="br-{sl}">{rects}</clipPath></defs>'
+              f'<g clip-path="url(#br-{sl})"><image href="{im}" width="{Wd}" height="{Hd*4}" y="-{Hd*1.5}" preserveAspectRatio="xMidYMid slice"/><rect class="fg" width="{Wd}" height="{Hd}" fill="var(--c)"/></g></svg>')
+        items.append(f'<button type="button" class="lsi" style="--c:{TINT[sl]}" data-src="{pre}audio/{sl}.mp3" data-title="{a["title"]}" data-href="{pre}#{sl}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
+                     f'<span class="pbt"><img src="{im}" alt="" loading="lazy"><span class="pp"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span></span>'
+                     f'<span class="r"><span class="t">{a["short"]}</span>{wv}'
                      f'<span class="tm"><span class="lc">0:00</span><span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></button>')
     player = ('<div class="nsp" hidden role="region" aria-label="Audio player"><div class="nsk">'
               '<button type="button" class="np" aria-label="Play"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></button>'
