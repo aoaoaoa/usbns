@@ -101,15 +101,23 @@ def ask_dialogs():
         '<div class="dbody"><span class="dk">Contribute</span><h2 id="dsb-h">Know a story like these?</h2>'
         '<div class="dnote"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
         '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div>'
-        f'<form class="dform" data-action="{SUBMIT_ACTION}" enctype="multipart/form-data" novalidate><div class="dgrid">'
-        '<label class="dfl"><span>Your name</span><input name="name" autocomplete="name" required></label>'
-        '<label class="dfl"><span>Email address</span><input type="email" name="email" autocomplete="email" required></label>'
-        '<label class="dfl full"><span>Where</span><input name="place" placeholder="Town or neighborhood, state" required></label>'
-        '<label class="dfl full"><span>What happened</span><textarea name="story" rows="5" placeholder="A few paragraphs is plenty." required></textarea></label>'
-        '<label class="dfl full"><span>Who was there <small>Names only with their permission.</small></span><input name="people"></label>'
-        '<label class="dfl full"><span>What you learned <small>What others could take from it.</small></span><textarea name="learned" rows="3"></textarea></label>'
-        '<label class="dfl full"><span>A photograph or two <small>With the photographer’s name.</small></span><input type="file" name="photos" accept="image/*" multiple></label>'
-        '<label class="dfl full"><span>Photographer</span><input name="photographer"></label></div>'
+        f'<form class="dform sform" data-action="{SUBMIT_ACTION}" enctype="multipart/form-data" novalidate>'
+        '<ol class="steps">'
+        '<li><span class="sn" aria-hidden="true">1</span><div class="sb"><h3>What happened, and where</h3>'
+        '<label class="dfl ln"><span>Where</span><input name="place" placeholder="Town or neighborhood, state" required></label>'
+        '<label class="dfl ln"><span>What happened <small>A few paragraphs is plenty.</small></span><textarea name="story" rows="6" required></textarea></label></div></li>'
+        '<li><span class="sn" aria-hidden="true">2</span><div class="sb"><h3>Who was there</h3>'
+        '<label class="dfl ln"><span class="vh">Who was there</span><input name="people" placeholder="Names only with their permission"></label></div></li>'
+        '<li><span class="sn" aria-hidden="true">3</span><div class="sb"><h3>A photograph or two</h3>'
+        '<label class="drop"><input type="file" name="photos" accept="image/*" multiple class="vh"><span class="dz"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3v12H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><b>Choose photographs</b><small class="dzn">JPEG or PNG, as many as you like</small></span></label>'
+        '<label class="dfl ln"><span>Photographer’s name</span><input name="photographer"></label></div></li>'
+        '<li><span class="sn" aria-hidden="true">4</span><div class="sb"><h3>What you learned</h3>'
+        '<label class="dfl ln"><span class="vh">What you learned</span><textarea name="learned" rows="3" placeholder="What others could take from it"></textarea></label></div></li>'
+        '</ol>'
+        '<fieldset class="you"><legend>About you</legend><div class="two">'
+        '<label class="dfl ln"><span>Your name</span><input name="name" autocomplete="name" required></label>'
+        '<label class="dfl ln"><span>Email address</span><input type="email" name="email" autocomplete="email" required></label></div>'
+        '<p class="dfine l">We’ll write before publishing anything you send.</p></fieldset>'
         '<button class="dgo" type="submit">Send your story</button></form>'
         '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div></div></dialog>')
     return sub + st + ASK_JS
@@ -119,7 +127,7 @@ var D={subscribe:document.getElementById('dlg-subscribe'),submit:document.getEle
 function kind(a){if(a.closest('dialog'))return null;if(a.hasAttribute('data-subscribe'))return 'subscribe';if(a.hasAttribute('data-submit'))return 'submit';var h=a.getAttribute('href')||'';if(/#subscribe$/.test(h)&&!document.querySelector('section#subscribe'))return 'subscribe';return null}
 document.addEventListener('click',function(e){if(e.defaultPrevented&&!e.target.closest('.nudge'))return;var a=e.target.closest('a,button');if(!a)return;var k=kind(a);if(!k)return;e.preventDefault();var d=D[k];
   d.querySelector('.dform').hidden=false;d.querySelector('.ddone').hidden=true;d.showModal();var f=d.querySelector('input:not([type=radio]):not([type=file]),textarea');if(f)setTimeout(function(){f.focus()},30)},true);
-[D.subscribe,D.submit].forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});
+[].forEach.call(document.querySelectorAll('.askdlg .drop'),function(l){var i=l.querySelector('input'),n=l.querySelector('.dzn'),b=l.querySelector('b'),t0=n.textContent;i.addEventListener('change',function(){var k=i.files.length;l.classList.toggle('has',k>0);b.textContent=k?(k==1?i.files[0].name:k+' photographs chosen'):'Choose photographs';n.textContent=k?'Choose again to replace':t0});['dragenter','dragover'].forEach(function(v){l.addEventListener(v,function(){l.classList.add('over')})});['dragleave','drop'].forEach(function(v){l.addEventListener(v,function(){l.classList.remove('over')})})});[D.subscribe,D.submit].forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});
   var f=d.querySelector('.dform');f.addEventListener('submit',function(e){e.preventDefault();var bad=[].slice.call(f.querySelectorAll('[required]')).filter(function(x){return !x.checkValidity()});
     f.querySelectorAll('.dfl').forEach(function(l){l.classList.remove('err')});if(bad.length){bad.forEach(function(x){x.closest('.dfl').classList.add('err')});bad[0].focus();return}
     var act=f.dataset.action;if(act){fetch(act,{method:'POST',body:new FormData(f)}).catch(function(){})}
@@ -155,6 +163,23 @@ ASK_CSS = """
 .askdlg .dfine{margin:12px 0 0;text-align:center;font-size:13px;color:var(--mute,#6a635a)}
 .askdlg .ddone{padding:10px 0 4px}.askdlg .ddone h3{font:700 22px "Literata",Georgia,serif;margin:0 0 6px}.askdlg .ddone p{margin:0;color:var(--mute,#6a635a);font-size:15.5px;line-height:1.5}.askdlg .ddone:focus{outline:none}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.askdlg .steps{list-style:none;margin:0 0 6px;padding:0;counter-reset:none}
+.askdlg .steps>li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:0 14px;padding:16px 0 18px;border-top:1px solid var(--rule,#d9d2c4)}
+.askdlg .sn{font:800 30px/1 var(--disp,"Bricolage Grotesque",sans-serif);color:#b8782e;letter-spacing:-.03em;padding-top:2px}
+.askdlg .sb h3{margin:4px 0 10px;font:700 17px/1.25 "Literata",Georgia,serif}
+.askdlg .dfl.ln{margin:0 0 12px}.askdlg .dfl.ln:last-child{margin-bottom:0}
+.askdlg .dfl.ln>span{font:600 11.5px var(--ui,sans-serif);letter-spacing:.12em;text-transform:uppercase;color:var(--mute,#6a635a)}.askdlg .dfl.ln>span small{text-transform:none;letter-spacing:0;font-size:12.5px}
+.askdlg .dfl.ln input,.askdlg .dfl.ln textarea{border:0;border-bottom:1.5px solid var(--rule,#d9d2c4);border-radius:0;background:transparent;padding:8px 2px;min-height:40px}
+.askdlg .dfl.ln textarea{background:repeating-linear-gradient(transparent 0 31px,var(--rule,#d9d2c4) 31px 32px);line-height:32px;padding:0 2px;border-bottom:0}
+.askdlg .dfl.ln input:focus,.askdlg .dfl.ln textarea:focus{outline:none;border-bottom-color:#222e4c;box-shadow:0 2px 0 #222e4c}
+.askdlg .dfl.ln textarea:focus{box-shadow:inset 0 -2px 0 #222e4c}
+.askdlg .dfl.ln.err input,.askdlg .dfl.ln.err textarea{border-bottom-color:#c9462c;box-shadow:0 2px 0 #c9462c}
+.askdlg .drop{display:block;cursor:pointer;margin:0 0 12px}.askdlg .dz{display:grid;justify-items:center;gap:4px;padding:18px 14px;border:1.5px dashed #b8782e;border-radius:10px;text-align:center;color:var(--ink,#1d1a16);transition:background .2s}
+.askdlg .dz svg{width:28px;height:28px;color:#b8782e}.askdlg .dz b{font-weight:600;font-size:15px}.askdlg .dz small{font-size:12.5px;color:var(--mute,#6a635a)}
+.askdlg .drop:hover .dz,.askdlg .drop.over .dz{background:rgba(184,120,46,.08)}.askdlg .drop input:focus-visible+.dz{outline:2px solid #222e4c;outline-offset:2px}.askdlg .drop.has .dz{border-style:solid}
+.askdlg .you{border:0;margin:0 0 18px;padding:16px 0 0;border-top:1px solid var(--rule,#d9d2c4)}.askdlg .you legend{font:700 17px "Literata",Georgia,serif;padding:0;margin:0 0 10px;float:left;width:100%}
+.askdlg .two{clear:both;display:grid;grid-template-columns:1fr 1fr;gap:0 18px;align-items:end}.askdlg .two .dfl{margin:0}.askdlg .dfine.l{text-align:left;margin:4px 0 0}
+@media (max-width:560px){.askdlg .two{grid-template-columns:1fr}.askdlg .steps>li{grid-template-columns:30px minmax(0,1fr);gap:0 10px}.askdlg .sn{font-size:24px}}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .askdlg .dgo{background:#f2cfc6;color:#222e4c}}:root[data-theme="dark"] .askdlg .dgo{background:#f2cfc6;color:#222e4c}
 @media (max-width:560px){.askdlg .dbody{padding:26px 18px 20px}.askdlg .dch{grid-template-columns:1fr}.askdlg .dgrid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.askdlg[open]{animation:none}}
