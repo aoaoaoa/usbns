@@ -95,7 +95,7 @@ def ask_dialogs():
         '<label><input type="radio" name="delivery" value="few" checked><span><b>A few stories</b><small>two or three at a time</small></span></label>'
         '<label><input type="radio" name="delivery" value="issue"><span><b>The full issue</b><small>four to six stories</small></span></label></fieldset>'
         '<label class="dfl"><span>Email address</span><input type="email" name="email" autocomplete="email" required placeholder="you@example.org"></label>'
-        '<button class="dgo" type="submit">Subscribe</button><p class="dfine">Unsubscribe from any email.</p></form>'
+        '<button class="dgo" type="submit">Subscribe</button></form>'
         '<div class="ddone" hidden><h3>Thank you.</h3><p>Email sign-up opens soon; we’ll have the next stories ready for you.</p></div></div></dialog>')
     st = (f'<dialog class="askdlg wide" id="dlg-submit" aria-labelledby="dsb-h"><form method="dialog" class="dx"><button aria-label="Close">{_X}</button></form>'
         '<div class="dbody"><span class="dk">Contribute</span><h2 id="dsb-h">Know a story like these?</h2>'

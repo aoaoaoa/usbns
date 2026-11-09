@@ -277,7 +277,7 @@ dict(
     byline=None,
     art="endeavor-quilt-anim.webp", art_alt="Quilt: four figures in patterned fabrics gather in a nine-pointed star, set in a field of blue and teal diamonds", art_credit="Quilt art (background only) by Helen Butler, from her original work for “A Common Endeavor”",
     art_credit_html='Quilt art (background only) by Helen Butler, from her <a href="img/endeavor-quilt-original.webp" data-lbx="quilt-original">original work</a> for “A Common Endeavor”',
-    art_extra={"id":"quilt-original","file":"endeavor-quilt-original.webp","alt":"Helen Butler's quilt for “A Common Endeavor,” hanging from a rod on a wood-paneled wall: four figures in patterned fabrics embrace beneath two green leaves, above a crescent and a bird, on a deep blue quilted ground with a mottled border",
+    art_extra={"id":"quilt-original","file":"endeavor-quilt-original.webp","alt":"Helen Butler's quilt for “A Common Endeavor”: four figures in patterned fabrics embrace beneath two green leaves, above a crescent and a bird, on a deep blue quilted ground",
                "caption":"Helen Butler, MFA (Theatre Arts, Brandeis University), is an artist and educator based in central Virginia. She crafts fiber works and creative interventions to inspire self-reflection and community engagement."},
     art_overlay={"ar":"1.7335","cls":"evo","html":ENDEAVOR_POSTMARKS},
     pages="12–15",
