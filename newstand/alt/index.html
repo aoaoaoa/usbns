@@ -222,6 +222,20 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 .ls .tm{font:600 10.5px/1.3 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:4px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .art .br{animation:none}}
+/* one system: shared heading, spacing and alternating grounds */
+.secin h2,.arch h2,.sbm h2{font-family:"Literata",Georgia,serif;font-weight:800;font-size:clamp(28px,3vw,38px);line-height:1.1;letter-spacing:-.015em}
+.sbm .kk{display:none}
+
+.secin h2::before,.arch h2::before,.sbm h2::before{display:block;font:700 11px/1 var(--ui);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;color:var(--lc,#b8782e)}
+.secin h2::before{content:"The current issue"}.arch h2::before{content:"The archive"}.sbm h2::before{content:"Contribute"}
+
+.secin .wrap,.arch .wrap,.sbm .wrap,.svy .wrap{padding-top:80px!important;padding-bottom:80px!important}
+.cur{padding-bottom:80px}
+.secin{background:var(--card)!important;border-top:1px solid var(--rule)}
+.arch{background:var(--paper)!important;border-top:0!important}
+.sbm{background:var(--card)!important;border-top:1px solid var(--rule)!important}
+.svy{background:var(--paper)!important}
+
 /* earlier issues: four, balanced */
 .arch .wrap{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);grid-template-areas:"h t" "m t";column-gap:clamp(24px,5vw,72px);align-content:start}
 .arch .rowh{grid-area:h;align-self:end;margin:0 0 12px}.arch .more{grid-area:m;align-self:start;margin:0}
@@ -466,6 +480,10 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 
 
 
+
+
+
+
 <!-- Featured Reports: hidden for now
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
@@ -478,6 +496,8 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 </div></section>
 -->
 </main>
+
+
 
 
 

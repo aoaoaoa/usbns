@@ -1327,7 +1327,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* article grid: a 3-column field. Margin column at left holds kicker, byline, pages; the headline spans the field; prose sits in the middle column with air on both sides; pull quotes hang into the left margin, photographs span margin and text. */
 .story{{display:grid;grid-template-columns:minmax(200px,26ch) minmax(0,64ch) minmax(0,1fr);column-gap:clamp(24px,4vw,56px)}}
 .story>.plate,.story>.fnote,.story>.csplash{{grid-column:1/-1}}
-.story>.plate:has(.evo){{justify-self:center;width:min(100%,900px)}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,960px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
+.story>.plate:has(.evo){{justify-self:center;width:min(100%,800px)}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,960px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead.nodek{{margin-bottom:clamp(20px,2.6vw,36px)}}
 .shead>*{{position:relative;z-index:1}}
