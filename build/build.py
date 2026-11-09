@@ -2103,7 +2103,7 @@ def standalone(body):
     return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<link rel="icon" type="image/svg+xml" href="FAVICON">\n'
-            '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n<link rel="manifest" href="/usbns/magazine/manifest.webmanifest">\n<meta name="application-name" content="American Bahá’í">\n<meta name="apple-mobile-web-app-title" content="American Bahá’í">\n'
+            '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n<link rel="manifest" href="/usbns/magazine/manifest.webmanifest">\n<link rel="icon" type="image/png" sizes="192x192" href="/usbns/magazine/icon-192.png">\n<link rel="icon" type="image/png" sizes="512x512" href="/usbns/magazine/icon-512.png">\n<meta name="application-name" content="American Bahá’í">\n<meta name="apple-mobile-web-app-title" content="American Bahá’í">\n'
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
