@@ -231,12 +231,13 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 .secin .wrap{padding-top:36px!important;padding-bottom:40px!important}
 .ls .lsi:hover{border-color:var(--ink)}.ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:3px}
 .nsp{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none}
-.nsk{pointer-events:auto;max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;background:var(--card);border:1px solid var(--rule);border-top:2px solid #222e4c;border-radius:14px;box-shadow:0 12px 30px rgba(29,26,22,.2);transform:translateY(130%);transition:transform .3s}
+.nsp:not([hidden]){display:block}
+.nsk{pointer-events:auto;width:100%;max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;background:var(--card);border:1px solid var(--rule);border-top:2px solid #222e4c;border-radius:14px;box-shadow:0 12px 30px rgba(29,26,22,.2);transform:translateY(130%);transition:transform .3s}
 .nsp.up .nsk{transform:none}
 .nsp .np{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#222e4c;color:#f2cfc6;display:grid;place-items:center;cursor:pointer}.nsp .np svg{width:16px;height:16px;fill:currentColor}
 .nsp .ia{display:none}.nsp.pl .ia{display:block}.nsp.pl .ip{display:none}.nsp.na .np{opacity:.45;cursor:default}
 .nsp .nm{flex:1;min-width:0;display:grid;gap:3px}
-.nsp .nk{font:600 10.5px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.nsp .nk{font:600 10.5px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nsp .nt{font:600 14px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nsp .nb{display:block;height:4px;background:var(--rule);border-radius:2px;cursor:pointer}.nsp .nb i{display:block;height:100%;width:0;background:#222e4c;border-radius:2px}
 .nsp .ntime{font:12px var(--ui);color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -245,7 +246,12 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 .nsp button:focus-visible,.nsp a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .nsplay .fstamp{bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 84px)}
 .ls .s{font-family:var(--ui)}
-@media (max-width:600px){.nsp .ntime{display:none}.nsp .nr{font-size:12px}}
+@media (max-width:700px){
+ .nsk{display:grid;grid-template-columns:44px minmax(0,1fr) 34px;grid-template-areas:"p m x" "p f x";column-gap:12px;row-gap:4px}
+ .nsp .np{grid-area:p}.nsp .nm{grid-area:m}.nsp .nx{grid-area:x}
+ .nsp .ntime,.nsp .nr{grid-area:f;font-size:12px}.nsp .nr{justify-self:end}
+ .nsp .nk{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 @media (prefers-reduced-motion:reduce){.nsk{transition:none}}
 
 /* browse by theme */
@@ -424,6 +430,10 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 
 
 
+
+
+
+
 <!-- Featured Reports: hidden for now
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
@@ -436,6 +446,8 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 </div></section>
 -->
 </main>
+
+
 
 
 
