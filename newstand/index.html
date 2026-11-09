@@ -150,16 +150,105 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 @media (prefers-reduced-motion:reduce){.colo .cs a{transition:none}}
 /* /colo */
 /* /survey */
+/* nsadd */
+/* dateline above the header */
+.dl{background:var(--paper);border-bottom:1px solid var(--rule);font-family:var(--ui);font-size:12.5px;color:var(--mute)}
+.dl>summary{list-style:none;cursor:pointer}.dl>summary::-webkit-details-marker{display:none}
+.dl .dr{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;min-height:34px;padding-top:6px;padding-bottom:6px}
+.dl .bd{color:var(--ink);font-weight:600;letter-spacing:.02em}.dl .bd b{font-family:var(--text);font-size:14px}
+.dl .gd{flex:1;min-width:0}
+.dl .nx{color:var(--ink)}.dl .nx i{font-style:normal;color:var(--gold-ns,#b8782e);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px;margin-right:6px}
+.dl .tg{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--link)}
+.dl .tg svg{width:12px;height:12px;transition:transform .25s}.dl[open] .tg svg{transform:rotate(180deg)}
+.dl>summary:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
+.dl .panel{border-top:1px solid var(--rule);background:var(--card)}
+.dl .panel .wrap{padding-top:28px;padding-bottom:32px}
+.cal{display:grid;grid-template-columns:minmax(240px,.8fr) 1.2fr;gap:28px;align-items:stretch}
+.today{background:#222e4c;color:#f2cfc6;border-radius:4px;padding:24px;display:grid;align-content:space-between;gap:16px;position:relative;overflow:hidden}
+.today .k{font:700 11px/1 var(--ui);letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+.today .d{font:300 58px/.95 "Barlow Condensed","Arial Narrow",sans-serif}.today .d b{font-weight:700}
+.today .m{font:italic 19px/1.3 var(--text)}
+.today .y{font:16px "Barlow Condensed","Arial Narrow",sans-serif;opacity:.85}
+.today .ring{position:absolute;right:-40px;bottom:-40px;width:170px;height:170px;opacity:.45}
+.up{list-style:none;margin:0;padding:0}
+.up li{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:13px 0;border-top:1px solid var(--rule);align-items:start}
+.up li:first-child{border-top:0;padding-top:0}
+.up .when{font:700 11.5px/1.25 var(--ui);color:#b8782e;text-transform:uppercase;letter-spacing:.06em}
+.up .when b{display:block;font:800 28px/1 var(--text);color:var(--ink);letter-spacing:0;text-transform:none}
+.up h4{margin:0 0 3px;font:700 17px/1.3 var(--text);color:var(--ink)}.up p{margin:0;font-size:13.5px;color:var(--mute)}
+.calnote{font-size:12.5px;color:var(--mute);margin:16px 0 0}
+@media (max-width:760px){.cal{grid-template-columns:1fr}.dl .gd{display:none}.dl .nx{flex-basis:100%;order:3}}
+
+/* airmail survey strip */
+.air{position:relative;background:var(--stamp);padding:6px 0;color:var(--ink)}
+.air::before,.air::after{content:"";position:absolute;left:0;right:0;height:6px;background:repeating-linear-gradient(-45deg,#c9462c 0 14px,transparent 14px 20px,#2f4f6e 20px 34px,transparent 34px 40px)}
+.air::before{top:0}.air::after{bottom:0}
+.air .wrap{display:flex;align-items:center;gap:14px;min-height:58px}
+.air .pm{flex:none;width:44px;height:44px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px var(--stamp),0 0 0 3.5px #b8782e}
+.air p{margin:0;flex:1;min-width:0;font:18px/1.2 "Barlow Condensed","Arial Narrow",sans-serif}
+.air p b{font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#b8782e;margin-right:8px;font-size:15px}
+.air a.go{font:700 15px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:2px solid #b8782e;padding-bottom:3px;white-space:nowrap}
+.air a.go:hover{color:#b8782e}
+@media (max-width:640px){.air p span{display:none}}
+
+/* shared one-line rows */
+.row1{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:14px}
+@media (max-width:900px){.row1{grid-auto-columns:minmax(190px,1fr);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)))}.row1>*{scroll-snap-align:start}}
+.secx .wrap{padding-top:52px;padding-bottom:60px}
+
+/* listen */
+.ls a{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:center;text-decoration:none;color:var(--ink);padding:9px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);min-width:0}
+.ls .th{position:relative;width:56px;height:56px;border-radius:3px;overflow:hidden}
+.ls .th img{width:100%;height:100%;object-fit:cover;display:block}
+.ls .th::after{content:"";position:absolute;inset:0;margin:auto;width:26px;height:26px;border-radius:50%;background:rgba(29,26,22,.72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5.5 4v8l6.5-4z' fill='%23fff'/%3E%3C/svg%3E") center/15px no-repeat}
+.ls .t{display:block;font:600 14px/1.25 var(--ui);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ls .s{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+.ls a:hover{border-color:var(--ink)}
+
+/* browse by theme */
+.thm a{position:relative;display:block;aspect-ratio:4/5;border-radius:4px;overflow:hidden;text-decoration:none;color:#fff;min-width:0}
+.thm img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.thm a::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.7))}
+.thm a>span{position:absolute;left:14px;right:12px;bottom:12px;z-index:1;font:800 19px/1.1 var(--text)}
+.thm small{display:block;font:600 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin-bottom:4px}
+.thm .bar{position:absolute;left:0;right:0;top:0;height:5px;background:var(--c);z-index:1}
+.thm a:hover img{transform:scale(1.05)}
+.thm a:focus-visible,.ls a:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+
+/* submit your story */
+.sbm{overflow:hidden}
+.sbm .wrap{padding-top:56px;padding-bottom:64px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px 56px;align-items:center}
+.sbm .art{position:relative;margin:0}
+.sbm .art img{display:block;width:100%;height:auto;filter:drop-shadow(0 18px 28px rgba(29,26,22,.18))}
+.sbm .art figcaption{font:12px var(--ui);color:var(--mute);margin-top:8px;text-align:right}
+.sbm .kk{font:700 12px/1 var(--ui);letter-spacing:.18em;text-transform:uppercase;color:#b8782e;margin:0 0 12px}
+.sbm h2{font-size:clamp(30px,3.6vw,44px);line-height:1.08;margin:0 0 14px}
+.sbm .ld{font-size:17px;line-height:1.55;color:var(--soft);margin:0 0 28px;max-width:46ch}
+.route{list-style:none;margin:0 0 30px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;position:relative}
+.route::before{content:"";position:absolute;left:0;right:0;top:30px;height:5px;background:repeating-linear-gradient(-45deg,#c9462c 0 10px,transparent 10px 14px,#2f4f6e 14px 24px,transparent 24px 28px);opacity:.85}
+.route li{position:relative;padding-right:16px;min-width:0}
+.route .no{position:relative;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);font:italic 700 30px/1 var(--text);color:var(--ink);margin-bottom:14px}
+.route li:last-child .no{background:#222e4c;border-color:#222e4c;color:#f2cfc6}
+.route b{display:block;font:700 20px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.route span{display:block;font-size:14px;line-height:1.45;color:var(--mute)}
+.sbtn{display:inline-flex;align-items:center;gap:10px;font:700 19px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;background:#222e4c;color:#f2cfc6;padding:14px 24px;border-radius:3px;transition:transform .2s,box-shadow .2s}
+.sbtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.2)}.sbtn:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+@media (max-width:860px){.sbm .wrap{grid-template-columns:1fr}.sbm .art{max-width:520px}}
+@media (max-width:560px){.route{grid-template-columns:1fr;gap:18px;padding-left:0}.route::before{left:29px;right:auto;top:0;bottom:0;width:5px;height:auto;background:repeating-linear-gradient(-45deg,#c9462c 0 10px,transparent 10px 14px,#2f4f6e 14px 24px,transparent 24px 28px)}
+ .route li{display:grid;grid-template-columns:62px 1fr;gap:0 16px;align-items:center}.route .no{margin:0;grid-row:1/3}}
+@media (prefers-reduced-motion:reduce){.thm img,.sbtn,.dl .tg svg{transition:none}}
+/* /nsadd */
 </style>
 </head>
 <body>
+<!-- nsadd:cal --><details class="dl"><summary><div class="wrap dr"><span class="bd" id="dl-b">183 B.E.</span><span class="gd" id="dl-g"></span><span class="nx" id="dl-n"></span><span class="tg">Holy Days and Feasts <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></summary><div class="panel"><div class="wrap"><div class="cal"><div class="today"><span class="k">In the Badí‘ calendar</span><div><div class="d" id="cal-d"></div><div class="m" id="cal-m"></div></div><div class="y" id="cal-y"></div><svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3"/></svg></div><div><ul class="up" id="cal-up"></ul><p class="calnote">From the issue’s Rhythm of Bahá’í Life listing. Each Bahá’í day begins at sunset the evening before.</p></div></div></div></div></details>
+<script>(function(){var M=[["Bahá", "Splendor", "2026-03-21"], ["Jalál", "Glory", "2026-04-09"], ["Jamál", "Beauty", "2026-04-28"], ["‘Aẓamat", "Grandeur", "2026-05-17"], ["Núr", "Light", "2026-06-05"], ["Raḥmat", "Mercy", "2026-06-24"], ["Kalimát", "Words", "2026-07-13"], ["Kamál", "Perfection", "2026-08-01"], ["Asmá’", "Names", "2026-08-20"], ["‘Izzat", "Might", "2026-09-08"], ["Mashíyyat", "Will", "2026-09-27"], ["‘Ilm", "Knowledge", "2026-10-16"], ["Qudrat", "Power", "2026-11-04"], ["Qawl", "Speech", "2026-11-23"], ["Masá’il", "Questions", "2026-12-12"], ["Sharaf", "Honor", "2026-12-31"], ["Sulṭán", "Sovereignty", "2027-01-19"], ["Mulk", "Dominion", "2027-02-07"]],E=[["2026-11-10", "Anniversary of the Birth of the Báb", "7 Qudrat · work is to be suspended"], ["2026-11-11", "Anniversary of the Birth of Bahá'u'lláh", "8 Qudrat · work is to be suspended"], ["2026-11-23", "Feast of Qawl", "Speech"], ["2026-11-26", "Day of the Covenant", "4 Qawl · work is not to be suspended"], ["2026-11-28", "Ascension of ‘Abdu'l-Bahá", "6 Qawl · work is not to be suspended"], ["2026-12-12", "Feast of Masá'il", "Questions"], ["2026-12-31", "Feast of Sharaf", "Honor"]];var d=new Date();var mid=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);function day(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2],12)}var cur=-1;for(var i=0;i<M.length;i++){if(day(M[i][2])<=mid)cur=i}var bd=document.getElementById('dl-b'),g=document.getElementById('dl-g');g.textContent=mid.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});document.getElementById('cal-y').textContent='183 B.E. · '+g.textContent;if(cur>=0){var n=Math.round((mid-day(M[cur][2]))/864e5)+1;if(n>=1&&n<=19){bd.innerHTML='<b>'+n+' '+M[cur][0]+'</b> · 183 B.E.';document.getElementById('cal-d').innerHTML='<b>'+n+'</b> '+M[cur][0];document.getElementById('cal-m').textContent='The month of '+M[cur][1]}}var up=document.getElementById('cal-up'),k=0,first=null;E.forEach(function(e){var t=day(e[0]);if(t<mid||k>=4)return;k++;var dd=Math.round((t-mid)/864e5);var w=dd===0?'Today':dd===1?'Tomorrow':'In '+dd+' days';if(!first)first=[w,e[1]];var li=document.createElement('li');li.innerHTML='<span class="when">'+w+'<b>'+t.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</b></span><div><h4></h4><p></p></div>';li.querySelector('h4').textContent=e[1];li.querySelector('p').textContent=e[2];up.appendChild(li)});var nx=document.getElementById('dl-n');if(first){nx.innerHTML='<i>'+first[0]+'</i>';nx.appendChild(document.createTextNode(first[1]))}else{up.innerHTML='<li><span class="when">Next</span><div><h4>With the next issue</h4><p>Each issue carries the Holy Days and Feasts ahead.</p></div></li>'}})();</script><!-- /nsadd:cal -->
 <header><div class="wrap">
 <a class="brand" href="./"><svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g1" x1="26" y1="1" x2="26" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".47" stop-color="#357686"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path fill="url(#g1)" d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z"/></svg><span><small>The</small> American Bahá'í</span></a>
 <nav aria-label="Site"><a href="#">About</a><a class="mem" href="../member/">Members</a></nav>
-</div></header>
-<!-- strip -->
-<div class="strip svy" role="region" aria-label="Reader survey"><div class="wrap"><span class="ms"><img class="mo" src="../img/motif/m02.webp" alt=""><img class="mo" src="../img/motif/m09.webp" alt=""><img class="mo" src="../img/motif/m05.webp" alt=""></span><p><b>Reader survey.</b> <span class="lg">Tell us what you enjoy reading. </span>Takes 5 minutes.</p><a class="svbtn" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener">Give feedback</a></div></div>
-<!-- /strip -->
+</div></header><!-- nsadd:air --><div class="strip air svy" role="region" aria-label="Reader survey"><div class="wrap"><span class="pm"><img class="mo" src="../img/motif/m09.webp" alt=""></span><p><b>Reader survey</b><span>Tell us what you enjoy reading, and what to write about next.</span></p><a class="go" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener">Give feedback · 5 min</a></div></div><!-- /nsadd:air -->
+
+
 
 
 
@@ -188,6 +277,9 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 <a class="card" href="../#abs" style="--c:#c9462c;--kc:#a8361f"><div class="im"><img src="../img/abs-stage-duo.jpg" alt="A panel at the Association's 50th annual conference in Ottawa" loading="lazy"></div><span class="k">Scholarship · Print pages 16–19</span><span class="t">Association for Bahá'í Studies at 50</span></a>
 </div>
 </div></section>
+<!-- nsadd:listen --><section class="band secx ls-s" aria-labelledby="ls-h"><div class="wrap"><div class="rowh"><h2 id="ls-h">Listen to the issue</h2><p>Each story, read aloud.</p></div><div class="row1 ls"><a href="../#gregory"><span class="th"><img src="../img/gregory-group-hd.jpg" alt="" loading="lazy"></span><span><span class="t">Louis Gregory</span><span class="s">Race amity · Reading coming soon</span></span></a><a href="../#newyorkers"><span class="th"><img src="../img/ny-park.jpg" alt="" loading="lazy"></span><span><span class="t">New Yorkers</span><span class="s">Community · Reading coming soon</span></span></a><a href="../#twoartists"><span class="th"><img src="../img/ta-portrait.jpg" alt="" loading="lazy"></span><span><span class="t">Two artists</span><span class="s">In conversation · Reading coming soon</span></span></a><a href="../#abs"><span class="th"><img src="../img/abs-stage-duo.jpg" alt="" loading="lazy"></span><span><span class="t">ABS at 50</span><span class="s">Scholarship · Reading coming soon</span></span></a><a href="../#endeavor"><span class="th"><img src="../img/az-ace.jpg" alt="" loading="lazy"></span><span><span class="t">A common endeavor</span><span class="s">Across America · Reading coming soon</span></span></a></div></div></section><!-- /nsadd:listen -->
+
+
 
 
 
@@ -223,7 +315,11 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 </div>
 <p class="more"><a href="#">Browse every issue →</a></p>
 </div></section>
+<!-- nsadd:themes --><section class="secx thm-s" aria-labelledby="th-h" style="border-top:1px solid var(--rule)"><div class="wrap"><div class="rowh"><h2 id="th-h">Browse by theme</h2><p>Every story, under the label it carried in print.</p></div><div class="row1 thm"><a href="../#gregory" style="--c:#e8532a"><i class="bar"></i><img src="../img/gregory-group-hd.jpg" alt="" loading="lazy"><span><small>1 story</small>Race amity</span></a><a href="../#newyorkers" style="--c:#f05a7e"><i class="bar"></i><img src="../img/ny-park.jpg" alt="" loading="lazy"><span><small>1 story</small>Community</span></a><a href="../#twoartists" style="--c:#b07a4a"><i class="bar"></i><img src="../img/ta-portrait.jpg" alt="" loading="lazy"><span><small>1 story</small>In conversation</span></a><a href="../#abs" style="--c:#c9462c"><i class="bar"></i><img src="../img/abs-stage-duo.jpg" alt="" loading="lazy"><span><small>1 story</small>Scholarship</span></a><a href="../#endeavor" style="--c:#1b5e6b"><i class="bar"></i><img src="../img/az-ace.jpg" alt="" loading="lazy"><span><small>1 story</small>Across America</span></a><a href="../member/" style="--c:#5b4a8a"><i class="bar"></i><img src="../img/cover-print-v57n5.jpg" alt="" loading="lazy" style="object-position:50% 30%"><span><small>Members</small>The full issue</span></a></div></div></section><!-- /nsadd:themes -->
 
+
+
+<!-- nsadd:submit --><section class="sbm" style="border-top:1px solid var(--rule)" aria-labelledby="sb-h"><div class="wrap"><figure class="art"><img src="../img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy"><figcaption>Painting with neighbors in Crown Heights, Brooklyn, from this issue</figcaption></figure><div><p class="kk">From your community</p><h2 id="sb-h">Have a story to tell?</h2><p class="ld">The American Bahá’í is written from the reports of Bahá’ís across the country. Yours could be next.</p><ol class="route"><li><span class="no">1</span><div><b>Write it</b><span>Who, where, and what you learned. A few paragraphs is plenty.</span></div></li><li><span class="no">2</span><div><b>Picture it</b><span>Add photographs, with the photographer’s name and permission from those pictured.</span></div></li><li><span class="no">3</span><div><b>Send it</b><span>An editor reads every one and will reply.</span></div></li></ol><a class="sbtn" href="#">Submit your story <span aria-hidden="true">→</span></a></div></div></section><!-- /nsadd:submit -->
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
 <div class="cards">
@@ -239,6 +335,8 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 
 
 
+
+
 <!-- survey -->
 <section id="survey" class="svy" aria-label="Reader survey"><div class="wrap"><div class="stampw"><div class="stamp"><div class="plate"><div class="bg"><img class="mo" src="../img/motif/m05.webp" alt="" loading="lazy"><img class="mo" src="../img/motif/m12.webp" alt="" loading="lazy"><img class="mo" src="../img/motif/m02.webp" alt="" loading="lazy"></div><div class="card2"><h3 class="svbrand">The American Bahá’í<br>Reader <b>Survey</b></h3><p class="l">Tell us what you enjoy reading and share your ideas for future topics.</p><a class="svbtn" href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener">Give feedback</a><p class="svmin"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Takes 5 minutes</p></div></div></div><svg class="pmark" viewBox="0 0 150 150" aria-hidden="true"><defs><path id="pmc" d="M75 75 m-54 0 a54 54 0 1 1 108 0 a54 54 0 1 1 -108 0"/></defs><circle cx="75" cy="75" r="66" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="75" cy="75" r="40" fill="none" stroke="currentColor" stroke-width="1.5"/><text><textPath href="#pmc">READER SURVEY · THE ARTS ISSUE · 2026 ·</textPath></text><text x="75" y="72" text-anchor="middle" style="font-size:15px;letter-spacing:.06em">5 MIN</text><text x="75" y="88" text-anchor="middle" style="font-size:11px">2026</text></svg></div></div></section>
 <!-- /survey -->
@@ -247,7 +345,7 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 <!-- /colo -->
 <!-- corner -->
 <div class="fstamp svy"><a href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><span class="pf"><span class="im"><img class="mo" src="../img/motif/m12.webp" alt="" loading="lazy"></span><span class="lb">Reader survey · 5 min</span></span></a><button class="x" type="button" aria-label="Dismiss the survey stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
-<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.strip');if(!s||!st||!('IntersectionObserver' in window))return;var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}watch(st,'strip');watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>
+<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.air');if(!s||!st||!('IntersectionObserver' in window))return;var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}watch(st,'strip');watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>
 <!-- /corner -->
 <!-- svydlg --><dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div><button class="shx" type="button" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><div class="svf"><iframe title="TAB Reader Survey" allow="camera; microphone; autoplay; encrypted-media; fullscreen" data-src="https://form.typeform.com/to/NfIWSbQl?typeform-medium=embed-snippet"></iframe></div></dialog><script>(function(){var d=document.querySelector('.svydlg');if(!d||!d.showModal)return;var f=d.querySelector('iframe'),op=null;function open(o){op=o||null;if(!f.src)f.src=f.dataset.src;if(!d.open)d.showModal()}document.addEventListener('click',function(e){var b=e.target.closest('[data-survey]');if(!b)return;e.preventDefault();open(b)});d.querySelector('.shx').addEventListener('click',function(){d.close()});d.addEventListener('click',function(e){if(e.target===d)d.close()});d.addEventListener('close',function(){if(op)op.focus()});if(location.hash==='#take-survey')open();})();</script><!-- /svydlg -->
 </body>

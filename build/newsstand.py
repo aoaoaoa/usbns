@@ -137,7 +137,7 @@ def corner(pre):
     return ('<!-- corner -->\n<div class="fstamp svy"><a href="' + FORM + '" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey">'
             f'<span class="pf"><span class="im"><img class="mo" src="{pre}img/motif/m12.webp" alt="" loading="lazy"></span><span class="lb">Reader survey · 5 min</span></span></a>'
             '<button class="x" type="button" aria-label="Dismiss the survey stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>\n'
-            "<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.strip');if(!s||!st||!('IntersectionObserver' in window))return;"
+            "<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.air');if(!s||!st||!('IntersectionObserver' in window))return;"
             "var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}"
             "var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}"
             "function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}"
@@ -145,9 +145,12 @@ def corner(pre):
             "s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});"
             "s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>\n<!-- /corner -->\n")
 
+exec(open(''+__import__('os').path.join(__import__('os').path.dirname(__import__('os').path.abspath(__file__)),'nsadd.py')+'').read())
+
 def make(block, css, pre, home):
     h = src.replace('</style>', CSS_COMMON + css.replace('/* /survey */\n', '') + CSS_EF + '/* colo */' + FOOTER_CSS + '/* /colo */\n/* /survey */\n</style>', 1)
-    h = h.replace(HEADER_END, HEADER_END + strip(pre), 1)
+    h = add_sections(h, pre, FORM)
+    h = h.replace(HEADER_END, HEADER_END + airmail(pre, FORM), 1)
     h = h.replace('</body>', block + '<!-- colo -->\n' + footer_html(home) + '\n<!-- /colo -->\n' + corner(pre) + DLG + '</body>', 1)
     return h
 
