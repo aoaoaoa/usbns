@@ -9,13 +9,19 @@ LINKS = [  # (label, href)
     ("Terms of use", "#"),
     ("Privacy policy", "#"),
 ]
-FOLLOW = [  # (label, href)
-    ("Facebook", "#"),
-    ("Instagram", "#"),
-    ("YouTube", "#"),
-    ("X", "#"),
-    ("LinkedIn", "#"),
+FOLLOW = [  # (label, href, icon file in icons/)
+    ("Facebook", "#", "facebook"),
+    ("Instagram", "#", "instagram"),
+    ("YouTube", "#", "youtube"),
+    ("X", "#", "x-twitter"),
+    ("LinkedIn", "#", "linkedin"),
 ]
+import os as _os
+_ICONS = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "icons")
+def _icon(name):
+    """Font Awesome Free brand icon (CC BY 4.0, license note kept inside the SVG), drawn in currentColor."""
+    svg = open(_os.path.join(_ICONS, name + ".svg")).read().strip()
+    return svg.replace("<svg ", '<svg aria-hidden="true" focusable="false" ', 1)
 PUBLISHER = "Published by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201."
 
 _MARK = ('<svg class="cm" width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="colo-g" x1="26" y1="1" x2="26" y2="48" gradientUnits="userSpaceOnUse">'
@@ -25,12 +31,12 @@ _MARK = ('<svg class="cm" width="22" height="22" viewBox="0 0 48 48" aria-hidden
 def footer_html(home="./"):
     """home: link target for the wordmark (the newsstand)."""
     nav = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in LINKS)
-    fol = "".join(f'<a href="{h}" rel="noopener">{t}</a>' for t, h in FOLLOW)
+    fol = "".join(f'<a href="{h}" rel="noopener" aria-label="{t}" title="{t}">{_icon(i)}</a>' for t, h, i in FOLLOW)
     return (f'<footer class="colo"><div class="ci">'
             f'<a class="cw" href="{home}">{_MARK}<span><small>The</small> American Bahá’í</span></a>'
             '<div class="cr" aria-hidden="true"></div>'
             f'<nav aria-label="Footer"><ul>{nav}</ul></nav>'
-            f'<p class="cs">Follow us on {fol}</p>'
+            f'<div class="cs"><span>Follow us</span><span class="ic">{fol}</span></div>'
             f'<p class="cp">{PUBLISHER}</p></div></footer>')
 
 FOOTER_CSS = """
@@ -44,10 +50,14 @@ FOOTER_CSS = """
 .colo li+li::before{content:"·";margin:0 14px;color:#b8782e}
 .colo nav a{color:var(--ink);text-decoration:none;padding:6px 0;display:inline-block}
 .colo nav a:hover{color:var(--link,var(--accent))}
-.colo .cs{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:6px 12px;margin:0;font:italic 400 15px "Literata",Georgia,serif;color:var(--mute)}
-.colo .cs a{color:var(--ink);font:400 13.5px var(--ui);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:1px}
-.colo .cs a:hover{border-color:currentColor;color:var(--link,var(--accent))}
+.colo nav{margin:0;display:block;width:100%}
+.colo .cs{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0;font:italic 400 15px "Literata",Georgia,serif;color:var(--mute)}
+.colo .cs .ic{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.colo .cs a{width:42px;height:42px;border-radius:50%;border:1px solid var(--rule);display:grid;place-items:center;color:var(--ink);transition:color .2s,border-color .2s,background .2s}
+.colo .cs a svg{width:18px;height:18px;display:block}
+.colo .cs a:hover{color:var(--card,var(--bar,#fdfcf9));background:var(--ink);border-color:var(--ink)}
 .colo .cp{font-size:12.5px;line-height:1.6;color:var(--mute);max-width:60ch;margin:0}
 .colo a:focus-visible{outline:2px solid var(--link,var(--accent));outline-offset:3px;border-radius:2px}
-@media (max-width:640px){.colo ul{flex-direction:column;align-items:center;gap:2px}.colo li+li::before{content:none}}
+@media (max-width:640px){.colo ul{flex-direction:column;align-items:center;gap:2px}.colo li+li::before{content:none}.colo li{padding-left:.16em}}
+@media (prefers-reduced-motion:reduce){.colo .cs a{transition:none}}
 """
