@@ -549,11 +549,11 @@ SVY_JS = r"""<script>
 </script>"""
 
 ASK_Q = ["What do you enjoy reading most?", "Which stories, ideas and resources matter to you?", "What should we write about next?"]
-ASK_HTML = ('<section class="ask" aria-labelledby="ask-h"><div class="askq"><h2 class="askb" id="ask-h">Reader <b>Survey</b></h2>'
+ASK_HTML = ('<div class="askw"><section class="ask" aria-labelledby="ask-h"><div class="askq"><h2 class="askb" id="ask-h">Reader <b>Survey</b></h2>'
     '<p class="askr" aria-live="off">' + ASK_Q[0] + '</p>'
     '<div class="askc">' + "".join(f'<a href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">{t}</a>' for t in ("Stories", "Ideas", "Resources", "Future topics")) + '</div>'
     f'<div class="askg"><a class="askbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a><span class="askm">Takes 5 minutes</span></div></div>'
-    '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section>')
+    '<div class="aski"><img src="img/motif/m08.webp" alt="" loading="lazy"></div></section></div>')
 NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Reader survey"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
     '<span class="ntx"><b>Finished the story?</b> Tell us what you’d like to read next.</span>'
     f'<a class="nbtn" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Give feedback</a>'
@@ -1416,7 +1416,9 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ask .aski{{min-height:280px;position:relative}} .ask .aski img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
 @media (max-width:720px){{.ask{{grid-template-columns:1fr}} .ask .aski{{min-height:0;aspect-ratio:16/9;order:-1}}}}
 .front>div:first-child{{display:flex;flex-direction:column}}
-.front .ask{{margin:32px 0 0;grid-template-columns:minmax(0,1fr) 36%}}
+.front .askw{{margin:32px 0 0;padding:12px;background:var(--bar);border:1px solid var(--rule);filter:drop-shadow(0 10px 18px rgba(29,26,22,.10));
+  clip-path:polygon(0 1.5%,3% 0,7% 1.2%,12% .2%,18% 1.4%,25% .3%,31% 1.1%,38% 0,45% 1.3%,52% .2%,59% 1.2%,66% 0,73% 1.4%,80% .3%,87% 1.2%,93% 0,97% 1.3%,100% .4%,99.4% 8%,100% 16%,99.3% 25%,100% 34%,99.5% 43%,100% 52%,99.3% 61%,100% 70%,99.4% 79%,100% 88%,99.5% 96%,100% 100%,94% 99%,88% 100%,81% 98.8%,74% 100%,67% 99%,60% 100%,53% 98.7%,46% 100%,39% 99%,32% 100%,25% 98.9%,18% 100%,11% 99%,5% 100%,0 99%,.6% 90%,0 80%,.7% 70%,0 60%,.5% 50%,0 40%,.7% 30%,0 20%,.6% 10%)}}
+.front .ask{{margin:0;border-radius:0;grid-template-columns:minmax(0,1fr) 36%}}
 .front .ask .askq{{padding:24px 24px 26px}}
 .front .ask .askb{{font-size:32px;margin-bottom:10px}}
 .front .ask .askr{{font-size:20px;min-height:2.5em;margin-bottom:14px}}
