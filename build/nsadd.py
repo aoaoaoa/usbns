@@ -5,6 +5,7 @@ _sys.path.insert(0, '/home/claude/tab')
 import data as _data, member_data as _md
 
 def _clean(h):
+    h = _re.sub(r'<!-- nsadd:toc -->.*?<!-- /nsadd:toc -->', '<div class="cards">\n</div>', h, flags=_re.S)
     h = _re.sub(r'\n?<!-- nsadd:\w+ -->.*?<!-- /nsadd:\w+ -->\n?', '\n', h, flags=_re.S)
     h = _re.sub(r'/\* nsadd \*/.*?/\* /nsadd \*/\n', '', h, flags=_re.S)
     return h
@@ -73,13 +74,28 @@ CSS_ADD = r'''/* nsadd */
 .secx .wrap{padding-top:52px;padding-bottom:60px}
 
 /* listen */
-.ls .lsi{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:center;text-align:left;font:inherit;cursor:pointer;color:var(--ink);padding:9px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);min-width:0}
-.ls .lsi.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset}
-.ls .th{position:relative;width:56px;height:56px;border-radius:3px;overflow:hidden}
-.ls .th img{width:100%;height:100%;object-fit:cover;display:block}
-.ls .th::after{content:"";position:absolute;inset:0;margin:auto;width:26px;height:26px;border-radius:50%;background:rgba(29,26,22,.72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5.5 4v8l6.5-4z' fill='%23fff'/%3E%3C/svg%3E") center/15px no-repeat}
-.ls .t{display:block;font:600 14px/1.25 var(--ui);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.ls .s{display:block;font-size:12px;color:var(--mute);margin-top:2px}
+.ls .lsi{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:12px;text-align:left;font:inherit;cursor:pointer;color:var(--ink);border:1px solid var(--rule);border-radius:40px 10px 10px 40px;padding:8px 14px 8px 8px;background:var(--paper);min-width:0}
+.ls .lsi.on{border-color:var(--c)}
+.ls .pbt{position:relative;width:56px;height:56px;border-radius:50%;overflow:hidden;display:block;box-shadow:0 0 0 3px var(--c)}
+.ls .pbt img{width:100%;height:100%;object-fit:cover;display:block}
+.ls .pp{position:absolute;inset:0;display:grid;place-items:center;background:rgba(29,26,22,.45);color:#fff}
+.ls .pp svg{width:15px;height:15px;fill:currentColor}.ls .ia{display:none}.ls .lsi.on[aria-pressed=true] .ia{display:block}.ls .lsi.on[aria-pressed=true] .ip{display:none}
+.ls .r{display:grid;gap:4px;min-width:0}
+.ls .t{font:600 14px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ls .wv{display:block;width:100%;height:22px}.ls .wv .bg{fill:var(--c);opacity:.3}.ls .wv .fg{fill:var(--c);clip-path:inset(0 100% 0 0);transition:clip-path .25s linear}
+.ls .tm{display:flex;justify-content:space-between;gap:8px;font:11px var(--ui);color:var(--mute);font-variant-numeric:tabular-nums}
+.ls .tm .lst{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* contents page */
+.toc{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.toc a{display:grid;grid-template-columns:96px minmax(0,1fr) 120px;gap:20px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
+.toc .pg{font:800 54px/1 var(--text);color:var(--c);letter-spacing:-.03em;font-variant-numeric:lining-nums}
+.toc .k{display:block;font:600 11.5px/1.3 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.toc .t{display:block;font:600 21px/1.25 var(--text);margin:4px 0 3px}
+.toc .by{display:block;font:13px var(--ui);color:var(--mute)}
+.toc .th{width:120px;height:80px;object-fit:cover;display:block;border-radius:2px}
+.toc a:hover .t{text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:4px}
+.toc a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+@media (max-width:640px){.toc a{grid-template-columns:58px minmax(0,1fr);gap:12px}.toc .pg{font-size:36px}.toc .th{display:none}.toc .t{font-size:17px}}
 .ls .lsi:hover{border-color:var(--ink)}.ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:3px}
 .nsp{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none}
 .nsk{pointer-events:auto;max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;background:var(--card);border:1px solid var(--rule);border-top:2px solid #222e4c;border-radius:14px;box-shadow:0 12px 30px rgba(29,26,22,.2);transform:translateY(130%);transition:transform .3s}
@@ -172,13 +188,24 @@ FEATS = [a for a in _data.ARTICLES if a['slug'] != 'comic']
 THUMB = {'gregory': 'gregory-group-hd.jpg', 'newyorkers': 'ny-park.jpg', 'twoartists': 'ta-portrait.jpg', 'abs': 'abs-stage-duo.jpg', 'endeavor': 'az-ace.jpg'}
 TINT = {"gregory": "#e8532a", "newyorkers": "#f05a7e", "twoartists": "#b07a4a", "abs": "#c9462c", "endeavor": "#1b5e6b"}
 
+def _bars(seed, n=34, h=24, w=3, g=2):
+    import hashlib
+    b = hashlib.md5(seed.encode()).digest() * 4
+    out = []
+    for i in range(n):
+        v = int((6 + b[i] % (h - 6) + 6 + b[i+1] % (h - 6)) / 2)
+        out.append(f'<rect x="{i*(w+g)}" y="{(h-v)/2:.1f}" width="{w}" height="{v}" rx="1.5"/>')
+    return n*(w+g), h, ''.join(out)
+
 def listen_html(pre):
     items = []
     for a in FEATS:
         has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
-        items.append(f'<button type="button" class="lsi" data-src="{pre}audio/{a["slug"]}.mp3" data-title="{a["title"]}" data-href="{pre}#{a["slug"]}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
-                     f'<span class="th"><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"></span>'
-                     f'<span><span class="t">{a["short"]}</span><span class="s">{a["kicker"]} · <span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></button>')
+        W, Hh, r = _bars(a['slug'])
+        items.append(f'<button type="button" class="lsi" style="--c:{TINT[a["slug"]]}" data-src="{pre}audio/{a["slug"]}.mp3" data-title="{a["title"]}" data-href="{pre}#{a["slug"]}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
+                     f'<span class="pbt"><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"><span class="pp"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span></span>'
+                     f'<span class="r"><span class="t">{a["short"]}</span><svg class="wv" viewBox="0 0 {W} {Hh}" preserveAspectRatio="none" aria-hidden="true"><g class="bg">{r}</g><g class="fg">{r}</g></svg>'
+                     f'<span class="tm"><span class="lc">0:00</span><span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></button>')
     player = ('<div class="nsp" hidden role="region" aria-label="Audio player"><div class="nsk">'
               '<button type="button" class="np" aria-label="Play"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></button>'
               '<div class="nm"><span class="nk"></span><span class="nt"></span><span class="nb" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></span></div>'
@@ -187,7 +214,7 @@ def listen_html(pre):
     js = r"""<script>(function(){var P=document.querySelector('.nsp');if(!P)return;var au=new Audio(),cur=null,np=P.querySelector('.np'),nb=P.querySelector('.nb'),tm=P.querySelector('.ntime');
 var fmt=function(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 function st(){var pl=cur&&!au.paused&&!cur.na;P.classList.toggle('pl',!!pl);np.setAttribute('aria-label',pl?'Pause':'Play');document.querySelectorAll('.lsi').forEach(function(b){b.classList.toggle('on',b===(cur&&cur.b));b.setAttribute('aria-pressed',b===(cur&&cur.b)&&pl?'true':'false')})}
-function sync(){if(!cur)return;if(cur.na){tm.textContent='Reading coming soon';nb.querySelector('i').style.width='0';return}var p=au.duration?au.currentTime/au.duration*100:0;nb.querySelector('i').style.width=p+'%';nb.setAttribute('aria-valuenow',Math.round(p));tm.textContent=fmt(au.currentTime)+(au.duration?' / '+fmt(au.duration):'')}
+function sync(){if(!cur)return;var fg=cur.b.querySelector('.fg'),lc=cur.b.querySelector('.lc');if(!cur.na&&au.duration){var pc=au.currentTime/au.duration*100;fg.style.clipPath='inset(0 '+(100-pc)+'% 0 0)';lc.textContent=fmt(au.currentTime);cur.b.querySelector('.lst').textContent=fmt(au.duration)}if(cur.na){tm.textContent='Reading coming soon';nb.querySelector('i').style.width='0';return}var p=au.duration?au.currentTime/au.duration*100:0;nb.querySelector('i').style.width=p+'%';nb.setAttribute('aria-valuenow',Math.round(p));tm.textContent=fmt(au.currentTime)+(au.duration?' / '+fmt(au.duration):'')}
 function open(b){if(cur&&cur.b===b){if(cur.na)return;if(au.paused)au.play().catch(function(){});else au.pause();return}
  au.pause();cur={b:b,na:false};P.querySelector('.nt').textContent=b.dataset.title;P.querySelector('.nk').textContent=b.dataset.kicker;P.querySelector('.nr').href=b.dataset.href;
  P.hidden=false;document.documentElement.classList.add('nsplay');requestAnimationFrame(function(){P.classList.add('up')});au.src=b.dataset.src;tm.textContent='Loading…';var r=au.play();if(r&&r.catch)r.catch(function(){});st();}
@@ -222,11 +249,24 @@ def submit_html(pre, href="#"):
             f'<ol class="route">{li}</ol><a class="sbtn" href="{href}">Submit your story <span aria-hidden="true">→</span></a></div>'
             '</div></section><!-- /nsadd:submit -->\n')
 
+def contents_html(pre):
+    order = sorted(FEATS, key=lambda a: int(a['pages'].split('–')[0]))
+    rows = []
+    for a in order:
+        by = a.get('byline') or ''
+        rows.append(f'<li><a href="{pre}#{a["slug"]}" style="--c:{TINT[a["slug"]]}"><span class="pg">{a["pages"].split("–")[0]}</span>'
+                    f'<span class="tx"><span class="k">{a["kicker"]}</span><span class="t">{a["title"]}</span>{("<span class=by>"+by+"</span>") if by else ""}</span>'
+                    f'<img class="th" src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy" width="120" height="80"></a></li>')
+    return f'<ol class="toc">{"".join(rows)}</ol>'
+
 def add_sections(h, pre, FORM):
     h = _clean(h)
     h = h.replace('</style>', CSS_ADD + '</style>', 1)
     # dateline calendar above the header
     h = h.replace('<header>', calendar_html() + '<header>', 1)
+    # In this issue as a contents page
+    i = h.index('<section class="band" aria-labelledby="in-h">'); a0 = h.index('<div class="cards">', i); a1 = h.index('</div>\n</div></section>', a0)
+    h = h[:a0] + '<!-- nsadd:toc -->' + contents_html(pre) + '<!-- /nsadd:toc -->' + h[a1+len('</div>'):]
     # listen after "In this issue"
     i = h.index('<section class="band" aria-labelledby="in-h">'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '\n' + listen_html(pre) + h[j:]
