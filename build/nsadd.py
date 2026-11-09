@@ -233,7 +233,11 @@ def add_sections(h, pre, FORM):
     # themes after the archive
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '\n' + themes_html(pre) + h[j:]
-    # submit before Featured Reports
-    i = h.index('<section id="special"')
-    h = h[:i] + submit_html(pre) + h[i:]
+    # Featured Reports: off for now (kept in the page as a comment)
+    if '<section id="special"' in h and '<!-- Featured Reports: hidden' not in h:
+        i = h.index('<section id="special"'); j = h.index('</div></section>', i) + len('</div></section>')
+        h = h[:i] + '<!-- Featured Reports: hidden for now\n' + h[i:j].replace('--', '- -') + '\n-->' + h[j:]
+    # submit after Browse by theme
+    i = h.index('<!-- /nsadd:themes -->') + len('<!-- /nsadd:themes -->')
+    h = h[:i] + '\n' + submit_html(pre) + h[i:]
     return h
