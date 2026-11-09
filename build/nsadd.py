@@ -39,22 +39,21 @@ CSS_ADD = r'''/* nsadd */
 .dl .tg svg{width:12px;height:12px;transition:transform .25s}.dl[open] .tg svg{transform:rotate(180deg)}
 .dl>summary:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
 .dl .panel{border-top:1px solid var(--rule);background:var(--card)}
-.dl .panel .wrap{padding-top:28px;padding-bottom:32px}
-.cal{display:grid;grid-template-columns:minmax(240px,.8fr) 1.2fr;gap:28px;align-items:stretch}
-.today{background:#222e4c;color:#f2cfc6;border-radius:4px;padding:24px;display:grid;align-content:space-between;gap:16px;position:relative;overflow:hidden}
-.today .k{font:700 11px/1 var(--ui);letter-spacing:.18em;text-transform:uppercase;opacity:.8}
-.today .d{font:300 58px/.95 "Barlow Condensed","Arial Narrow",sans-serif}.today .d b{font-weight:700}
-.today .m{font:italic 19px/1.3 var(--text)}
-.today .y{font:16px "Barlow Condensed","Arial Narrow",sans-serif;opacity:.85}
-.today .ring{position:absolute;right:-40px;bottom:-40px;width:170px;height:170px;opacity:.45}
-.up{list-style:none;margin:0;padding:0}
-.up li{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:13px 0;border-top:1px solid var(--rule);align-items:start}
-.up li:first-child{border-top:0;padding-top:0}
-.up .when{font:700 11.5px/1.25 var(--ui);color:#b8782e;text-transform:uppercase;letter-spacing:.06em}
-.up .when b{display:block;font:800 28px/1 var(--text);color:var(--ink);letter-spacing:0;text-transform:none}
-.up h4{margin:0 0 3px;font:700 17px/1.3 var(--text);color:var(--ink)}.up p{margin:0;font-size:13.5px;color:var(--mute)}
-.calnote{font-size:12.5px;color:var(--mute);margin:16px 0 0}
-@media (max-width:760px){.cal{grid-template-columns:1fr}.dl .gd{display:none}.dl .nx{flex-basis:100%;order:3}}
+.dl .panel .wrap{padding-top:14px;padding-bottom:16px}
+.cal{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:stretch}
+.today{background:#222e4c;color:#f2cfc6;border-radius:4px;padding:12px 16px;display:grid;align-content:center;gap:2px;min-width:170px}
+.today .k{font:700 10px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin-bottom:4px}
+.today .d{font:300 30px/1 "Barlow Condensed","Arial Narrow",sans-serif}.today .d b{font-weight:700}
+.today .m{font:italic 14px/1.3 var(--text)}
+.today .y{display:none}.today .ring{display:none}
+.up{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.up li{display:grid;gap:2px;padding:2px 14px;border-left:1px solid var(--rule);align-content:start}
+.up li:first-child{border-left:0;padding-left:0}
+.up .when{font:700 10.5px/1.25 var(--ui);color:#b8782e;text-transform:uppercase;letter-spacing:.06em}
+.up .when b{font:700 13px var(--ui);color:var(--ink);letter-spacing:0;text-transform:none;margin-left:4px}
+.up h4{margin:0;font:700 14px/1.3 var(--text);color:var(--ink)}.up p{margin:0;font-size:12px;line-height:1.35;color:var(--mute)}
+.calnote{font-size:11.5px;color:var(--mute);margin:8px 0 0}
+@media (max-width:760px){.cal{grid-template-columns:1fr}.up{grid-template-columns:1fr 1fr;gap:10px 0}.up li:nth-child(3){border-left:0;padding-left:0}.dl .gd{display:none}.dl .nx{flex-basis:100%;order:3}}
 
 /* airmail survey strip */
 .air{position:relative;background:var(--stamp);padding:6px 0;color:var(--ink)}
