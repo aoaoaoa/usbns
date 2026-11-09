@@ -73,13 +73,31 @@ CSS_ADD = r'''/* nsadd */
 .secx .wrap{padding-top:52px;padding-bottom:60px}
 
 /* listen */
-.ls a{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:center;text-decoration:none;color:var(--ink);padding:9px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);min-width:0}
+.ls .lsi{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:center;text-align:left;font:inherit;cursor:pointer;color:var(--ink);padding:9px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);min-width:0}
+.ls .lsi.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset}
 .ls .th{position:relative;width:56px;height:56px;border-radius:3px;overflow:hidden}
 .ls .th img{width:100%;height:100%;object-fit:cover;display:block}
 .ls .th::after{content:"";position:absolute;inset:0;margin:auto;width:26px;height:26px;border-radius:50%;background:rgba(29,26,22,.72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5.5 4v8l6.5-4z' fill='%23fff'/%3E%3C/svg%3E") center/15px no-repeat}
 .ls .t{display:block;font:600 14px/1.25 var(--ui);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .ls .s{display:block;font-size:12px;color:var(--mute);margin-top:2px}
-.ls a:hover{border-color:var(--ink)}
+.ls .lsi:hover{border-color:var(--ink)}.ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+.nsp{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none}
+.nsk{pointer-events:auto;max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;background:var(--card);border:1px solid var(--rule);border-top:2px solid #222e4c;border-radius:14px;box-shadow:0 12px 30px rgba(29,26,22,.2);transform:translateY(130%);transition:transform .3s}
+.nsp.up .nsk{transform:none}
+.nsp .np{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:#222e4c;color:#f2cfc6;display:grid;place-items:center;cursor:pointer}.nsp .np svg{width:16px;height:16px;fill:currentColor}
+.nsp .ia{display:none}.nsp.pl .ia{display:block}.nsp.pl .ip{display:none}.nsp.na .np{opacity:.45;cursor:default}
+.nsp .nm{flex:1;min-width:0;display:grid;gap:3px}
+.nsp .nk{font:600 10.5px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.nsp .nt{font:600 14px/1.25 var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nsp .nb{display:block;height:4px;background:var(--rule);border-radius:2px;cursor:pointer}.nsp .nb i{display:block;height:100%;width:0;background:#222e4c;border-radius:2px}
+.nsp .ntime{font:12px var(--ui);color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
+.nsp .nr{font:600 13px var(--ui);color:var(--link);text-decoration:none;white-space:nowrap}
+.nsp .nx{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer;display:grid;place-items:center}.nsp .nx svg{width:18px;height:18px}
+.nsp button:focus-visible,.nsp a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.nsplay .fstamp{bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 84px)}
+.ls .s{font-family:var(--ui)}
+@media (max-width:600px){.nsp .ntime{display:none}.nsp .nr{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.nsk{transition:none}}
 
 /* browse by theme */
 .thm a{position:relative;display:block;aspect-ratio:4/5;border-radius:4px;overflow:hidden;text-decoration:none;color:#fff;min-width:0}
@@ -158,11 +176,32 @@ def listen_html(pre):
     items = []
     for a in FEATS:
         has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
-        items.append(f'<a href="{pre}#{a["slug"]}"><span class="th"><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"></span>'
-                     f'<span><span class="t">{a["short"]}</span><span class="s">{a["kicker"]} · {"Listen" if has else "Reading coming soon"}</span></span></a>')
+        items.append(f'<button type="button" class="lsi" data-src="{pre}audio/{a["slug"]}.mp3" data-title="{a["title"]}" data-href="{pre}#{a["slug"]}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">'
+                     f'<span class="th"><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"></span>'
+                     f'<span><span class="t">{a["short"]}</span><span class="s">{a["kicker"]} · <span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></button>')
+    player = ('<div class="nsp" hidden role="region" aria-label="Audio player"><div class="nsk">'
+              '<button type="button" class="np" aria-label="Play"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></button>'
+              '<div class="nm"><span class="nk"></span><span class="nt"></span><span class="nb" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></span></div>'
+              '<span class="ntime"></span><a class="nr" href="#">Read the story →</a>'
+              '<button type="button" class="nx" aria-label="Close the player"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div></div>')
+    js = r"""<script>(function(){var P=document.querySelector('.nsp');if(!P)return;var au=new Audio(),cur=null,np=P.querySelector('.np'),nb=P.querySelector('.nb'),tm=P.querySelector('.ntime');
+var fmt=function(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+function st(){var pl=cur&&!au.paused&&!cur.na;P.classList.toggle('pl',!!pl);np.setAttribute('aria-label',pl?'Pause':'Play');document.querySelectorAll('.lsi').forEach(function(b){b.classList.toggle('on',b===(cur&&cur.b));b.setAttribute('aria-pressed',b===(cur&&cur.b)&&pl?'true':'false')})}
+function sync(){if(!cur)return;if(cur.na){tm.textContent='Reading coming soon';nb.querySelector('i').style.width='0';return}var p=au.duration?au.currentTime/au.duration*100:0;nb.querySelector('i').style.width=p+'%';nb.setAttribute('aria-valuenow',Math.round(p));tm.textContent=fmt(au.currentTime)+(au.duration?' / '+fmt(au.duration):'')}
+function open(b){if(cur&&cur.b===b){if(cur.na)return;if(au.paused)au.play().catch(function(){});else au.pause();return}
+ au.pause();cur={b:b,na:false};P.querySelector('.nt').textContent=b.dataset.title;P.querySelector('.nk').textContent=b.dataset.kicker;P.querySelector('.nr').href=b.dataset.href;
+ P.hidden=false;document.documentElement.classList.add('nsplay');requestAnimationFrame(function(){P.classList.add('up')});au.src=b.dataset.src;tm.textContent='Loading…';var r=au.play();if(r&&r.catch)r.catch(function(){});st();}
+au.addEventListener('error',function(){if(!cur)return;cur.na=true;P.classList.add('na');cur.b.querySelector('.lst').textContent='Reading coming soon';sync();st()});
+au.addEventListener('playing',function(){P.classList.remove('na')});
+['play','pause','ended'].forEach(function(e){au.addEventListener(e,st)});au.addEventListener('timeupdate',sync);au.addEventListener('loadedmetadata',sync);
+document.querySelectorAll('.lsi').forEach(function(b){b.addEventListener('click',function(){open(b)})});
+np.addEventListener('click',function(){if(cur)open(cur.b)});
+P.querySelector('.nx').addEventListener('click',function(){au.pause();document.documentElement.classList.remove('nsplay');P.classList.remove('up');setTimeout(function(){P.hidden=true},300);cur=null;st()});
+nb.addEventListener('click',function(e){if(!au.duration)return;var r=nb.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration});
+})();</script>"""
     return ('<!-- nsadd:listen --><section class="band secx ls-s" aria-labelledby="ls-h"><div class="wrap">'
-            '<div class="rowh"><h2 id="ls-h">Listen to the issue</h2><p>Each story, read aloud.</p></div>'
-            f'<div class="row1 ls">{"".join(items)}</div></div></section><!-- /nsadd:listen -->\n')
+            '<div class="rowh"><h2 id="ls-h">Listen to the issue</h2><p>Each story, read aloud, right here.</p></div>'
+            f'<div class="row1 ls">{"".join(items)}</div></div></section>{player}{js}<!-- /nsadd:listen -->\n')
 
 def themes_html(pre):
     tiles = [f'<a href="{pre}#{a["slug"]}" style="--c:{TINT[a["slug"]]}"><i class="bar"></i><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"><span><small>1 story</small>{a["kicker"]}</span></a>' for a in FEATS]
