@@ -855,7 +855,7 @@ def build_tab(member=False, menu="contents"):
     else:
         sheet = ('<div class="rhs rhs-c" role="navigation" id="rhs" aria-label="Contents">' + f'<div class="rhm"><span>{vol}</span><span>{when}</span></div><p class="rhtt">{esc(ISSUE["theme"])}</p>'
                  + "".join(f'<a href="#{s}" style="--tint:{t}" data-name="{esc(n)}"><span class="pn">{p}</span><span class="rx"><span class="k">{esc(k)}</span><span class="tt">{esc(ti)}</span><span class="rd" aria-hidden="true"><i></i></span></span></a>' for s, n, p, t, k, ti in rows)
-                 + '<div class="rhf"><a href="#top">Back to the cover</a><a href="#front">About this issue</a></div>' + SECRET + '</div>')
+                 + '<div class="rhf"><a href="#top">Back to the cover</a></div>' + SECRET + '</div>')
     title = esc(ISSUE["title"]) + (" Full Edition" if member else "")
     return f'''<title>{title}</title>
 {SIDES}
