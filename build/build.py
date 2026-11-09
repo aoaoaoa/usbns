@@ -8,6 +8,7 @@ Images are read from out/img/ (subfolders included) and mirrored to site/img/.
 import html, os, re, shutil, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import ISSUE, VOICES, ARTICLES
+from footer import footer_html, FOOTER_CSS
 SUB = "A U.S. Bah\u00e1\u2019\u00ed News publication"
 
 def esc(s): return html.escape(s, quote=False) if s else ""
@@ -1506,7 +1507,8 @@ html.docked body{{padding-bottom:84px}}
 .uhj p::first-letter{{color:var(--gilt-c);font-size:1.45em;font-style:normal;font-weight:600}}
 .uhj cite{{display:flex;align-items:center;gap:10px;color:var(--gilt-c)}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--gilt-c:#d4b062;--star-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23d4b062' d='M22.0121%2012.0305L23.9836%208.64366L25.9552%2012.0305L27.4999%2014.6878L30.3894%2013.6493L34.0717%2012.3258L33.4077%2016.1878L32.8894%2019.2183L35.7688%2020.2839L39.4375%2021.6414L36.4531%2024.1731L34.1089%2026.1584L35.6333%2028.8292L37.5744%2032.233L33.6618%2032.25L30.5927%2032.2636L30.0473%2035.2907L29.3529%2039.1459L26.3447%2036.6414L23.9836%2034.6731L21.6225%2036.6414L18.6144%2039.1459L17.92%2035.2907L17.3746%2032.2636L14.3055%2032.25L10.3929%2032.233L12.334%2028.8292L13.8583%2026.1584L11.5142%2024.1731L8.52977%2021.6414L12.2018%2020.2839L15.0812%2019.2183L14.5629%2016.1878L13.899%2012.3258L17.5812%2013.6493L20.4708%2014.6878L22.0155%2012.0305H22.0121ZM18.523%209.3733L8.32652%205.70475L10.1626%2016.4016L0%2020.1584L8.26894%2027.1697L2.89294%2036.5905L13.7262%2036.638L15.6537%2047.3179L23.9836%2040.3778L32.3136%2047.3179L34.241%2036.638L45.0743%2036.5905L39.6983%2027.1697L47.9673%2020.1584L37.8047%2016.4016L39.6408%205.70475L29.4443%209.3733L23.9803%200L18.523%209.3767V9.3733Z'/%3E%3C/svg%3E")}}}} :root[data-theme="dark"]{{--gilt-c:#d4b062;--star-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%23d4b062' d='M22.0121%2012.0305L23.9836%208.64366L25.9552%2012.0305L27.4999%2014.6878L30.3894%2013.6493L34.0717%2012.3258L33.4077%2016.1878L32.8894%2019.2183L35.7688%2020.2839L39.4375%2021.6414L36.4531%2024.1731L34.1089%2026.1584L35.6333%2028.8292L37.5744%2032.233L33.6618%2032.25L30.5927%2032.2636L30.0473%2035.2907L29.3529%2039.1459L26.3447%2036.6414L23.9836%2034.6731L21.6225%2036.6414L18.6144%2039.1459L17.92%2035.2907L17.3746%2032.2636L14.3055%2032.25L10.3929%2032.233L12.334%2028.8292L13.8583%2026.1584L11.5142%2024.1731L8.52977%2021.6414L12.2018%2020.2839L15.0812%2019.2183L14.5629%2016.1878L13.899%2012.3258L17.5812%2013.6493L20.4708%2014.6878L22.0155%2012.0305H22.0121ZM18.523%209.3733L8.32652%205.70475L10.1626%2016.4016L0%2020.1584L8.26894%2027.1697L2.89294%2036.5905L13.7262%2036.638L15.6537%2047.3179L23.9836%2040.3778L32.3136%2047.3179L34.241%2036.638L45.0743%2036.5905L39.6983%2027.1697L47.9673%2020.1584L37.8047%2016.4016L39.6408%205.70475L29.4443%209.3733L23.9803%200L18.523%209.3767V9.3733Z'/%3E%3C/svg%3E")}}
-.colophon{{padding-block:clamp(48px,8vw,96px);font-family:var(--ui);font-size:13px;color:var(--mute);max-width:60ch;line-height:1.6;border-top:1px solid var(--rule);margin-top:clamp(48px,8vw,112px)}}
+{FOOTER_CSS}
+.colo{{margin-top:clamp(48px,8vw,112px)}}
 a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 @media (max-width:980px){{
   .story{{grid-template-columns:minmax(0,1fr)}}
@@ -1560,9 +1562,9 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {lead}
 {"".join(secs)}
 {depts}
-<footer class="colophon">{esc(ISSUE["publisher"])}</footer>
 </div>
 </main>
+{footer_html("https://aoaoaoa.github.io/usbns/newstand/")}
 {DOCK}
 {LBX_HTML}
 {SHARE_HTML}

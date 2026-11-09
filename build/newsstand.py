@@ -1,0 +1,162 @@
+import re
+P = '/home/claude/usbns/newstand/index.html'
+src = open(P).read()
+# strip any earlier survey block so the script can be rerun
+src = re.sub(r'\n<!-- survey -->.*?<!-- /survey -->\n', '\n', src, flags=re.S)
+src = re.sub(r'/\* survey \*/.*?/\* /survey \*/\n', '', src, flags=re.S)
+src = re.sub(r'<!-- svydlg -->.*?<!-- /svydlg -->\n', '', src, flags=re.S)
+src = re.sub(r'<!-- strip -->.*?<!-- /strip -->\n', '', src, flags=re.S)
+src = re.sub(r'<!-- corner -->.*?<!-- /corner -->\n', '', src, flags=re.S)
+src = re.sub(r'<!-- colo -->.*?<!-- /colo -->\n', '', src, flags=re.S)
+src = re.sub(r'<footer><div class="wrap">Published by[^<]*</div></footer>\n?', '', src)
+import sys; sys.path.insert(0, '/home/claude/tab')
+from footer import footer_html, FOOTER_CSS
+
+FORM = 'https://form.typeform.com/to/NfIWSbQl'
+FONT_OLD = 'family=Bricolage+Grotesque:'
+if 'Barlow+Condensed' not in src:
+    src = src.replace(FONT_OLD, 'family=Barlow+Condensed:wght@300;400;700&' + FONT_OLD, 1)
+
+CSS_COMMON = '''/* survey */
+.svy{--navy:#222e4c;--blush:#f2cfc6;--gold:#b8782e;--stamp:#fbf7ef}
+.svy .wrap{padding-top:72px;padding-bottom:72px}
+.svbrand{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:300;line-height:1.02;margin:0;color:var(--blush)}.svbrand b{font-weight:700}
+.svbtn{display:inline-flex;align-items:center;justify-content:center;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;text-decoration:none;background:var(--blush);color:var(--navy);padding:12px 28px;border-radius:3px;white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.svbtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.25)}
+.svbtn:focus-visible{outline:2px solid var(--blush);outline-offset:3px}
+.svmin{display:flex;align-items:center;justify-content:center;gap:6px;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:17px;color:var(--blush);opacity:.85;margin:12px 0 0}
+.svmin svg{width:15px;height:15px;flex:none}
+img.mo{display:block;width:100%;height:100%;object-fit:cover}
+.svydlg{border:0;border-radius:14px;padding:0;width:min(760px,calc(100vw - 32px));height:min(720px,calc(100dvh - 48px));background:var(--card);color:var(--ink);box-shadow:0 24px 60px rgba(20,16,10,.28);overflow:hidden}
+.svydlg[open]{display:flex;flex-direction:column}.svydlg::backdrop{background:rgba(20,16,10,.38)}
+.svydlg .svh{display:flex;justify-content:space-between;align-items:start;gap:12px;padding:18px 18px 14px 22px;border-bottom:1px solid var(--rule)}
+.svydlg .shk{margin:0;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.svydlg h2{font-size:20px;line-height:1.2}
+.svydlg .shx{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--mute);cursor:pointer}.svydlg .shx svg{width:20px;height:20px}.svydlg .shx:hover{background:var(--ph)}
+.svydlg .svf{flex:1;min-height:0}.svydlg iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+@media (max-width:640px){.svydlg{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}.svydlg .svh{padding-top:max(14px,env(safe-area-inset-top,0px))}}
+@media (prefers-reduced-motion:reduce){.svbtn{transition:none}}
+'''
+
+CSS_F = '''/* F: three motifs behind one card, in a postage-stamp frame */
+.stampw{position:relative;max-width:1080px;margin:0 auto;filter:drop-shadow(0 18px 30px rgba(29,26,22,.18))}
+.stamp{--r:7px;background:var(--stamp);padding:calc(2.6*var(--r));
+  -webkit-mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat;
+  mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat}
+.stamp .plate{position:relative;min-height:460px;display:grid;place-items:center;overflow:hidden;outline:1px solid color-mix(in oklab,var(--navy) 30%,transparent);outline-offset:6px}
+.stamp .bg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.stamp .card2{position:relative;margin:28px 20px;background:color-mix(in oklab,var(--navy) 90%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--blush);padding:clamp(26px,4vw,44px) clamp(22px,4vw,48px);max-width:580px;text-align:center;border-radius:3px;box-shadow:0 0 0 1px rgba(242,207,198,.35) inset,0 0 0 7px var(--navy) inset,0 0 0 8px rgba(242,207,198,.25) inset}
+.stamp .svbrand{font-size:clamp(36px,4.4vw,52px);margin:0 0 14px}
+.stamp .card2 p.l{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:21px;margin:0 0 22px;color:var(--blush)}
+.stampw .val{position:absolute;right:calc(2.6*7px + 10px);top:calc(2.6*7px + 8px);z-index:2;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-weight:700;font-size:15px;letter-spacing:.08em;color:var(--navy);background:var(--stamp);padding:3px 8px;border-radius:2px}
+.pmark{position:absolute;left:-26px;bottom:-30px;width:150px;height:150px;z-index:3;color:var(--gold);transform:rotate(-14deg);pointer-events:none;opacity:.9}
+.pmark text{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.2em;fill:currentColor}
+@media (max-width:720px){.stamp .bg{grid-template-columns:1fr 1fr}.stamp .bg img:nth-child(3){display:none}.stamp .plate{min-height:420px}.pmark{width:110px;height:110px;left:-10px;bottom:-26px}}
+/* /survey */
+'''
+
+CSS_B = '''/* B: a wall of the motif, one tile asks */
+.wall{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.wall>*{aspect-ratio:1;overflow:hidden;border-radius:2px}
+.wall .ask{grid-column:3/5;grid-row:1/3;aspect-ratio:auto;background:var(--navy);color:var(--blush);padding:clamp(20px,3vw,36px);display:flex;flex-direction:column;justify-content:flex-end;gap:14px}
+.wall .ask .svbrand{font-size:clamp(32px,3.8vw,52px)}
+.wall .ask p.l{margin:0;font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:19px;color:var(--blush);opacity:.92}
+.wall .ask .go{display:flex;flex-direction:column;align-items:flex-start}.wall .ask .svmin{justify-content:flex-start}
+.wall a.t{display:block;transition:transform .25s}.wall a.t:hover{transform:scale(1.03)}
+.wall a.t:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+@media (max-width:900px){.wall{grid-template-columns:repeat(4,1fr)}.wall .ask{grid-column:2/4}.wall a.x4,.wall a.x5,.wall a.x6{display:none}}
+@media (max-width:600px){.wall{grid-template-columns:repeat(3,1fr)}.wall .ask{grid-column:1/-1;grid-row:2}.wall a.x4,.wall a.x5{display:block}.wall a.x6{display:none}}
+@media (prefers-reduced-motion:reduce){.wall a.t{transition:none}}
+/* /survey */
+'''
+
+CLOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>'
+BTN = f'<a class="svbtn" href="{FORM}" data-survey target="_blank" rel="noopener">Give feedback</a>'
+MIN = f'<p class="svmin">{CLOCK}Takes 5 minutes</p>'
+HEAD = ''
+
+def F(pre):
+    m = lambda n: f'<img class="mo" src="{pre}img/motif/m{n:02d}.webp" alt="" loading="lazy">'
+    pm = ('<svg class="pmark" viewBox="0 0 150 150" aria-hidden="true"><defs><path id="pmc" d="M75 75 m-54 0 a54 54 0 1 1 108 0 a54 54 0 1 1 -108 0"/></defs>'
+          '<circle cx="75" cy="75" r="66" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="75" cy="75" r="40" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+          '<text><textPath href="#pmc">READER SURVEY · THE ARTS ISSUE · 2026 ·</textPath></text>'
+          '<text x="75" y="72" text-anchor="middle" style="font-size:15px;letter-spacing:.06em">5 MIN</text><text x="75" y="88" text-anchor="middle" style="font-size:11px">2026</text></svg>')
+    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey"><div class="wrap">{HEAD}'
+            f'<div class="stampw"><div class="stamp"><div class="plate"><div class="bg">{m(5)}{m(12)}{m(2)}</div>'
+            f'<div class="card2"><h3 class="svbrand">The American Bahá’í<br>Reader <b>Survey</b></h3><p class="l">Tell us what you enjoy reading and share your ideas for future topics.</p>{BTN}{MIN}</div></div></div>'
+            f'{pm}</div></div></section>\n<!-- /survey -->\n')
+
+def B(pre):
+    t = lambda n, c='': f'<a class="t {c}" href="{FORM}" data-survey target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img class="mo" src="{pre}img/motif/m{n:02d}.webp" alt="" loading="lazy"></a>'
+    ask = (f'<div class="ask"><h3 class="svbrand">Tell us what<br>you <b>read</b></h3><p class="l">What you enjoy, and what you’d like next.</p>'
+           f'<div class="go">{BTN}{MIN}</div></div>')
+    tiles = [t(2), t(4), ask, t(6, 'x5'), t(9, 'x6'), t(11), t(5), t(10, 'x4'), t(12, 'x6')]
+    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey"><div class="wrap">{HEAD}'
+            f'<div class="wall">{"".join(tiles)}</div></div></section>\n<!-- /survey -->\n')
+
+DLG = ('<!-- svydlg --><dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div>'
+       '<button class="shx" type="button" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>'
+       f'<div class="svf"><iframe title="TAB Reader Survey" allow="camera; microphone; autoplay; encrypted-media; fullscreen" data-src="{FORM}?typeform-medium=embed-snippet"></iframe></div></dialog>'
+       "<script>(function(){var d=document.querySelector('.svydlg');if(!d||!d.showModal)return;var f=d.querySelector('iframe'),op=null;"
+       "function open(o){op=o||null;if(!f.src)f.src=f.dataset.src;if(!d.open)d.showModal()}"
+       "document.addEventListener('click',function(e){var b=e.target.closest('[data-survey]');if(!b)return;e.preventDefault();open(b)});"
+       "d.querySelector('.shx').addEventListener('click',function(){d.close()});d.addEventListener('click',function(e){if(e.target===d)d.close()});"
+       "d.addEventListener('close',function(){if(op)op.focus()});if(location.hash==='#take-survey')open();})();</script><!-- /svydlg -->\n")
+
+CSS_EF = """/* E→F: a strip under the header that becomes a stamp in the corner once the reader scrolls */
+.strip{background:var(--navy);color:var(--blush);overflow:hidden}
+.strip .wrap{display:flex;align-items:center;gap:16px;min-height:64px;padding-top:0;padding-bottom:0}
+.strip .ms{display:flex;height:64px;flex:none}.strip .ms img{width:64px;height:64px}
+.strip p{margin:0;flex:1;min-width:0;font:19px/1.2 "Barlow Condensed","Arial Narrow",sans-serif}.strip p b{font-weight:700}
+.strip .svbtn{font-size:16px;padding:9px 16px;border-radius:999px}
+@media (max-width:640px){.strip .ms img:nth-child(n+2){display:none}.strip p{font-size:17px}.strip .svbtn{font-size:14px;padding:8px 12px}.strip .lg{display:none}}
+.fstamp{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:20;width:150px;transform:translateY(150%) rotate(10deg);opacity:0;visibility:hidden;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s,visibility 0s .5s;filter:drop-shadow(0 10px 18px rgba(29,26,22,.3))}
+.fstamp.on{transform:translateY(0) rotate(4deg);opacity:1;visibility:visible;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s,visibility 0s}
+.fstamp>a{display:block;text-decoration:none}
+.fstamp .pf{--r:5px;background:var(--stamp);padding:calc(2.4*var(--r));display:block;
+ -webkit-mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat;
+ mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat}
+.fstamp .im{display:block;aspect-ratio:1;overflow:hidden;position:relative}
+.fstamp .lb{display:block;background:var(--navy);color:var(--blush);text-align:center;font:700 14px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:8px 4px}
+.fstamp .x{position:absolute;top:-10px;left:-10px;width:28px;height:28px;border-radius:50%;border:0;background:var(--card);color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;display:grid;place-items:center}
+.fstamp .x svg{width:14px;height:14px}
+.fstamp>a:focus-visible,.fstamp .x:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+@media (max-width:600px){.fstamp{width:108px}}
+@media (prefers-reduced-motion:reduce){.fstamp,.fstamp.on{transition:none}}
+"""
+HEADER_END = '</div></header>'
+assert HEADER_END in src
+
+def strip(pre):
+    m = lambda n: f'<img class="mo" src="{pre}img/motif/m{n:02d}.webp" alt="">'
+    return (f'\n<!-- strip -->\n<div class="strip svy" role="region" aria-label="Reader survey"><div class="wrap"><span class="ms">{m(2)}{m(9)}{m(5)}</span>'
+            f'<p><b>Reader survey.</b> <span class="lg">Tell us what you enjoy reading. </span>Takes 5 minutes.</p>'
+            f'<a class="svbtn" href="{FORM}" data-survey target="_blank" rel="noopener">Give feedback</a></div></div>\n<!-- /strip -->\n')
+
+def corner(pre):
+    return ('<!-- corner -->\n<div class="fstamp svy"><a href="' + FORM + '" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey">'
+            f'<span class="pf"><span class="im"><img class="mo" src="{pre}img/motif/m12.webp" alt="" loading="lazy"></span><span class="lb">Reader survey · 5 min</span></span></a>'
+            '<button class="x" type="button" aria-label="Dismiss the survey stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>\n'
+            "<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.strip');if(!s||!st||!('IntersectionObserver' in window))return;"
+            "var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}"
+            "var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}"
+            "function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}"
+            "watch(st,'strip');watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');"
+            "s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});"
+            "s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>\n<!-- /corner -->\n")
+
+def make(block, css, pre, home):
+    h = src.replace('</style>', CSS_COMMON + css.replace('/* /survey */\n', '') + CSS_EF + '/* colo */' + FOOTER_CSS + '/* /colo */\n/* /survey */\n</style>', 1)
+    h = h.replace(HEADER_END, HEADER_END + strip(pre), 1)
+    h = h.replace('</body>', block + '<!-- colo -->\n' + footer_html(home) + '\n<!-- /colo -->\n' + corner(pre) + DLG + '</body>', 1)
+    return h
+
+open(P, 'w').write(make(F('../'), CSS_F, '../', './'))
+alt = make(B('../'), CSS_B, '../', '../')
+# alt lives one level deeper
+alt = alt.replace('src="../', 'src="../../').replace('href="../', 'href="../../').replace('href="./"', 'href="../"')
+alt = alt.replace('<title>', '<meta name="robots" content="noindex"><title>', 1)
+import os
+os.makedirs('/home/claude/usbns/newstand/alt', exist_ok=True)
+open('/home/claude/usbns/newstand/alt/index.html', 'w').write(alt)
+print('ok')
