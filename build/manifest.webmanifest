@@ -1,0 +1,13 @@
+{
+  "name": "The American Bahá’í",
+  "short_name": "American Bahá’í",
+  "scope": "/usbns/magazine/",
+  "display": "browser",
+  "background_color": "#f5f1e8",
+  "theme_color": "#222e4c",
+  "icons": [
+    {"src": "/usbns/magazine/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "/usbns/magazine/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/usbns/magazine/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
