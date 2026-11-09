@@ -5,6 +5,7 @@ _sys.path.insert(0, '/home/claude/tab')
 import data as _data, member_data as _md
 
 def _clean(h):
+    h = h.replace('class="band secin"', 'class="band"')
     h = _re.sub(r'<!-- nsadd:toc -->.*?<!-- /nsadd:toc -->', '<div class="cards">\n</div>', h, flags=_re.S)
     h = _re.sub(r'\n?<!-- nsadd:\w+ -->.*?<!-- /nsadd:\w+ -->\n?', '\n', h, flags=_re.S)
     h = _re.sub(r'/\* nsadd \*/.*?/\* /nsadd \*/\n', '', h, flags=_re.S)
@@ -89,16 +90,18 @@ CSS_ADD = r'''/* nsadd */
 .ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:4px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .art .br{animation:none}}
 /* contents page */
-.toc{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
-.toc a{display:grid;grid-template-columns:96px minmax(0,1fr) 120px;gap:20px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
-.toc .pg{font:800 54px/1 var(--text);color:var(--c);letter-spacing:-.03em;font-variant-numeric:lining-nums}
-.toc .k{display:block;font:600 11.5px/1.3 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
-.toc .t{display:block;font:600 21px/1.25 var(--text);margin:4px 0 3px}
-.toc .by{display:block;font:13px var(--ui);color:var(--mute)}
-.toc .th{width:120px;height:80px;object-fit:cover;display:block;border-radius:2px}
+.toc{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,auto);grid-auto-flow:column;column-gap:40px;align-content:start}
+.toc a{display:grid;grid-template-columns:44px minmax(0,1fr) 64px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
+.toc .pg{font:800 28px/1 var(--text);color:var(--c);letter-spacing:-.02em;font-variant-numeric:lining-nums}
+.toc .k{display:block;font:600 10.5px/1.3 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.toc .t{display:block;font:600 15.5px/1.25 var(--text);margin:2px 0 1px}
+.toc .by{display:block;font:12px var(--ui);color:var(--mute)}
+.toc .th{width:64px;height:44px;object-fit:cover;display:block;border-radius:2px}
 .toc a:hover .t{text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:4px}
 .toc a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
-@media (max-width:640px){.toc a{grid-template-columns:58px minmax(0,1fr);gap:12px}.toc .pg{font-size:36px}.toc .th{display:none}.toc .t{font-size:17px}}
+@media (max-width:820px){.toc{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+@media (max-width:640px){.toc a{grid-template-columns:40px minmax(0,1fr)}.toc .th{display:none}}
+.secin .wrap{padding-top:36px!important;padding-bottom:40px!important}
 .ls .lsi:hover{border-color:var(--ink)}.ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:3px}
 .nsp{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:0 max(12px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));pointer-events:none}
 .nsk{pointer-events:auto;max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;background:var(--card);border:1px solid var(--rule);border-top:2px solid #222e4c;border-radius:14px;box-shadow:0 12px 30px rgba(29,26,22,.2);transform:translateY(130%);transition:transform .3s}
@@ -275,9 +278,9 @@ def add_sections(h, pre, FORM):
     h = h.replace('<header>', calendar_html() + '<header>', 1)
     # In this issue as a contents page
     i = h.index('<section class="band" aria-labelledby="in-h">'); a0 = h.index('<div class="cards">', i); a1 = h.index('</div>\n</div></section>', a0)
-    h = h[:a0] + '<!-- nsadd:toc -->' + contents_html(pre) + '<!-- /nsadd:toc -->' + h[a1+len('</div>'):]
+    h = h[:i] + h[i:a0].replace('class="band"','class="band secin"',1) + '<!-- nsadd:toc -->' + contents_html(pre) + '<!-- /nsadd:toc -->' + h[a1+len('</div>'):]
     # listen after "In this issue"
-    i = h.index('<section class="band" aria-labelledby="in-h">'); j = h.index('</div></section>', i) + len('</div></section>')
+    i = h.index('aria-labelledby="in-h">'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '\n' + listen_html(pre) + h[j:]
     # themes after the archive
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')

@@ -155,12 +155,13 @@ def make(block, css, pre, home):
     h = h.replace('</body>', block + '<!-- colo -->\n' + footer_html(home) + '\n<!-- /colo -->\n' + corner(pre) + DLG + '</body>', 1)
     return h
 
-open(P, 'w').write(make(F('../'), CSS_F, '../', './'))
+_main = make(F('../'), CSS_F, '../', './')
 alt = make(B('../'), CSS_B, '../', '../')
 # alt lives one level deeper
 alt = alt.replace('src="../', 'src="../../').replace('href="../', 'href="../../').replace('href="./"', 'href="../"')
 alt = alt.replace('<title>', '<meta name="robots" content="noindex"><title>', 1)
 import os
 os.makedirs('/home/claude/usbns/newstand/alt', exist_ok=True)
+open(P, 'w').write(_main)
 open('/home/claude/usbns/newstand/alt/index.html', 'w').write(alt)
 print('ok')
