@@ -346,7 +346,7 @@ def concept_html(c):
     kind = c["form"]; W = 600; P = []
     if kind == "ring":
         import math as _m
-        st = c["steps"]; n = len(st); R = 170; SW = 64; gap = 6; lo = .22; lw = .4
+        st = c["steps"]; n = len(st); R = 170; SW = 52; gap = 6; lo = .22; lw = .4
         def pt(r, deg): t = _m.radians(deg - 90); return 300 + r * _m.cos(t), 300 + r * _m.sin(t)
         P2 = []
         for i, (l, _) in enumerate(st):
@@ -986,7 +986,7 @@ main,.head{{position:relative;z-index:1}}
 .chart.ringf .ct{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:clamp(19px,1.75vw,24px);line-height:1.25;letter-spacing:-.005em;max-width:34ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
 .rwrap{{display:grid;gap:clamp(20px,3vw,44px)}}
 .rsvg{{display:block;width:100%;max-width:350px;height:auto;overflow:visible;margin:0 auto}}
-.wseg{{fill:none;stroke:var(--accent);stroke-width:64;stroke-linecap:butt}}
+.wseg{{fill:none;stroke:var(--accent);stroke-width:52;stroke-linecap:butt}}
 .wword{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:34px;letter-spacing:-.01em;fill:var(--ink);font-variation-settings:"opsz" 48}}
 .whair{{fill:none;stroke:var(--rule);stroke-width:1}}
 .rcols{{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px 26px}}
