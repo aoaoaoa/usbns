@@ -1,6 +1,6 @@
 # Article readings
 
-Drop one MP3 per curated feature here, named by its slug. The "Listen to this story" player on each feature finds it automatically; until a file is present the player shows "Reading coming soon".
+Drop one MP3 per curated feature here, named by its slug. The "Listen to this story" player on each feature finds it automatically; until a file is present the player plays `placeholder.mp3` (the A Common Endeavor letter reading). Delete `placeholder.mp3` and rebuild once every reading is in.
 
 | Feature | File |
 | --- | --- |

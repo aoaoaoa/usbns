@@ -2082,7 +2082,11 @@ def _add_dims(page):
         return tag[:-1] + _DIMS[f] + ">" if _DIMS[f] else tag
     return re.sub(r'<img src="img/([^"]+)"[^>]*>', fix, page)
 _build_tab = build_tab
-def build_tab(*a, **k): return _add_dims(_build_tab(*a, **k))
+AUDIO_DIR = "/home/claude/usbns/magazine/audio"
+def _audio(h):
+    """Point every reading without its own file at audio/placeholder.mp3 (the A Common Endeavor letter reading, for now)."""
+    return re.sub(r'audio/([a-z0-9-]+)\.mp3', lambda m: m.group(0) if os.path.exists(os.path.join(AUDIO_DIR, m.group(1) + ".mp3")) else "audio/placeholder.mp3", h)
+def build_tab(*a, **k): return _audio(_add_dims(_build_tab(*a, **k)))
 
 for name, fn in [("tab", build_tab), ("plates", build_plates), ("reader", build_reader)]:
     with open(os.path.join(OUT, f"{name}.html"), "w") as f: f.write(fn())

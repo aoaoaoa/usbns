@@ -275,7 +275,8 @@ def _bars(seed, n=34, h=24, w=3, g=2):
 def listen_html(pre):
     items = []
     for a in sorted(FEATS, key=lambda a: int(a['pages'].split('–')[0])):
-        has = _os.path.exists(f'/home/claude/usbns/magazine/audio/{a["slug"]}.mp3')
+        has = True  # every reading plays: its own file, or audio/placeholder.mp3 until it arrives
+        _af = a["slug"] if _os.path.exists(f'/home/claude/usbns/magazine/audio/{a["slug"]}.mp3') else 'placeholder'
         sl = a['slug']; im = f'{pre}img/{THUMB[sl]}'
         import hashlib as _h
         bb = _h.md5(sl.encode()).digest() * 8; n = 22; Wd, Hd, gp = 240, 180, 3; bw = (Wd - (n-1)*gp) / n
@@ -284,7 +285,7 @@ def listen_html(pre):
         rects = ''.join(f'<rect class="br" style="--d:{(i*137)%900}ms;--v:{v:.2f}" x="{i*(bw+gp):.1f}" y="0" width="{bw:.1f}" height="{Hd}" rx="{bw/2:.1f}"/>' for i, v in enumerate(vs))
         art = (f'<svg class="art" viewBox="0 0 {Wd} {Hd}" aria-hidden="true"><defs><clipPath id="br-{sl}">{rects}</clipPath></defs>'
                f'<g clip-path="url(#br-{sl})"><image href="{im}" width="{Wd}" height="{Hd}" preserveAspectRatio="xMidYMid slice"/><rect class="fg" width="{Wd}" height="{Hd}" fill="var(--c)"/></g></svg>')
-        items.append(f'<button type="button" class="lsi" style="--c:{TINT[sl]}" data-src="{pre}audio/{sl}.mp3" data-title="{a["title"]}" data-href="{pre}#{sl}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">{art}'
+        items.append(f'<button type="button" class="lsi" style="--c:{TINT[sl]}" data-src="{pre}audio/{_af}.mp3" data-title="{a["title"]}" data-href="{pre}#{sl}" data-kicker="{a["kicker"]}" aria-label="Listen to {a["short"]}">{art}'
                      f'<span class="rw"><span class="pb"><svg class="ip" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9l7.5-4.5z"/></svg><svg class="ia" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg></span>'
                      f'<span class="r"><span class="t">{a["short"]}</span><span class="tm"><span class="lst">{"Listen" if has else "Reading coming soon"}</span></span></span></span></button>')
     player = ('<div class="nsp" hidden role="region" aria-label="Audio player"><div class="nsk">'
