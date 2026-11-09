@@ -5,6 +5,8 @@ _sys.path.insert(0, '/home/claude/tab')
 import data as _data, member_data as _md
 
 def _clean(h):
+    h = _re.sub(r'<!-- nsadd:sw -->.*?<!-- /nsadd:sw -->', '<div class="rowh"><h2 id="in-h">In this issue</h2></div>', h, flags=_re.S)
+    h = _re.sub(r'<!-- nsadd:swjs -->.*?<!-- /nsadd:swjs -->', '', h, flags=_re.S)
     h = h.replace('class="band secin"', 'class="band"')
     h = _re.sub(r'<!-- nsadd:toc -->.*?<!-- /nsadd:toc -->', '<div class="cards">\n</div>', h, flags=_re.S)
     h = _re.sub(r'\n?<!-- nsadd:\w+ -->.*?<!-- /nsadd:\w+ -->\n?', '\n', h, flags=_re.S)
@@ -89,6 +91,14 @@ CSS_ADD = r'''/* nsadd */
 .ls .tm{font:600 10.5px/1.3 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ls .lsi:focus-visible{outline:2px solid var(--link);outline-offset:4px;border-radius:4px}
 @media (prefers-reduced-motion:reduce){.ls .lsi[aria-pressed=true] .art .br{animation:none}}
+/* read / listen switch */
+.swh{justify-content:space-between;align-items:center}
+.sw{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px}
+.sw button{font:600 13px var(--ui);letter-spacing:.08em;text-transform:uppercase;border:0;border-radius:999px;padding:7px 16px;background:transparent;color:var(--ink);cursor:pointer}
+.sw button[aria-selected=true]{background:var(--ink);color:var(--card)}
+.sw button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+#mode-listen{border-top:2px solid var(--ink);padding-top:18px}
+#mode-listen[hidden],#mode-read[hidden]{display:none!important}
 /* contents page */
 .toc{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
 .toc a{display:grid;grid-template-columns:72px minmax(0,1fr) 96px;gap:16px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
@@ -204,7 +214,7 @@ def _bars(seed, n=34, h=24, w=3, g=2):
 
 def listen_html(pre):
     items = []
-    for a in FEATS:
+    for a in sorted(FEATS, key=lambda a: int(a['pages'].split('–')[0])):
         has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
         sl = a['slug']; im = f'{pre}img/{THUMB[sl]}'
         import hashlib as _h
@@ -237,9 +247,8 @@ np.addEventListener('click',function(){if(cur)open(cur.b)});
 P.querySelector('.nx').addEventListener('click',function(){au.pause();document.documentElement.classList.remove('nsplay');P.classList.remove('up');setTimeout(function(){P.hidden=true},300);cur=null;st()});
 nb.addEventListener('click',function(e){if(!au.duration)return;var r=nb.getBoundingClientRect();au.currentTime=(e.clientX-r.left)/r.width*au.duration});
 })();</script>"""
-    return ('<!-- nsadd:listen --><section class="band secx ls-s" aria-labelledby="ls-h"><div class="wrap">'
-            '<div class="rowh"><h2 id="ls-h">Listen to the issue</h2><p>Each story, read aloud, right here.</p></div>'
-            f'<div class="row1 ls">{"".join(items)}</div></div></section>{player}{js}<!-- /nsadd:listen -->\n')
+    return (f'<!-- nsadd:listen --><div class="row1 ls" id="mode-listen" role="tabpanel" aria-labelledby="tab-listen" hidden>{"".join(items)}</div><!-- /nsadd:listen -->',
+            f'<!-- nsadd:player -->{player}{js}<!-- /nsadd:player -->\n')
 
 def themes_html(pre):
     tiles = [f'<a href="{pre}#{a["slug"]}" style="--c:{TINT[a["slug"]]}"><i class="bar"></i><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"><span><small>1 story</small>{a["kicker"]}</span></a>' for a in FEATS]
@@ -270,6 +279,11 @@ def contents_html(pre):
                     f'<img class="th" src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy" width="120" height="80"></a></li>')
     return f'<ol class="toc">{"".join(rows)}</ol>'
 
+SW_JS = ("<!-- nsadd:swjs --><script>(function(){var t=document.querySelectorAll('.sw [role=tab]');t.forEach(function(b){b.addEventListener('click',function(){"
+         "t.forEach(function(x){var on=x===b;x.setAttribute('aria-selected',on);document.getElementById(x.getAttribute('aria-controls')).hidden=!on});"
+         "try{sessionStorage.setItem('tab-ns-mode',b.id)}catch(e){}})});"
+         "try{var m=sessionStorage.getItem('tab-ns-mode');if(m&&document.getElementById(m))document.getElementById(m).click()}catch(e){}})();</script><!-- /nsadd:swjs -->")
+
 def add_sections(h, pre, FORM):
     h = _clean(h)
     h = h.replace('</style>', CSS_ADD + '</style>', 1)
@@ -278,9 +292,15 @@ def add_sections(h, pre, FORM):
     # In this issue as a contents page
     i = h.index('<section class="band" aria-labelledby="in-h">'); a0 = h.index('<div class="cards">', i); a1 = h.index('</div>\n</div></section>', a0)
     h = h[:i] + h[i:a0].replace('class="band"','class="band secin"',1) + '<!-- nsadd:toc -->' + contents_html(pre) + '<!-- /nsadd:toc -->' + h[a1+len('</div>'):]
-    # listen after "In this issue"
-    i = h.index('aria-labelledby="in-h">'); j = h.index('</div></section>', i) + len('</div></section>')
-    h = h[:j] + '\n' + listen_html(pre) + h[j:]
+    # Listen joins In this issue as the second mode of one section
+    row, player = listen_html(pre)
+    sw = ('<div class="sw" role="tablist" aria-label="Read or listen">'
+          '<button type="button" role="tab" id="tab-read" aria-selected="true" aria-controls="mode-read">Read</button>'
+          '<button type="button" role="tab" id="tab-listen" aria-selected="false" aria-controls="mode-listen">Listen</button></div>')
+    h = h.replace('<div class="rowh"><h2 id="in-h">In this issue</h2></div>', '<!-- nsadd:sw --><div class="rowh swh"><h2 id="in-h">In this issue</h2>' + sw + '</div><!-- /nsadd:sw -->', 1)
+    h = h.replace('<ol class="toc">', '<ol class="toc" id="mode-read" role="tabpanel" aria-labelledby="tab-read">', 1)
+    h = h.replace('<!-- /nsadd:toc -->', '<!-- /nsadd:toc -->' + row, 1)
+    h = h.replace('</body>', player + SW_JS + '</body>', 1)
     # themes after the archive
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '\n' + themes_html(pre) + h[j:]
