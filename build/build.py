@@ -1576,7 +1576,6 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <h2>Features</h2>
     <ol class="index">{index}</ol>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
-    {ASK_HTML}
     {dindex}
   </div>
   <div class="epi">
