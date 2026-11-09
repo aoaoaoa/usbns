@@ -62,7 +62,7 @@ FOOTER_CSS = """
 .colo .cs a{width:42px;height:42px;border-radius:50%;border:1px solid var(--rule);display:grid;place-items:center;color:var(--ink);transition:color .2s,border-color .2s,background .2s}
 .colo .cs a svg{width:18px;height:18px;display:block}
 .colo .cs a:hover{color:var(--card,var(--bar,#fdfcf9));background:var(--ink);border-color:var(--ink)}
-.colo .cp{font-size:12.5px;line-height:1.6;color:var(--mute);max-width:60ch;margin:0}
+.colo .cp{font-size:12.5px;line-height:1.6;color:var(--mute);max-width:none;margin:0}@media (min-width:700px){.colo .cp{white-space:nowrap}}
 .colo a:focus-visible{outline:2px solid var(--link,var(--accent));outline-offset:3px;border-radius:2px}
 @media (max-width:640px){.colo ul{flex-direction:column;align-items:center;gap:2px}.colo li+li::before{content:none}.colo li{padding-left:.16em}}
 @media (prefers-reduced-motion:reduce){.colo .cs a{transition:none}}
