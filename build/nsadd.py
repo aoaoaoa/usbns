@@ -301,9 +301,9 @@ def add_sections(h, pre, FORM):
     h = h.replace('<ol class="toc">', '<ol class="toc" id="mode-read" role="tabpanel" aria-labelledby="tab-read">', 1)
     h = h.replace('<!-- /nsadd:toc -->', '<!-- /nsadd:toc -->' + row, 1)
     h = h.replace('</body>', player + SW_JS + '</body>', 1)
-    # themes after the archive
+    # Browse by theme: off for now
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
-    h = h[:j] + '\n' + themes_html(pre) + h[j:]
+    h = h[:j] + '<!-- nsadd:themes --><!-- /nsadd:themes -->' + h[j:]
     # Featured Reports: off for now (kept in the page as a comment)
     if '<section id="special"' in h and '<!-- Featured Reports: hidden' not in h:
         i = h.index('<section id="special"'); j = h.index('</div></section>', i) + len('</div></section>')
