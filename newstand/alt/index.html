@@ -434,6 +434,8 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 
 
 
+
+
 <!-- Featured Reports: hidden for now
 <section id="special" class="band" aria-labelledby="sp-h"><div class="wrap">
 <div class="rowh"><h2 id="sp-h">Featured Reports</h2></div>
@@ -446,6 +448,7 @@ img.mo{display:block;width:100%;height:100%;object-fit:cover}
 </div></section>
 -->
 </main>
+
 
 
 
@@ -498,7 +501,7 @@ nb.addEventListener('click',function(e){if(!au.duration)return;var r=nb.getBound
 <!-- /colo -->
 <!-- corner -->
 <div class="fstamp svy"><a href="https://form.typeform.com/to/NfIWSbQl" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><span class="pf"><span class="im"><img class="mo" src="../../img/motif/m12.webp" alt="" loading="lazy"></span><span class="lb">Reader survey · 5 min</span></span></a><button class="x" type="button" aria-label="Dismiss the survey stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>
-<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.air')||document.querySelector('#current .cta');if(!s||!st||!('IntersectionObserver' in window))return;var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}watch(st,'strip');watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>
+<script>(function(){var s=document.querySelector('.fstamp'),st=document.querySelector('.air')||document.querySelector('#current .cta');if(!s||!st||!('IntersectionObserver' in window))return;var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}function sc(){seen.strip=scrollY<140;up()}addEventListener('scroll',sc,{passive:true});sc();watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>
 <!-- /corner -->
 <!-- svydlg --><dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div><button class="shx" type="button" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div><div class="svf"><iframe title="TAB Reader Survey" allow="camera; microphone; autoplay; encrypted-media; fullscreen" data-src="https://form.typeform.com/to/NfIWSbQl?typeform-medium=embed-snippet"></iframe></div></dialog><script>(function(){var d=document.querySelector('.svydlg');if(!d||!d.showModal)return;var f=d.querySelector('iframe'),op=null;function open(o){op=o||null;if(!f.src)f.src=f.dataset.src;if(!d.open)d.showModal()}document.addEventListener('click',function(e){var b=e.target.closest('[data-survey]');if(!b)return;e.preventDefault();open(b)});d.querySelector('.shx').addEventListener('click',function(){d.close()});d.addEventListener('click',function(e){if(e.target===d)d.close()});d.addEventListener('close',function(){if(op)op.focus()});if(location.hash==='#take-survey')open();})();</script><!-- /svydlg -->
 </body>

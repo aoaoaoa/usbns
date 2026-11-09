@@ -141,7 +141,7 @@ def corner(pre):
             "var K='tab-ns-stamp',off=false;try{off=!!sessionStorage.getItem(K)}catch(e){}"
             "var seen={strip:true,big:false,foot:false};function up(){s.classList.toggle('on',!off&&!seen.strip&&!seen.big&&!seen.foot)}"
             "function watch(el,k){if(!el)return;new IntersectionObserver(function(e){seen[k]=e[0].isIntersecting;up()}).observe(el)}"
-            "watch(st,'strip');watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');"
+            "function sc(){seen.strip=scrollY<140;up()}addEventListener('scroll',sc,{passive:true});sc();watch(document.getElementById('survey'),'big');watch(document.querySelector('.colo'),'foot');"
             "s.querySelector('.x').addEventListener('click',function(){off=true;up();try{sessionStorage.setItem(K,'1')}catch(e){}});"
             "s.querySelector('a').addEventListener('click',function(){off=true;setTimeout(up,400)})})();</script>\n<!-- /corner -->\n")
 
