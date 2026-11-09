@@ -6,7 +6,7 @@ LINKS = [  # (label, href)
     ("About", "#"),
     ("Contact", "#"),
     ("Terms of use", "#"),
-    ("Privacy policy", "#"),
+    ("Privacy policy", "/usbns/magazine/privacy/"),
 ]
 FOLLOW = [  # (label, href, icon file in icons/)
     ("Facebook", "#", "facebook"),

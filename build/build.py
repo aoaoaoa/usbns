@@ -2142,3 +2142,30 @@ os.makedirs(os.path.join(SITE, "img"), exist_ok=True)
 shutil.rmtree(os.path.join(SITE, "img")); shutil.copytree(os.path.join(OUT, "img"), os.path.join(SITE, "img"))
 open(os.path.join(SITE, ".nojekyll"), "w").close()
 print("built out/ and site/")
+
+
+# ---- Privacy policy page (copy supplied by the editors, verbatim) ----
+PRIVACY = [
+    ("h", "Privacy"),
+    ("p", "Visitors to this website are not tracked, except to produce aggregate statistical data which does not identify individual users. Where cookies are used to provide essential functionality, these are not used to track use of the website or to store personally-identifiable information. Steps have been taken to secure all information collected from unauthorized access, use or disclosure. Please note that this website may include links to websites with different privacy policies."),
+    ("h", "Personal information"),
+    ("p", "We collect information that personally identifies you only when you provide it to us by filling in an online form. This information may include your name, email address, address, and telephone number. Mobile information collected—including information provided for receiving SMS messages, whether sent via standard long‑code numbers or via our toll‑free SMS number (1‑800‑228‑6483 / 1‑800‑22UNITE)—will not be shared with third parties or affiliates for marketing or promotional purposes. All identifiable personal information that you provide will be kept confidential and will only be used by authorized individuals to fulfill the purpose for which it was originally collected or for a use consistent with that purpose. All the above categories exclude text messaging originator opt‑in data and consent; this information will not be shared with third parties. Upon providing your mobile number, you will be given the choice to opt in to SMS communications, including messages sent from our toll‑free SMS number. If, at any point, you wish to be removed from receiving future SMS communications, you may opt out by texting STOP, QUIT, END, REVOKE, OPT OUT, CANCEL, or UNSUBSCRIBE."),
+]
+def build_privacy():
+    body = "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in PRIVACY)
+    css = (":root{--paper:#f5f1e8;--card:#fdfcf9;--bar:#fdfcf9;--ink:#1d1a16;--mute:#6a635a;--rule:#d9d2c4;--link:#1b5e6b;--ui:'Bricolage Grotesque',system-ui,sans-serif;--text:'Literata',Georgia,serif;color-scheme:light}"
+        "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#15130f;--card:#1f1c17;--bar:#221e19;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;color-scheme:dark}}"
+        "*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui)}"
+        ".pt{border-bottom:1px solid var(--rule);background:var(--card)}.pt div{max-width:720px;margin:0 auto;padding:16px}.pt a{font:700 19px var(--text);color:var(--ink);text-decoration:none}.pt small{font:italic 400 15px var(--text);color:#b8782e;margin-right:5px}"
+        "main{max-width:720px;margin:0 auto;padding:48px 16px 72px}main h1{font:800 clamp(32px,5vw,46px)/1.05 var(--text);margin:0 0 30px}"
+        "main h2{font:700 13px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:36px 0 12px;padding-top:16px;border-top:1px solid var(--rule)}"
+        "main p{font:18px/1.65 var(--text);margin:0 0 1.1em;text-wrap:pretty}")
+    return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+            '<title>Privacy policy · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
+            '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
+            '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
+            f'<style>{css}{FOOTER_CSS}</style>\n</head>\n<body>\n'
+            '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
+            f'<main><h1>Privacy policy</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
+os.makedirs(os.path.join(SITE, "privacy"), exist_ok=True)
+with open(os.path.join(SITE, "privacy", "index.html"), "w") as f: f.write(build_privacy())
