@@ -200,6 +200,12 @@ CSS_ADD = r'''/* nsadd */
 .sbc .places a{text-decoration:none;color:var(--soft)}.sbc .places a:hover{color:var(--c)}
 .sbc .places em{font-style:normal;color:#b8782e;border-bottom:2px dashed #b8782e}
 .sbc .pt{display:block;width:min(260px,70%);height:auto;margin:0 0 26px}
+.sbc .sbr{display:grid;grid-template-columns:230px minmax(0,1fr);gap:34px;align-items:center;width:100%;max-width:900px;margin:0 auto 26px}
+.sbc .sbr .pt{margin:0;width:100%}
+.sbc .nt{position:relative;background:#fffdf6;color:#1d1a16;padding:18px 22px 16px;text-align:left;box-shadow:0 8px 20px rgba(29,26,22,.12);transform:rotate(-.8deg)}
+.sbc .nt p{font:15px/1.55 "Literata",Georgia,serif;margin:0 0 6px}.sbc .nt p:last-child{margin:0}
+.sbc .nt::before{content:"";position:absolute;top:-9px;left:50%;width:80px;height:20px;transform:translateX(-50%) rotate(2deg);background:rgba(242,207,198,.85)}
+@media (max-width:700px){.sbc .sbr{grid-template-columns:1fr;gap:20px}.sbc .sbr .pt{max-width:160px;margin:0 auto}}
 .sbc .ckl{width:100%;max-width:1000px;margin:0 0 22px}
 .sbc .meter{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin:0 0 14px}.sbc .meter i{display:block;height:100%;width:0;background:#222e4c;transition:width .3s}
 .sbc .ckl ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -321,7 +327,9 @@ def submit_html(pre, href="#"):
     return ('<!-- nsadd:submit --><section class="sbm sbc" aria-labelledby="sb-h"><div class="wrap">'
             '<h2 id="sb-h">Every story in this issue began as a report from a community.</h2>'
             f'<p class="places">{pl}</p>'
-            f'<img class="pt" src="{pre}img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy">'
+            f'<div class="sbr"><img class="pt" src="{pre}img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy">'
+            '<div class="nt"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
+            '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div></div>'
             f'<div class="ckl"><div class="meter" aria-hidden="true"><i></i></div><ul>{items}</ul></div>'
             f'<a class="sbtn" href="{href}">Submit your story <span aria-hidden="true">→</span></a>'
             f'</div></section>{js}<!-- /nsadd:submit -->\n')
