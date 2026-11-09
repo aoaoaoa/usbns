@@ -976,14 +976,14 @@ main,.head{{position:relative;z-index:1}}
 .prose>.mnote:nth-of-type(even){{--mr:1.2deg}}
 .mnote .mq{{display:block;font-family:"Reenie Beanie",cursive;font-size:clamp(25px,2.3vw,31px);line-height:1}}
 .mnote .mw{{display:block;font-family:var(--ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-top:6px;line-height:1.45}}
-.mnh{{background:none;color:inherit;background-image:linear-gradient(color-mix(in oklab,#e7b84a 70%,transparent),color-mix(in oklab,#e7b84a 70%,transparent));background-repeat:no-repeat;background-position:0 92%;background-size:100% .3em;transition:background-size .7s,background-position .3s}}
-.mnh.on{{background-size:100% 1.1em;background-position:0 70%}}
+.mnh{{background:none;color:inherit}}
+
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]) .prose>.mnote{{color:#a9c4e8}}}} :root[data-theme="dark"] .prose>.mnote{{color:#a9c4e8}}
 @media (max-width:760px){{.prose>.mnote{{grid-column:auto;grid-row:auto;margin:0 0 1.4em 1em;max-width:none}}}}
 @media (prefers-reduced-motion:no-preference){{
 .ovready .mnote .mq{{clip-path:inset(0 100% 0 0)}} .ovready .mnote .mw{{opacity:0}}
 .ovready .mnote.go .mq{{clip-path:inset(0 0 0 0);transition:clip-path 1.4s cubic-bezier(.5,.1,.4,1)}} .ovready .mnote.go .mw{{opacity:1;transition:opacity .5s .9s}}
-.ovready .mnh{{background-size:0 .3em}} .ovready .mnh.go{{background-size:100% .3em;transition:background-size .7s .5s}} .ovready .mnh.go.on{{background-size:100% 1.1em;transition:background-size .4s,background-position .3s}}
+
 }}
 /* A common endeavor: postmarks on the quilt */
 .evo .ov{{text-shadow:none}}
