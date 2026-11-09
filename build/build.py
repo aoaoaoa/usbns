@@ -1415,6 +1415,15 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .ask .askm{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:17px}}
 .ask .aski{{min-height:280px;position:relative}} .ask .aski img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}}
 @media (max-width:720px){{.ask{{grid-template-columns:1fr}} .ask .aski{{min-height:0;aspect-ratio:16/9;order:-1}}}}
+.front>div:first-child{{display:flex;flex-direction:column}}
+.front .ask{{margin:32px 0 0;grid-template-columns:minmax(0,1fr) 36%}}
+.front .ask .askq{{padding:24px 24px 26px}}
+.front .ask .askb{{font-size:32px;margin-bottom:10px}}
+.front .ask .askr{{font-size:20px;min-height:2.5em;margin-bottom:14px}}
+.front .ask .askc{{margin-bottom:16px;gap:6px}} .front .ask .askc a{{font-size:16px;padding:4px 11px}}
+.front .ask .askbtn{{font-size:18px;padding:9px 18px}}
+.front .ask .aski{{min-height:0}}
+@media (max-width:720px){{.front .ask{{grid-template-columns:1fr}} .front .ask .aski{{aspect-ratio:16/7}}}}
 .nudge{{--navy:#222e4c;--blush:#f2cfc6;position:fixed;z-index:9;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + var(--dh,0px));transform:translate(-50%,24px);opacity:0;transition:transform .3s,opacity .3s,bottom .3s;
   display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100vw - 32px);background:var(--navy);color:var(--blush);border-radius:999px;padding:7px 8px 7px 7px;box-shadow:0 10px 26px rgba(0,0,0,.25)}}
 .nudge.on{{transform:translate(-50%,0);opacity:1}}
@@ -1550,6 +1559,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <h2>Features</h2>
     <ol class="index">{index}</ol>
     <p class="about"><b>About this issue.</b> {esc(ISSUE["about"])}</p>
+    {ASK_HTML}
     {dindex}
   </div>
   <div class="epi">
@@ -1558,7 +1568,6 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="about"><b>About the cover.</b> “{esc(ISSUE["cover_note"])}” <i>Juliet Bogan</i></p>
   </div>
 </section>
-{ASK_HTML}
 {lead}
 {"".join(secs)}
 {depts}
