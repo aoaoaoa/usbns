@@ -354,7 +354,8 @@ def add_sections(h, pre, FORM):
     h = _clean(h)
     h = h.replace('</style>', CSS_ADD + '</style>', 1)
     # dateline calendar above the header
-    h = h.replace('<header>', calendar_html() + '<header>', 1)
+    # Badí‘ strip above the header: off for now (kept in ideas/badi-strip); restore by uncommenting
+    # h = h.replace('<header>', calendar_html() + '<header>', 1)
     # In this issue as a contents page
     i = h.index('<section class="band" aria-labelledby="in-h">'); a0 = h.index('<div class="cards">', i); a1 = h.index('</div>\n</div></section>', a0)
     h = h[:i] + h[i:a0].replace('class="band"','class="band secin"',1) + '<!-- nsadd:toc -->' + contents_html(pre) + '<!-- /nsadd:toc -->' + h[a1+len('</div>'):]
