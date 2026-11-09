@@ -77,9 +77,9 @@ FOOTER_CSS = """
 .colo .cs a:hover{background:#f2cfc6;color:#222e4c;border-color:#f2cfc6}
 .colo .cp{color:rgba(242,207,198,.75)}
 .colo a:focus-visible{outline-color:#f2cfc6}
-@media (max-width:640px){.colo nav a{font-size:16px}}
+@media (max-width:640px){.colo nav a{font-size:16px}.colo ul{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:4px 22px;max-width:320px;margin:0 auto}.colo li{padding-left:0}.colo li+li::before{content:none;margin:0}}
 .colo .c3{display:grid;grid-template-columns:repeat(3,auto);justify-content:center}.colo .c3>div{padding:4px 28px;text-align:center}.colo .c3>div+div{border-left:1px solid rgba(242,207,198,.3)}.colo .c3 span{display:block;font:700 11px var(--ui);letter-spacing:.18em;text-transform:uppercase;color:rgba(242,207,198,.7);margin-bottom:6px}.colo .c3 a{font:italic 600 18px "Literata",Georgia,serif;color:#fff;text-decoration:none}.colo .c3 a:hover{text-decoration:underline;text-underline-offset:4px}
-@media (max-width:600px){.colo .c3{grid-template-columns:1fr;gap:14px}.colo .c3>div+div{border-left:0}}
+@media (max-width:600px){.colo .c3{grid-template-columns:repeat(3,auto);gap:0}.colo .c3>div{padding:2px 10px}.colo .c3 span{font-size:9.5px;letter-spacing:.12em}.colo .c3 a{font-size:14.5px;white-space:nowrap}}@media (max-width:380px){.colo .c3{grid-template-columns:1fr;gap:12px}.colo .c3>div+div{border-left:0}}
 """
 
 # ---- Subscribe and Submit-your-story popups, shared by every page (emitted with the footer) ----
