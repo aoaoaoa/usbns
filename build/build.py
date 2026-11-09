@@ -757,13 +757,13 @@ def build_tab(member=False, menu="contents"):
         margin = f'''<aside class="margin">
     <p class="kicker">{esc(a["kicker"])}</p>
     {by}
-    <p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>
+    {f'<p class="pp">{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</p>' if member else ""}
     {share(a)}
     {listen(a)}
   </aside>'''
         _feat = [x for x in ARTICLES if x["slug"] != "comic"]
         chap = "" if member or a["slug"] == "comic" else (f'<div class="chap" aria-hidden="true" style="--accent:{tints[a["slug"]]}"><span class="n">{_feat.index(a) + 1}</span><span class="k">{esc(a["kicker"])}</span>'
-                f'<span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span><span class="of">{_feat.index(a) + 1} of {len(_feat)}</span></div>')
+                f'<span class="of">{_feat.index(a) + 1} of {len(_feat)}</span></div>')
         story = chap + f'''<article class="story" id="{a["slug"]}" style="--accent:{tints[a["slug"]]}">{blooms}
   {art}
   <header class="shead{"" if dek else " nodek"}">{torn}
@@ -1762,7 +1762,7 @@ def build_plates():
         chapters.append(f'''<section class="chapter" id="{a["slug"]}">
   <div class="plate">
     {plate}
-    <div class="cap"><span class="n">Plate {n}</span><span>{esc(a["art_credit"] or "Set in type")}</span><span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span></div>
+    <div class="cap"><span class="n">Plate {n}</span><span>{esc(a["art_credit"] or "Set in type")}</span></div>
   </div>
   <header class="chead">{torn}
     <p class="kicker">{esc(a["kicker"])}</p>
@@ -1918,7 +1918,7 @@ def build_reader():
     <p class="kicker">{esc(a["kicker"])}</p>
     <h2>{esc(a["title"])}</h2>
     {dek}
-    <p class="meta">{by}<span>{"Print pages" if "–" in str(a["pages"]) else "Print page"} {a["pages"]}</span></p>
+    <p class="meta">{by}</p>
   </header>
   {art}
   <div class="prose">{body_html(a["body"])}</div>
