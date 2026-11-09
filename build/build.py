@@ -763,7 +763,7 @@ def build_tab(member=False, menu="contents"):
                 ov = a.get("art_overlay")
                 ov_open = f'<div class="ovw {ov.get("cls","")}" style="--ar:{ov["ar"]}">' if ov else ""
                 ov_close = f'<div class="ov" aria-hidden="true">{ov["html"]}</div></div>' if ov else ""
-                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"{_dims(a["art"])}{"" if a is ARTICLES[0] else ' loading="lazy" decoding="async"'}>{ov_close}{cap}</figure>'''
+                art = f'''<figure class="{cls}" style="--aw:{a.get("art_width",0)}px{";--ground:"+a["art_ground"] if a.get("art_ground") else ""}">{ov_open}<img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"{_dims(a["art"])}{"" if a is ARTICLES[0] else ' loading="lazy" decoding="async"'}>{ov_close}{cap}</figure>'''
                 if a.get("art_extra"):  # seen only in the lightbox, opened from a link in the caption
                     x = a["art_extra"]
                     art += f'<figure class="lbx-only" hidden><img id="{x["id"]}" src="img/{x["file"]}" alt="{esc(x["alt"])}" loading="lazy"><figcaption>{esc(x["caption"])}</figcaption></figure>'
@@ -1340,11 +1340,12 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 /* Louis Gregory: a broadside, the name pressed in letter by letter */
 .gro .ov{{text-shadow:none;color:#1d1a16}}
 .gro .ov span{{animation:none!important}}
-.gro .gbs{{position:absolute;right:2.5%;top:4%;width:auto;white-space:normal;line-height:1;background:rgba(247,242,234,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:1.2cqw 1.4cqw;box-shadow:0 .4cqw 1.6cqw rgba(0,0,0,.12)}}
+.gro .gbs{{position:absolute;right:1%;bottom:2%;width:auto;white-space:normal;line-height:1}}
 .gro .gbs span{{position:relative;white-space:normal}} .gro .gbs .gnm{{white-space:nowrap}}
-.gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:5.8cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
+.gro .gnm{{display:block;font-family:"Big Shoulders Display",sans-serif;font-weight:900;font-size:5.2cqw;line-height:.86;text-transform:uppercase;white-space:nowrap}}
 .gro .gl{{display:inline-block}}
-.gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:2.2cqw;margin:.35em 0 .2em;border-bottom:.25cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
+@media (max-width:600px){{.gro .ov{{position:static}} .gro .gbs{{position:static;display:block;margin-top:12px}} .gro .gnm{{font-size:min(44px,11vw)!important}} .gro .gnm br{{display:none}} .gro .gyr{{font-size:16px!important;border-bottom-width:2px!important}}}}
+.gro .gyr{{display:flex;justify-content:space-between;font-family:"Libre Caslon Text",serif;font-size:2cqw;margin:.35em 0 .2em;border-bottom:.22cqw solid #1d1a16;padding-bottom:.25em;font-variant-numeric:oldstyle-nums}}
 @media (prefers-reduced-motion:no-preference){{
 .ovready .gro .gl{{transform:scale(1.12);opacity:0;filter:blur(1.5px)}} .ovready .gro .gyr{{opacity:0}}
 .ovready .gro.go .gl{{transform:none;opacity:1;filter:none;transition:transform .5s cubic-bezier(.2,.9,.2,1) var(--d),opacity .35s var(--d),filter .5s var(--d)}}
@@ -1373,7 +1374,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
   background:url(img/motif/m12.webp) center 6px/calc(100% - 12px) calc(100% - 26px) no-repeat,#fffdf6;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));--r:3.5px;
   -webkit-mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat;
   mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5*var(--r)) calc(-1.5*var(--r))/calc(3*var(--r)) calc(3*var(--r)),linear-gradient(#000 0 0) calc(1.5*var(--r)) calc(1.5*var(--r))/calc(100% - 3*var(--r)) calc(100% - 3*var(--r)) no-repeat}}
-@media (prefers-reduced-motion:reduce){{.ovw.evo{{transform:none}}}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,960px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
+@media (prefers-reduced-motion:reduce){{.ovw.evo{{transform:none}}}} .story>.plate:has(.gro){{justify-self:center;width:min(100%,1120px);background:var(--ground);border-color:var(--ground);padding:clamp(10px,2vw,24px) clamp(10px,2vw,24px) clamp(14px,2.4vw,28px)}} .story>.plate:has(.nyo){{justify-self:center;width:min(100%,750px)}}
 .shead{{grid-column:1/-1;margin:0 0 clamp(40px,6vw,88px);position:relative}}
 .shead.nodek{{margin-bottom:clamp(20px,2.6vw,36px)}}
 .shead>*{{position:relative;z-index:1}}
@@ -1788,7 +1789,7 @@ def build_plates():
             if a["slug"] == "comic":
                 plate = f'<div class="img two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"></div>'
             else:
-                plate = f'<div class="img{" bare" if a.get("art_transparent") else ""}{" capped" if a.get("art_width") else ""}" style="--aw:{a.get("art_width",0)}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
+                plate = f'<div class="img{" bare" if a.get("art_transparent") else ""}{" capped" if a.get("art_width") else ""}" style="--aw:{a.get("art_width",0)}px{";background:"+a["art_ground"] if a.get("art_ground") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"></div>'
         else:
             plate = '<div class="img type"><span>50</span></div>'
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
@@ -1944,7 +1945,7 @@ def build_reader():
             if a["slug"] == "comic":
                 art = f'<figure class="inset two"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><img src="img/{a["art2"]}" alt="{esc(a["art2_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
             else:
-                art = f'<figure class="inset{" bare" if a.get("art_transparent") else ""}" style="max-width:{a.get("art_width") or 860}px"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
+                art = f'<figure class="inset{" bare" if a.get("art_transparent") else ""}" style="max-width:{a.get("art_width") or 860}px{";background:"+a["art_ground"] if a.get("art_ground") else ""}"><img src="img/{a["art"]}" alt="{esc(a["art_alt"])}"><figcaption>{esc(a["art_credit"])}</figcaption></figure>'
         else:
             art = ""
         dek = f'<p class="dek">{esc(a["dek"])}</p>' if a.get("dek") else ""
