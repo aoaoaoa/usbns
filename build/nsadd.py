@@ -193,11 +193,28 @@ CSS_ADD = r'''/* nsadd */
 @media (max-width:560px){.route{grid-template-columns:1fr;gap:18px;padding-left:0}.route::before{left:29px;right:auto;top:0;bottom:0;width:5px;height:auto;background:repeating-linear-gradient(-45deg,#c9462c 0 10px,transparent 10px 14px,#2f4f6e 14px 24px,transparent 24px 28px)}
  .route li{display:grid;grid-template-columns:62px 1fr;gap:0 16px;align-items:center}.route .no{margin:0;grid-row:1/3}}
 @media (prefers-reduced-motion:reduce){.thm img,.sbtn,.dl .tg svg{transition:none}}
+/* submit your story, centered */
+.sbc .wrap{display:grid!important;grid-template-columns:1fr!important;justify-items:center;text-align:center;gap:0!important}
+.sbc h2{max-width:22ch;margin:0 auto 18px;text-wrap:balance}
+.sbc .places{font:700 17px/1.6 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin:0 0 28px}
+.sbc .places a{text-decoration:none;color:var(--soft)}.sbc .places a:hover{color:var(--c)}
+.sbc .places em{font-style:normal;color:#b8782e;border-bottom:2px dashed #b8782e}
+.sbc .pt{display:block;width:min(260px,70%);height:auto;margin:0 0 26px}
+.sbc .ckl{width:100%;max-width:1000px;margin:0 0 22px}
+.sbc .meter{height:5px;background:var(--rule);border-radius:3px;overflow:hidden;margin:0 0 14px}.sbc .meter i{display:block;height:100%;width:0;background:#222e4c;transition:width .3s}
+.sbc .ckl ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sbc .ckl label{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:10px 12px;border:1px solid var(--rule);border-radius:4px;cursor:pointer;background:var(--paper);height:100%}
+.sbc .ckl input{width:18px;height:18px;accent-color:#222e4c;margin-top:2px;flex:none}
+.sbc .ckl label:has(input:checked){border-color:#222e4c}
+.sbc .ckl b{display:block;font:600 14.5px var(--ui)}.sbc .ckl small{color:var(--mute);font-size:12.5px}
+@media (max-width:860px){.sbc .ckl ul{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.sbc .ckl ul{grid-template-columns:1fr}}
 /* centered heads */
 .secin .rowh{justify-content:center;text-align:center;flex-direction:column;align-items:center;gap:14px}
 .arch .wrap{grid-template-columns:1fr!important;grid-template-areas:"h" "t" "m"!important;justify-items:center}.arch .rowh{text-align:center;margin-bottom:28px!important}.arch .tiles{width:100%;max-width:840px}.arch .more{margin-top:28px!important}
 .secin h2::before,.arch h2::before,.sbm h2::before{border-top:4px double var(--ink);padding-top:12px;width:60px;margin-left:auto;margin-right:auto;white-space:nowrap;text-align:center;width:auto;display:table}
 .sbm h2::before{margin-left:0}
+.sbc h2::before{margin-left:auto!important;margin-right:auto}
 /* /nsadd */
 '''
 
@@ -294,16 +311,20 @@ def themes_html(pre):
             f'<div class="row1 thm">{"".join(tiles)}</div></div></section><!-- /nsadd:themes -->\n')
 
 def submit_html(pre, href="#"):
-    steps = [("Write it", "Who, where, and what you learned. A few paragraphs is plenty."),
-             ("Picture it", "Add photographs, with the photographer’s name and permission from those pictured."),
-             ("Send it", "An editor reads every one and will reply.")]
-    li = "".join(f'<li><span class="no">{i}</span><div><b>{t}</b><span>{s}</span></div></li>' for i, (t, s) in enumerate(steps, 1))
-    return ('<!-- nsadd:submit --><section class="sbm" style="border-top:1px solid var(--rule)" aria-labelledby="sb-h"><div class="wrap">'
-            f'<figure class="art"><img src="{pre}img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy"><figcaption>Painting with neighbors in Crown Heights, Brooklyn, from this issue</figcaption></figure>'
-            '<div><p class="kk">From your community</p><h2 id="sb-h">Have a story to tell?</h2>'
-            '<p class="ld">The American Bahá’í is written from the reports of Bahá’ís across the country. Yours could be next.</p>'
-            f'<ol class="route">{li}</ol><a class="sbtn" href="{href}">Submit your story <span aria-hidden="true">→</span></a></div>'
-            '</div></section><!-- /nsadd:submit -->\n')
+    places = [('gregory', 'Hemingway, South Carolina'), ('newyorkers', 'Crown Heights, Brooklyn'), ('twoartists', 'Los Angeles')]
+    pl = ' · '.join(f'<a href="{pre}#{sl}" style="--c:{TINT[sl]}">{n}</a>' for sl, n in places) + ' · <em>your town?</em>'
+    ck = [('What happened, and where', 'A few paragraphs is plenty.'), ('Who was there', 'Names only with their permission.'),
+          ('A photograph or two', 'With the photographer’s name.'), ('What you learned', 'What others could take from it.')]
+    items = ''.join(f'<li><label><input type="checkbox" id="sbk{j}"><span><b>{t}</b><small>{d}</small></span></label></li>' for j, (t, d) in enumerate(ck))
+    js = ("<script>(function(){var c=[].slice.call(document.querySelectorAll('.sbc .ckl input')),m=document.querySelector('.sbc .meter i');"
+          "if(!m)return;c.forEach(function(x){x.addEventListener('change',function(){m.style.width=(c.filter(function(y){return y.checked}).length/c.length*100)+'%'})})})();</script>")
+    return ('<!-- nsadd:submit --><section class="sbm sbc" aria-labelledby="sb-h"><div class="wrap">'
+            '<h2 id="sb-h">Every story in this issue began as a report from a community.</h2>'
+            f'<p class="places">{pl}</p>'
+            f'<img class="pt" src="{pre}img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy">'
+            f'<div class="ckl"><div class="meter" aria-hidden="true"><i></i></div><ul>{items}</ul></div>'
+            f'<a class="sbtn" href="{href}">Submit your story <span aria-hidden="true">→</span></a>'
+            f'</div></section>{js}<!-- /nsadd:submit -->\n')
 
 def contents_html(pre):
     order = sorted(FEATS, key=lambda a: int(a['pages'].split('–')[0]))
