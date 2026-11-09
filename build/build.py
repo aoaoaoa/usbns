@@ -2103,7 +2103,7 @@ def standalone(body):
     return ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<link rel="icon" type="image/svg+xml" href="FAVICON">\n'
-            '<link rel="apple-touch-icon" href="/usbns/magazine/apple-touch-icon.png">\n<meta name="apple-mobile-web-app-title" content="Am. Bahá’í">\n'
+            '<link rel="apple-touch-icon" href="/usbns/magazine/apple-touch-icon.png">\n<meta name="apple-mobile-web-app-title" content="American Bahá’í">\n'
             '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
             + body + '\n</body>\n</html>\n')
 os.makedirs(SITE, exist_ok=True)
