@@ -1,5 +1,5 @@
 import re
-P = '/home/claude/usbns/newstand/index.html'
+P = '/home/claude/usbns/magazine/landing/index.html'
 src = open(P).read()
 # strip any earlier survey block so the script can be rerun
 src = re.sub(r'\n<!-- survey -->.*?<!-- /survey -->\n', '\n', src, flags=re.S)
@@ -161,7 +161,7 @@ alt = make(B('../'), CSS_B, '../', '../')
 alt = alt.replace('src="../', 'src="../../').replace('href="../', 'href="../../').replace('href="./"', 'href="../"')
 alt = alt.replace('<title>', '<meta name="robots" content="noindex"><title>', 1)
 import os
-os.makedirs('/home/claude/usbns/newstand/alt', exist_ok=True)
+os.makedirs('/home/claude/usbns/magazine/landing/alt', exist_ok=True)
 open(P, 'w').write(_main)
-open('/home/claude/usbns/newstand/alt/index.html', 'w').write(alt)
+open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(alt)
 print('ok')

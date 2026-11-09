@@ -268,7 +268,7 @@ def _bars(seed, n=34, h=24, w=3, g=2):
 def listen_html(pre):
     items = []
     for a in sorted(FEATS, key=lambda a: int(a['pages'].split('–')[0])):
-        has = _os.path.exists(f'/home/claude/usbns/audio/{a["slug"]}.mp3')
+        has = _os.path.exists(f'/home/claude/usbns/magazine/audio/{a["slug"]}.mp3')
         sl = a['slug']; im = f'{pre}img/{THUMB[sl]}'
         import hashlib as _h
         bb = _h.md5(sl.encode()).digest() * 8; n = 22; Wd, Hd, gp = 240, 180, 3; bw = (Wd - (n-1)*gp) / n
@@ -305,7 +305,7 @@ nb.addEventListener('click',function(e){if(!au.duration)return;var r=nb.getBound
 
 def themes_html(pre):
     tiles = [f'<a href="{pre}#{a["slug"]}" style="--c:{TINT[a["slug"]]}"><i class="bar"></i><img src="{pre}img/{THUMB[a["slug"]]}" alt="" loading="lazy"><span><small>1 story</small>{a["kicker"]}</span></a>' for a in FEATS]
-    tiles.append(f'<a href="{pre}member/" style="--c:#5b4a8a"><i class="bar"></i><img src="{pre}img/cover-print-v57n5.jpg" alt="" loading="lazy" style="object-position:50% 30%"><span><small>Members</small>The full issue</span></a>')
+    tiles.append(f'<a href="{pre}members/" style="--c:#5b4a8a"><i class="bar"></i><img src="{pre}img/cover-print-v57n5.jpg" alt="" loading="lazy" style="object-position:50% 30%"><span><small>Members</small>The full issue</span></a>')
     return ('<!-- nsadd:themes --><section class="secx thm-s" aria-labelledby="th-h" style="border-top:1px solid var(--rule)"><div class="wrap">'
             '<div class="rowh"><h2 id="th-h">Browse by theme</h2><p>Every story, under the label it carried in print.</p></div>'
             f'<div class="row1 thm">{"".join(tiles)}</div></div></section><!-- /nsadd:themes -->\n')

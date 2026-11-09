@@ -825,7 +825,7 @@ def build_tab(member=False, menu="contents"):
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
     when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
-    SECRET = f'<div class="rhx" aria-hidden="true"><a href="https://aoaoaoa.github.io/usbns/newstand/" tabindex="-1"></a><a href="https://aoaoaoa.github.io/usbns/{"" if member else "member/"}" tabindex="-1"></a></div>'  # unmarked: left goes to the newsstand, right to the other edition
+    SECRET = f'<div class="rhx" aria-hidden="true"><a href="https://aoaoaoa.github.io/usbns/magazine/landing/" tabindex="-1"></a><a href="https://aoaoaoa.github.io/usbns/magazine/{"" if member else "members/"}" tabindex="-1"></a></div>'  # unmarked: left goes to the newsstand, right to the other edition
     if menu == "bands":
         light = {"#e9a21f", "#f05a7e"}
         sheet = ('<div class="rhs rhs-b" role="navigation" id="rhs" aria-label="Contents">' + f'<p class="rhi">{esc(ISSUE["theme"])}</p>'
@@ -935,8 +935,8 @@ main,.head{{position:relative;z-index:1}}
 .verb:not([data-f="2"]) .vr{{opacity:.18;transform:translateY(.15em)}} .verb:not([data-f="2"]) cite{{opacity:0}}
 @media (max-width:760px){{.prose>.verb{{grid-column:auto}} .verb .vq{{margin-left:0;width:auto}}}}
 /* display, centered, in Newsreader */
-.verb.vc{{text-align:center;margin-left:auto;margin-right:auto;max-width:680px}}
-.verb.vc p{{font-family:"Newsreader",var(--text),serif;font-optical-sizing:auto;font-weight:400;font-size:clamp(38px,6.2vw,74px);line-height:1.02;letter-spacing:-.01em;margin:0 0 18px;text-wrap:balance;color:var(--ink)}}
+.verb.vc{{text-align:center;margin-left:auto;margin-right:auto;max-width:560px}}
+.verb.vc p{{font-family:"Newsreader",var(--text),serif;font-optical-sizing:auto;font-weight:400;font-size:clamp(28px,3.6vw,44px);line-height:1.1;letter-spacing:-.005em;margin:0 0 16px;text-wrap:balance;color:var(--ink)}}
 .verb.vc em{{font-style:italic;color:var(--accent)}}
 .verb.vc .rl{{display:block;width:80px;height:3px;background:#b8782e;margin:0 auto 14px}}
 .verb.vc cite{{margin:0}}
@@ -1590,7 +1590,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
-{footer_html("https://aoaoaoa.github.io/usbns/newstand/")}
+{footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}
 {LBX_HTML}
 {SHARE_HTML}
@@ -2051,7 +2051,7 @@ for name, fn in [("tab", build_tab), ("plates", build_plates), ("reader", build_
 with open(os.path.join(OUT, "member.html"), "w") as f: f.write(build_tab(member=True))
 
 # ---------------------------------------------------------------- GitHub Pages site
-SITE = os.path.join(HERE, "site")
+SITE = os.path.join(HERE, "site", "magazine")
 def standalone(body):
     """Wrap an artifact page in a full HTML document; image paths become relative to site/img."""
     body = body.replace(SIDES, "").replace('src="img/', 'src="../img/').replace('href="img/', 'href="../img/').replace('url(img/', 'url(../img/')
@@ -2066,13 +2066,13 @@ def standalone(body):
 os.makedirs(SITE, exist_ok=True)
 with open(os.path.join(SITE, "index.html"), "w") as f: f.write(standalone(build_tab()).replace('src="../img/', 'src="img/').replace('href="../img/', 'href="img/').replace('url(../img/', 'url(img/').replace('href="FAVICON"', 'href="favicon.svg"'))
 shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg"))
-os.makedirs(os.path.join(SITE, "member"), exist_ok=True)
-with open(os.path.join(SITE, "member", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
+os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
+with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
 os.makedirs(os.path.join(SITE, "alt"), exist_ok=True)
 with open(os.path.join(SITE, "alt", "index.html"), "w") as f: f.write(standalone(build_tab(menu="bands")).replace('href="FAVICON"', 'href="../favicon.svg"'))
-os.makedirs(os.path.join(SITE, "member", "alt"), exist_ok=True)
-with open(os.path.join(SITE, "member", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
+os.makedirs(os.path.join(SITE, "members", "alt"), exist_ok=True)
+with open(os.path.join(SITE, "members", "alt", "index.html"), "w") as f: f.write(standalone(build_tab(member=True, menu="bands")).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
 for d, fn in [("alt/plates", build_plates), ("alt/reader", build_reader)]:
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
     with open(os.path.join(SITE, d, "index.html"), "w") as f: f.write(standalone(fn()).replace('src="../img/', 'src="../../img/').replace('href="../img/', 'href="../../img/').replace('url(../img/', 'url(../../img/').replace('href="FAVICON"', 'href="../../favicon.svg"'))
