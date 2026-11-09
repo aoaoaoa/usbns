@@ -567,7 +567,7 @@ NUDGE_LINES = [("Tell us what you enjoy reading and share your ideas for future 
                ("Have the next stories sent to you.", "By email, as they’re published.")]
 NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Take part"><span class="ndot"><img src="img/motif/dot03.webp" alt="" loading="lazy"></span>'
     f'<span class="ntx" aria-live="polite"><b>{NUDGE_LINES[0][0]}</b><span class="nl">{NUDGE_LINES[0][1]}</span></span>'
-    f'<span class="n3"><a class="on" data-k="0" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Reader survey</a><a data-k="1" href="#">Contribute</a><a data-k="2" href="/usbns/magazine/landing/#subscribe">Subscribe</a></span>'
+    f'<span class="n3"><a class="on" data-k="0" href="{SURVEY_FORM}" data-survey target="_blank" rel="noopener">Reader survey</a><a data-k="1" href="#" data-submit>Contribute</a><a data-k="2" href="/usbns/magazine/landing/#subscribe" data-subscribe>Subscribe</a></span>'
     '<button class="nx" type="button" aria-label="Dismiss"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>')
 ASK_JS = r"""<script>
 (function(){var el=document.querySelector('.askr');if(el&&!matchMedia('(prefers-reduced-motion:reduce)').matches){var Q=""" + __import__("json").dumps(ASK_Q) + r""",i=0;

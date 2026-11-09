@@ -23,8 +23,8 @@ def _icon(name):
     return svg.replace("<svg ", '<svg aria-hidden="true" focusable="false" ', 1)
 ASKS = [  # (label, link text, href, extra attributes)
     ("Reader survey", "Give feedback", "https://form.typeform.com/to/NfIWSbQl", ' data-survey'),
-    ("Contribute", "Submit your story", "#", ''),
-    ("Every issue", "Subscribe", "/usbns/magazine/landing/#subscribe", ''),
+    ("Contribute", "Submit your story", "#", ' data-submit'),
+    ("Every issue", "Subscribe", "/usbns/magazine/landing/#subscribe", ' data-subscribe'),
 ]
 PUBLISHER = "Published by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201."
 
@@ -42,7 +42,7 @@ def footer_html(home="./"):
             '<div class="c3">' + ''.join(f'<div><span>{l}</span><a href="{h}"{x}>{t}</a></div>' for l, t, h, x in ASKS) + '</div>'
             f'<nav aria-label="Footer"><ul>{nav}</ul></nav>'
             f'<div class="cs"><span>Follow us</span><span class="ic">{fol}</span></div>'
-            f'<p class="cp">{PUBLISHER}</p></div></footer>')
+            f'<p class="cp">{PUBLISHER}</p></div></footer>' + ask_dialogs())
 
 FOOTER_CSS = """
 /* navy and blush */
@@ -81,3 +81,82 @@ FOOTER_CSS = """
 .colo .c3{display:grid;grid-template-columns:repeat(3,auto);justify-content:center}.colo .c3>div{padding:4px 28px;text-align:center}.colo .c3>div+div{border-left:1px solid rgba(242,207,198,.3)}.colo .c3 span{display:block;font:700 11px var(--ui);letter-spacing:.18em;text-transform:uppercase;color:rgba(242,207,198,.7);margin-bottom:6px}.colo .c3 a{font:italic 600 18px "Literata",Georgia,serif;color:#fff;text-decoration:none}.colo .c3 a:hover{text-decoration:underline;text-underline-offset:4px}
 @media (max-width:600px){.colo .c3{grid-template-columns:1fr;gap:14px}.colo .c3>div+div{border-left:0}}
 """
+
+# ---- Subscribe and Submit-your-story popups, shared by every page (emitted with the footer) ----
+# Set these to the real endpoints; until then the forms validate and say plainly that sign-up / submissions open soon.
+SUBSCRIBE_ACTION = ""
+SUBMIT_ACTION = ""
+_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+def ask_dialogs():
+    sub = (f'<dialog class="askdlg" id="dlg-subscribe" aria-labelledby="dsu-h"><form method="dialog" class="dx"><button aria-label="Close">{_X}</button></form>'
+        '<div class="dbody"><span class="dk">Subscribe</span><h2 id="dsu-h">Have the next stories sent to you.</h2><p class="dl2">By email, as they’re published. Choose how much arrives at a time.</p>'
+        f'<form class="dform" data-action="{SUBSCRIBE_ACTION}" novalidate><fieldset class="dch"><legend class="vh">Send me</legend>'
+        '<label><input type="radio" name="delivery" value="one"><span><b>One story</b><small>as each is published</small></span></label>'
+        '<label><input type="radio" name="delivery" value="few" checked><span><b>A few stories</b><small>two or three at a time</small></span></label>'
+        '<label><input type="radio" name="delivery" value="issue"><span><b>The full issue</b><small>four to six stories</small></span></label></fieldset>'
+        '<label class="dfl"><span>Email address</span><input type="email" name="email" autocomplete="email" required placeholder="you@example.org"></label>'
+        '<button class="dgo" type="submit">Subscribe</button><p class="dfine">Unsubscribe from any email.</p></form>'
+        '<div class="ddone" hidden><h3>Thank you.</h3><p>Email sign-up opens soon; we’ll have the next stories ready for you.</p></div></div></dialog>')
+    st = (f'<dialog class="askdlg wide" id="dlg-submit" aria-labelledby="dsb-h"><form method="dialog" class="dx"><button aria-label="Close">{_X}</button></form>'
+        '<div class="dbody"><span class="dk">Contribute</span><h2 id="dsb-h">Know a story like these?</h2>'
+        '<div class="dnote"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
+        '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div>'
+        f'<form class="dform" data-action="{SUBMIT_ACTION}" enctype="multipart/form-data" novalidate><div class="dgrid">'
+        '<label class="dfl"><span>Your name</span><input name="name" autocomplete="name" required></label>'
+        '<label class="dfl"><span>Email address</span><input type="email" name="email" autocomplete="email" required></label>'
+        '<label class="dfl full"><span>Where</span><input name="place" placeholder="Town or neighborhood, state" required></label>'
+        '<label class="dfl full"><span>What happened</span><textarea name="story" rows="5" placeholder="A few paragraphs is plenty." required></textarea></label>'
+        '<label class="dfl full"><span>Who was there <small>Names only with their permission.</small></span><input name="people"></label>'
+        '<label class="dfl full"><span>What you learned <small>What others could take from it.</small></span><textarea name="learned" rows="3"></textarea></label>'
+        '<label class="dfl full"><span>A photograph or two <small>With the photographer’s name.</small></span><input type="file" name="photos" accept="image/*" multiple></label>'
+        '<label class="dfl full"><span>Photographer</span><input name="photographer"></label></div>'
+        '<button class="dgo" type="submit">Send your story</button></form>'
+        '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div></div></dialog>')
+    return sub + st + ASK_JS
+
+ASK_JS = r'''<script>(function(){
+var D={subscribe:document.getElementById('dlg-subscribe'),submit:document.getElementById('dlg-submit')};if(!D.subscribe||!D.submit||!D.subscribe.showModal)return;
+function kind(a){if(a.closest('dialog'))return null;if(a.hasAttribute('data-subscribe'))return 'subscribe';if(a.hasAttribute('data-submit'))return 'submit';var h=a.getAttribute('href')||'';if(/#subscribe$/.test(h)&&!document.querySelector('section#subscribe'))return 'subscribe';return null}
+document.addEventListener('click',function(e){if(e.defaultPrevented&&!e.target.closest('.nudge'))return;var a=e.target.closest('a,button');if(!a)return;var k=kind(a);if(!k)return;e.preventDefault();var d=D[k];
+  d.querySelector('.dform').hidden=false;d.querySelector('.ddone').hidden=true;d.showModal();var f=d.querySelector('input:not([type=radio]):not([type=file]),textarea');if(f)setTimeout(function(){f.focus()},30)},true);
+[D.subscribe,D.submit].forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});
+  var f=d.querySelector('.dform');f.addEventListener('submit',function(e){e.preventDefault();var bad=[].slice.call(f.querySelectorAll('[required]')).filter(function(x){return !x.checkValidity()});
+    f.querySelectorAll('.dfl').forEach(function(l){l.classList.remove('err')});if(bad.length){bad.forEach(function(x){x.closest('.dfl').classList.add('err')});bad[0].focus();return}
+    var act=f.dataset.action;if(act){fetch(act,{method:'POST',body:new FormData(f)}).catch(function(){})}
+    f.hidden=true;var dn=d.querySelector('.ddone');dn.hidden=false;dn.setAttribute('tabindex','-1');dn.focus()})})})();</script>'''
+
+ASK_CSS = """
+.askdlg{border:0;padding:0;border-radius:14px;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--card,var(--bar,#fdfcf9));color:var(--ink,#1d1a16);box-shadow:0 24px 60px rgba(20,16,10,.3);overflow:auto;font-family:var(--ui,system-ui,sans-serif)}
+.askdlg.wide{width:min(720px,calc(100vw - 24px))}
+.askdlg::backdrop{background:rgba(20,16,10,.45)}
+.askdlg[open]{animation:dlgin .25s ease-out}@keyframes dlgin{from{opacity:0;transform:translateY(12px)}}
+.askdlg .dx{position:sticky;top:0;display:flex;justify-content:flex-end;margin:0;padding:10px 10px 0;height:0;z-index:2}
+.askdlg .dx button{width:40px;height:40px;border-radius:50%;border:0;background:var(--card,var(--bar,#fdfcf9));color:var(--mute,#6a635a);cursor:pointer;display:grid;place-items:center}.askdlg .dx svg{width:20px;height:20px}.askdlg .dx button:hover{color:var(--ink,#1d1a16)}
+.askdlg .dbody{padding:30px 30px 28px}
+.askdlg .dk{display:block;font:700 11px/1 var(--ui,sans-serif);letter-spacing:.2em;text-transform:uppercase;color:#b8782e;margin:0 0 10px}
+.askdlg h2{font:800 clamp(24px,3vw,30px)/1.12 "Literata",Georgia,serif;letter-spacing:-.015em;margin:0 0 8px;padding-right:36px}
+.askdlg .dl2{margin:0 0 18px;font-size:15px;color:var(--mute,#6a635a)}
+.askdlg .dnote{position:relative;background:#fffdf6;color:#1d1a16;padding:16px 20px 14px;margin:14px 2px 22px;box-shadow:0 8px 20px rgba(29,26,22,.12);transform:rotate(-.6deg)}
+.askdlg .dnote::before{content:"";position:absolute;top:-9px;left:50%;width:80px;height:20px;transform:translateX(-50%) rotate(2deg);background:rgba(242,207,198,.85)}
+.askdlg .dnote p{font:15px/1.55 "Literata",Georgia,serif;margin:0 0 6px}.askdlg .dnote p:last-child{margin:0}
+.askdlg .dch{border:0;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.askdlg .dch label{cursor:pointer;position:relative}.askdlg .dch input{position:absolute;opacity:0}
+.askdlg .dch span{display:grid;gap:2px;height:100%;padding:10px 12px;border:1.5px solid var(--rule,#d9d2c4);border-radius:10px;text-align:center}
+.askdlg .dch b{font-weight:600;font-size:14.5px}.askdlg .dch small{font-size:12px;color:var(--mute,#6a635a)}
+.askdlg .dch input:checked+span{border-color:var(--ink,#1d1a16);box-shadow:inset 0 0 0 1px var(--ink,#1d1a16)}.askdlg .dch input:focus-visible+span{outline:2px solid #b8782e;outline-offset:2px}
+.askdlg .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin:0 0 18px}.askdlg .dfl.full{grid-column:1/-1}
+.askdlg .dfl{display:grid;gap:6px;margin:0 0 14px}.askdlg .dgrid .dfl{margin:0}
+.askdlg .dfl>span{font-weight:600;font-size:13.5px}.askdlg .dfl small{font-weight:400;color:var(--mute,#6a635a);margin-left:6px}
+.askdlg input:not([type=radio]),.askdlg textarea{width:100%;box-sizing:border-box;min-height:46px;border:1.5px solid var(--rule,#d9d2c4);border-radius:10px;padding:10px 14px;font:16px var(--ui,sans-serif);background:var(--paper,#f5f1e8);color:var(--ink,#1d1a16)}
+.askdlg textarea{resize:vertical;line-height:1.5}.askdlg input[type=file]{padding:10px;font-size:14px}
+.askdlg input:focus,.askdlg textarea:focus{outline:2px solid #222e4c;outline-offset:1px}
+.askdlg .dfl.err input,.askdlg .dfl.err textarea{border-color:#c9462c}.askdlg .dfl.err>span::after{content:" required";color:#c9462c;font-weight:500}
+.askdlg .dgo{width:100%;min-height:50px;border:0;border-radius:999px;background:#222e4c;color:#fff;font:600 16px var(--ui,sans-serif);cursor:pointer}.askdlg .dgo:hover{background:#2c3a60}
+.askdlg .dfine{margin:12px 0 0;text-align:center;font-size:13px;color:var(--mute,#6a635a)}
+.askdlg .ddone{padding:10px 0 4px}.askdlg .ddone h3{font:700 22px "Literata",Georgia,serif;margin:0 0 6px}.askdlg .ddone p{margin:0;color:var(--mute,#6a635a);font-size:15.5px;line-height:1.5}.askdlg .ddone:focus{outline:none}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .askdlg .dgo{background:#f2cfc6;color:#222e4c}}:root[data-theme="dark"] .askdlg .dgo{background:#f2cfc6;color:#222e4c}
+@media (max-width:560px){.askdlg .dbody{padding:26px 18px 20px}.askdlg .dch{grid-template-columns:1fr}.askdlg .dgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.askdlg[open]{animation:none}}
+"""
+FOOTER_CSS += ASK_CSS
