@@ -572,7 +572,7 @@ NUDGE_HTML = ('<div class="nudge" hidden role="complementary" aria-label="Take p
 ASK_JS = r"""<script>
 (function(){var el=document.querySelector('.askr');if(el&&!matchMedia('(prefers-reduced-motion:reduce)').matches){var Q=""" + __import__("json").dumps(ASK_Q) + r""",i=0;
   setInterval(function(){el.style.opacity=0;setTimeout(function(){i=(i+1)%Q.length;el.textContent=Q[i];el.style.opacity=1},400)},3400);}
-  var n=document.querySelector('.nudge');if(!n||!('IntersectionObserver' in window))return;var K='tab-survey-nudge',off=false;
+  var n=document.querySelector('.nudge');if(!n||!('IntersectionObserver' in window))return;var K='tab-takepart-1',off=false;
   try{off=!!localStorage.getItem(K)}catch(e){}if(off)return;
   function stop(){off=true;n.classList.remove('on');setTimeout(function(){n.hidden=true},300);try{localStorage.setItem(K,'1')}catch(e){}}
   n.querySelector('.nx').addEventListener('click',stop);var L=""" + __import__("json").dumps(NUDGE_LINES) + r""",C=[].slice.call(n.querySelectorAll('.n3 a')),B=n.querySelector('.ntx b'),S=n.querySelector('.ntx .nl'),cur=0,held=false;function show(k){if(k===cur)return;cur=k;B.textContent=L[k][0];S.textContent=L[k][1];C.forEach(function(c,i){c.classList.toggle('on',i===k)})}C.forEach(function(c,i){c.addEventListener('click',stop);c.addEventListener('mouseenter',function(){held=true;show(i)});c.addEventListener('focus',function(){held=true;show(i)});c.addEventListener('mouseleave',function(){held=false});c.addEventListener('blur',function(){held=false})});if(!matchMedia('(prefers-reduced-motion:reduce)').matches)setInterval(function(){if(!held&&n.classList.contains('on'))show((cur+1)%3)},5000);
