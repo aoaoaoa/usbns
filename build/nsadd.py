@@ -256,7 +256,7 @@ def calendar_html():
 def airmail(pre, FORM):
     return (f'<!-- nsadd:air --><div class="strip air svy" role="region" aria-label="Reader survey"><div class="wrap">'
             f'<span class="pm"><img class="mo" src="{pre}img/motif/m09.webp" alt=""></span>'
-            '<p><b>Reader survey</b><span>Tell us what you enjoy reading, and what to write about next.</span></p>'
+            '<p><b>Reader survey</b><span>Share your ideas to shape the magazine’s future.</span></p>'
             f'<a class="go" href="{FORM}" data-survey target="_blank" rel="noopener">Give feedback · 5 min</a></div></div><!-- /nsadd:air -->\n')
 
 FEATS = [a for a in _data.ARTICLES if a['slug'] != 'comic']

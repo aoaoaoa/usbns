@@ -89,7 +89,7 @@ def F(pre):
           '<text x="75" y="72" text-anchor="middle" style="font-size:15px;letter-spacing:.06em">5 MIN</text><text x="75" y="88" text-anchor="middle" style="font-size:11px">2026</text></svg>')
     return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey"><div class="wrap">{HEAD}'
             f'<div class="stampw"><div class="stamp"><div class="plate"><div class="bg">{m(5)}{m(12)}{m(2)}</div>'
-            f'<div class="card2"><h3 class="svbrand">The American Bahá’í<br>Reader <b>Survey</b></h3><p class="l">Tell us what you enjoy reading and share your ideas for future topics.</p>{BTN}{MIN}</div></div></div>'
+            f'<div class="card2"><h3 class="svbrand">The American Bahá’í<br>Reader <b>Survey</b></h3><p class="l">Share your ideas to shape the magazine’s future.</p>{BTN}{MIN}</div></div></div>'
             f'{pm}</div></div></section>\n<!-- /survey -->\n')
 
 def B(pre):
@@ -136,7 +136,7 @@ assert HEADER_END in src
 def strip(pre):
     m = lambda n: f'<img class="mo" src="{pre}img/motif/m{n:02d}.webp" alt="">'
     return (f'\n<!-- strip -->\n<div class="strip svy" role="region" aria-label="Reader survey"><div class="wrap"><span class="ms">{m(2)}{m(9)}{m(5)}</span>'
-            f'<p><b>Reader survey.</b> <span class="lg">Tell us what you enjoy reading. </span>Takes 5 minutes.</p>'
+            f'<p><b>Reader survey.</b> <span class="lg">Share your ideas to shape the magazine’s future. </span>Takes 5 minutes.</p>'
             f'<a class="svbtn" href="{FORM}" data-survey target="_blank" rel="noopener">Give feedback</a></div></div>\n<!-- /strip -->\n')
 
 def corner(pre):

@@ -591,7 +591,7 @@ ASK_JS = r"""<script>
   var arts=[].slice.call(document.querySelectorAll('article.story:not(.dept):not(.letter)')),q=0;
   function chk(){q=0;if(off)return;var vh=innerHeight,show=false;arts.forEach(function(a){var r=a.getBoundingClientRect();if(r.height&&r.bottom-r.height*.25<vh*.9&&r.bottom>-vh*.6)show=true});
     place();if(show){if(n.hidden){n.hidden=false;requestAnimationFrame(function(){n.classList.add('on')})}else n.classList.add('on')}else n.classList.remove('on')}
-  addEventListener('scroll',function(){if(!q){q=1;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);chk();
+  addEventListener('scroll',function(){if(!q){q=1;requestAnimationFrame(chk)}},{passive:true});addEventListener('resize',chk);if(dock&&'MutationObserver' in window)new MutationObserver(function(){setTimeout(chk,40)}).observe(dock,{attributes:true,attributeFilter:['class','hidden']});chk();
 })();
 </script>"""
 
@@ -1475,6 +1475,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 @media (max-width:720px){{.front .ask{{grid-template-columns:1fr}} .front .ask .aski{{aspect-ratio:16/7}}}}
 .nudge{{--navy:#222e4c;--blush:#f2cfc6;position:fixed;z-index:9;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + var(--dh,0px));transform:translate(-50%,24px);opacity:0;transition:transform .3s,opacity .3s,bottom .3s;
   display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100vw - 32px);background:var(--navy);color:var(--blush);border-radius:999px;padding:7px 8px 7px 7px;box-shadow:0 10px 26px rgba(0,0,0,.25)}}
+.nudge:not(.on){{pointer-events:none;visibility:hidden;transition:transform .3s,opacity .3s,bottom .3s,visibility 0s .3s}}
 .nudge.on{{transform:translate(-50%,0);opacity:1}}
 .nudge .ndot{{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:none}} .nudge .ndot img{{width:100%;height:100%;object-fit:cover;display:block}}
 .nudge .ntx{{font-family:"Barlow Condensed","Arial Narrow",var(--ui),sans-serif;font-size:18px;line-height:1.15;min-width:0}} .nudge .ntx b{{display:block;font-size:20px}}
