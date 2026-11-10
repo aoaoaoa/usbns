@@ -2175,9 +2175,7 @@ def _office(name, role, phone, email):
     return (f'<section class="ct"><h3>{esc(name)}</h3><p class="r">{esc(role)}</p><dl><dt>Phone (office)</dt><dd><a href="tel:+1{re.sub(r"[^0-9]", "", phone)}">{esc(phone)}</a></dd>'
             f'<dt>E-mail</dt><dd><a href="mailto:{email}">{esc(email)}</a></dd></dl></section>')
 CONTACT = ('<h2>National and local</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
-    + _office("Bah\u00e1\u2019\u00ed Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
-    + '<p>For information on any of the content on this site, contact the Communications Editor.</p>'
-    + _office("Bah\u00e1\u2019\u00ed Office of Communications", "Communications Editor", "(847) 733-3438", "Communications@bahai.us"))
+    + _office("Bah\u00e1\u2019\u00ed Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org"))
 NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
 TERMS = ('<h2>Copyright</h2>'
     '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
