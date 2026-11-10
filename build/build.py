@@ -1006,7 +1006,7 @@ main,.head{{position:relative;z-index:1}}
 /* photo frames: a thin border cut from the cover painting */
 .prose .photo.pair{{display:flex!important;gap:20px;align-items:flex-start}} .prose .photo.pair>div{{min-width:0}}
 @media (max-width:640px){{.prose .photo.pair{{flex-direction:column}}}}
-.prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{{box-sizing:border-box;padding:6px;background:#2f5a2a url(img/motif-uhj.jpg) center/cover;border-radius:0!important}}
+.prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{{box-sizing:border-box;padding:6px;background:#2f5a2a url(img/motif-uhj-v2.jpg) center/cover;border-radius:0!important}}
 
 /* CARS wheel: four phases, each filling in turn */
 .chart.ringf .ct{{font-family:"Literata",var(--text),serif;font-weight:500;font-size:clamp(19px,1.75vw,24px);line-height:1.25;letter-spacing:-.005em;max-width:34ch;margin-bottom:18px;font-variation-settings:"opsz" 48}}
@@ -1259,7 +1259,7 @@ body::before{{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inse
 .index a{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--rule);color:inherit;text-decoration:none;font-family:var(--text);font-style:italic;font-size:22px;line-height:1.25;font-weight:300}}
 .index a:hover .t,.index a:focus-visible .t{{color:var(--accent)}}
 .index .pg{{font-family:var(--ui);font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}}
-.uhjf{{padding:clamp(16px,2.2vw,28px);background:#2f5a2a url(img/motif-uhj.jpg) center/cover;border:1px solid var(--rule);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}}
+.uhjf{{padding:clamp(16px,2.2vw,28px);background:#2f5a2a url(img/motif-uhj-v2.jpg) center/cover;border:1px solid var(--rule);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}}
 .uhj{{margin:0;background:var(--tabon-white,#fff);border:1px solid var(--rule);padding:clamp(20px,2.6vw,32px) clamp(22px,2.8vw,36px)}}
 .uhj p{{font-family:var(--text);font-style:italic;font-weight:400;font-size:clamp(24px,2.6vw,32px);line-height:1.28;margin:0 0 14px;text-wrap:pretty;color:var(--ink)}}
 .uhj cite{{font-style:normal;font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}}
