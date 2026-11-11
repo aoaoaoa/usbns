@@ -643,7 +643,7 @@ LBX_CSS = r'''
 '''
 LBX_HTML = '''<div class="lbx" id="lbx" role="dialog" aria-modal="true" aria-labelledby="lbx-h" hidden>
 <h2 id="lbx-h" class="vh">Photographs</h2>
-<div class="lbx-bar"><p class="lbx-n" aria-live="polite"></p><p class="lbx-tou">Before downloading please refer to the <a href="https://news.bahai.org/legal" target="_blank" rel="noopener">Terms of use</a></p><button type="button" class="lbx-x" aria-label="Close photographs"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
+<div class="lbx-bar"><p class="lbx-n" aria-live="polite"></p><p class="lbx-tou">Before downloading please refer to the <a href="/usbns/magazine/terms/">Terms of use</a></p><button type="button" class="lbx-x" aria-label="Close photographs"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
 <div class="lbx-stage">
 <button type="button" class="lbx-nav lbx-prev" aria-label="Previous photograph"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2L4 8l6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
 <figure class="lbx-fig"><img alt=""><figcaption></figcaption></figure>
