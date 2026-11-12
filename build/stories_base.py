@@ -64,7 +64,7 @@ ST = [("Neighbors came together", "newyorkers", "ny-film.jpg", "Harlem"),
       ("Creativity brought people closer", "twoartists", "ta-portrait.jpg", "Los Angeles")]
 cards = "".join(f'<button type="button" class="st" style="--c:{TINT[s]}" data-p="{t}"><img src="{I}{im}" alt="" loading="lazy"><span><b>{t}</b><small>Like <a href="{E}{s}/">{pl}</a></small></span></button>' for t, s, im, pl in ST)
 C = f'''<section class="ap" id="C" data-n="Story starters" hidden>
-<p class="kk">Contribute</p><h1>You may already have a story.</h1><p class="ld">Each story in this issue started with something small.</p>
+<p class="kk">Contribute</p><h1>Do you have a story?</h1><p class="ld">Each story in this issue started with something small.</p>
 <div class="sts">{cards}<button type="button" class="st own" data-p="Something else"><span><b>Something else</b><small>Start from a blank page</small></span></button></div>
 <div class="unf" hidden><p class="yt"></p>{form('<label>Where<input placeholder="City or neighborhood, state"></label>')}</div>{PROMISE}</section>'''
 

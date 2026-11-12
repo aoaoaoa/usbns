@@ -18,17 +18,32 @@ def strip_links(h):
     h = re.sub(r'<span class="lang"( hidden)?>.*?</span>(?=</div>)', "", h, flags=re.S)
     return h
 
+L = "/usbns/magazine/lang/"
+EDS = [("en", "English", L), ("es", "Español", L + "es/"), ("zh-Hans", "中文", L + "members/zh/"), ("fa", "فارسی", L + "members/fa/")]
+def langs(skip, en=L):
+    return '<span class="lang">' + " · ".join(f'<a href="{en if c == "en" else u}" hreflang="{c}" lang="{c}">{n}</a>' for c, n, u in EDS if c != skip) + "</span>"
+BAND = ('<!-- langband --><style>.lgb{background:var(--card);border-block:1px solid var(--rule)}.lgb .wrap{padding-block:36px 40px}'
+        '.lgb h2{font:700 12px/1 var(--ui);letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin:0 0 18px}'
+        '.lgb ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}'
+        '.lgb a{display:grid;gap:6px;height:100%;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:18px 20px}'
+        '.lgb a:hover,.lgb a:focus-visible{border-color:var(--ink)}.lgb b{font:700 24px/1.2 var(--text)}.lgb span{font:15px/1.45 var(--text);color:var(--mute)}'
+        '.lgb i{font:600 14px var(--ui);font-style:normal;margin-top:4px}'
+        '.lgb [lang=zh-Hans] b,.lgb [lang=zh-Hans] span{font-family:"Noto Serif SC",var(--text)}.lgb [lang=fa] b,.lgb [lang=fa] span,.lgb [lang=fa] i{font-family:"Vazirmatn",var(--ui)}</style>'
+        '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Vazirmatn:wght@400;700&display=swap">'
+        '<section class="lgb" aria-labelledby="lg-h"><div class="wrap"><h2 id="lg-h">This issue in other languages</h2><ul>'
+        f'<li><a href="{L}es/" hreflang="es" lang="es"><b>Español</b><span>Edición seleccionada: cinco reportajes de este número.</span><i>Leer el número →</i></a></li>'
+        f'<li><a href="{L}members/zh/" hreflang="zh-Hans" lang="zh-Hans"><b>中文</b><span>完整版：五篇专题、一则漫画，以及总灵理会年中文告的印刷版中文译文。</span><i>阅读本期 →</i></a></li>'
+        f'<li><a href="{L}members/fa/" hreflang="fa" lang="fa" dir="rtl"><b>فارسی</b><span>نسخهٔ کامل: پنج گزارش، یک داستان مصوّر، و ترجمهٔ فارسیِ چاپیِ پیام نیمه‌سالهٔ محفل روحانی ملّی.</span><i>خواندن این شماره ←</i></a></li>'
+        '</ul></div></section><!-- /langband -->')
 def show_links(h, rel):
-    h = h.replace('<span class="lang" hidden>', '<span class="lang">')
-    if rel == "" and 'hreflang="es"' not in h:
-        h = h.replace('<span>Curated edition</span></div>', '<span>Curated edition</span><span class="lang"><a href="es/" hreflang="es" lang="es">Español</a></span></div>', 1)
+    h = re.sub(r'<span class="lang"( hidden)?>.*?</span>(?=</div>)', "", h, flags=re.S)
+    if rel == "":
+        h = h.replace('<span>Curated edition</span></div>', '<span>Curated edition</span>' + langs("en") + '</div>', 1)
     if rel == "members":
-        h = h.replace('<span><a href="../">Curated edition</a></span>',
-                      '<span><a href="../">Curated edition</a></span><span class="lang"><a href="zh/" hreflang="zh-Hans" lang="zh-Hans">中文</a> · <a href="fa/" hreflang="fa" lang="fa">فارسی</a></span>', 1)
-    if rel == "landing":
-        h = h.replace('<p class="meta">October / November / December 2026</p>',
-                      '<p class="meta">October / November / December 2026</p>\n<p class="meta lg">Also in <a href="../es/" hreflang="es" lang="es">Español</a>'
-                      ' · Members: <a href="../members/zh/" hreflang="zh-Hans" lang="zh-Hans">中文</a> · <a href="../members/fa/" hreflang="fa" lang="fa">فارسی</a></p>', 1)
+        h = h.replace('<span><a href="../">Curated edition</a></span>', '<span><a href="../">Curated edition</a></span>' + langs("en"), 1)
+    if rel == "landing" and "langband" not in h:
+        i = h.find('<section class="band secin"')
+        if i > 0: h = h[:i] + BAND + "\n" + h[i:]
     return h
 
 def page_dir(t):  # the mirrored page a resolved path belongs to, or None
@@ -84,7 +99,10 @@ def main():
             if rel.split(os.sep)[0] in ("es",) or rel.startswith("members" + os.sep):
                 p = os.path.join(dirpath, f); h = open(p).read()
                 h = re.sub(r'<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?', "", h)
-                h = rebase(h.replace('<span class="lang" hidden>', '<span class="lang">'), rel.replace(os.sep, "/"))
+                code = {"es": "es", "members/zh": "zh-Hans", "members/fa": "fa"}.get("/".join(rel.split(os.sep)[:2]) if rel.startswith("members") else "es")
+                if f == "index.html" and rel in ("es", "members" + os.sep + "zh", "members" + os.sep + "fa"):
+                    h = re.sub(r'<span class="lang"( hidden)?>.*?</span>(?=</div>)', lambda m: langs(code, L if code == "es" else L + "members/"), h, count=1, flags=re.S)
+                h = rebase(h, rel.replace(os.sep, "/"))
                 open(p, "w").write(h)
     print("lang:", n, "pages mirrored;", ", ".join(t for t in TRANS if os.path.isdir(os.path.join(LANG, t))))
 
