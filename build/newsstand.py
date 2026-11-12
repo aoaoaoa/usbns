@@ -162,7 +162,7 @@ def make(block, css, pre, home):
     h = h.replace('</style>', SUBX_CSS + '</style>', 1)
     _n = h.index('</nav>', h.index('<nav aria-label="Site">')) + 6
     h = h[:_n] + SUBX_BTN + h[_n:]
-    h = h.replace('<section id="archive"', SUBX_SEC + '<section id="archive"', 1)
+    h = h.replace('<!-- nsadd:colophon -->', SUBX_SEC + '<!-- nsadd:colophon -->', 1) if '<!-- nsadd:colophon -->' in h else h.replace('<section id="archive"', SUBX_SEC + '<section id="archive"', 1)
     # airmail strip under the header: off for now; restore by uncommenting
     # h = h.replace(HEADER_END, HEADER_END + airmail(pre, FORM), 1)
     h = h.replace('</body>', block + '<!-- colo -->\n' + footer_html(home) + '\n<!-- /colo -->\n' + corner(pre) + DLG + '</body>', 1)

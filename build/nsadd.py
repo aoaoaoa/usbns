@@ -362,6 +362,23 @@ def next_html():
             '<p>Children’s classes, junior youth groups, study circles, schools. Tell us what learning looks like where you live.</p>'
             '<a class="btn" href="#" data-submit="next">Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
 
+COLO_LINE = "The American Bahá’í is the national magazine of the U.S. Bahá’í community, telling stories from neighborhoods across the country where people are learning, in practice, how to build communities that bring everyone together."
+def colophon_html():
+    import stories_base as _sb, html as _h
+    n = list(_sb.M["places"]); k = len(n) // 2
+    def rib(names, rev, label):
+        t = " · ".join(_h.escape(x) for x in names) + " · "
+        lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
+        return f'<div class="cpr{" rev" if rev else ""}"{lab}><div class="cpt"><span>{t}</span><span aria-hidden="true">{t}</span></div></div>'
+    css = ('.colp{border-block:1px solid var(--rule);padding-block:44px;display:grid;gap:28px;overflow:hidden}'
+           '.colp .wrap{max-width:760px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(18px,2vw,21px);line-height:1.6;color:var(--ink);text-wrap:pretty}'
+           '.cpr{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
+           '.cpt{display:flex;width:max-content;animation:cpd 200s linear infinite;font:500 13px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);opacity:.6;white-space:nowrap}'
+           '.cpt span{padding-right:.4em}.cpr.rev .cpt{animation-direction:reverse;animation-duration:240s}.cpr:hover .cpt{animation-play-state:paused}'
+           '@keyframes cpd{to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.cpt{animation:none}.cpr{overflow-x:auto}}')
+    return (f'<!-- nsadd:colophon --><style>{css}</style><section class="colp" aria-label="About the magazine">'
+            + rib(n[:k], False, True) + f'<div class="wrap"><p>{COLO_LINE}</p></div>' + rib(n[k:][::-1], True, False) + '</section><!-- /nsadd:colophon -->')
+
 def add_sections(h, pre, FORM):
     h = _clean(h)
     # only the styles of sections that are on: the dateline strip, airmail strip and browse by theme are off for now
@@ -388,6 +405,9 @@ def add_sections(h, pre, FORM):
     # Coming next: Education, below In this issue
     i = h.index('<!-- /nsadd:listen -->'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + next_html() + h[j:]
+    # Colophon: what the magazine is, between two slow currents of the places named in this issue
+    i = h.index('<section id="archive"')
+    h = h[:i] + colophon_html() + '\n' + h[i:]
     # Browse by theme: off for now
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '<!-- nsadd:themes --><!-- /nsadd:themes -->' + h[j:]
