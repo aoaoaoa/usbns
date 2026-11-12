@@ -1,11 +1,11 @@
-# /magazine/test/stories/: a running gallery of story-submission landing ideas. One page per idea, plus the gallery.
+# /magazine/story-ctas/: a running gallery of story-submission landing ideas. One page per idea, plus the gallery.
 # To add an idea: append to IDEAS (code, slug, name, blurb, tags, added, html, css, js) and run this file. Nothing typed on any page is sent or kept.
 import json, os, re, datetime
 import stories_base as b
 
 D = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(D, "site", "magazine", "test", "stories")
-R = "../../../"            # magazine root, from an idea page
+OUT = os.path.join(D, "site", "magazine", "story-ctas")
+R = "../../"               # magazine root, from an idea page
 I = R + "img/"
 T = b.TINT
 SURVEY_URL = "https://aoaoaoa.github.io/usbns/magazine/landing/"
@@ -278,7 +278,7 @@ def gallery():
     fl = '<button type="button" aria-pressed="true" data-t="">All</button>' + "".join(f'<button type="button" aria-pressed="false" data-t="{t}">{t}</button>' for t in tags)
     js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>Story Invitation Ideas</title><link rel="icon" href="../../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
+            f'<title>Story Invitation Ideas</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
             f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1></header>'
             f'<div class="fl" role="group" aria-label="Filter by who it reaches">{fl}</div><ul class="gg">{cards}</ul></main><script>{js}</script></body></html>')
 
