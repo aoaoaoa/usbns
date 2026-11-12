@@ -2235,7 +2235,7 @@ CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap
     ".tabm{scroll-margin-top:16px;margin:0 0 8px;background:var(--card);border:1px solid var(--rule);overflow:hidden}"
     ".tabm .wm{margin:0;background:#222e4c;color:#fff;font:400 clamp(28px,4vw,38px)/1 var(--text);letter-spacing:-.01em;padding:18px 22px}.tabm .wm small{display:block;font:italic 400 15px var(--text);color:#f2cfc6;margin:0 0 2px 2px}"
     ".tabm .mh{display:grid;grid-template-columns:1.3fr 1fr;gap:18px 28px;padding:20px 22px 4px}.tabm h3{font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:0 0 8px}"
-    ".tabm .mh p{font:16px/1.5 var(--ui);margin:0 0 4px}.tabm .ph{font:14px/1.5 var(--ui);color:var(--mute);padding:8px 22px 0;margin:0}"
+    ".tabm .mh p{font:16px/1.5 var(--ui);margin:0 0 4px}.tabm .ph{font:14px/1.5 var(--ui);color:var(--mute);padding:8px 22px 20px;margin:0}"
     ".tabm .snd{margin:18px 22px 22px;padding:14px 16px;border-left:4px solid #b8782e;background:var(--paper)}.tabm .snd p{font:17px/1.5 var(--text);margin:0}"
     "main ol.tl{margin:0 0 1.4em;padding-left:1.4em;font:18px/1.65 var(--text)}main ol.tl li{margin:0 0 .8em;padding-left:.3em}main ol.tl li::marker{color:#b8782e;font-weight:700}"
     ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}"
