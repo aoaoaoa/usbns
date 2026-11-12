@@ -364,20 +364,21 @@ def next_html():
 
 COLO_LINE = "The American Bahá’í is the national magazine of the U.S. Bahá’í community, telling stories from neighborhoods across the country where people are learning, in practice, how to build communities that bring everyone together."
 def colophon_html():
+    # two still rows of the places named in this issue, the line between them, the name in blush
     import stories_base as _sb, html as _h
     n = list(_sb.M["places"]); k = len(n) // 2
-    def rib(names, rev, label):
-        t = " · ".join(_h.escape(x) for x in names) + " · "
+    def row(names, cls, label):
+        t = " · ".join(_h.escape(x) for x in names)
         lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
-        return f'<div class="cpr{" rev" if rev else ""}"{lab}><div class="cpt"><span>{t}</span><span aria-hidden="true">{t}</span></div></div>'
-    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:30px;display:grid;gap:16px;overflow:hidden}'
-           '.colp .wrap{max-width:700px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(17px,1.8vw,19px);line-height:1.55;color:var(--cc);text-wrap:pretty}'
-           '.cpr{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
-           '.cpt{display:flex;width:max-content;animation:cpd 200s linear infinite;font:500 13px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--cb);opacity:.55;white-space:nowrap}'
-           '.cpt span{padding-right:.4em}.cpr.rev .cpt{animation-direction:reverse;animation-duration:240s;opacity:.35}.cpr:hover .cpt{animation-play-state:paused}'
-           '@keyframes cpd{to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.cpt{animation:none}.cpr{overflow-x:auto}}')
+        return f'<p class="cpr {cls}"{lab}><span>{t} · {t}</span></p>'
+    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:28px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow:hidden}'
+           '.colp .wrap{max-width:640px;text-align:center}.colp .ln{margin:0 auto;font-family:var(--text);font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}.colp .ln b{color:var(--cb);font-weight:700}'
+           '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 13.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.04em;color:var(--cb);opacity:.55;'
+           '-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
+           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.35}.cpr.b span{transform:translateX(-31%)}')
+    rest = COLO_LINE[len("The American Bahá’í "):]
     return (f'<!-- nsadd:colophon --><style>{css}</style><section class="colp" aria-label="About the magazine">'
-            + rib(n[:k], False, True) + f'<div class="wrap"><p>{COLO_LINE}</p></div>' + rib(n[k:][::-1], True, False) + '</section><!-- /nsadd:colophon -->')
+            + row(n[:k], "a", True) + f'<div class="wrap"><p class="ln"><b>The American Bahá’í</b> {rest}</p></div>' + row(n[k:][::-1], "b", False) + '</section><!-- /nsadd:colophon -->')
 
 def add_sections(h, pre, FORM):
     h = _clean(h)
