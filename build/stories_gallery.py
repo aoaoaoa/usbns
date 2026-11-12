@@ -307,31 +307,52 @@ def page(i, x):
             f'<button type="button" class="px" aria-label="Close">×</button>{body}</div>'
             f'<script>(function(){{{REC}{DONEJS}{x["js"]};{POPJS}}})();</script></body></html>')
 
+import rfc_studies as rfc
+BAR0 = ".bar0{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--rule);font:13px var(--ui);display:flex;gap:6px;align-items:center;padding:8px max(16px,env(safe-area-inset-left,0px));overflow-x:auto;scrollbar-width:none}.bar0 b{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--mute);white-space:nowrap;margin-right:6px}"
+RFCS = [dict(code=f"R{i+1}", slug=rfc.SLUGS[i], name=n, blurb=d, html=h, tags=["RFC / Open calls"], added=TODAY) for i, (n, d, h) in enumerate(rfc.V)]
+def rfc_page(i, x):
+    pv, nx = RFCS[i - 1] if i else None, RFCS[i + 1] if i + 1 < len(RFCS) else None
+    nav = (f'<nav class="bar0" aria-label="Open calls"><a href="../">← All ideas</a><span class="cd">{x["code"]}</span><b>{x["name"]}</b>'
+           f'<span class="pn2">{f"""<a href="../{pv["slug"]}/">← {pv["code"]}</a>""" if pv else ""}{f"""<a href="../{nx["slug"]}/">{nx["code"]} →</a>""" if nx else ""}</span></nav>')
+    body = re.sub(r'<a href="#" data-go="(\d)">', lambda m: f'<a href="../{RFCS[int(m.group(1))]["slug"]}/">', x["html"])
+    js = rfc.JS.split("var F=", 1)[1]
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
+            f'<title>{x["code"]} · {x["name"]}</title><link rel="icon" href="{R}favicon.svg">{FONTS}<style>{rfc.CSS}{BAR0}{NAVCSS}</style></head><body>{nav}<main>{body}</main>'
+            f'<script>(function(){{[].forEach.call(document.querySelectorAll(\'a[href="#"]\'),function(a){{a.addEventListener("click",function(e){{e.preventDefault()}})}});var F={js}}})();</script></body></html>')
+
 GCSS = '''.gw{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,72px) 16px 80px}.gh{max-width:720px;margin:0 0 28px}.gh h1{margin:0 0 12px;max-width:none;text-align:left}.gh .kk::before{margin-left:0}.gh .ld{margin:0;text-align:left;text-wrap:pretty}
 .fl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.fl button{font:600 13px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}.fl button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .gg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
 .gc a{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:4px;overflow:hidden;height:100%}.gc a:hover{border-color:var(--ink)}
 .gc img{width:100%;height:auto;align-self:start;aspect-ratio:16/10;object-fit:cover;object-position:top;display:block;border-bottom:1px solid var(--rule);background:var(--paper)}
 .gc .tx{padding:14px 16px 16px;display:grid;gap:6px;align-content:start}.gc .cn{display:flex;gap:8px;align-items:baseline}.gc .cd{font:700 12px var(--ui);background:var(--ink);color:var(--paper);border-radius:999px;padding:2px 8px}.gc b{font:700 19px/1.2 var(--text)}
-.gc p{font:14px/1.45 var(--ui);color:var(--soft);margin:0}.gc .tg{font:600 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}'''
+.gc p{font:14px/1.45 var(--ui);color:var(--soft);margin:0}.gs{font:700 22px/1.2 var(--text);margin:44px 0 16px;padding-top:20px;border-top:1px solid var(--rule)}.fl+.gs{margin-top:8px}.gs small{display:block;font:500 13px var(--ui);color:var(--mute);margin-top:4px}.gc .tg{font:600 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}'''
 def gallery():
-    tags = sorted({t for x in IDEAS for t in x["tags"]}, key=lambda t: (t != "Everyone", t))
+    tags = sorted({t for x in IDEAS for t in x["tags"]}, key=lambda t: (t != "Everyone", t)) + ["RFC / Open calls"]
+    card = lambda x: (f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x["slug"]}/"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
+                      f'<span class="tx"><span class="cn"><span class="cd">{x["code"]}</span><b>{x["name"]}</b></span><p>{x["blurb"]}</p><span class="tg">{" · ".join(x["tags"])} · {x["added"].strftime("%b %-d, %Y")}</span></span></a></li>')
+    rcards = "".join(card(x) for x in RFCS)
     cards = "".join(f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x["slug"]}/"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
                     f'<span class="tx"><span class="cn"><span class="cd">{x["code"]}</span><b>{x["name"]}</b></span><p>{x["blurb"]}</p><span class="tg">{" · ".join(x["tags"])} · {x["added"].strftime("%b %-d, %Y")}</span></span></a></li>' for x in IDEAS)
     fl = '<button type="button" aria-pressed="true" data-t="">All</button>' + "".join(f'<button type="button" aria-pressed="false" data-t="{t}">{t}</button>' for t in tags)
-    js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0})}})'''
+    js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc')),G=[].slice.call(document.querySelectorAll('.gg'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0});G.forEach(function(g){var e=!g.querySelector('.gc:not([hidden])');g.hidden=e;g.previousElementSibling.hidden=e})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
             f'<title>Story Invitation Ideas</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
-            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1><p class="ld">Each one opens as a popup over the magazine.</p></header>'
-            f'<div class="fl" role="group" aria-label="Filter by who it reaches">{fl}</div><ul class="gg">{cards}</ul></main><script>{js}</script></body></html>')
+            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1><p class="ld">Popups that invite a story, and landing pages for a recurring open call.</p></header>'
+            f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
+            f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul></main><script>{js}</script></body></html>')
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for i, x in enumerate(IDEAS):
         os.makedirs(os.path.join(OUT, x["slug"]), exist_ok=True)
         open(os.path.join(OUT, x["slug"], "index.html"), "w").write(page(i, x))
+    for i, x in enumerate(RFCS):
+        os.makedirs(os.path.join(OUT, x["slug"]), exist_ok=True)
+        open(os.path.join(OUT, x["slug"], "index.html"), "w").write(rfc_page(i, x))
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
     import shutil; shutil.copy(os.path.join(D, "vendor", "qrcode.min.js"), OUT)  # qrcodejs 1.0.0, MIT
     shutil.copytree(os.path.join(D, "stories_thumbs"), os.path.join(OUT, "thumbs"), dirs_exist_ok=True)  # screenshots of each idea page, refreshed by hand
     json.dump([x["slug"] for x in IDEAS], open(os.path.join(OUT, "slugs.json"), "w"))
+    json.dump([x["slug"] for x in RFCS], open(os.path.join(OUT, "rfc_slugs.json"), "w"))
     print("ok", len(IDEAS))
