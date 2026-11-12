@@ -2219,10 +2219,9 @@ CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The Ameri
     + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
     + f'<section class="ct"><h3>Bahá’í National Center offices</h3><dl><dt>Phone</dt><dd>{_tel("(847) 733-3400")}</dd><dt>Address</dt><dd>1233 Central St. | Evanston, IL 60201</dd></dl></section>'
     + '<h2 id="submit">Submitting articles or photographs</h2>'
-    '<p><b>Full information is on the web</b>—go to <a href="https://link.bahai.us/TAB_submit">https://link.bahai.us/TAB_submit</a> and <b>log in with your Bahá’í Online Services account</b> (BOSA).</p>'
-    '<p>Every item will be carefully considered, but we cannot guarantee publication.</p>'
-    '<p>Articles should be clear, concise and relevant to the aims of the current Plan. Limit: 800 words. <b>We may edit stories for length and style.</b> We cannot print advance articles to publicize locally sponsored events, but may be able to list them in the Calendar pages.</p>'
-    '<p>Photographs should be bright, well-composed and in focus. Please identify people when possible. <b>Electronic images</b> should be high resolution, in TIFF or JPEG format.</p>'
+    '<div class="v2"><a class="door" href="https://link.bahai.us/TAB_submit"><span class="dk">Online</span><b>Submit a story or photographs</b><span class="ds">Log in with your Bahá’í Online Services account (BOSA).</span><span class="go">Submit <span aria-hidden="true">→</span></span></a>'
+    '<a class="door" href="mailto:TAB@usbnc.org"><span class="dk">By email</span><b>Write to the editors</b><span class="ds">Questions, leads, or a story idea in a few lines.</span><span class="go">TAB@usbnc.org <span aria-hidden="true">→</span></span></a></div>'
+    '<ul class="fx"><li>Up to 800 words</li><li>Photos in TIFF or JPEG, people identified</li><li>We may edit for length and style</li></ul>'
     '<h2 id="subs">Subscriptions</h2>'
     f'<section class="ct"><h3>Bahá’í Subscriber Service</h3><p class="r">Bahá’í Subscriber Service distributes the magazines and periodicals published by the National Spiritual Assembly of the Bahá’ís of the United States</p><dl><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>E-mail</dt><dd>{_ml("subscription@usbnc.org")}</dd></dl></section>'
     '<p><b>Subscription Rates (in U.S. dollars) six issues per year.</b> Available by subscription to Bahá’ís outside the contiguous U.S.: Currently $36 (one year) / $60 (two years)</p>'
@@ -2242,7 +2241,10 @@ CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap
     ".tabm .snd{margin:18px 22px 22px;padding:14px 16px;border-left:4px solid #b8782e;background:var(--paper)}.tabm .snd p{font:17px/1.5 var(--text);margin:0}"
     "main ol.tl{margin:0 0 1.4em;padding-left:1.4em;font:18px/1.65 var(--text)}main ol.tl li{margin:0 0 .8em;padding-left:.3em}main ol.tl li::marker{color:#b8782e;font-weight:700}"
     ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}"
-    "@media (max-width:560px){.tabm .mh{grid-template-columns:1fr}}")
+    ".v2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.door{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink)!important;background:var(--card);border:1px solid var(--rule);border-top:4px solid #222e4c;padding:18px}.door+.door{border-top-color:#b8782e}.door:hover{border-color:var(--ink)}.door:focus-visible{outline:2px solid var(--link);outline-offset:3px}"
+    ".dk{font:700 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}.door b{font:700 20px/1.2 var(--text)}.ds{font:14px/1.5 var(--ui);color:var(--mute)}.go{font:700 16px var(--ui);color:var(--link);margin-top:6px}"
+    ".fx{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font:14px var(--ui);color:var(--mute)}.fx li::before{content:\"·\";margin-right:8px;color:#b8782e;font-weight:700}.fx li:first-child::before{content:none}"
+    "@media (max-width:560px){.tabm .mh,.v2{grid-template-columns:1fr}}")
 NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
 TERMS = ('<h2>Copyright</h2>'
     '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
