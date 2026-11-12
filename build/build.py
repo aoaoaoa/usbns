@@ -763,6 +763,12 @@ def prayer_html(pr):
     corner = lambda n: f'<svg class="jc jc{n}" viewBox="0 0 40 40" aria-hidden="true"><polygon points="{_star9(20,20,18,11)}" fill="var(--gilt)"/><circle cx="20" cy="20" r="5" fill="var(--lap)"/></svg>'
     return f'<blockquote class="passage prayer illum">{"".join(corner(n) for n in range(1,5))}{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
 
+# end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
+NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
+    '<span class="q">“Education can, alone, cause it to reveal its treasures…” <cite>Bahá’u’lláh</cite></span><a href="#" data-submit>Send a story <span aria-hidden="true">→</span></a></div></div></section>')
+NEXT_CSS = (".nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
+    ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
+    ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
 def build_tab(member=False, menu="contents"):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
@@ -1604,7 +1610,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
   .plate.comic{{grid-template-columns:1fr}}
 }}
 {LBX_CSS}
-{(NB_CSS + FI2_CSS if member else L_CSS + MAST_CSS + '#abs.story .torn{--b:#e9a21f!important;--c:#1b5e6b!important;--d:#2448c8!important}') + CAL_CSS + END_ASKS_CSS + LBX_TOU_CSS}
+{(NB_CSS + FI2_CSS if member else L_CSS + MAST_CSS + '#abs.story .torn{--b:#e9a21f!important;--c:#1b5e6b!important;--d:#2448c8!important}') + CAL_CSS + END_ASKS_CSS + LBX_TOU_CSS + NEXT_CSS}
 </style>
 <div class="head{" member" if member else ""}"><div class="in"><a class="brand" href="#top"><span class="bn"><svg class="star" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="star-g" x1="26" y1="1" x2="26" y2="48.4" gradientUnits="userSpaceOnUse"><stop stop-color="#73E4C4"/><stop offset=".19" stop-color="#54ADA5"/><stop offset=".47" stop-color="#357686"/><stop offset=".79" stop-color="#265B76"/><stop offset="1" stop-color="#255875"/></linearGradient></defs><path d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z" fill="url(#star-g)"/></svg><b><em class="sc">The</em> American Bahá'í</b></span><small>{SUB}</small></a><nav aria-label="Features">{head}</nav><span class="ind" aria-hidden="true"></span>{CAL_HTML if member else CAL_HTML.replace(" · work is not to be suspended", "").replace(" · work is to be suspended", "")}<button class="rh" type="button" aria-expanded="false" aria-controls="rhs"><small>The American Bahá'í</small><b><i></i><span>{esc(ISSUE["theme"])}</span></b></button><button class="rht" type="button" aria-label="Contents" aria-expanded="false" aria-controls="rhs"><svg class="bk-c" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h11.5a1 1 0 0 1 1 1v12.5H7.5A1.5 1.5 0 0 0 6 18.5zM6 18.5A1.5 1.5 0 0 0 7.5 20H18.5M9.5 7.5h5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="bk-o" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5C10 5 7 4.6 3.5 5v13c3.5-.4 6.5 0 8.5 1.5 2-1.5 5-1.9 8.5-1.5V5C17 4.6 14 5 12 6.5zM12 6.5v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><i class="rhp" aria-hidden="true"></i>{sheet}</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="usmap"><path d="{USMAP["nation"]}" class="cland" vector-effect="non-scaling-stroke"/><path d="{USMAP["states"]}" class="cstate" vector-effect="non-scaling-stroke"/></g></defs></svg>
@@ -1639,6 +1645,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
+{NEXT_LINE}
 {_ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1).replace('src="img/', 'src="img/')}{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1)}
 {footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}

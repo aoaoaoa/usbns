@@ -351,6 +351,17 @@ SW_JS = ("<!-- nsadd:swjs --><script>(function(){var t=document.querySelectorAll
          "try{sessionStorage.setItem('tab-ns-mode',b.id)}catch(e){}})});"
          "try{var m=sessionStorage.getItem('tab-ns-mode');if(m&&document.getElementById(m))document.getElementById(m).click()}catch(e){}})();</script><!-- /nsadd:swjs -->")
 
+NEXT_CSS = (".nxb{background:#222e4c;color:#fff}.nxb .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:20px 32px;align-items:center;padding-top:30px;padding-bottom:30px}"
+    ".nxb .k{display:block;font:700 11px/1.4 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#f2cfc6}.nxb b{display:block;font:400 clamp(34px,4vw,44px)/1 var(--text);margin-top:4px}"
+    ".nxb .w{display:block;font:13px var(--ui);color:rgba(255,255,255,.7);margin-top:6px}.nxb p{font:16px/1.5 var(--ui);margin:0;color:rgba(255,255,255,.88);max-width:52ch}"
+    ".nxb .btn{font:700 18px/1 \"Barlow Condensed\",\"Arial Narrow\",sans-serif;letter-spacing:.04em;text-transform:uppercase;background:#f2cfc6;color:#222e4c;text-decoration:none;padding:13px 20px;border-radius:3px;white-space:nowrap}"
+    ".nxb .btn span{margin-left:6px}.nxb .btn:focus-visible{outline:2px solid #f2cfc6;outline-offset:3px}@media (max-width:760px){.nxb .wrap{grid-template-columns:1fr}.nxb .btn{justify-self:start}}")
+def next_html():
+    return ('<!-- nsadd:next --><style>' + NEXT_CSS + '</style><section class="nxb" aria-labelledby="nxb-h"><div class="wrap">'
+            '<div><span class="k">Coming next</span><b id="nxb-h">Education</b><span class="w">Winter 2027 · In homes February 2027</span></div>'
+            '<p>Children’s classes, junior youth groups, study circles, schools. Tell us what learning looks like where you live.</p>'
+            '<a class="btn" href="#" data-submit>Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
+
 def add_sections(h, pre, FORM):
     h = _clean(h)
     # only the styles of sections that are on: the dateline strip, airmail strip and browse by theme are off for now
@@ -374,6 +385,9 @@ def add_sections(h, pre, FORM):
     h = h.replace('<ol class="toc">', '<ol class="toc" id="mode-read" role="tabpanel" aria-labelledby="tab-read">', 1)
     h = h.replace('<!-- /nsadd:toc -->', '<!-- /nsadd:toc -->' + row, 1)
     h = h.replace('</body>', player + SW_JS + '</body>', 1)
+    # Coming next: Education, below In this issue
+    i = h.index('<!-- /nsadd:listen -->'); j = h.index('</div></section>', i) + len('</div></section>')
+    h = h[:j] + next_html() + h[j:]
     # Browse by theme: off for now
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '<!-- nsadd:themes --><!-- /nsadd:themes -->' + h[j:]
