@@ -2220,7 +2220,7 @@ PRIVACY = [
 # subpage top bar: the newsstand's header, so every page opens with the same brand
 from footer import _MARK as _FMARK
 PT_HEADER = ('<header class="pt"><div class="ptw"><a class="ptb" href="/usbns/magazine/landing/">' + _FMARK.replace('colo-g', 'pt-g').replace('class="cm" ', '') + '<span><small>The</small> American Bahá’í</span></a>'
-    '<nav aria-label="Site"><a href="#">About</a><a class="mem" href="/usbns/magazine/members/">Members</a></nav><a class="hsub" href="/usbns/magazine/landing/#subscribe" data-subscribe>Subscribe</a></div></header>\n')
+    '<nav aria-label="Site"><a href="#about">About</a><a class="mem" href="/usbns/magazine/members/">Members</a></nav><a class="hsub" href="/usbns/magazine/landing/#subscribe" data-subscribe>Subscribe</a></div></header>\n')
 PT_CSS = (".ptw{max-width:1240px;margin:0 auto;padding:10px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));min-height:64px;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}@media (min-width:700px){.ptw{padding-left:24px;padding-right:24px}}"
     ".ptb{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}.ptb svg{width:22px;height:22px}.ptb span{font:600 19px/1 var(--text);letter-spacing:-.015em}.ptb small{font-size:inherit;font-variant-caps:all-small-caps;letter-spacing:.06em;font-weight:500}"
     ".pt nav{margin-left:auto;display:flex;gap:6px 22px;font:600 14.5px var(--ui)}.pt nav a{color:var(--ink);text-decoration:none;padding:6px 0}.pt nav a.mem{color:var(--mem,#5b4a8a)}.pt nav a:hover{text-decoration:underline;text-underline-offset:4px}"

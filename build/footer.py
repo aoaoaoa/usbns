@@ -3,7 +3,7 @@
 Fill in LINKS and FOLLOW with the real addresses; everything else follows."""
 
 LINKS = [  # (label, href)
-    ("About", "#"),
+    ("About", "#about"),
     ("Contact", "/usbns/magazine/contact/"),
     ("Terms of use", "/usbns/magazine/terms/"),
     ("Privacy policy", "/usbns/magazine/privacy/"),
@@ -106,6 +106,10 @@ FOOTER_CSS = """
 SUBSCRIBE_ACTION = ""
 SUBMIT_ACTION = ""
 _X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+ABOUT_HTML = ('<dialog class="askdlg abdlg" id="dlg-about" aria-labelledby="dab-h"><form method="dialog" class="dx"><button aria-label="Close">{X}</button></form>'
+    '<div class="abg"><a class="abc" href="/usbns/magazine/"><img src="/usbns/magazine/img/cover-full-v2.jpg" alt="The cover of this issue, a painting by Juliet Bogan" loading="lazy"><span>This issue · The Arts</span></a>'
+    '<div class="abt"><span class="dk" id="dab-h">About</span><p class="abs"><b>The American Bahá’í</b> ' + COLO_REST + '</p>'
+    '<div class="aba"><a class="ab1" href="/usbns/magazine/">Read this issue <span aria-hidden="true">→</span></a><a class="ab2" href="#" data-submit="next">Send a story</a></div></div></div></dialog>')
 def ask_dialogs():
     sub = (f'<dialog class="askdlg" id="dlg-subscribe" aria-labelledby="dsu-h"><form method="dialog" class="dx"><button aria-label="Close">{_X}</button></form>'
         '<div class="dbody"><span class="dk">Subscribe</span><h2 id="dsu-h">Have the next stories sent to you.</h2><p class="dl2">By email, as they’re published. Choose how much arrives at a time.</p>'
@@ -145,14 +149,14 @@ def ask_dialogs():
         '<p class="dfine l">We’ll write before publishing anything you send.</p></fieldset>'
         '<button class="dgo" type="submit">Send your story</button></form>'
         '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div></div></dialog>')
-    return sub + st + ASK_JS
+    return sub + st + ABOUT_HTML.replace('{X}', _X) + ASK_JS
 
 ASK_JS = r'''<script>(function(){
-var D={subscribe:document.getElementById('dlg-subscribe'),submit:document.getElementById('dlg-submit')};if(!D.subscribe||!D.submit||!D.subscribe.showModal)return;
-function kind(a){if(a.closest('dialog'))return null;if(a.hasAttribute('data-subscribe'))return 'subscribe';if(a.hasAttribute('data-submit'))return 'submit';var h=a.getAttribute('href')||'';if(/#subscribe$/.test(h)&&!document.querySelector('section#subscribe'))return 'subscribe';return null}
+var D={subscribe:document.getElementById('dlg-subscribe'),submit:document.getElementById('dlg-submit'),about:document.getElementById('dlg-about')};if(!D.subscribe||!D.submit||!D.subscribe.showModal)return;
+function kind(a){var h0=a.getAttribute('href')||'';if(h0==='#about'&&D.about)return 'about';var dl=a.closest('dialog');if(dl){if(dl===D.about&&a.hasAttribute('data-submit')){D.about.close();return 'submit'}return null}if(a.hasAttribute('data-subscribe'))return 'subscribe';if(a.hasAttribute('data-submit'))return 'submit';var h=a.getAttribute('href')||'';if(/#subscribe$/.test(h)&&!document.querySelector('section#subscribe'))return 'subscribe';return null}
 document.addEventListener('click',function(e){if(e.defaultPrevented&&!e.target.closest('.nudge'))return;var a=e.target.closest('a,button');if(!a)return;var k=kind(a);if(!k)return;e.preventDefault();var d=D[k];
   var nx=k==='submit'&&a.getAttribute('data-submit')==='next';d.classList.toggle('nx',nx);var iss=d.querySelector('input[name=issue]');if(iss)iss.value=nx?'education':'';
-  d.querySelector('.dform').hidden=false;d.querySelector('.ddone').hidden=true;d.showModal();var f=d.querySelector('input:not([type=radio]):not([type=file]),textarea');if(f)setTimeout(function(){f.focus()},30)},true);
+  if(k==='about'){d.showModal();return}d.querySelector('.dform').hidden=false;d.querySelector('.ddone').hidden=true;d.showModal();var f=d.querySelector('input:not([type=radio]):not([type=file]),textarea');if(f)setTimeout(function(){f.focus()},30)},true);
 [].forEach.call(document.querySelectorAll('form.sf'),function(f){f.setAttribute('novalidate','');f.onsubmit=null;f.addEventListener('submit',function(e){e.preventDefault();var i=f.querySelector('input[type=email]');if(!i.checkValidity()||!i.value){i.focus();i.style.borderColor='#c9462c';return}var a=f.dataset.action||'';if(a){fetch(a,{method:'POST',body:new FormData(f)}).catch(function(){})}var p=document.createElement('p');p.className='sfdone';p.setAttribute('role','status');p.innerHTML='<b>Thank you.</b> Email sign-up opens soon; we\u2019ll have the next stories ready for you.';f.replaceWith(p)})});[].forEach.call(document.querySelectorAll('.askdlg .drop'),function(l){var i=l.querySelector('input'),n=l.querySelector('.dzn'),b=l.querySelector('b'),t0=n.textContent;i.addEventListener('change',function(){var k=i.files.length;l.classList.toggle('has',k>0);b.textContent=k?(k==1?i.files[0].name:k+' photographs chosen'):'Choose photographs';n.textContent=k?'Choose again to replace':t0});['dragenter','dragover'].forEach(function(v){l.addEventListener(v,function(){l.classList.add('over')})});['dragleave','drop'].forEach(function(v){l.addEventListener(v,function(){l.classList.remove('over')})})});[D.subscribe,D.submit].forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});
   var f=d.querySelector('.dform');f.addEventListener('submit',function(e){e.preventDefault();var bad=[].slice.call(f.querySelectorAll('[required]')).filter(function(x){return !x.checkValidity()});
     f.querySelectorAll('.dfl').forEach(function(l){l.classList.remove('err')});if(bad.length){bad.forEach(function(x){x.closest('.dfl').classList.add('err')});bad[0].focus();return}
@@ -219,3 +223,17 @@ ASK_CSS = """
 @media (prefers-reduced-motion:reduce){.askdlg[open]{animation:none}}
 """
 FOOTER_CSS += ASK_CSS
+FOOTER_CSS += """
+.abdlg{padding:0!important;width:min(700px,calc(100vw - 32px))!important;max-width:none!important;overflow:hidden}
+.abdlg .dx{position:absolute;top:10px;right:10px;z-index:2}
+.abg{display:grid;grid-template-columns:220px minmax(0,1fr)}
+.abc{position:relative;display:block;background:#222e4c;min-height:300px}.abc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.abc span{position:absolute;left:12px;bottom:12px;font:700 12px/1 var(--ui,sans-serif);background:var(--card,#fdfcf9);color:var(--ink,#1d1a16);padding:6px 10px;border-radius:999px}
+.abc:focus-visible{outline:3px solid #b8782e;outline-offset:-3px}
+.abt{padding:34px 32px 30px;display:grid;align-content:center;gap:4px}
+.abs{margin:4px 0 0;font:400 18px/1.6 "Literata",Georgia,serif;color:var(--ink,#1d1a16);text-wrap:pretty}.abs b{font-weight:700}
+.aba{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.aba a{font:700 15px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:12px 16px;border-radius:3px}
+.ab1{background:#222e4c;color:#f2cfc6}.ab2{color:var(--ink,#1d1a16);border:1px solid var(--rule,#d9d2c4)}
+@media (max-width:600px){.abg{grid-template-columns:minmax(0,1fr)}.abc{min-height:220px}.abt{padding:24px 20px 22px}}
+"""
