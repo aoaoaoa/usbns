@@ -360,7 +360,7 @@ def next_html():
     return ('<!-- nsadd:next --><style>' + NEXT_CSS + '</style><section class="nxb" aria-labelledby="nxb-h"><div class="wrap">'
             '<div><span class="k">Coming next</span><b id="nxb-h">The Education issue</b><span class="w">Winter 2027 · In homes February 2027</span></div>'
             '<p>Children’s classes, junior youth groups, study circles, schools. Tell us what learning looks like where you live.</p>'
-            '<a class="btn" href="#" data-submit>Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
+            '<a class="btn" href="#" data-submit="next">Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
 
 def add_sections(h, pre, FORM):
     h = _clean(h)

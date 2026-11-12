@@ -98,10 +98,15 @@ def ask_dialogs():
         '<button class="dgo" type="submit">Subscribe</button></form>'
         '<div class="ddone" hidden><h3>Thank you.</h3><p>Email sign-up opens soon; we’ll have the next stories ready for you.</p></div></div></dialog>')
     st = (f'<dialog class="askdlg wide" id="dlg-submit" aria-labelledby="dsb-h"><form method="dialog" class="dx"><button aria-label="Close">{_X}</button></form>'
-        '<div class="dbody"><span class="dk">Contribute</span><h2 id="dsb-h">Know a story like these?</h2>'
+        '<div class="dbody"><span class="dk">Contribute</span><h2 id="dsb-h"><span class="h-std">Know a story like these?</span><span class="h-nx">A story for the Education issue?</span></h2>'
+        # Coming next: shown in place of the note when the dialog is opened from a Coming next link (data-submit="next")
+        '<div class="dnx" role="note"><p class="nxh"><span>Coming next · Winter 2027</span><b>The Education issue</b></p>'
+        '<p class="nxq">“Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.”<cite>Bahá’u’lláh, Gleanings from the Writings of Bahá’u’lláh, CXXII</cite></p>'
+        '<p class="nxl2">We’re looking for stories from</p><ul><li>Children’s classes</li><li>Junior youth groups</li><li>Study circles</li><li>Tutor training</li><li>Seasonal Bahá’í schools</li><li class="nxo">and wherever else learning happens where you live</li></ul></div>'
         '<div class="dnote"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
         '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div>'
         f'<form class="dform sform" data-action="{SUBMIT_ACTION}" enctype="multipart/form-data" novalidate>'
+        '<input type="hidden" name="issue" value="">'
         '<ol class="steps">'
         '<li><span class="sn" aria-hidden="true">1</span><div class="sb"><h3>What happened, and where</h3>'
         '<label class="dfl ln"><span>Where</span><input name="place" placeholder="Town or neighborhood, state" required></label>'
@@ -126,6 +131,7 @@ ASK_JS = r'''<script>(function(){
 var D={subscribe:document.getElementById('dlg-subscribe'),submit:document.getElementById('dlg-submit')};if(!D.subscribe||!D.submit||!D.subscribe.showModal)return;
 function kind(a){if(a.closest('dialog'))return null;if(a.hasAttribute('data-subscribe'))return 'subscribe';if(a.hasAttribute('data-submit'))return 'submit';var h=a.getAttribute('href')||'';if(/#subscribe$/.test(h)&&!document.querySelector('section#subscribe'))return 'subscribe';return null}
 document.addEventListener('click',function(e){if(e.defaultPrevented&&!e.target.closest('.nudge'))return;var a=e.target.closest('a,button');if(!a)return;var k=kind(a);if(!k)return;e.preventDefault();var d=D[k];
+  var nx=k==='submit'&&a.getAttribute('data-submit')==='next';d.classList.toggle('nx',nx);var iss=d.querySelector('input[name=issue]');if(iss)iss.value=nx?'education':'';
   d.querySelector('.dform').hidden=false;d.querySelector('.ddone').hidden=true;d.showModal();var f=d.querySelector('input:not([type=radio]):not([type=file]),textarea');if(f)setTimeout(function(){f.focus()},30)},true);
 [].forEach.call(document.querySelectorAll('form.sf'),function(f){f.setAttribute('novalidate','');f.onsubmit=null;f.addEventListener('submit',function(e){e.preventDefault();var i=f.querySelector('input[type=email]');if(!i.checkValidity()||!i.value){i.focus();i.style.borderColor='#c9462c';return}var a=f.dataset.action||'';if(a){fetch(a,{method:'POST',body:new FormData(f)}).catch(function(){})}var p=document.createElement('p');p.className='sfdone';p.setAttribute('role','status');p.innerHTML='<b>Thank you.</b> Email sign-up opens soon; we\u2019ll have the next stories ready for you.';f.replaceWith(p)})});[].forEach.call(document.querySelectorAll('.askdlg .drop'),function(l){var i=l.querySelector('input'),n=l.querySelector('.dzn'),b=l.querySelector('b'),t0=n.textContent;i.addEventListener('change',function(){var k=i.files.length;l.classList.toggle('has',k>0);b.textContent=k?(k==1?i.files[0].name:k+' photographs chosen'):'Choose photographs';n.textContent=k?'Choose again to replace':t0});['dragenter','dragover'].forEach(function(v){l.addEventListener(v,function(){l.classList.add('over')})});['dragleave','drop'].forEach(function(v){l.addEventListener(v,function(){l.classList.remove('over')})})});[D.subscribe,D.submit].forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)d.close()});
   var f=d.querySelector('.dform');f.addEventListener('submit',function(e){e.preventDefault();var bad=[].slice.call(f.querySelectorAll('[required]')).filter(function(x){return !x.checkValidity()});
@@ -147,6 +153,16 @@ ASK_CSS = """
 .askdlg .dnote{position:relative;background:#fffdf6;color:#1d1a16;padding:16px 20px 14px;margin:14px 2px 22px;box-shadow:0 8px 20px rgba(29,26,22,.12);transform:rotate(-.6deg)}
 .askdlg .dnote::before{content:"";position:absolute;top:-9px;left:50%;width:80px;height:20px;transform:translateX(-50%) rotate(2deg);background:rgba(242,207,198,.85)}
 .askdlg .dnote p{font:15px/1.55 "Literata",Georgia,serif;margin:0 0 6px}.askdlg .dnote p:last-child{margin:0}
+.askdlg .h-nx,.askdlg .dnx{display:none}.askdlg.nx .h-std,.askdlg.nx .dnote{display:none}.askdlg.nx .h-nx{display:inline}
+.askdlg.nx .dnx{display:block;position:relative;margin:16px 2px 24px;padding:20px 22px 16px 62px;color:#1d1a16;box-shadow:0 8px 20px rgba(29,26,22,.12);transform:rotate(-.5deg);
+  background:repeating-linear-gradient(#fffdf6 0 29px,#cfdbe6 29px 30px)}
+.askdlg.nx .dnx::after{content:"";position:absolute;left:44px;top:0;bottom:0;width:2px;background:#e3a69a}
+.askdlg.nx .dnx::before{content:"";position:absolute;top:-9px;left:50%;width:80px;height:20px;transform:translateX(-50%) rotate(2deg);background:rgba(242,207,198,.85)}
+.askdlg .nxh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 14px;margin:0 0 4px}.askdlg .nxh span{font:700 11px/30px var(--ui,sans-serif);letter-spacing:.18em;text-transform:uppercase;color:#9a5f1f}
+.askdlg .nxh b{font:italic 400 clamp(24px,3.4vw,32px)/30px "Literata",Georgia,serif;color:#1d1a16}
+.askdlg .nxq{font:italic 16px/30px "Literata",Georgia,serif;margin:0 0 4px}.askdlg .nxq cite{display:block;font:normal 12px/30px var(--ui,sans-serif);color:#6a635a}
+.askdlg .nxl2{font:700 14px/30px var(--ui,sans-serif);margin:0}.askdlg .dnx ul{margin:0;padding-left:1.1em;font:17px/30px "Literata",Georgia,serif;columns:2 180px;column-gap:20px}.askdlg .dnx li{break-inside:avoid}.askdlg .dnx .nxo{column-span:all;font-style:italic;color:#6a635a}
+@media (max-width:560px){.askdlg.nx .dnx{padding-left:44px}.askdlg.nx .dnx::after{left:28px}}
 .askdlg .dch{border:0;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .askdlg .dch label{cursor:pointer;position:relative}.askdlg .dch input{position:absolute;opacity:0}
 .askdlg .dch span{display:grid;gap:2px;height:100%;padding:10px 12px;border:1.5px solid var(--rule,#d9d2c4);border-radius:10px;text-align:center}
