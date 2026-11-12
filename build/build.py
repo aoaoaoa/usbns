@@ -766,7 +766,7 @@ def prayer_html(pr):
 # end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
 NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
     '<span class="q">“Education can, alone, cause it to reveal its treasures…” <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
-NEXT_CSS = (".nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
+NEXT_CSS = (".nxl{padding-top:40px}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
     ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
 def build_tab(member=False, menu="contents", lite=False, letter=None):
@@ -1660,8 +1660,9 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
+{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1)}
+{_ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1).replace('src="img/', 'src="img/')}
 {NEXT_LINE}
-{_ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1).replace('src="img/', 'src="img/')}{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1)}
 {footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}
 {LBX_HTML}

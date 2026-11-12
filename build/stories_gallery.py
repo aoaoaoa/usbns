@@ -338,7 +338,7 @@ def gallery():
     js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc')),G=[].slice.call(document.querySelectorAll('.gg'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0});G.forEach(function(g){var e=!g.querySelector('.gc:not([hidden])');g.hidden=e;g.previousElementSibling.hidden=e})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
             f'<title>Story Invitation Ideas</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
-            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1><p class="ld">Popups that invite a story, and landing pages for a recurring open call.</p></header>'
+            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1></header>'
             f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
             f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul></main><script>{js}</script></body></html>')
 
