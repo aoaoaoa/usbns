@@ -33,7 +33,7 @@ def form(extra=""):
 # A · the map
 A = f'''<section class="ap" id="A" data-n="The map">
 <p class="kk">Contribute</p><h1>Every story in this issue began as a report from a community.</h1>
-<p class="ld">{NPL} places are named in this issue. Add the next one.</p>
+<p class="ld">Below are some of the places named in this issue. Yours next?</p>
 <div class="mapw">{MAP}
 <ul class="key"><li><i style="--c:{TINT['gregory']}"></i>Hemingway, South Carolina</li><li><i style="--c:{TINT['newyorkers']}"></i>Crown Heights, Brooklyn</li><li><i style="--c:{TINT['twoartists']}"></i>Los Angeles</li><li><i style="--c:{TINT['comic']}"></i>Indianapolis</li><li><i style="--c:{TINT['endeavor']}"></i>Communities engage in a common endeavor</li></ul></div>
 <form class="where" novalidate><label for="aw">Where are you?</label><div class="wr"><input id="aw" placeholder="City or neighborhood, state" list="aws"><button class="sbtn" type="submit">Add your town</button></div>
