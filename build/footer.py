@@ -146,7 +146,7 @@ def ask_dialogs():
         '<fieldset class="you"><legend>About you</legend><div class="two">'
         '<label class="dfl ln"><span>Your name</span><input name="name" autocomplete="name" required></label>'
         '<label class="dfl ln"><span>Email address</span><input type="email" name="email" autocomplete="email" required></label></div>'
-        '<p class="dfine l">We’ll write before publishing anything you send.</p></fieldset>'
+        '<p class="dfine l">We will get in touch and work with you before anything you share is used.</p></fieldset>'
         '<button class="dgo" type="submit">Send your story</button></form>'
         '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div></div></dialog>')
     return sub + st + ABOUT_HTML.replace('{X}', _X) + ASK_JS

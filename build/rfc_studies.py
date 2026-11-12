@@ -18,7 +18,7 @@ WELCOME = ('<ul class="wel" aria-label="Before you begin">'
            '<li><b>No experience needed</b>Care for your community is enough.</li>'
            '<li><b>A phone is fine</b>Pictures and clips straight from your pocket.</li>'
            '<li><b>Any language</b>Write or speak the way you think.</li>'
-           '<li><b>We write back</b>Nothing is published without talking with you first.</li></ul>')
+           '<li><b>We work with you</b>We will get in touch and work with you before anything you share is used.</li></ul>')
 r1 = f'''<section class="r1"><div class="g"><div class="w hero">
 <div class="hx"><p class="kk">You’re invited · Open call · Winter 2027</p><h1>Education</h1><p class="ld">The American Bahá’í is gathering stories, photographs and ideas for its Education issue. Whatever you have, there is a way to share it, and we’d be glad to hear from you.</p>
 <figure class="sq"><blockquote><p>Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.</p></blockquote><figcaption><b>Bahá’u’lláh</b><span>Gleanings from the Writings of Bahá’u’lláh, CXXII</span></figcaption></figure>
@@ -41,7 +41,7 @@ for i,(k,n,t,d,u) in enumerate(WAYS):
 r2 += '</div></div></section>'
 
 # ---------------- R3 The cycle
-PH = [("Call opens", "Themes announced with the issue before"), ("Gathering", "Ideas, pictures, pitches and drafts come in"), ("Editors choose", "We write to everyone whose work we use"), ("In homes", "The issue arrives and the next call opens")]
+PH = [("Call opens", "Themes announced with the issue before"), ("Gathering", "Ideas, pictures, pitches and drafts come in"), ("Editors choose", "We get in touch and work with everyone whose work is used"), ("In homes", "The issue arrives and the next call opens")]
 r3 = '<section class="r3"><div class="g"><div class="w"><p class="kk">The open call</p><h1 class="h">What’s next?</h1></div></div><div class="g"><div class="w cyc">'
 for n,se,h,s in THEMES:
     cur = {"now":1,"next":0,"later":-1}[s]

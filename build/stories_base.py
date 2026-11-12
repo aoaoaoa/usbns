@@ -21,7 +21,7 @@ NPL = len(M["places"])
 
 PRINT = ('<p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
          '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p>')
-PROMISE = '<p class="prom">We’ll write before publishing anything you send. Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p>'
+PROMISE = '<p class="prom">We will get in touch and work with you before anything you share is used. Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p>'
 DONE = '<div class="done" hidden><b>Thank you.</b> Story submissions open soon. This study keeps nothing you type.</div>'
 
 def form(extra=""):
@@ -46,7 +46,7 @@ Q = [("Where did it happen?", '<input placeholder="City or neighborhood, state">
      ("Who was there?", '<input placeholder="Neighbors, a children’s class, a study circle…">', "Names only with their permission."),
      ("Any photographs?", '<input type="file" accept="image/jpeg,image/png" multiple><input placeholder="Photographer’s name">', "JPEG or PNG, as many as you like."),
      ("What did you learn?", '<textarea rows="3" placeholder="What others could take from it"></textarea>', ""),
-     ("How can we reach you?", '<input placeholder="Your name" autocomplete="name"><input placeholder="Email or phone" autocomplete="email">', "We’ll write before publishing anything you send.")]
+     ("How can we reach you?", '<input placeholder="Your name" autocomplete="name"><input placeholder="Email or phone" autocomplete="email">', "We will get in touch and work with you before anything you share is used.")]
 steps = "".join(f'<fieldset class="q" data-i="{i}"{"" if i==0 else " hidden"}><legend><span class="qn">{i+1} of {len(Q)}</span>{t}</legend>{f}{("<small>"+h+"</small>") if h else ""}</fieldset>' for i, (t, f, h) in enumerate(Q))
 B = f'''<section class="ap" id="B" data-n="One question at a time" hidden>
 <div class="bq"><div class="bl"><p class="kk">Contribute</p><h1>Tell us what happened.</h1><p class="ld">Six short questions. Skip any you like.</p>
@@ -95,7 +95,7 @@ Esec = f'''<section class="ap" id="E" data-n="From report to page" hidden>
 <ol class="rt3">
 <li><span class="no">1</span><b>You send a few paragraphs</b><div class="nt">{PRINT}</div></li>
 <li><span class="no">2</span><b>Our editors read every item</b></li>
-<li><span class="no">3</span><b>We contact you before anything is published</b><div class="pg">{pages}</div></li></ol>
+<li><span class="no">3</span><b>We will get in touch and work with you before anything you share is used</b><div class="pg">{pages}</div></li></ol>
 <div class="ef">{form('<label>Where<input placeholder="City or neighborhood, state"></label>')}</div><p class="prom">Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p></section>'''
 
 CSS = r'''

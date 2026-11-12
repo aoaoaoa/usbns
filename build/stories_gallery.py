@@ -72,7 +72,7 @@ ws.forEach(function(w){w.addEventListener('click',function(){ws.forEach(function
 [].forEach.call(df.querySelectorAll('.pn'),function(p){p.hidden=p.dataset.w!==w.dataset.w})})});
 REC(Dd);""")
 
-idea("E", "report-to-page", "From report to page", "The printed call, word for word, as step one of three: you send, our editors read every item, and we contact you before anything is published.",
+idea("E", "report-to-page", "From report to page", "The printed call, word for word, as step one of three: you send, our editors read every item, and we get in touch and work with you before anything you share is used.",
      ["Everyone"], depth(unhide(b.Esec)))
 
 # ---------------------------------------------------------------- new proposals
