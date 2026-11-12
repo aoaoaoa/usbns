@@ -108,9 +108,8 @@ background-image:linear-gradient(90deg,transparent 52px,#e3a69a 52px,#e3a69a 54p
 .nb-f{max-width:720px;margin:0 auto;display:grid;gap:14px;text-align:left}.nb-f .sbtn{justify-self:start}''',
      js='''var H=document.getElementById('H');H.querySelector('.nb-f .sbtn').addEventListener('click',function(){H.querySelector('.nb').hidden=true;H.querySelector('.nb-f').hidden=true;H.querySelector('.done').hidden=false})''')
 
-idea("I", "quote-first", "Start with a quote", "Begin with what someone said. The issue’s own pull quote shows how far one line can carry a story.",
+idea("I", "quote-first", "Start with a quote", "Begin with what someone said. One remembered line can open a whole story.",
      ["Non-writers"], f'''<section class="ap" id="I">{head("What did someone say that stayed with you?")}
-<figure class="qx" style="--c:{T['newyorkers']}"><blockquote>“The diversity was so rich – it alone made the night worthwhile.”</blockquote><figcaption>Felicia Sobhani, Harlem · <a href="{R}newyorkers/">New Yorkers create more unified communities through the arts</a></figcaption></figure>
 <form class="sf qf" novalidate><label class="qq">Their words<textarea rows="3" placeholder="“…”"></textarea></label><div class="two"><label>Who said it<input placeholder="With their permission"></label><label>Where<input placeholder="City or neighborhood, state"></label></div>
 <label>Tell us the rest, if you like<textarea rows="3"></textarea></label>{reach()}{send()}</form>{DONE}{PROM}</section>''',
      css='''.qx{max-width:640px;margin:0 auto 34px;border-left:5px solid var(--c);padding:4px 0 4px 22px;text-align:left}.qx blockquote{margin:0;font:italic 400 clamp(22px,2.6vw,30px)/1.3 var(--text)}.qx figcaption{font:13px/1.5 var(--ui);color:var(--mute);margin-top:10px}
