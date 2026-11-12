@@ -23,7 +23,7 @@ def _icon(name):
     return svg.replace("<svg ", '<svg aria-hidden="true" focusable="false" ', 1)
 ASKS = [  # (label, link text, href, extra attributes)
     ("Reader survey", "Give feedback", "https://form.typeform.com/to/NfIWSbQl", ' data-survey'),
-    ("Contribute", "Submit your story", "#", ' data-submit'),
+    ("Contribute", "Send a story", "#", ' data-submit'),
     ("Every issue", "Subscribe", "/usbns/magazine/landing/#subscribe", ' data-subscribe'),
 ]
 PUBLISHER = "Published by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201."
@@ -236,4 +236,17 @@ FOOTER_CSS += """
 .aba a{font:700 15px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:12px 16px;border-radius:3px}
 .ab1{background:#222e4c;color:#f2cfc6}.ab2{color:var(--ink,#1d1a16);border:1px solid var(--rule,#d9d2c4)}
 @media (max-width:600px){.abg{grid-template-columns:minmax(0,1fr)}.abc{min-height:220px}.abt{padding:24px 20px 22px}}
+"""
+# One quotation setting for the Writings and the House of Justice: hanging gold mark, italic serif, a short gold rule, small-capitals author, italic source
+FOOTER_CSS += """
+.sq{position:relative;padding:4px 0 0 42px;margin:1.6em 0}
+.sq::before{content:"“";position:absolute;left:-2px;top:-8px;font:400 66px/1 "Literata",Georgia,serif;color:#b8782e}
+.sq blockquote{margin:0}.sq p{margin:0;font:italic 400 clamp(17px,1.6vw,19px)/1.6 "Literata",Georgia,serif;color:var(--ink,#1d1a16);letter-spacing:0;text-wrap:pretty}
+.sq figcaption{display:grid;gap:2px;margin-top:12px;padding:11px 0 0!important;border:0!important;position:relative;font:12.5px/1.4 var(--ui,sans-serif);color:var(--mute,#6a635a)}
+.sq figcaption::before{content:"";position:absolute;top:0;left:0;width:30px;height:1px;background:#b8782e}
+.sq figcaption b{font:700 11.5px/1.4 var(--ui,sans-serif);letter-spacing:.14em;text-transform:uppercase;color:var(--ink,#1d1a16)}.sq figcaption span{font-style:italic}
+.pull.sq{border-left:0!important;padding-left:42px!important;max-width:30ch}
+.pull.sq p{font:italic 400 clamp(18px,1.7vw,21px)/1.5 "Literata",Georgia,serif!important;color:var(--ink,#1d1a16)!important}
+.sqi{position:relative;padding-left:22px;font-style:italic}.sqi::before{content:"“";position:absolute;left:0;top:-.15em;font:400 30px/1 "Literata",Georgia,serif;color:#b8782e;font-style:normal}
+.sqi cite{font:700 11px var(--ui,sans-serif)!important;letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--ink,#1d1a16);margin-left:6px}
 """

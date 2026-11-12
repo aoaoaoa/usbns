@@ -333,7 +333,7 @@ def submit_html(pre, href="#"):
             '<div class="nt"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
             '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div></div>'
             f'<div class="ckl"><div class="meter" aria-hidden="true"><i></i></div><ul>{items}</ul></div>'
-            f'<a class="sbtn" href="{href}" data-submit>Submit your story <span aria-hidden="true">→</span></a>'
+            f'<a class="sbtn" href="{href}" data-submit>Send a story <span aria-hidden="true">→</span></a>'
             f'</div></section>{js}<!-- /nsadd:submit -->\n')
 
 def contents_html(pre):
@@ -360,7 +360,7 @@ def next_html():
     return ('<!-- nsadd:next --><style>' + NEXT_CSS + '</style><section class="nxb" aria-labelledby="nxb-h"><div class="wrap">'
             '<div><span class="k">Coming next</span><b id="nxb-h">Education</b><span class="w">Winter 2027 · In homes February 2027</span></div>'
             '<p>Children’s classes, junior youth groups, study circles, schools. Tell us what learning looks like where you live.</p>'
-            '<a class="btn" href="#" data-submit="next">Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
+            '<a class="btn" href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
 
 COLO_LINE = "The American Bahá’í is the national magazine of the U.S. Bahá’í community, telling stories from neighborhoods across the country where people are learning, in practice, how to build communities that bring everyone together."
 def colophon_html():
@@ -431,3 +431,41 @@ def add_sections(h, pre, FORM):
     i = h.index('<!-- /nsadd:themes -->') + len('<!-- /nsadd:themes -->')
     h = h[:i] + '\n' + submit_html(pre) + h[i:]
     return h
+
+# ---------- Take part: Send a story and Subscribe as two halves of one band (design shift 4) ----------
+TAKEPART_CSS = """
+.tkp{background:var(--card);border-top:1px solid var(--rule)}
+.tkp .tw{max-width:1180px;margin:0 auto;padding:72px max(16px,env(safe-area-inset-right,0px)) 76px max(16px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:0}
+.tkp .tk{padding:0 clamp(20px,4vw,56px);display:grid;align-content:start;gap:14px;text-align:left}
+.tkp .tk+.tk{border-left:1px solid var(--rule)}
+.tkp .tk>.kk{margin:0;font:700 11px/1 var(--ui);letter-spacing:.2em;text-transform:uppercase;color:#9a5f1f;border-top:4px double var(--ink);padding-top:12px;justify-self:start}
+.tkp h2{margin:0;font:800 clamp(26px,2.6vw,34px)/1.12 "Literata",Georgia,serif;letter-spacing:-.015em;text-wrap:balance}
+.tkp h2::before{content:none!important}
+.tkp .places{margin:0;font:600 13px/1.6 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.tkp .places a{color:var(--c,var(--ink));text-decoration:none}.tkp .places em{font-style:normal;color:#9a5f1f;border-bottom:1.5px dashed currentColor}
+.tkp .tki{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;align-items:start}
+.tkp .tki img{width:120px;height:auto;display:block}
+.tkp .tki p{margin:0 0 8px;font:15.5px/1.6 "Literata",Georgia,serif;color:var(--soft,#3d3831)}
+.tkp .tkb{justify-self:start;display:inline-flex;gap:8px;align-items:center;font:700 17px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:#222e4c;color:#f2cfc6;padding:14px 22px;border-radius:3px;margin-top:4px}
+.tkp .tkb:hover{background:#2c3a60}
+.tkp .ld{margin:0;font:16.5px/1.55 "Literata",serif;color:var(--soft,#3d3831)}
+.tkp .dv{justify-content:flex-start;margin:4px 0 6px}.tkp .dv legend{text-align:left}.tkp .dv span{min-width:0}
+.tkp .sf{margin:0;max-width:none}.tkp .tk.sbx{background:none!important;border-top:0!important}
+@media (max-width:860px){.tkp .tw{grid-template-columns:minmax(0,1fr);gap:48px;padding-top:56px;padding-bottom:56px}.tkp .tk{padding:0}.tkp .tk+.tk{border-left:0;border-top:1px solid var(--rule);padding-top:40px}}
+@media (max-width:520px){.tkp .tki{grid-template-columns:minmax(0,1fr)}.tkp .tki img{width:140px}}
+"""
+def takepart_html(pre, sub_section):
+    import re as _r
+    places = [('gregory', 'Hemingway, South Carolina'), ('newyorkers', 'Crown Heights, Brooklyn'), ('twoartists', 'Los Angeles')]
+    pl = ' · '.join(f'<a href="{pre}#{sl}" style="--c:{TINT[sl]}">{n}</a>' for sl, n in places) + ' · <em>your town?</em>'
+    inner = _r.search(r'<div class="wrap">(.*)</div></section>', sub_section, _r.S).group(1)
+    inner = inner.replace('<h2 id="sx-h">', '<p class="kk">Subscribe</p><h2 id="sx-h">', 1)
+    return ('<!-- takepart --><style>' + TAKEPART_CSS + '</style><section class="tkp" aria-label="Take part"><div class="tw">'
+            '<div class="tk" aria-labelledby="sb-h"><p class="kk">Contribute</p><h2 id="sb-h">Every story in this issue began as a report from a community.</h2>'
+            f'<p class="places">{pl}</p>'
+            f'<div class="tki"><img src="{pre}img/story-paint.webp" alt="Children’s hands at a watercolor set beside paintings, one lettered I am kind, loving, and friendly" width="1400" height="1203" loading="lazy"><div>'
+            '<p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
+            '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div></div>'
+            '<a class="tkb" href="#" data-submit>Send a story <span aria-hidden="true">→</span></a></div>'
+            f'<section class="tk sbx" id="subscribe" aria-labelledby="sx-h">{inner}</section>'
+            '</div></section><!-- /takepart -->\n')

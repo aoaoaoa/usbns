@@ -27,7 +27,7 @@ r1 = f'''<section class="r1"><div class="g"><div class="w hero">
 <div class="g band"><div class="w"><h2>Five ways to take part</h2><ol class="ways">''' + "".join(f'<li><span class="t">{t}</span><b>{n}</b><p>{d}</p><p class="u">{u}</p></li>' for k,n,t,d,u in WAYS) + f'''</ol>{WELCOME}</div></div>
 <div class="g"><div class="w two"><div><h2>Where it can go</h2><ul class="uses">''' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in USES) + f'''</ul></div>
 <div><h2>Coming up</h2><ul class="up">''' + "".join(f'<li class="{s}"><b>{n}</b><span>{se} · {h}</span><i>{"Gathering now" if s=="now" else "Opens next" if s=="next" else "Later in 2027"}</i></li>' for n,se,h,s in THEMES) + f'''</ul></div></div></div>
-<div class="g"><div class="w cta"><p>New to this? Start with the <a href="#" data-go="4">field guide</a>, or just send what you have.</p><a class="btn" href="#">Take part {ARR}</a></div></div></section>'''
+<div class="g"><div class="w cta"><p>New to this? Start with the <a href="#" data-go="4">field guide</a>, or just send what you have.</p><a class="btn" href="#">Send a story {ARR}</a></div></div></section>'''
 
 # ---------------- R2 Ways in, by time
 r2 = '<section class="r2"><div class="g"><div class="w"><p class="kk">Open call · Education · Winter 2027</p><h1 class="h">Everyone has something to bring.</h1><p class="ld">Choose by the time you have. Each way in is welcome, and each one helps.</p>' + WELCOME + '</div></div><div class="g"><div class="w lad">'
@@ -58,7 +58,7 @@ BR = [("Photo", "A children’s class in session, wide", "Show the room, the tea
 r4 = '<section class="r4"><div class="g"><div class="w"><p class="kk">Open briefs · Education · Winter 2027</p><h1 class="h">What we’re looking for right now</h1><p class="ld">Pick a brief that fits what you have. Each one says what we need and where it may appear. If none fits, send what you have anyway.</p>'
 r4 += WELCOME + '<div class="flt" role="group" aria-label="Filter briefs"><button aria-pressed="true" data-f="">All</button>' + "".join(f'<button aria-pressed="false" data-f="{x}">{x}</button>' for x in ("Photo","Video","Pitch","Words")) + '</div></div></div><div class="g"><div class="w brd">'
 for k,t,d,us,img,sh in BR:
-    r4 += f'<article class="br" data-k="{k}"><figure>{im(img,"")}<span class="sh">{sh}</span></figure><div class="bt"><p class="kd">{k}</p><h2>{t}</h2><p>{d}</p><ul>' + "".join(f"<li>{u}</li>" for u in us) + f'</ul><a href="#" class="tk">Answer this brief {ARR}</a></div></article>'
+    r4 += f'<article class="br" data-k="{k}"><figure>{im(img,"")}<span class="sh">{sh}</span></figure><div class="bt"><p class="kd">{k}</p><h2>{t}</h2><p>{d}</p><ul>' + "".join(f"<li>{u}</li>" for u in us) + f'</ul><a href="#" class="tk">Send a story {ARR}</a></div></article>'
 r4 += '</div></div></section>'
 
 # ---------------- R5 Field guide
@@ -148,7 +148,7 @@ section>.g{padding-block:48px}section>.g+.g{padding-top:0}section>.band+.g{paddi
 .wel{list-style:none;margin:32px 0 0;padding:22px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px 28px;background:color-mix(in oklab,var(--gold) 8%,var(--card));border:1px solid color-mix(in oklab,var(--gold) 22%,var(--rule));border-radius:8px}.wel li{display:grid;grid-template-columns:22px minmax(0,1fr);column-gap:8px;align-content:start;font-size:14px;line-height:1.45;color:var(--mute)}.wel li::before{content:"✓";grid-row:1/3;font:700 15px var(--ui);color:var(--gold);line-height:1.5}.wel b{font:700 16px/1.35 var(--text);color:var(--ink)}.wel+.flt{margin-top:28px}
 .uses,.up{list-style:none;margin:0;padding:0;display:grid;gap:0}.uses li,.up li{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--rule)}.uses b,.up b{font:700 17px var(--text)}
 .up li{grid-template-columns:1fr auto;align-items:center}.up span{grid-column:1;font-size:14px;color:var(--mute)}.up i{grid-row:1/3;grid-column:2;font:600 13px var(--ui);font-style:normal;border-radius:999px;padding:4px 10px;border:1px solid var(--rule)}
-.up .now i{background:var(--navy);color:var(--blush);border-color:var(--navy)}
+.up .now i{background:var(--teal);color:var(--card);border-color:var(--teal)}
 .cta{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;border-top:1px solid var(--rule);padding-top:28px}.cta p{margin:0;font:18px var(--text)}.cta a:not(.btn){color:var(--teal)}
 /* R2 */
 .lad{display:grid;gap:0}.step{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px;padding:28px 0;border-top:1px solid var(--rule)}

@@ -11,6 +11,9 @@ from data import ISSUE, VOICES, ARTICLES
 from footer import footer_html, FOOTER_CSS
 SUB = "A U.S. Bah\u00e1\u2019\u00ed News publication"
 
+def typo_q(x):
+    return x.replace("'", "’").replace("’Abdu", "‘Abdu")
+
 def esc(s): return html.escape(s, quote=False) if s else ""
 def qesc(s):
     return re.sub("\u201c([^\u201d]+)\u201d", lambda m: '<i class="qt">\u201c' + m.group(1) + '\u201d</i>', esc(s))
@@ -34,7 +37,10 @@ def body_html(blocks):
             mid = "mn-" + re.sub(r"[^a-z]+", "-", b[3].lower()).strip("-"); mark = (b[3], mid)
             out.append(f'<aside class="mnote" data-for="{mid}"><span class="mq">{qesc(b[1])}</span><span class="mw">{esc(b[2])}</span></aside>')
         elif k == "h": out.append(f"<h3>{esc(b[1])}</h3>")
-        elif k == "q": out.append(f'<blockquote class="pull"><p>{esc(b[1])}</p><cite>{esc(b[2])}</cite></blockquote>')
+        elif k == "q":
+            _w = re.match(r"(Bahá’u’lláh|‘Abdu’l-Bahá|The Báb|Shoghi Effendi|The Universal House of Justice)(?:,\s*(.*))?$", typo_q(b[2]))
+            if _w: out.append(f'<figure class="pull sq"><blockquote><p>{esc(b[1])}</p></blockquote><figcaption><b>{esc(_w.group(1))}</b>' + (f'<span>{esc(_w.group(2))}</span>' if _w.group(2) else '') + '</figcaption></figure>')
+            else: out.append(f'<blockquote class="pull"><p>{esc(b[1])}</p><cite>{esc(b[2])}</cite></blockquote>')
         elif k == "note": out.append(f'<p class="note">{esc(b[1])}</p>')
         elif k == "qa": out.append(f'<p class="qa">{esc(b[1])}</p>')
         elif k == "a": out.append(f'<p class="ans"><b>{esc(b[1])}</b> {qesc(b[2])}</p>')
@@ -765,8 +771,8 @@ def prayer_html(pr):
 
 # end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
 NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
-    '<span class="q">“Education can, alone, cause it to reveal its treasures…” <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
-NEXT_CSS = (".nxl{padding-top:40px}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
+    '<span class="q sqi">Education can, alone, cause it to reveal its treasures… <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
+NEXT_CSS = (".nxl{padding:34px 0 38px}.nxl+.colo{margin-top:0!important}.nxl .wrap{padding-top:0!important;padding-bottom:0!important}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:16px 0;margin:0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
     ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
 def build_tab(member=False, menu="contents", lite=False, letter=None):
@@ -1660,8 +1666,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
-{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1)}
-{_ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1).replace('src="img/', 'src="img/')}
+{_ns["takepart_html"]("", SUB_SECTION).replace('class="tkp"', 'class="tkp edask"', 1)}
 {NEXT_LINE}
 {footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}
@@ -2252,7 +2257,7 @@ def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}<
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
 # Contacts, "How can we help?": pick a need, see only the contacts that answer it. Contacts as on the print page (p. 84) and as since agreed.
 _CT = {
- "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "Submit your story", "https://link.bahai.us/TAB_submit"),
+ "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "Send a story", "https://link.bahai.us/TAB_submit"),
  "editors": ("Write to the editors", "Questions, leads, or a story idea in a few lines", "TAB@usbnc.org", "mailto:TAB@usbnc.org"),
  "feedback": ("Share your experience of the site", "What worked, what didn’t, and what you’d like to see", "research@bahai.us", "mailto:research@bahai.us"),
  "survey": ("Take the reader survey", "Share your ideas to shape the magazine’s future", "5 minutes", SURVEY_FORM),
