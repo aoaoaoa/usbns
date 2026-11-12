@@ -2209,13 +2209,16 @@ def _office(name, role, phone, email):
 def _ml(e): return f'<a href="mailto:{e}">{esc(e)}</a>'
 def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}</a>'
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
-CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a><a href="#move">Change of address</a><a href="#national">National and local</a></nav>'
+CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#national">National and local</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a><a href="#move">Change of address</a></nav>'
     '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
     f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
     f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
     '<p class="ph">Photography by license or by permission of community members.</p>'
     f'<div class="snd"><h3>Send items for possible publication to</h3><p>The American Bahá’í, 1233 Central St., Evanston, IL 60201, email {_ml("TAB@usbnc.org")}</p></div></section>'
-    '<h2 id="submit">Submitting articles or photographs</h2>'
+    '<h2 id="national">National and local</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
+    + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
+    + f'<section class="ct"><h3>Bahá’í National Center offices</h3><dl><dt>Phone</dt><dd>{_tel("(847) 733-3400")}</dd><dt>Address</dt><dd>1233 Central St. | Evanston, IL 60201</dd></dl></section>'
+    + '<h2 id="submit">Submitting articles or photographs</h2>'
     '<p><b>Full information is on the web</b>—go to <a href="https://link.bahai.us/TAB_submit">https://link.bahai.us/TAB_submit</a> and <b>log in with your Bahá’í Online Services account</b> (BOSA).</p>'
     '<p>Every item will be carefully considered, but we cannot guarantee publication.</p>'
     '<p>Articles should be clear, concise and relevant to the aims of the current Plan. Limit: 800 words. <b>We may edit stories for length and style.</b> We cannot print advance articles to publicize locally sponsored events, but may be able to list them in the Calendar pages.</p>'
@@ -2230,9 +2233,6 @@ CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The Ameri
     '<li>OR: Inform your Spiritual Assembly secretary about your new address and the date of your move; the local secretary can use eMembership or the mail to inform the national Membership Office of the change.</li>'
     f'<li>OR: Contact the Membership Office directly at {_ml("Membership@usbnc.org")}</li></ol>'
     f'<p>Contact the Membership Office at the Bahá’í National Center ({_ml("Membership@usbnc.org")}) if you wish to receive your own copy of The American Bahá’í in addition to the one your household already receives.</p>'
-    '<h2 id="national">National and local</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
-    + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
-    + f'<section class="ct"><h3>Bahá’í National Center offices</h3><dl><dt>Phone</dt><dd>{_tel("(847) 733-3400")}</dd><dt>Address</dt><dd>1233 Central St. | Evanston, IL 60201</dd></dl></section>'
     + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>')
 CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-10px 0 28px}.toc2 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;background:var(--card)}.toc2 a:hover{border-color:var(--ink)}"
     ".tabm{scroll-margin-top:16px;margin:0 0 8px;background:var(--card);border:1px solid var(--rule);overflow:hidden}"
