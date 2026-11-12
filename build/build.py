@@ -2214,7 +2214,7 @@ CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The Ameri
     f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
     f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
     '<p class="ph">Photography by license or by permission of community members.</p>'
-    f'<div class="snd"><h3>Send items for possible publication to</h3><p>The American Bahá’í, 1233 Central St., Evanston, IL 60201, email {_ml("TAB@usbnc.org")}</p></div></section>'
+    '</section>'
     '<h2 id="media">Media inquiries</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
     + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
     + '<h2 id="national">National offices</h2>'
