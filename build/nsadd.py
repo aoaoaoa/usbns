@@ -372,7 +372,7 @@ def colophon_html():
         lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
         return f'<p class="cpr {cls}"{lab}><span>{t} · {t}</span></p>'
     css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:28px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow:hidden}'
-           '.colp .wrap{max-width:640px;text-align:center}.colp .ln{margin:0 auto;font-family:var(--text);font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}.colp .ln b{color:var(--cb);font-weight:700}'
+           '.colp .wrap{max-width:640px;text-align:center}.colp .ln{margin:0 auto;font-family:"Bricolage Grotesque",var(--ui),system-ui,sans-serif;font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}.colp .ln b{color:var(--cb);font-weight:700}'
            '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 13.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.04em;color:var(--cb);opacity:.55;'
            '-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
            '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.35}.cpr.b span{transform:translateX(-31%)}')
