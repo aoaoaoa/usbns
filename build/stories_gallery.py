@@ -262,7 +262,7 @@ def gallery():
     js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
             f'<title>Story Invitation Ideas</title><link rel="icon" href="../../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
-            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1><p class="ld">Ways to turn “Every story in this issue began as a report from a community” into a page that invites everyone to send theirs. {len(IDEAS)} ideas so far. Each opens as a working page; nothing typed is sent or kept.</p></header>'
+            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1></header>'
             f'<div class="fl" role="group" aria-label="Filter by who it reaches">{fl}</div><ul class="gg">{cards}</ul></main><script>{js}</script></body></html>')
 
 if __name__ == "__main__":
