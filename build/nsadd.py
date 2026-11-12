@@ -376,19 +376,19 @@ def colophon_html():
            '.colp .tl{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr) minmax(0,230px);gap:24px 40px;align-items:center}'
            '.colp .is{display:grid;gap:6px;justify-items:start}.colp .is.r{justify-items:end;text-align:right}'
            f'.colp .k{{margin:0;font:700 11px {ui};letter-spacing:.16em;text-transform:uppercase;color:var(--cb)}}'
-           '.colp .nt{margin:0;font:700 clamp(22px,2.2vw,26px)/1 var(--text);color:var(--cc)}.colp .is:first-child .nt{color:var(--c2)}'
+           '.colp .nt{margin:0;font:700 clamp(22px,2.2vw,26px)/1 var(--text);color:var(--cc)}.colp .is:first-child .nt a{color:var(--c2);text-decoration:none}.colp .is:first-child .nt a:hover{color:var(--cc);text-decoration:underline;text-underline-offset:4px}.colp .rd{margin-top:6px;font:600 14px \"Bricolage Grotesque\",var(--ui),sans-serif;color:var(--cc);text-decoration:underline;text-decoration-color:var(--cb);text-underline-offset:4px}.colp .rd:hover{color:var(--cb)}.colp a:focus-visible{outline:2px solid var(--cc);outline-offset:3px}'
            f'.colp .nd{{margin:0;font:13px {ui};color:var(--c2)}}'
            f'.colp .ln{{margin:0;text-align:center;font-family:{ui};font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}}.colp .ln b{{color:var(--cb);font-weight:700}}'
            '.colp .sb{margin-top:6px;display:inline-flex;gap:8px;align-items:center;font:700 16px "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:var(--cb);color:var(--cn);padding:10px 18px;border-radius:3px;white-space:nowrap}'
            '.colp .sb:focus-visible{outline:2px solid var(--cc);outline-offset:3px}'
-           '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 13.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.04em;color:var(--cb);opacity:.55;'
+           '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 12.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.05em;color:var(--cb);opacity:.3;'
            '-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
-           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.35}.cpr.b span{transform:translateX(-31%)}'
+           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.2}.cpr.b span{transform:translateX(-31%)}'
            '@media (max-width:760px){.colp .tl{grid-template-columns:minmax(0,1fr)}.colp .is.r{justify-items:start;text-align:left}.colp .ln{text-align:left}}')
     rest = COLO_LINE[len("The American Bahá’í "):]
     return (f'<!-- nsadd:twoissues --><style>{css}</style><section class="colp" aria-labelledby="nxb-h">'
             + row(n[:k], "a", True)
-            + '<div class="wrap tl"><div class="is"><p class="k">This issue</p><p class="nt">The Arts</p><p class="nd">October / November /<br>December 2026</p></div>'
+            + '<div class="wrap tl"><div class="is"><p class="k">This issue</p><p class="nt"><a href="../">The Arts</a></p><p class="nd">October / November /<br>December 2026</p><a class="rd" href="../">Read the issue <span aria-hidden="true">→</span></a></div>'
             + f'<p class="ln"><b>The American Bahá’í</b> {rest}</p>'
             + '<div class="is r"><p class="k">Coming next</p><p class="nt" id="nxb-h">Education</p><p class="nd">Winter 2027<br>In homes February 2027</p>'
             + '<a class="sb" href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div>'
