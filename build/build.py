@@ -2160,11 +2160,9 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
   new IntersectionObserver(function(e){var v=e[0].isIntersecting;if(v&&!on){clearTimeout(t);q.src=A+'?r='+(++n)}on=v},{threshold:.5}).observe(q)});
 })();</script>"""
 def build_test():
+    # /test/ is a live clone of the curated edition, ready for trials. Earlier trials kept above, not applied: TEST_CSS (blind deboss), TEST_MOTION/TEST_MOTION_JS (one moving thing per screen).
     h = standalone(build_tab()).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/')
-    h = h.replace("Bahá’í</h1>", '<span class="fl">Bahá’í</span></h1>', 1).replace('</head>', TEST_CSS + TEST_MOTION + '<meta name="robots" content="noindex"></head>', 1)
-    k = "place();if(show){"; assert k in h
-    h = h.replace(k, "place();if(show&&!document.querySelector('.cont.on')&&!(dock&&!dock.hidden&&dock.classList.contains('on'))){", 1)
-    return h.replace('</body>', TEST_MOTION_JS + '</body>', 1)
+    return h.replace('</head>', '<meta name="robots" content="noindex"></head>', 1)
 os.makedirs(os.path.join(SITE, "test"), exist_ok=True)
 with open(os.path.join(SITE, "test", "index.html"), "w") as f: f.write(build_test())
 if os.path.exists(os.path.join(SITE, "alt", "index.html")): os.remove(os.path.join(SITE, "alt", "index.html"))

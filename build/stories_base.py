@@ -1,4 +1,4 @@
-# /magazine/test/stories/: five studies for the story invitation. Nothing typed is sent or kept.
+# shared pieces for the story invitation gallery (stories_gallery.py). The first five studies; B is set aside.
 import json, os
 D = os.path.dirname(os.path.abspath(__file__))
 M = json.load(open(os.path.join(D, "usmap.json")))
@@ -94,8 +94,8 @@ Esec = f'''<section class="ap" id="E" data-n="From report to page" hidden>
 <p class="kk">Contribute</p><h1>Every story in this issue began as a report from a community.</h1>
 <ol class="rt3">
 <li><span class="no">1</span><b>You send a few paragraphs</b><div class="nt">{PRINT}</div></li>
-<li><span class="no">2</span><b>An editor writes back</b><p class="sm">We’ll write before publishing anything you send, and work on it with you.</p></li>
-<li><span class="no">3</span><b>It reaches every reader</b><p class="sm">In print, online and read aloud.</p><div class="pg">{pages}</div></li></ol>
+<li><span class="no">2</span><b>We write back</b></li>
+<li><span class="no">3</span><b>It may become a story</b><div class="pg">{pages}</div></li></ol>
 <div class="ef">{form('<label>Where<input placeholder="City or neighborhood, state"></label>')}</div><p class="prom">Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p></section>'''
 
 CSS = r'''
@@ -219,8 +219,3 @@ HTML = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 <nav class="bar0" aria-label="Studies"><b>Story invitation</b><span class="nk">Studies · nothing is sent</span></nav>
 <main>{A}{B}{C}{Dsec}{Esec}</main><script>{JS}</script></body></html>'''
 
-if __name__ == "__main__":
-    out = os.path.join(D, "site", "magazine", "test", "stories")
-    os.makedirs(out, exist_ok=True)
-    open(os.path.join(out, "index.html"), "w").write(HTML)
-    print("ok", len(HTML))
