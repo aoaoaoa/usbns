@@ -27,10 +27,10 @@ r1 = f'''<section class="r1"><div class="g"><div class="w hero">
 <div class="g band"><div class="w"><h2>Five ways to take part</h2><ol class="ways">''' + "".join(f'<li><span class="t">{t}</span><b>{n}</b><p>{d}</p><p class="u">{u}</p></li>' for k,n,t,d,u in WAYS) + f'''</ol>{WELCOME}</div></div>
 <div class="g"><div class="w two"><div><h2>Where it can go</h2><ul class="uses">''' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in USES) + f'''</ul></div>
 <div><h2>Coming up</h2><ul class="up">''' + "".join(f'<li class="{s}"><b>{n}</b><span>{se} · {h}</span><i>{"Gathering now" if s=="now" else "Opens next" if s=="next" else "Later in 2027"}</i></li>' for n,se,h,s in THEMES) + f'''</ul></div></div></div>
-<div class="g"><div class="w cta"><p>New to this? Start with the <a href="#" data-go="4">field guide</a>, or just send what you have.</p><a class="btn" href="#">Send a story {ARR}</a></div></div></section>'''
+<div class="g"><div class="w cta"><p>New to this? Start with the <a href="#">field guide</a>, or just send what you have.</p><a class="btn" href="#">Send a story {ARR}</a></div></div></section>'''
 
 # ---------------- R2 Ways in, by time
-r2 = '<section class="r2"><div class="g"><div class="w"><p class="kk">Open call · Education · Winter 2027</p><h1 class="h">Everyone has something to bring.</h1><p class="ld">Choose by the time you have. Each way in is welcome, and each one helps.</p>' + WELCOME + '</div></div><div class="g"><div class="w lad">'
+r2 = '<section class="r2"><div class="g"><div class="w"><p class="kk">Open call · Education · Winter 2027</p><h1 class="h">Everyone has something to contribute.</h1>' + WELCOME + '</div></div><div class="g"><div class="w lad">'
 for i,(k,n,t,d,u) in enumerate(WAYS):
     fld = {"idea":("ri1","Your idea","A grandmother teaches a children’s class in Spanish…","Send"),
            "photo":("ri2","Where and when were they taken?","Saturday class, Westlake, Indianapolis","Choose files"),
@@ -42,48 +42,11 @@ r2 += '</div></div></section>'
 
 # ---------------- R3 The cycle
 PH = [("Call opens", "Themes announced with the issue before"), ("Gathering", "Ideas, pictures, pitches and drafts come in"), ("Editors choose", "We write to everyone whose work we use"), ("In homes", "The issue arrives and the next call opens")]
-r3 = '<section class="r3"><div class="g"><div class="w"><p class="kk">The open call</p><h1 class="h">A call with every issue.</h1><p class="ld">Each issue of The American Bahá’í has a theme, and each theme opens a call. Here is where the next three stand.</p></div></div><div class="g"><div class="w cyc">'
+r3 = '<section class="r3"><div class="g"><div class="w"><p class="kk">The open call</p><h1 class="h">What’s next?</h1></div></div><div class="g"><div class="w cyc">'
 for n,se,h,s in THEMES:
     cur = {"now":1,"next":0,"later":-1}[s]
     r3 += f'<article class="iss {s}"><header><p class="se">{se}</p><h2>{n}</h2><p class="hm">{h}</p></header><ol>' + "".join(f'<li class="{"on" if j==cur else "done" if j<cur else ""}"><b>{p}</b><span>{d}</span></li>' for j,(p,d) in enumerate(PH)) + f'</ol><p class="st">{"Gathering now. Send what you have." if s=="now" else "Opens when Education goes to print." if s=="next" else "Opens in spring."}</p></article>'
 r3 += f'</div></div><div class="g"><div class="w note3"><p>Dates for each phase are set by the editors. This study shows only the order, and the issues already announced.</p></div></div><div class="g"><div class="w"><div class="sub3"><p class="kk">Hear when a call opens</p><form class="mini" onsubmit="event.preventDefault();this.classList.add(\'sent\')"><label for="rc">Email address</label><div class="fr"><input id="rc" type="email" placeholder="you@example.org"><button type="submit">Notify me {ARR}</button></div><p class="ok" role="status">Thank you. This is a demo; nothing was sent.</p></form></div></div></div></section>'
-
-# ---------------- R4 Brief board
-BR = [("Photo", "A children’s class in session, wide", "Show the room, the teacher and the children together, faces visible. One wide shot gives the whole scene.", ["Photo library", "Feature"], "gregory-circle.jpg", "Wide shot"),
-      ("Photo", "Hands at work", "Close on hands: painting, writing, building, serving. No faces needed, which helps when children are present.", ["Microstory", "Social"], "ny-table.jpg", "Detail"),
-      ("Video", "Sixty seconds of a study circle", "Hold the phone steady and horizontal. Shoot over a shoulder so the conversation is the subject.", ["Social", "Photo library"], "ny-film.jpg", "Over the shoulder"),
-      ("Pitch", "A home that hosts a class", "Who opened their door, how it began, and what the neighbors noticed. A few lines is enough to start.", ["Feature"], "az-ace.jpg", "Story lead"),
-      ("Photo", "The sign at the door", "Get the name of the place or event in the frame, so nobody has to guess what it was.", ["Photo library"], "gregory-sign-hd.jpg", "Context"),
-      ("Words", "What a child learned this week", "A parent, tutor or teacher, in their own words. Two or three sentences, and the child’s first name only with permission.", ["Microstory", "Social"], "gv-table.jpg", "Microstory")]
-r4 = '<section class="r4"><div class="g"><div class="w"><p class="kk">Open briefs · Education · Winter 2027</p><h1 class="h">What we’re looking for right now</h1><p class="ld">Pick a brief that fits what you have. Each one says what we need and where it may appear. If none fits, send what you have anyway.</p>'
-r4 += WELCOME + '<div class="flt" role="group" aria-label="Filter briefs"><button aria-pressed="true" data-f="">All</button>' + "".join(f'<button aria-pressed="false" data-f="{x}">{x}</button>' for x in ("Photo","Video","Pitch","Words")) + '</div></div></div><div class="g"><div class="w brd">'
-for k,t,d,us,img,sh in BR:
-    r4 += f'<article class="br" data-k="{k}"><figure>{im(img,"")}<span class="sh">{sh}</span></figure><div class="bt"><p class="kd">{k}</p><h2>{t}</h2><p>{d}</p><ul>' + "".join(f"<li>{u}</li>" for u in us) + f'</ul><a href="#" class="tk">Send a story {ARR}</a></div></article>'
-r4 += '</div></div></section>'
-
-# ---------------- R5 Field guide
-FR = [("Wide shot", "Gives a sense of the space and the context.", "gregory-circle.jpg"),
-      ("Mid-shot", "Shows many people while staying close enough to see their faces.", "gregory-panel-hd.jpg"),
-      ("Medium close-up", "Makes the viewer feel part of the space.", "gv-table.jpg"),
-      ("Close-up", "Gives a sense of focus.", "ta-portrait.jpg"),
-      ("Extreme close-up", "Shows emotion in a more dramatic way.", "ta-portrait.jpg"),
-      ("Audience view", "Shows the event from where the audience sits.", "ny-film.jpg")]
-SIT = [("Audience", "A wide shot with many faces clearly visible. Add reaction shots: one person listening, laughing, moved."),
-       ("Stage", "Keep the event’s title in the frame. Make sure the microphone doesn’t hide a speaker’s face. Look for warm engagement with the audience."),
-       ("Community", "Neighborhood gatherings can be spontaneous, intimate and delicate. A phone is fine: wipe the lens and set your focus. Use silent mode or a zoom so you don’t interrupt."),
-       ("Action", "Raise the shutter speed to match the light and the movement. Focus on one person; faces draw the eye."),
-       ("Devotion", "Devotion takes different forms and asks for a quiet, creative approach. Be especially mindful of your presence.")]
-TIPS = ["Be conscientious of your presence in the room", "Be ready for spontaneous moments", "Capture a series of angles", "Keep a steady hand", "Review your work on a bigger screen"]
-SPEC = [("Send originals", "Full-size files straight from the camera or phone, not screenshots or messaging copies."),
-        ("Name the photographer", "Every picture carries a credit."),
-        ("Ask first", "Everyone recognizable has agreed to be pictured. For children, a parent or guardian."),
-        ("Say where and when", "Town or neighborhood, state, and the date."),
-        ("Video", "Steady and horizontal for the photo library; vertical is welcome for social. Ten seconds per shot or longer.")]
-r5 = '<section class="r5"><div class="g"><div class="w gh"><p class="kk">Field guide</p><h1 class="h">Capturing the story where you are</h1><p class="ld">A short guide for anyone sending photographs or video. Most of it works with a phone.</p><ol class="tips">' + "".join(f"<li>{t}</li>" for t in TIPS) + '</ol></div></div>'
-r5 += '<div class="g"><div class="w"><h2>Framing, from wide to close</h2><div class="fr6">' + "".join(f'<figure><span class="fi">{im(i,"") if i else ""}</span><figcaption><b>{n}</b>{d}</figcaption></figure>' for n,d,i in FR) + '</div><p class="cap">Examples from this issue. The guide asks for a range: one wide, some mid, a few close.</p></div></div>'
-r5 += '<div class="g"><div class="w two"><div><h2>Composition</h2><dl class="cmp"><dt>Thirds</dt><dd>Balance the picture on a grid of thirds; place the subject on a line, not dead center.</dd><dt>Vanishing point</dt><dd>Lines that run into the distance add depth.</dd><dt>Depth and focus</dt><dd>A sharp subject against a softer background.</dd><dt>Over the shoulder</dt><dd>Catches warm exchanges between people.</dd><dt>Candid and posed</dt><dd>Both are welcome. Group photos let us see everyone’s face; no group is too small.</dd></dl></div>'
-r5 += '<div><h2>By situation</h2><dl class="cmp">' + "".join(f"<dt>{a}</dt><dd>{b}</dd>" for a,b in SIT) + '</dl></div></div></div>'
-r5 += '<div class="g band"><div class="w"><h2>Before you send</h2><p class="pr">Proposed starter specs, to be confirmed by the editors.</p><ul class="spec">' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in SPEC) + '</ul><p class="mb">For examples of strong pictures of community life, browse the Bahá’í Media Bank at media.bahai.org.</p></div></div></section>'
 
 # ---------------- R6 Contributor desk
 ROLES = [("Contributing writer", "Report and write features with an editor."), ("Photographer", "Cover gatherings and classes near you, and build the photo library."), ("Videographer", "Short clips and b-roll for social and future stories."), ("Local correspondent", "Keep an eye out in your area and send leads.")]
@@ -98,10 +61,8 @@ r6 = f'''<section class="r6"><div class="g"><div class="w d6"><div class="dl"><p
 V = [("Open call", "One page per issue: the theme, five ways in, where things go, and what’s coming.", r1),
      ("Ways in", "Organized by the time a visitor has, from a minute to ongoing, each with its own small form.", r2),
      ("The cycle", "The call as a rhythm: every issue opens one, and each card shows its phase.", r3),
-     ("Brief board", "Specific open requests for the current theme, each tagged with format and where it may appear.", r4),
-     ("Field guide", "The standards page, compiled from Capturing Content and illustrated with this issue’s photographs.", r5),
      ("Contributor desk", "An invitation to join the network of writers, photographers, videographers and correspondents.", r6)]
-SLUGS = ["rfc-open-call", "rfc-ways-in", "rfc-cycle", "rfc-brief-board", "rfc-field-guide", "rfc-contributor-desk"]
+SLUGS = ["rfc-open-call", "rfc-ways-in", "rfc-cycle", "rfc-contributor-desk"]
 tabs = "".join(f'<button type="button" role="tab" id="t{i}" aria-controls="v{i}" aria-selected="{str(i==0).lower()}"><b>R{i+1}</b>{n}</button>' for i,(n,_,_) in enumerate(V))
 views = "".join(f'<div class="v" id="v{i}" role="tabpanel" aria-labelledby="t{i}"{"" if i==0 else " hidden"}><p class="note g"><b>R{i+1} · {n}.</b> {d}</p>{h}</div>' for i,(n,d,h) in enumerate(V))
 
