@@ -2211,7 +2211,7 @@ def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}<
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
 CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a><a href="#move">Change of address</a><a href="#national">National and local</a></nav>'
     '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
-    f'<div><h3>Editors</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p><p><b>Nadia Mehretab</b>, {_ml("nmehretab@usbnc.org")}</p></div>'
+    f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
     f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
     '<p class="ph">Photography by license or by permission of community members.</p>'
     f'<div class="snd"><h3>Send items for possible publication to</h3><p>The American Bahá’í, 1233 Central St., Evanston, IL 60201, email {_ml("TAB@usbnc.org")}</p></div></section>'
