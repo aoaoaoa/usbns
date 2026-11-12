@@ -226,6 +226,9 @@ idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in i
 @media (max-width:600px){.ecf{grid-template-columns:1fr}.ecf img{width:100%;height:120px}}''',
      js='''[].forEach.call(document.querySelectorAll('#R .ecf'),function(f){f.addEventListener('submit',function(e){e.preventDefault();f.querySelector('.eci').hidden=true;f.querySelector('.ok').hidden=false})})''')
 
+# discarded Nov 12, 2026: J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
+IDEAS[:] = [x for x in IDEAS if x["code"] not in set("JKLMNOQR")]
+
 # ---------------------------------------------------------------- shared runtime
 REC = r'''function REC(root){var rb=root.querySelector('.rb');if(!rb)return;var au=root.querySelector('.rec audio'),mr=null,ch=[];
 rb.addEventListener('click',function(){if(mr&&mr.state==='recording'){mr.stop();return}
