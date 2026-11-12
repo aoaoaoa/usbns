@@ -764,7 +764,7 @@ def prayer_html(pr):
     return f'<blockquote class="passage prayer illum">{"".join(corner(n) for n in range(1,5))}{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
 
 # end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
-NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
+NEXT_LINE = ('<section class="nxl" aria-label="Coming next"><div class="wrap"><div class="m1"><span class="k">Coming next</span><b>The Education issue</b><span class="w">Winter 2027</span>'
     '<span class="q">“Education can, alone, cause it to reveal its treasures…” <cite>Bahá’u’lláh</cite></span><a href="#" data-submit>Send a story <span aria-hidden="true">→</span></a></div></div></section>')
 NEXT_CSS = (".nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
@@ -2200,11 +2200,20 @@ PRIVACY = [
     ("h", "Personal information"),
     ("p", "We collect information that personally identifies you only when you provide it to us by filling in an online form. This information may include your name, email address, address, and telephone number. Mobile information collected—including information provided for receiving SMS messages, whether sent via standard long‑code numbers or via our toll‑free SMS number (1‑800‑228‑6483 / 1‑800‑22UNITE)—will not be shared with third parties or affiliates for marketing or promotional purposes. All identifiable personal information that you provide will be kept confidential and will only be used by authorized individuals to fulfill the purpose for which it was originally collected or for a use consistent with that purpose. All the above categories exclude text messaging originator opt‑in data and consent; this information will not be shared with third parties. Upon providing your mobile number, you will be given the choice to opt in to SMS communications, including messages sent from our toll‑free SMS number. If, at any point, you wish to be removed from receiving future SMS communications, you may opt out by texting STOP, QUIT, END, REVOKE, OPT OUT, CANCEL, or UNSUBSCRIBE."),
 ]
+# subpage top bar: the newsstand's header, so every page opens with the same brand
+from footer import _MARK as _FMARK
+PT_HEADER = ('<header class="pt"><div class="ptw"><a class="ptb" href="/usbns/magazine/landing/">' + _FMARK.replace('colo-g', 'pt-g').replace('class="cm" ', '') + '<span><small>The</small> American Bahá’í</span></a>'
+    '<nav aria-label="Site"><a href="#">About</a><a class="mem" href="/usbns/magazine/members/">Members</a></nav><a class="hsub" href="/usbns/magazine/landing/#subscribe" data-subscribe>Subscribe</a></div></header>\n')
+PT_CSS = (".ptw{max-width:1240px;margin:0 auto;padding:10px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));min-height:64px;display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}@media (min-width:700px){.ptw{padding-left:24px;padding-right:24px}}"
+    ".ptb{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)}.ptb svg{width:22px;height:22px}.ptb span{font:600 19px/1 var(--text);letter-spacing:-.015em}.ptb small{font-size:inherit;font-variant-caps:all-small-caps;letter-spacing:.06em;font-weight:500}"
+    ".pt nav{margin-left:auto;display:flex;gap:6px 22px;font:600 14.5px var(--ui)}.pt nav a{color:var(--ink);text-decoration:none;padding:6px 0}.pt nav a.mem{color:var(--mem,#5b4a8a)}.pt nav a:hover{text-decoration:underline;text-underline-offset:4px}"
+    ".hsub{display:inline-flex;align-items:center;min-height:40px;padding:0 18px;border-radius:6px;background:#222e4c;color:#fff;font:700 13px var(--ui);letter-spacing:.14em;text-transform:uppercase;text-decoration:none}.hsub:hover{background:#2c3a60}"
+    ".pt a:focus-visible{outline:2px solid var(--link);outline-offset:3px}@media (max-width:600px){.ptw{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 12px;padding-bottom:0}.ptb{grid-column:1;grid-row:1;min-width:0}.ptb span{white-space:nowrap}.pt .hsub{grid-column:2;grid-row:1;margin:0;min-height:34px;padding:0 12px;font-size:11.5px}.pt nav{grid-column:1/-1;grid-row:2;margin:0 -16px;padding:8px 16px 9px;border-top:1px solid var(--rule);display:flex;gap:22px;font-size:14px}}")
 def build_page(title, h1, body):
     css = (":root{--paper:#f5f1e8;--card:#fdfcf9;--bar:#fdfcf9;--ink:#1d1a16;--mute:#6a635a;--rule:#d9d2c4;--link:#1b5e6b;--ui:'Bricolage Grotesque',system-ui,sans-serif;--text:'Literata',Georgia,serif;color-scheme:light}"
         "@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#15130f;--card:#1f1c17;--bar:#221e19;--ink:#efe9dd;--mute:#a39b8e;--rule:#2f2a22;--link:#7fc0c9;color-scheme:dark}}"
         "*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui)}"
-        ".pt{border-bottom:1px solid var(--rule);background:var(--card)}.pt div{max-width:720px;margin:0 auto;padding:16px}.pt a{font:700 19px var(--text);color:var(--ink);text-decoration:none}.pt small{font:italic 400 15px var(--text);color:#b8782e;margin-right:5px}"
+        ".pt{border-bottom:1px solid var(--rule);background:var(--card)}"
         "main{max-width:720px;margin:0 auto;padding:48px 16px 72px}main h1{font:800 clamp(32px,5vw,46px)/1.05 var(--text);margin:0 0 30px}"
         "main h2{font:700 13px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:36px 0 12px;padding-top:16px;border-top:1px solid var(--rule)}"
         "main p{font:18px/1.65 var(--text);margin:0 0 1.1em;text-wrap:pretty}"
@@ -2214,8 +2223,8 @@ def build_page(title, h1, body):
             f'<title>{title} · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
-            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl' in body else ""}</style>\n</head>\n<body>\n'
-            '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
+            f'<style>{css}{PT_CSS}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl' in body else ""}</style>\n</head>\n<body>\n'
+            + PT_HEADER +
             f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
 def _office(name, role, phone, email):

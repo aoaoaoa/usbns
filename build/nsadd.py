@@ -358,7 +358,7 @@ NEXT_CSS = (".nxb{background:#222e4c;color:#fff}.nxb .wrap{display:grid;grid-tem
     ".nxb .btn span{margin-left:6px}.nxb .btn:focus-visible{outline:2px solid #f2cfc6;outline-offset:3px}@media (max-width:760px){.nxb .wrap{grid-template-columns:1fr}.nxb .btn{justify-self:start}}")
 def next_html():
     return ('<!-- nsadd:next --><style>' + NEXT_CSS + '</style><section class="nxb" aria-labelledby="nxb-h"><div class="wrap">'
-            '<div><span class="k">Coming next</span><b id="nxb-h">Education</b><span class="w">Winter 2027 · In homes February 2027</span></div>'
+            '<div><span class="k">Coming next</span><b id="nxb-h">The Education issue</b><span class="w">Winter 2027 · In homes February 2027</span></div>'
             '<p>Children’s classes, junior youth groups, study circles, schools. Tell us what learning looks like where you live.</p>'
             '<a class="btn" href="#" data-submit>Submit <span aria-hidden="true">→</span></a></div></section><!-- /nsadd:next -->')
 
