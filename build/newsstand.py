@@ -87,7 +87,7 @@ def F(pre):
           '<circle cx="75" cy="75" r="66" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="75" cy="75" r="40" fill="none" stroke="currentColor" stroke-width="1.5"/>'
           '<text><textPath href="#pmc">READER SURVEY · THE ARTS ISSUE · 2026 ·</textPath></text>'
           '<text x="75" y="72" text-anchor="middle" style="font-size:15px;letter-spacing:.06em">5 MIN</text><text x="75" y="88" text-anchor="middle" style="font-size:11px">2026</text></svg>')
-    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey"><div class="wrap">{HEAD}'
+    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey" hidden><div class="wrap">{HEAD}'
             f'<div class="stampw"><div class="stamp"><div class="plate"><div class="bg">{m(5)}{m(12)}{m(2)}</div>'
             f'<div class="card2"><h3 class="svbrand">The American Bahá’í<br>Reader <b>Survey</b></h3><p class="l">Share your ideas to shape the magazine’s future.</p>{BTN}{MIN}</div></div></div>'
             f'{pm}</div></div></section>\n<!-- /survey -->\n')
@@ -97,7 +97,7 @@ def B(pre):
     ask = (f'<div class="ask"><h3 class="svbrand">Tell us what<br>you <b>read</b></h3><p class="l">What you enjoy, and what you’d like next.</p>'
            f'<div class="go">{BTN}{MIN}</div></div>')
     tiles = [t(2), t(4), ask, t(6, 'x5'), t(9, 'x6'), t(11), t(5), t(10, 'x4'), t(12, 'x6')]
-    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey"><div class="wrap">{HEAD}'
+    return (f'\n<!-- survey -->\n<section id="survey" class="svy" aria-label="Reader survey" hidden><div class="wrap">{HEAD}'
             f'<div class="wall">{"".join(tiles)}</div></div></section>\n<!-- /survey -->\n')
 
 DLG = ('<!-- svydlg --><dialog class="svydlg" aria-labelledby="svy-h"><div class="svh"><div><p class="shk">Reader survey</p><h2 id="svy-h">Shape the future of The American Bahá’í</h2></div>'
