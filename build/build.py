@@ -660,7 +660,7 @@ LBX_CSS = r'''
 '''
 LBX_HTML = '''<div class="lbx" id="lbx" role="dialog" aria-modal="true" aria-labelledby="lbx-h" hidden>
 <h2 id="lbx-h" class="vh">Photographs</h2>
-<div class="lbx-bar"><p class="lbx-n" aria-live="polite"></p><p class="lbx-tou">Before downloading please refer to the <a href="/usbns/magazine/terms/">Terms of use</a></p><button type="button" class="lbx-x" aria-label="Close photographs"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
+<div class="lbx-bar"><p class="lbx-n" aria-live="polite"></p><p class="lbx-tou">Before downloading please refer to the <a href="/usbns/magazine/terms/#media">Terms of use</a></p><button type="button" class="lbx-x" aria-label="Close photographs"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button></div>
 <div class="lbx-stage">
 <button type="button" class="lbx-nav lbx-prev" aria-label="Previous photograph"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2L4 8l6 6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
 <figure class="lbx-fig"><img alt=""><figcaption></figcaption></figure>
@@ -2206,7 +2206,7 @@ def build_page(title, h1, body):
             f'<title>{title} · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
-            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}</style>\n</head>\n<body>\n'
+            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl"' in body else ""}</style>\n</head>\n<body>\n'
             '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
             f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
@@ -2250,19 +2250,35 @@ CONTACT_CSS = ("main{max-width:980px!important}.rt{display:none;flex-wrap:wrap;g
     ".mh2 p{font:15px/1.5 var(--ui)!important;margin:0 20px 8px!important}.mh2 p b{display:inline-block;min-width:80px;color:var(--mute)}.mh2 .ph{color:var(--mute);margin-bottom:18px!important}"
     ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}")
 NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
-TERMS = ('<h2>Copyright</h2>'
-    '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
-    '<p>While retaining full legal protection for the Content under all applicable national and international laws, the National Assembly grants use of the Content under the terms of the <a href="http://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.</p>'
-    '<h2>Terms of Use</h2>'
-    '<p>You are welcome to access and use the Content of this website subject to the following conditions:</p><ul class="tl">'
-    '<li>The Content may not be used in a way that misrepresents the intent of the original source.</li>'
-    '<li>If you wish to use any Content, it must be accompanied by the following notice: “Copyright © ' + NSA + '” together with attribution to bahai.us, where appropriate. Attribution must also include the name of the individual author of the Content, in cases where an individual author is named.</li>'
-    '<li>Audio-visual content including video clips, audio clips, maps, and photographs may be cropped and edited for size. No other editing is permitted. Each user of the audio-visual content is given a limited, non-exclusive license to use, reproduce, distribute, link, and/or display this content provided the intent, character, nature, or meaning of the content remains unaltered, and the individual author is credited, in cases where an individual author is named.</li>'
-    '<li>Any use for a commercial purpose requires permission prior to use. For inquiries, please email <a href="mailto:termsofuse@bahai.us">termsofuse@bahai.us</a>.</li>'
-    '<li>The ' + NSA + ' reserves the right to withdraw permission to use the Content at any time and for any use. In such circumstances, the use of the Content should cease immediately.</li>'
-    '<li>The ' + NSA + ' does not endorse or take responsibility for third-party uses of the Content. Further, the ' + NSA + ' will not be responsible or liable to any person or organization for any direct, incidental, consequential, indirect, or punitive damages that may result from access to or use of the Content.</li></ul>'
-    '<p>These conditions may be revised at any time without notice.</p>'
-    '<p>To obtain permission to use content for commercial purposes and other uses not covered by this license, please <a href="https://www.bahai.us/contact/">contact us</a>.</p>')
+# Terms of use: consolidated (Nov 12, 2026). Summary on top, marked non-binding; six numbered clauses with anchors (#media is linked from the photo viewer).
+_CC = '<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>'
+_TML = '<a href="mailto:termsofuse@bahai.us">termsofuse@bahai.us</a>'
+_CLAUSES = [
+ ("meaning", "Meaning", "The Content may not be used in a way that misrepresents the intent of the original source."),
+ ("notice", "Notice and credit", f"Any use of the Content must be accompanied by the notice “Copyright © {NSA}” together with attribution to bahai.us, where appropriate, and the name of the individual author, where one is named."),
+ ("media", "Photographs, audio, video and maps", "Audio-visual content may be cropped and edited for size. No other editing is permitted. You may use, reproduce, distribute, link to and display it under a limited, non-exclusive license, provided its intent, character, nature and meaning remain unaltered and the individual author is credited where named."),
+ ("commercial", "Commercial and other uses", f"Any use for a commercial purpose, or any use not covered by this license, requires permission before use. Write to {_TML}."),
+ ("withdrawal", "Withdrawal", "The National Assembly may withdraw permission to use the Content at any time and for any use. Use of the Content must then cease immediately."),
+ ("liability", "Liability", "The National Assembly does not endorse or take responsibility for third-party uses of the Content, and will not be responsible or liable to any person or organization for any direct, incidental, consequential, indirect, or punitive damages that may result from access to or use of the Content."),
+]
+_GLANCE = [("You may", ["Share, link to and display the Content", "Crop or resize photographs and media"]),
+           ("Always", [f"Include “Copyright © {NSA}”", "Credit bahai.us and the named author", "Keep the original meaning"]),
+           ("Ask first", ["Commercial use", "Any edit beyond cropping or resizing", f"Write to {_TML}"])]
+TERMS = (f'<p class="lede">Everything on this site is protected by copyright and shared under a {_CC}, on the terms below.</p>'
+    '<div class="gl" aria-label="At a glance">' + "".join(f'<section><h3>{h}</h3><ul>{"".join(f"<li>{x}</li>" for x in L)}</ul></section>' for h, L in _GLANCE) + '</div>'
+    '<p class="note">This summary is for convenience. The terms below govern.</p>'
+    '<h2 id="copyright">Copyright</h2>'
+    f'<p>All material on this website, including but not limited to text, photographs, images, illustrations, maps, audio clips and video clips (“Content”), is protected by copyrights, trademarks and other intellectual property rights. The {NSA} (“the National Assembly”) retains full legal protection for its Content under all applicable United States and international laws, and grants use of it under the terms of the {_CC}.</p>'
+    '<h2 id="terms">Terms of use</h2><p>You are welcome to access and use the Content subject to these conditions:</p><ol class="cl">'
+    + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in _CLAUSES) + '</ol>'
+    '<p>These conditions may be revised at any time without notice.</p>')
+TERMS_CSS = (".lede{font:400 21px/1.5 var(--text)!important}"
+    ".gl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 8px}.gl section{background:var(--card);border:1px solid var(--rule);border-top:4px solid #1b5e6b;padding:14px 16px}.gl section:nth-child(2){border-top-color:#b8782e}.gl section:nth-child(3){border-top-color:#222e4c}"
+    ".gl h3{font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px}.gl ul{margin:0;padding-left:1.1em;font:15px/1.45 var(--ui)}.gl li{margin:0 0 6px}.note{font:13px var(--ui)!important;color:var(--mute)}"
+    "ol.cl{list-style:none;counter-reset:c;margin:0 0 1.4em;padding:0}ol.cl li{counter-increment:c;position:relative;padding:14px 0 14px 46px;border-top:1px solid var(--rule);font:17px/1.6 var(--text);scroll-margin-top:16px}"
+    "ol.cl li::before{content:counter(c);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--rule);display:grid;place-items:center;font:700 14px var(--ui);color:#b8782e}"
+    "ol.cl li:target{background:color-mix(in oklab,#b8782e 10%,transparent)}ol.cl b{font-family:var(--ui);font-size:15px}"
+    "@media (max-width:640px){.gl{grid-template-columns:1fr}}")
 for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "How can we help?", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
