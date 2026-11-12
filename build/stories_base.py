@@ -56,15 +56,15 @@ B = f'''<section class="ap" id="B" data-n="One question at a time" hidden>
 {PROMISE}</section>'''
 
 # C · story starters, each tied to the story in this issue that began that way
-ST = [("Neighbors shared a meal and a film", "newyorkers", "ny-film.jpg", "Crown Heights, Brooklyn"),
-      ("Children painted together", "newyorkers", "story-paint.webp", "New York City"),
-      ("Young people raised money for camp", "comic", "comic-1.jpg", "Indianapolis"),
-      ("Friends studied a message and talked it over", "endeavor", "az-ace.jpg", "Las Vegas"),
-      ("A place carries on a legacy", "gregory", "gregory-group-hd.jpg", "Hemingway, South Carolina"),
-      ("Your art, and what it serves", "twoartists", "ta-portrait.jpg", "Los Angeles")]
+ST = [("Neighbors came together", "newyorkers", "ny-film.jpg", "Harlem"),
+      ("Children learned or made something", "newyorkers", "story-paint.webp", "Crown Heights, Brooklyn"),
+      ("Young people took something on", "comic", "comic-1.jpg", "Indianapolis"),
+      ("A conversation opened something up", "endeavor", "az-ace.jpg", "Las Vegas"),
+      ("A person or place made a difference", "gregory", "gregory-group-hd.jpg", "Hemingway, South Carolina"),
+      ("Creativity brought people closer", "twoartists", "ta-portrait.jpg", "Los Angeles")]
 cards = "".join(f'<button type="button" class="st" style="--c:{TINT[s]}" data-p="{t}"><img src="{I}{im}" alt="" loading="lazy"><span><b>{t}</b><small>Like <a href="{E}{s}/">{pl}</a></small></span></button>' for t, s, im, pl in ST)
 C = f'''<section class="ap" id="C" data-n="Story starters" hidden>
-<p class="kk">Contribute</p><h1>You may already have a story.</h1><p class="ld">Each story in this issue started with something small. Pick the one closest to yours.</p>
+<p class="kk">Contribute</p><h1>You may already have a story.</h1><p class="ld">Each story in this issue started with something small.</p>
 <div class="sts">{cards}<button type="button" class="st own" data-p="Something else"><span><b>Something else</b><small>Start from a blank page</small></span></button></div>
 <div class="unf" hidden><p class="yt"></p>{form('<label>Where<input placeholder="City or neighborhood, state"></label>')}</div>{PROMISE}</section>'''
 

@@ -42,9 +42,7 @@ var p=PL[v];if(p){you.setAttribute('transform','translate('+p[0]+','+p[1]+')');y
 u.querySelector('.yt').textContent=v+(p?' · already in this issue. Tell us what’s new.':' · the next place in this issue?');u.hidden=false;u.querySelector('textarea').focus()});""".replace("__PL__", json.dumps(b.M["places"])))
 
 C = depth(unhide(b.C))
-C = C.replace('Like <a href="../../../newyorkers/">Crown Heights, Brooklyn</a>', 'Like <a href="../../../newyorkers/">Harlem</a>', 1)
-C = C.replace('Like <a href="../../../newyorkers/">New York City</a>', 'Like <a href="../../../newyorkers/">Crown Heights, Brooklyn</a>', 1)
-idea("C", "starters", "Story starters", "Six openings, each tied to the story in this issue that began that way. For readers who doubt they have a story.",
+idea("C", "starters", "Story starters", "Six broad openings, each tied to a story in this issue. For readers who doubt they have a story.",
      ["Non-writers"], C,
      js="""var C=document.getElementById('C'),cs=[].slice.call(C.querySelectorAll('.st'));
 cs.forEach(function(c){c.setAttribute('aria-pressed','false');c.addEventListener('click',function(e){if(e.target.closest('a'))return;cs.forEach(function(x){x.setAttribute('aria-pressed',x===c)});
@@ -53,6 +51,23 @@ var u=C.querySelector('.unf');u.querySelector('.yt').textContent=c.dataset.p;u.h
 idea("D", "any-way", "Any way you can", "Write, record a voice note, send photographs, pass along a lead, or use your own language.",
      ["Everyone", "Any language", "Non-writers"], depth(unhide(b.Dsec)),
      js="""var Dd=document.getElementById('D'),ws=[].slice.call(Dd.querySelectorAll('.wy')),df=Dd.querySelector('.dw');
+ws.forEach(function(w){w.addEventListener('click',function(){ws.forEach(function(x){x.setAttribute('aria-pressed',x===w)});df.hidden=false;
+[].forEach.call(df.querySelectorAll('.pn'),function(p){p.hidden=p.dataset.w!==w.dataset.w})})});
+REC(Dd);""")
+
+D2 = (depth(unhide(b.Dsec)).replace('id="D"', 'id="D2"').replace('data-n="Any way you can"', 'data-n="Start with what you have"')
+      .replace("<h1>Send it however it comes to you.</h1>", "<h1>Start with what you have.</h1>")
+      .replace("Every story in this issue began as a report from a community. Yours can begin as a few lines, a voice note, a photograph or a name.",
+               "A few lines, a voice note, a photograph or a name is enough to begin.")
+      .replace(">Write a few lines</button>", ">Tell it in writing</button>").replace(">Record a voice note</button>", ">Say it out loud</button>")
+      .replace(">Send photographs</button>", ">Show us a photograph</button>").replace(">Pass along a lead</button>", ">Point us to someone</button>")
+      .replace(">Use your own language</button>", ">In the language you think in</button>")
+      .replace("<label>Tell us your story<textarea", "<label>In your own words<textarea")
+      .replace("Up to 3 minutes, in your own words.", "Up to 3 minutes. Talk as you would to a friend.")
+      .replace("<label>Who or what should we know about?<textarea", "<label>Who should we hear from?<textarea"))
+idea("D2", "start-with-what-you-have", "Start with what you have", "D in new wording: five ways in, named the way people talk.",
+     ["Everyone", "Any language", "Non-writers"], D2,
+     js="""var Dd=document.getElementById('D2'),ws=[].slice.call(Dd.querySelectorAll('.wy')),df=Dd.querySelector('.dw');
 ws.forEach(function(w){w.addEventListener('click',function(){ws.forEach(function(x){x.setAttribute('aria-pressed',x===w)});df.hidden=false;
 [].forEach.call(df.querySelectorAll('.pn'),function(p){p.hidden=p.dataset.w!==w.dataset.w})})});
 REC(Dd);""")
@@ -226,8 +241,8 @@ idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in i
 @media (max-width:600px){.ecf{grid-template-columns:1fr}.ecf img{width:100%;height:120px}}''',
      js='''[].forEach.call(document.querySelectorAll('#R .ecf'),function(f){f.addEventListener('submit',function(e){e.preventDefault();f.querySelector('.eci').hidden=true;f.querySelector('.ok').hidden=false})})''')
 
-# discarded Nov 12, 2026: I quote first, J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
-IDEAS[:] = [x for x in IDEAS if x["code"] not in set("IJKLMNOQR")]
+# discarded Nov 12, 2026: P print and post, I quote first, J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
+IDEAS[:] = [x for x in IDEAS if x["code"] not in {"I","J","K","L","M","N","O","P","Q","R"}]
 
 # ---------------------------------------------------------------- shared runtime
 REC = r'''function REC(root){var rb=root.querySelector('.rb');if(!rb)return;var au=root.querySelector('.rec audio'),mr=null,ch=[];
