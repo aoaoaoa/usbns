@@ -2206,7 +2206,7 @@ def build_page(title, h1, body):
             f'<title>{title} · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
-            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "tabm" in body else ""}</style>\n</head>\n<body>\n'
+            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}</style>\n</head>\n<body>\n'
             '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
             f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
@@ -2216,40 +2216,39 @@ def _office(name, role, phone, email):
 def _ml(e): return f'<a href="mailto:{e}">{esc(e)}</a>'
 def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}</a>'
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
-CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#media">Media inquiries</a><a href="#national">National offices</a><a href="#submit">Submitting articles or photographs</a><a href="#feedback">Feedback</a><a href="#subs">Subscriptions</a></nav>'
-    '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
-    f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
-    f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
-    '<p class="ph">Photography by license or by permission of community members.</p>'
-    '</section>'
-    '<h2 id="media">Media inquiries</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
-    + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
-    + '<h2 id="national">National offices</h2>'
-    f'<section class="ct"><h3>Bahá’í National Center offices</h3><dl><dt>Phone</dt><dd>{_tel("(847) 733-3400")}</dd><dt>Address</dt><dd>1233 Central St. | Evanston, IL 60201</dd></dl></section>'
-    + '<h2 id="submit">Submitting articles or photographs</h2>'
-    '<div class="v2"><a class="door" href="https://link.bahai.us/TAB_submit"><span class="dk">Online</span><b>Submit a story or photographs</b><span class="ds">Log in with your Bahá’í Online Services account (BOSA).</span><span class="go">Submit <span aria-hidden="true">→</span></span></a>'
-    '<a class="door" href="mailto:TAB@usbnc.org"><span class="dk">By email</span><b>Write to the editors</b><span class="ds">Questions, leads, or a story idea in a few lines.</span><span class="go">TAB@usbnc.org <span aria-hidden="true">→</span></span></a></div>'
-    '<ul class="fx"><li>Up to 800 words</li><li>Photos in TIFF or JPEG, people identified</li><li>We may edit for length and style</li></ul>'
-    '<h2 id="feedback">Feedback</h2><p>Tell us about your visit: what worked, what didn’t, and what you’d like to see.</p>'
-    f'<div class="v2"><a class="door" href="mailto:research@bahai.us"><span class="dk">By email</span><b>Share your experience of the site</b><span class="ds">A few lines is plenty.</span><span class="go">research@bahai.us <span aria-hidden="true">→</span></span></a>'
-    f'<a class="door" href="{SURVEY_FORM}" target="_blank" rel="noopener"><span class="dk">5 minutes</span><b>Take the reader survey</b><span class="ds">Share your ideas to shape the magazine’s future.</span><span class="go">Take part <span aria-hidden="true">→</span></span></a></div>'
-    '<h2 id="subs">Subscriptions</h2>'
-    f'<section class="ct"><h3>Bahá’í Subscriber Service</h3><p class="r">Bahá’í Subscriber Service distributes the magazines and periodicals published by the National Spiritual Assembly of the Bahá’ís of the United States</p><dl><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>E-mail</dt><dd>{_ml("subscription@usbnc.org")}</dd></dl></section>'
-    '<p><b>Subscription Rates (in U.S. dollars) six issues per year.</b> Available by subscription to Bahá’ís outside the contiguous U.S.: Currently $36 (one year) / $60 (two years)</p>'
-    f'<section class="ct"><h3>Back issues</h3><p class="r">Back issues: $3 + shipping/handling available from the Bahá’í Distribution Service:</p><dl><dt>Address</dt><dd>1233 Central Street • Evanston, IL 60201-1611</dd><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>Web</dt><dd><a href="https://www.bahaibookstore.com">www.bahaibookstore.com</a></dd></dl></section>'
-    + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>')
-CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-10px 0 28px}.toc2 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;background:var(--card)}.toc2 a:hover{border-color:var(--ink)}"
-    ".tabm{scroll-margin-top:16px;margin:0 0 8px;background:var(--card);border:1px solid var(--rule);overflow:hidden}"
-    ".tabm .wm{margin:0;background:#222e4c;color:#fff;font:400 clamp(28px,4vw,38px)/1 var(--text);letter-spacing:-.01em;padding:18px 22px}.tabm .wm small{display:block;font:italic 400 15px var(--text);color:#f2cfc6;margin:0 0 2px 2px}"
-    ".tabm .mh{display:grid;grid-template-columns:1.3fr 1fr;gap:18px 28px;padding:20px 22px 4px}.tabm h3{font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:0 0 8px}"
-    ".tabm .mh p{font:16px/1.5 var(--ui);margin:0 0 4px}.tabm .ph{font:14px/1.5 var(--ui);color:var(--mute);padding:8px 22px 20px;margin:0}"
-    ".tabm .snd{margin:18px 22px 22px;padding:14px 16px;border-left:4px solid #b8782e;background:var(--paper)}.tabm .snd p{font:17px/1.5 var(--text);margin:0}"
-    "main ol.tl{margin:0 0 1.4em;padding-left:1.4em;font:18px/1.65 var(--text)}main ol.tl li{margin:0 0 .8em;padding-left:.3em}main ol.tl li::marker{color:#b8782e;font-weight:700}"
-    ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}"
-    ".v2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.door{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink)!important;background:var(--card);border:1px solid var(--rule);border-top:4px solid #222e4c;padding:18px}.door+.door{border-top-color:#b8782e}.door:hover{border-color:var(--ink)}.door:focus-visible{outline:2px solid var(--link);outline-offset:3px}"
-    ".dk{font:700 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}.door b{font:700 20px/1.2 var(--text)}.ds{font:14px/1.5 var(--ui);color:var(--mute)}.go{font:700 16px var(--ui);color:var(--link);margin-top:6px}"
-    ".fx{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;font:14px var(--ui);color:var(--mute)}.fx li::before{content:\"·\";margin-right:8px;color:#b8782e;font-weight:700}.fx li:first-child::before{content:none}"
-    "@media (max-width:560px){.tabm .mh,.v2{grid-template-columns:1fr}}")
+# Contacts, "How can we help?": pick a need, see only the contacts that answer it. Contacts as on the print page (p. 84) and as since agreed.
+_CT = {
+ "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "link.bahai.us/TAB_submit", "https://link.bahai.us/TAB_submit"),
+ "editors": ("Write to the editors", "Questions, leads, or a story idea in a few lines", "TAB@usbnc.org", "mailto:TAB@usbnc.org"),
+ "feedback": ("Share your experience of the site", "What worked, what didn’t, and what you’d like to see", "research@bahai.us", "mailto:research@bahai.us"),
+ "survey": ("Take the reader survey", "Share your ideas to shape the magazine’s future", "5 minutes", SURVEY_FORM),
+ "subs": ("Bahá’í Subscriber Service", "Subscriptions to the magazines and periodicals of the National Spiritual Assembly", "1.800.999.9019 · subscription@usbnc.org", "mailto:subscription@usbnc.org"),
+ "back": ("Back issues", "$3 + shipping/handling, from the Bahá’í Distribution Service", "1.800.999.9019 · bahaibookstore.com", "https://www.bahaibookstore.com"),
+ "media": ("Office of Public Affairs", "For editors, journalists, and other media professionals", "(202) 833-8990 · usnsa-opa@usbnc.org", "mailto:usnsa-opa@usbnc.org"),
+ "nc": ("Bahá’í National Center offices", "1233 Central St., Evanston, IL 60201", "(847) 733-3400", "tel:+18477333400"),
+}
+_ROUTES = [("I have a story or photographs", ["submit", "editors"]), ("I have feedback on the site", ["feedback", "survey"]),
+           ("I want the magazine", ["subs", "back"]), ("I’m a journalist", ["media"]), ("I need the National Center", ["nc"])]
+def _card(k):
+    h, d, v, u = _CT[k]; ext = ' target="_blank" rel="noopener"' if u.startswith("https") else ""
+    return f'<a class="c" href="{u}"{ext}><b>{h}</b><span class="d">{d}</span><span class="v">{v} <span aria-hidden="true">→</span></span></a>'
+CONTACT = ('<div class="rt" role="group" aria-label="What do you need?">' + "".join(f'<button type="button" aria-pressed="{str(k == 0).lower()}" data-k="{k}">{q}</button>' for k, (q, _) in enumerate(_ROUTES)) + '</div>'
+    + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' for k, (q, L) in enumerate(_ROUTES))
+    + '<section class="mh2"><p class="wm"><small>The</small>American Bahá’í</p>'
+    + '<p><b>Editor</b> Neena Rouhani · <a href="mailto:nrouhani@usbnc.org">nrouhani@usbnc.org</a></p><p><b>Designer</b> Luthando Mazibuko · <a href="mailto:lmazibuko@usbnc.org">lmazibuko@usbnc.org</a></p>'
+    + '<p class="ph">Photography by license or by permission of community members.</p></section>'
+    + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>'
+    # every panel shows without script; with script, only the chosen one
+    + "<script>(function(){var B=[].slice.call(document.querySelectorAll('.rt button')),P=[].slice.call(document.querySelectorAll('.rp'));function go(k){B.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.k===k)});P.forEach(function(p){p.hidden=p.dataset.k!==k})}"
+      "B.forEach(function(b){b.onclick=function(){go(b.dataset.k)}});go('0');document.documentElement.classList.add('rtjs')})();</script>")
+CONTACT_CSS = ("main{max-width:980px!important}.rt{display:none;flex-wrap:wrap;gap:8px;margin:-6px 0 20px}.rtjs .rt{display:flex}"
+    ".rt button{font:600 15px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;cursor:pointer}.rt button[aria-pressed=true]{background:#222e4c;color:#f2cfc6;border-color:#222e4c}.rt button:focus-visible{outline:2px solid var(--link);outline-offset:2px}"
+    ".rp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:0 0 14px}.rp[hidden]{display:none}"
+    ".c{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink)!important;background:var(--card);border:1px solid var(--rule);border-top:4px solid #222e4c;padding:18px}.c:hover{border-color:var(--ink)}.c:focus-visible{outline:2px solid var(--link);outline-offset:3px}"
+    ".c b{font:700 19px/1.25 var(--text)}.c .d{font:14px/1.5 var(--ui);color:var(--mute)}.c .v{font:700 15px var(--ui);color:var(--link)}"
+    ".mh2{margin:40px 0 0;background:var(--card);border:1px solid var(--rule);overflow:hidden}.mh2 .wm{margin:0 0 14px!important;background:#222e4c;color:#fff;font:400 30px/1 var(--text)!important;padding:16px 20px}.mh2 .wm small{display:block;font:italic 14px var(--text);color:#f2cfc6}"
+    ".mh2 p{font:15px/1.5 var(--ui)!important;margin:0 20px 8px!important}.mh2 p b{display:inline-block;min-width:80px;color:var(--mute)}.mh2 .ph{color:var(--mute);margin-bottom:18px!important}"
+    ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}")
 NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
 TERMS = ('<h2>Copyright</h2>'
     '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
@@ -2264,7 +2263,7 @@ TERMS = ('<h2>Copyright</h2>'
     '<li>The ' + NSA + ' does not endorse or take responsibility for third-party uses of the Content. Further, the ' + NSA + ' will not be responsible or liable to any person or organization for any direct, incidental, consequential, indirect, or punitive damages that may result from access to or use of the Content.</li></ul>'
     '<p>These conditions may be revised at any time without notice.</p>'
     '<p>To obtain permission to use content for commercial purposes and other uses not covered by this license, please <a href="https://www.bahai.us/contact/">contact us</a>.</p>')
-for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "Contacts", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
+for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "How can we help?", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
 
