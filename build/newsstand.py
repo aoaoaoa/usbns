@@ -172,6 +172,11 @@ def make(block, css, pre, home):
     # airmail strip under the header: off for now; restore by uncommenting
     # h = h.replace(HEADER_END, HEADER_END + airmail(pre, FORM), 1)
     h = h.replace('</body>', block + '<!-- colo -->\n' + footer_html(home) + '\n<!-- /colo -->\n' + corner(pre) + DLG + '</body>', 1)
+    # Earlier issues sits just above the footer
+    _i = h.index('<section id="archive"'); _j = h.index('</div></section>', _i) + len('</div></section>')
+    _a = h[_i:_j]; h = h[:_i] + h[_j:]
+    h = h.replace('<!-- colo -->', _a + chr(10) + '<!-- colo -->', 1)
+    h = re.sub(r'\n{3,}', '\n\n', h)
     return h
 
 _main = make(F('../'), CSS_F, '../', './')

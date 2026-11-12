@@ -104,7 +104,7 @@ def ask_dialogs():
         '<div class="dnote"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
         '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div>'
         '<div class="dnx" role="note"><p class="nxk">Next issue · Winter 2027</p><p class="nxt">Education</p>'
-        '<blockquote class="nxq"><p>“Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.”</p><cite>Bahá’u’lláh, Gleanings from the Writings of Bahá’u’lláh, CXXII</cite></blockquote>'
+        '<figure class="nxq"><blockquote><p>Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.</p></blockquote><figcaption><b>Bahá’u’lláh</b><span>Gleanings from the Writings of Bahá’u’lláh, CXXII</span></figcaption></figure>'
         '<p class="nxl2">We’re looking for stories from</p><ul class="nxc"><li>Children’s classes</li><li>Junior youth groups</li><li>Study circles</li><li>Tutor training</li><li>Seasonal Bahá’í schools</li><li class="nxo">and wherever else learning happens where you live</li></ul></div>'
         f'<form class="dform sform" data-action="{SUBMIT_ACTION}" enctype="multipart/form-data" novalidate>'
         '<input type="hidden" name="issue" value="">'
@@ -157,7 +157,7 @@ ASK_CSS = """
 .askdlg .dnx{display:none}.askdlg.nx .dnx{display:block;margin:0 0 24px;padding:16px 0 18px 18px;border-left:3px solid #b8782e}
 .askdlg .nxk{margin:0 0 2px;font:700 11px/1.4 var(--ui,sans-serif);letter-spacing:.18em;text-transform:uppercase;color:#9a5f1f}
 .askdlg .nxt{margin:0 0 10px;font:400 30px/1.1 "Literata",Georgia,serif;letter-spacing:-.01em}
-.askdlg .nxq{margin:0 0 14px}.askdlg .nxq p{margin:0 0 4px;font:italic 15.5px/1.55 "Literata",Georgia,serif}.askdlg .nxq cite{font:normal 12px/1.4 var(--ui,sans-serif);color:var(--mute,#6a635a)}
+.askdlg .nxq{position:relative;margin:4px 0 18px;padding:2px 0 0 34px}.askdlg .nxq::before{content:"“";position:absolute;left:-2px;top:-6px;font:400 56px/1 "Literata",Georgia,serif;color:#b8782e}.askdlg .nxq blockquote{margin:0}.askdlg .nxq p{margin:0;font:italic 400 16.5px/1.6 "Literata",Georgia,serif;color:var(--ink,#1d1a16);text-wrap:pretty}.askdlg .nxq figcaption{display:grid;gap:1px;margin-top:10px;padding-top:10px;position:relative;font:12px/1.4 var(--ui,sans-serif);color:var(--mute,#6a635a)}.askdlg .nxq figcaption::before{content:"";position:absolute;top:0;left:0;width:28px;height:1px;background:#b8782e}.askdlg .nxq figcaption b{font:700 11px/1.4 var(--ui,sans-serif);letter-spacing:.14em;text-transform:uppercase;color:var(--ink,#1d1a16)}.askdlg .nxq figcaption span{font-style:italic}
 .askdlg .nxl2{margin:0 0 8px;font:700 13px var(--ui,sans-serif)}
 .askdlg .nxc{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}.askdlg .nxc li{font:600 13px/1 var(--ui,sans-serif);padding:8px 12px;border:1px solid var(--rule,#d9d2c4);border-radius:999px;background:var(--paper,#f5f1e8)}
 .askdlg .nxc .nxo{border-style:dashed;background:none;font-weight:500;color:var(--mute,#6a635a)}

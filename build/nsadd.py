@@ -383,7 +383,7 @@ def colophon_html():
            '.colp .sb:focus-visible{outline:2px solid var(--cc);outline-offset:3px}'
            '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 12.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.05em;color:var(--cb);opacity:.3;'
            '-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
-           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.2}.cpr.b span{transform:translateX(-31%)}'
+           '.cpr span{display:inline-block;animation:cpd 220s linear infinite}.cpr.b{opacity:.2}.cpr.b span{animation-direction:reverse;animation-duration:260s}.cpr:hover span{animation-play-state:paused}@keyframes cpd{from{transform:translateX(0)}to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.cpr span{animation:none}.cpr.a span{transform:translateX(-6%)}.cpr.b span{transform:translateX(-31%)}}'
            '@media (max-width:760px){.colp .tl{grid-template-columns:minmax(0,1fr)}.colp .is.r{justify-items:start;text-align:left}.colp .ln{text-align:left}}')
     rest = COLO_LINE[len("The American Bahá’í "):]
     return (f'<!-- nsadd:twoissues --><style>{css}</style><section class="colp" aria-labelledby="nxb-h">'

@@ -3,7 +3,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 segs = json.load(open("segs.json"))
 FD = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
 for lg in ("zh", "fa"):
-    M = {}
+    M = json.load(open(f"{lg}_map.json")) if os.path.exists(f"{lg}_map.json") else {}  # keeps strings added outside segs.json
     for i in range(12):
         t = importlib.import_module(f"t{i:02d}")
         for k, v in getattr(t, lg.upper()).items():
