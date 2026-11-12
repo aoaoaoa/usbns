@@ -32,17 +32,36 @@ _MARK = ('<svg class="cm" width="22" height="22" viewBox="0 0 48 48" aria-hidden
          '<stop stop-color="#73E4C4"/><stop offset=".47" stop-color="#357686"/><stop offset="1" stop-color="#255875"/></linearGradient></defs>'
          '<path fill="url(#colo-g)" d="M22.0121 12.0305L23.9836 8.64366L25.9552 12.0305L27.4999 14.6878L30.3894 13.6493L34.0717 12.3258L33.4077 16.1878L32.8894 19.2183L35.7688 20.2839L39.4375 21.6414L36.4531 24.1731L34.1089 26.1584L35.6333 28.8292L37.5744 32.233L33.6618 32.25L30.5927 32.2636L30.0473 35.2907L29.3529 39.1459L26.3447 36.6414L23.9836 34.6731L21.6225 36.6414L18.6144 39.1459L17.92 35.2907L17.3746 32.2636L14.3055 32.25L10.3929 32.233L12.334 28.8292L13.8583 26.1584L11.5142 24.1731L8.52977 21.6414L12.2018 20.2839L15.0812 19.2183L14.5629 16.1878L13.899 12.3258L17.5812 13.6493L20.4708 14.6878L22.0155 12.0305H22.0121ZM18.523 9.3733L8.32652 5.70475L10.1626 16.4016L0 20.1584L8.26894 27.1697L2.89294 36.5905L13.7262 36.638L15.6537 47.3179L23.9836 40.3778L32.3136 47.3179L34.241 36.638L45.0743 36.5905L39.6983 27.1697L47.9673 20.1584L37.8047 16.4016L39.6408 5.70475L29.4443 9.3733L23.9803 0L18.523 9.3767V9.3733Z"/></svg>')
 
-def footer_html(home="./"):
-    """home: link target for the wordmark (the newsstand)."""
+COLO_REST = "is the national magazine of the U.S. Bahá’í community, telling stories from neighborhoods across the country where people are learning, in practice, how to build communities that bring everyone together."
+def colophon_bits(issue_href):
+    """The colophon in the footer: the line under the wordmark, one line for this issue and the next, and one slow row of this issue's places."""
+    import html as _h, stories_base as _sb
+    n = list(_sb.M["places"]); t = " · ".join(_h.escape(x) for x in n)
+    line = f'<p class="fl"><b>The American Bahá’í</b> {COLO_REST}</p>'
+    strip = (f'<p class="strip"><span><b>This issue</b><a href="{issue_href}">The Arts</a></span>'
+             '<span><b>Coming next</b>Education · <a href="#" data-submit="next">Send a story</a></span></p>')
+    places = f'<p class="cpr" aria-label="Places named in this issue"><span>{t} · {t} · </span></p>'
+    return line + strip, places
+COLO_CSS = (".colo .fl{margin:0 auto;max-width:640px;font:400 clamp(15px,1.5vw,16.5px)/1.6 \"Bricolage Grotesque\",var(--ui),sans-serif;color:#fbf7ef;text-wrap:pretty}.colo .fl b{color:#f2cfc6;font-weight:700}"
+            ".colo .strip{margin:2px 0 4px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 28px;font:15px \"Bricolage Grotesque\",var(--ui),sans-serif;color:#ddd3c4}"
+            ".colo .strip b{font:700 11px \"Bricolage Grotesque\",var(--ui),sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#f2cfc6;margin-right:8px}"
+            ".colo .strip a{color:#fbf7ef;text-decoration:underline;text-decoration-color:#f2cfc6;text-underline-offset:4px}.colo .strip a:hover{color:#f2cfc6}"
+            ".colo .cpr{margin:0;overflow:hidden;white-space:nowrap;font:500 12.5px \"Barlow Condensed\",\"Arial Narrow\",sans-serif;letter-spacing:.05em;color:#f2cfc6;opacity:.3;padding:0 0 calc(16px + env(safe-area-inset-bottom,0px));"
+            "-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}"
+            ".colo .cpr span{display:inline-block;animation:cpd 240s linear infinite}.colo .cpr:hover span{animation-play-state:paused}"
+            "@keyframes cpd{from{transform:translateX(0)}to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.colo .cpr span{animation:none;transform:translateX(-6%)}}")
+def footer_html(home="./", issue=None):
+    """home: link target for the wordmark (the newsstand). issue: when given, the colophon joins the footer, linking to this issue."""
+    line, places = colophon_bits(issue) if issue else ("", "")
     nav = "".join(f'<li><a href="{h}">{t}</a></li>' for t, h in LINKS)
     fol = "".join(f'<a href="{h}" rel="noopener" aria-label="{t}" title="{t}">{_icon(i)}</a>' for t, h, i in FOLLOW)
     return (f'<footer class="colo"><div class="ci">'
             f'<a class="cw" href="{home}">{_MARK}<span><small>The</small> American Bahá’í</span></a>'
-            '<div class="cr" aria-hidden="true"></div>'
+            '<div class="cr" aria-hidden="true"></div>' + line +
             '<div class="c3">' + ''.join(f'<div><span>{l}</span><a href="{h}"{x}>{t}</a></div>' for l, t, h, x in ASKS) + '</div>'
             f'<nav aria-label="Footer"><ul>{nav}</ul></nav>'
             f'<div class="cs"><span>Follow us</span><span class="ic">{fol}</span></div>'
-            f'<p class="cp">{PUBLISHER}</p></div></footer>' + ask_dialogs())
+            f'<p class="cp">{PUBLISHER}</p></div>' + places + '</footer>' + (f'<style>{COLO_CSS}</style>' if issue else '') + ask_dialogs())
 
 FOOTER_CSS = """
 /* navy and blush */

@@ -419,7 +419,7 @@ def add_sections(h, pre, FORM):
     h = h.replace('</body>', player + SW_JS + '</body>', 1)
     # Coming next: Education, below In this issue
     i = h.index('<!-- /nsadd:listen -->'); j = h.index('</div></section>', i) + len('</div></section>')
-    h = h[:j] + colophon_html() + h[j:]  # Two issues: the colophon and the next issue in one band, in the next-issue position
+    # the colophon and the next issue now live in the footer (footer_html(..., issue=...)); nothing is inserted here
     # Browse by theme: off for now
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '<!-- nsadd:themes --><!-- /nsadd:themes -->' + h[j:]
