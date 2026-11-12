@@ -370,11 +370,11 @@ def colophon_html():
         t = " · ".join(_h.escape(x) for x in names) + " · "
         lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
         return f'<div class="cpr{" rev" if rev else ""}"{lab}><div class="cpt"><span>{t}</span><span aria-hidden="true">{t}</span></div></div>'
-    css = ('.colp{border-block:1px solid var(--rule);padding-block:44px;display:grid;gap:28px;overflow:hidden}'
-           '.colp .wrap{max-width:760px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(18px,2vw,21px);line-height:1.6;color:var(--ink);text-wrap:pretty}'
+    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:46px;display:grid;gap:28px;overflow:hidden}'
+           '.colp .wrap{max-width:760px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(18px,2vw,21px);line-height:1.6;color:var(--cc);text-wrap:pretty}'
            '.cpr{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
-           '.cpt{display:flex;width:max-content;animation:cpd 200s linear infinite;font:500 13px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);opacity:.6;white-space:nowrap}'
-           '.cpt span{padding-right:.4em}.cpr.rev .cpt{animation-direction:reverse;animation-duration:240s}.cpr:hover .cpt{animation-play-state:paused}'
+           '.cpt{display:flex;width:max-content;animation:cpd 200s linear infinite;font:500 13px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--cb);opacity:.55;white-space:nowrap}'
+           '.cpt span{padding-right:.4em}.cpr.rev .cpt{animation-direction:reverse;animation-duration:240s;opacity:.35}.cpr:hover .cpt{animation-play-state:paused}'
            '@keyframes cpd{to{transform:translateX(-50%)}}@media (prefers-reduced-motion:reduce){.cpt{animation:none}.cpr{overflow-x:auto}}')
     return (f'<!-- nsadd:colophon --><style>{css}</style><section class="colp" aria-label="About the magazine">'
             + rib(n[:k], False, True) + f'<div class="wrap"><p>{COLO_LINE}</p></div>' + rib(n[k:][::-1], True, False) + '</section><!-- /nsadd:colophon -->')
