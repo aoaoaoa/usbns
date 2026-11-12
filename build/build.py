@@ -2147,10 +2147,24 @@ TEST_CSS = ('<style>/* test: blind deboss */.cover .mast .the{font:italic 400 cl
     '.cover .mast .sub{text-shadow:none}'
     '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cover h1{color:#2b271f;text-shadow:0 -1.5px 1px rgba(0,0,0,.9),0 1.5px 0 rgba(255,255,255,.2)}:root:not([data-theme="light"]) .cover h1 .fl{filter:none}:root:not([data-theme="light"]) .cover .mast .the{text-shadow:none}}'
     ':root[data-theme="dark"] .cover h1{color:#2b271f;text-shadow:0 -1.5px 1px rgba(0,0,0,.9),0 1.5px 0 rgba(255,255,255,.2)}:root[data-theme="dark"] .cover h1 .fl{filter:none}:root[data-theme="dark"] .cover .mast .the{text-shadow:none}</style>')
+# /test/: one moving thing per screen. Background drift only while the cover shows; headline shapes and blooms settle once; the quilt plays one loop per view; the survey pill waits for the toast and the player.
+TEST_MOTION = ('<style>.terraces i{animation-play-state:paused}html.covin .terraces i{animation-play-state:running}'
+    '.torn i,.blooms i{animation-duration:5s!important;animation-delay:0s!important;animation-iteration-count:1!important;animation-fill-mode:both;animation-timing-function:cubic-bezier(.2,.8,.2,1)!important;animation-play-state:paused}'
+    '.torn.mvon i,.blooms.mvon i{animation-play-state:running}</style>')
+TEST_MOTION_JS = r"""<script>(function(){if(!('IntersectionObserver' in window))return;var H=document.documentElement,c=document.querySelector('.cover'),R=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(c)new IntersectionObserver(function(e){H.classList.toggle('covin',e[0].isIntersecting)}).observe(c);
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('mvon');io.unobserve(e.target)}})},{threshold:.2});
+[].forEach.call(document.querySelectorAll('.torn,.blooms'),function(x){io.observe(x)});
+[].forEach.call(document.querySelectorAll('img[src*="quilt-anim"]'),function(q){var A=q.getAttribute('src'),S=A.replace('quilt-anim','quilt-still'),n=0,t,on=false;q.src=S;if(R)return;
+  q.addEventListener('load',function(){if(q.src.indexOf('quilt-anim')>-1){clearTimeout(t);t=setTimeout(function(){q.src=S},3000)}});
+  new IntersectionObserver(function(e){var v=e[0].isIntersecting;if(v&&!on){clearTimeout(t);q.src=A+'?r='+(++n)}on=v},{threshold:.5}).observe(q)});
+})();</script>"""
 def build_test():
     h = standalone(build_tab()).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/')
-    h = h.replace("Bahá’í</h1>", '<span class="fl">Bahá’í</span></h1>', 1).replace('</head>', TEST_CSS + '<meta name="robots" content="noindex"></head>', 1)
-    return h
+    h = h.replace("Bahá’í</h1>", '<span class="fl">Bahá’í</span></h1>', 1).replace('</head>', TEST_CSS + TEST_MOTION + '<meta name="robots" content="noindex"></head>', 1)
+    k = "place();if(show){"; assert k in h
+    h = h.replace(k, "place();if(show&&!document.querySelector('.cont.on')&&!(dock&&!dock.hidden&&dock.classList.contains('on'))){", 1)
+    return h.replace('</body>', TEST_MOTION_JS + '</body>', 1)
 os.makedirs(os.path.join(SITE, "test"), exist_ok=True)
 with open(os.path.join(SITE, "test", "index.html"), "w") as f: f.write(build_test())
 if os.path.exists(os.path.join(SITE, "alt", "index.html")): os.remove(os.path.join(SITE, "alt", "index.html"))
