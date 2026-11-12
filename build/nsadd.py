@@ -364,21 +364,35 @@ def next_html():
 
 COLO_LINE = "The American Bahá’í is the national magazine of the U.S. Bahá’í community, telling stories from neighborhoods across the country where people are learning, in practice, how to build communities that bring everyone together."
 def colophon_html():
-    # two still rows of the places named in this issue, the line between them, the name in blush
+    # Two issues: this issue at left, the colophon between, the next issue at right; two still rows of this issue's places above and below
     import stories_base as _sb, html as _h
     n = list(_sb.M["places"]); k = len(n) // 2
     def row(names, cls, label):
         t = " · ".join(_h.escape(x) for x in names)
         lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
         return f'<p class="cpr {cls}"{lab}><span>{t} · {t}</span></p>'
-    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:28px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow:hidden}'
-           '.colp .wrap{max-width:640px;text-align:center}.colp .ln{margin:0 auto;font-family:"Bricolage Grotesque",var(--ui),system-ui,sans-serif;font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}.colp .ln b{color:var(--cb);font-weight:700}'
+    ui = '"Bricolage Grotesque",var(--ui),system-ui,sans-serif'
+    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--c2:#ddd3c4;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:28px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;overflow:hidden}'
+           '.colp .tl{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr) minmax(0,230px);gap:24px 40px;align-items:center}'
+           '.colp .is{display:grid;gap:6px;justify-items:start}.colp .is.r{justify-items:end;text-align:right}'
+           f'.colp .k{{margin:0;font:700 11px {ui};letter-spacing:.16em;text-transform:uppercase;color:var(--cb)}}'
+           '.colp .nt{margin:0;font:700 clamp(22px,2.2vw,26px)/1 var(--text);color:var(--cc)}.colp .is:first-child .nt{color:var(--c2)}'
+           f'.colp .nd{{margin:0;font:13px {ui};color:var(--c2)}}'
+           f'.colp .ln{{margin:0;text-align:center;font-family:{ui};font-size:clamp(15px,1.5vw,16.5px);line-height:1.6;color:var(--cc);text-wrap:pretty}}.colp .ln b{{color:var(--cb);font-weight:700}}'
+           '.colp .sb{margin-top:6px;display:inline-flex;gap:8px;align-items:center;font:700 16px "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:var(--cb);color:var(--cn);padding:10px 18px;border-radius:3px;white-space:nowrap}'
+           '.colp .sb:focus-visible{outline:2px solid var(--cc);outline-offset:3px}'
            '.cpr{margin:0;min-width:0;overflow:hidden;white-space:nowrap;font:500 13.5px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.04em;color:var(--cb);opacity:.55;'
            '-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
-           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.35}.cpr.b span{transform:translateX(-31%)}')
+           '.cpr span{display:inline-block}.cpr.a span{transform:translateX(-6%)}.cpr.b{opacity:.35}.cpr.b span{transform:translateX(-31%)}'
+           '@media (max-width:760px){.colp .tl{grid-template-columns:minmax(0,1fr)}.colp .is.r{justify-items:start;text-align:left}.colp .ln{text-align:left}}')
     rest = COLO_LINE[len("The American Bahá’í "):]
-    return (f'<!-- nsadd:colophon --><style>{css}</style><section class="colp" aria-label="About the magazine">'
-            + row(n[:k], "a", True) + f'<div class="wrap"><p class="ln"><b>The American Bahá’í</b> {rest}</p></div>' + row(n[k:][::-1], "b", False) + '</section><!-- /nsadd:colophon -->')
+    return (f'<!-- nsadd:twoissues --><style>{css}</style><section class="colp" aria-labelledby="nxb-h">'
+            + row(n[:k], "a", True)
+            + '<div class="wrap tl"><div class="is"><p class="k">This issue</p><p class="nt">The Arts</p><p class="nd">October / November /<br>December 2026</p></div>'
+            + f'<p class="ln"><b>The American Bahá’í</b> {rest}</p>'
+            + '<div class="is r"><p class="k">Coming next</p><p class="nt" id="nxb-h">Education</p><p class="nd">Winter 2027<br>In homes February 2027</p>'
+            + '<a class="sb" href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div>'
+            + row(n[k:][::-1], "b", False) + '</section><!-- /nsadd:twoissues -->')
 
 def add_sections(h, pre, FORM):
     h = _clean(h)
@@ -405,10 +419,7 @@ def add_sections(h, pre, FORM):
     h = h.replace('</body>', player + SW_JS + '</body>', 1)
     # Coming next: Education, below In this issue
     i = h.index('<!-- /nsadd:listen -->'); j = h.index('</div></section>', i) + len('</div></section>')
-    h = h[:j] + next_html() + h[j:]
-    # Colophon: what the magazine is, between two slow currents of the places named in this issue
-    i = h.index('<section id="archive"')
-    h = h[:i] + colophon_html() + '\n' + h[i:]
+    h = h[:j] + colophon_html() + h[j:]  # Two issues: the colophon and the next issue in one band, in the next-issue position
     # Browse by theme: off for now
     i = h.index('<section id="archive"'); j = h.index('</div></section>', i) + len('</div></section>')
     h = h[:j] + '<!-- nsadd:themes --><!-- /nsadd:themes -->' + h[j:]
