@@ -72,7 +72,7 @@ def translate(h, depth):
     up = "../" * depth
     h = (h.replace('<html lang="en"', '<html lang="es"').replace('src="img/', f'src="{up}img/').replace('href="img/', f'href="{up}img/')
           .replace('url(img/', f'url({up}img/').replace('href="favicon.svg"', f'href="{up}favicon.svg"').replace('data-src="audio/', f'data-src="{up}audio/'))
-    h = h.replace('<span class="lang"><a href="es/" hreflang="es" lang="es">Español</a></span>', '<span class="lang"><a href="../" hreflang="en" lang="en">English</a></span>')
+    h = h.replace('<span class="lang" hidden><a href="es/" hreflang="es" lang="es">Español</a></span>', '<span class="lang"><a href="../" hreflang="en" lang="en">English</a></span>')
     h = h.replace("Edición seleccionada</span>", "Edición seleccionada</span>")
     out = []
     for part in re.split(r'(<script\b.*?</script>|<style\b.*?</style>|<[^>]+>)', h, flags=re.S | re.I):
