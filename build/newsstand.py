@@ -186,8 +186,8 @@ def _addog(h):
 def _arch(h):
     h = re.sub(r'<p class="more"><a href="#">Browse every issue →</a></p>\n?', '', h)
     h = re.sub(r'<style id="archimg">.*?</style>\n?', '', h, flags=re.S)
-    for k in ('v57n4', 'v57n2', 'v57n1', 'v56n1'):
-        h = re.sub(r'src="\.\./img/cover-' + k + r'\.jpg" alt="" width="640" height="\d+"', 'src="../img/art-' + k + '.jpg" alt="" width="640" height="834"', h)
+    for k, hh in (('v57n4', 823), ('v57n2', 836), ('v57n1', 821), ('v56n1', 827)):
+        h = re.sub(r'src="\.\./img/(?:art|cover)-' + k + r'\.jpg" alt="" width="640" height="\d+"', 'src="../img/cover-' + k + '.jpg" alt="" width="640" height="' + str(hh) + '"', h)
     if '.tile .cv.ph{' not in h:
         h = h.replace('</head>', '<style>.tile .cv.ph{padding:0!important;background:var(--card);overflow:hidden}.tile .cv.ph img{display:block;width:100%;height:100%;object-fit:cover}</style>\n</head>', 1)
     return h
