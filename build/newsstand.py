@@ -182,6 +182,16 @@ import re as _re
 def _addog(h):
     h=_re.sub(r'<meta name="description"[^>]*>\n?|<meta (?:property="og:[^"]*"|name="twitter:card")[^>]*>\n?','',h)
     return h.replace('</title>','</title>\n'+OG.rstrip('\n'),1)
+
+def _arch(h):
+    h = re.sub(r'<p class="more"><a href="#">Browse every issue →</a></p>\n?', '', h)
+    h = re.sub(r'<style id="archimg">.*?</style>\n?', '', h, flags=re.S)
+    for k in ('v57n4', 'v57n2', 'v57n1', 'v56n1'):
+        h = re.sub(r'src="\.\./img/cover-' + k + r'\.jpg" alt="" width="640" height="\d+"', 'src="../img/art-' + k + '.jpg" alt="" width="640" height="834"', h)
+    if '.tile .cv.ph{' not in h:
+        h = h.replace('</head>', '<style>.tile .cv.ph{padding:0!important;background:var(--card);overflow:hidden}.tile .cv.ph img{display:block;width:100%;height:100%;object-fit:cover}</style>\n</head>', 1)
+    return h
+_main = _arch(_main)
 open(P, 'w').write(curl(_addog(_main)))
 open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(curl(alt))
 print('ok')
