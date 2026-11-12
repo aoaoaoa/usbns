@@ -57,7 +57,7 @@ ws.forEach(function(w){w.addEventListener('click',function(){ws.forEach(function
 [].forEach.call(df.querySelectorAll('.pn'),function(p){p.hidden=p.dataset.w!==w.dataset.w})})});
 REC(Dd);""")
 
-idea("E", "report-to-page", "From report to page", "The printed call, word for word, as step one of three: you send, we write back, it may become a story.",
+idea("E", "report-to-page", "From report to page", "The printed call, word for word, as step one of three: you send, our editors read every item, and we contact you before anything is published.",
      ["Everyone"], depth(unhide(b.Esec)))
 
 # ---------------------------------------------------------------- new proposals
@@ -65,7 +65,7 @@ idea("F", "postcard", "A postcard home", "The cover painting on the front; your 
      ["Everyone"], f'''<section class="ap" id="F">{head("Send us a postcard.", "A few lines from where you live, the way you’d write home.")}
 <div class="pc"><div class="pc-in">
 <div class="pc-f"><img src="{I}cover-paint-v2.jpg" alt="The cover painting of this issue" loading="lazy"><span class="pc-g">Greetings from <b class="pc-t">your town</b></span></div>
-<form class="pc-b" novalidate><textarea aria-label="Your message" placeholder="What happened, and who was there…"></textarea>
+<form class="pc-b" novalidate><textarea aria-label="Your message" placeholder="This week in our neighborhood…"></textarea>
 <div class="pc-r"><span class="pc-s"><img src="{I}motif/dot03.webp" alt=""></span><span class="pc-pm"><i class="pm-t">YOUR TOWN</i><i>{TODAY.strftime("%b %-d %Y").upper()}</i></span>
 <p class="pc-a">The American Bahá’í<br>{ADDR}</p>
 <label>From<input class="pc-fr" placeholder="City or neighborhood, state"></label><label>Your name<input autocomplete="name"></label><label>Email or phone<input autocomplete="email"></label></div>
@@ -90,7 +90,7 @@ F.querySelector('.pc-b').addEventListener('submit',function(e){e.preventDefault(
 
 idea("G", "one-sentence", "One sentence", "The story as one sentence with blanks. Fill four gaps and it’s a report.",
      ["Non-writers", "Young people"], f'''<section class="ap" id="G">{head("Your story in one sentence.", "Fill in the blanks. We’ll write back for the rest.")}
-<form class="sn" novalidate><p class="sn-p">In <input size="14" placeholder="Westlake, Indianapolis" aria-label="Where">, <input size="16" placeholder="neighbors and their children" aria-label="Who"> came together to <input size="22" placeholder="wash cars for camp money" aria-label="What happened">. What stayed with us: <input size="26" placeholder="how many hands it took" aria-label="What you learned">.</p>
+<form class="sn" novalidate><p class="sn-p">In <input size="14" placeholder="Westlake, Indianapolis" aria-label="Where">, <input size="16" placeholder="neighbors and their children" aria-label="The people"> came together to <input size="22" placeholder="wash cars for camp money" aria-label="What you did together">. What stayed with us: <input size="26" placeholder="how many hands it took" aria-label="What you learned">.</p>
 {reach()}{send()}</form>{DONE}{PROM}</section>''',
      css='''.sn{max-width:820px;margin:0 auto;display:grid;gap:22px;text-align:left}.sn-p{font:400 clamp(22px,2.8vw,32px)/1.9 var(--text);margin:0 0 6px;text-align:center;text-wrap:pretty}
 .sn-p input{font:inherit;font-style:italic;width:auto;max-width:100%;background:transparent;border:0;border-bottom:2px solid var(--gold);border-radius:0;padding:0 4px;color:var(--ink);text-align:center}
@@ -99,7 +99,7 @@ idea("G", "one-sentence", "One sentence", "The story as one sentence with blanks
 idea("H", "field-notes", "Field notes", "A dated notebook page. The print call asks for field notes; this gives them a place.",
      ["Everyone"], f'''<section class="ap" id="H">{head("Send us your field notes.", "How community building unfolds where you live, and what is being learned along the way.")}
 <form class="nb" novalidate><div class="nb-h"><span>{TODAY.strftime("%B %-d, %Y")}</span><input placeholder="Place" aria-label="Place"></div>
-<textarea rows="9" aria-label="Notes" placeholder="What happened today…"></textarea><div class="nb-m"><label>What we’re learning<textarea rows="3"></textarea></label></div></form>
+<textarea rows="9" aria-label="Notes" placeholder="Today in our neighborhood…"></textarea><div class="nb-m"><label>What we’re learning<textarea rows="3"></textarea></label></div></form>
 <div class="nb-f">{reach()}{send("Send the page")}</div>{DONE}{PROM}</section>''',
      css='''.nb{max-width:720px;margin:0 auto 22px;background:#fffdf6;color:#1d1a16;border-radius:4px;box-shadow:0 12px 30px rgba(29,26,22,.14);padding:22px 26px 22px 70px;text-align:left;position:relative;
 background-image:linear-gradient(90deg,transparent 52px,#e3a69a 52px,#e3a69a 54px,transparent 54px),repeating-linear-gradient(#fffdf6 0 31px,#cfdbe6 31px 32px)}
@@ -122,7 +122,7 @@ idea("J", "next-byline", "The next byline", "The issue’s bylines, then yours: 
      ["Writers"], f'''<section class="ap" id="J">{head("The next byline could be yours.", "Every story here was written by someone close to it.")}
 <ul class="bys">{"".join(f'<li style="--c:{T[s]}"><span>{k}</span>{n}</li>' for k, n, s in by)}</ul>
 <div class="jb"><form class="sf" novalidate><label>Section<select class="j-k">{"".join(f"<option>{k}</option>" for k in kick)}</select></label><label>Your headline<input class="j-t" placeholder="Neighbors build a garden for the children of Elm Street"></label>
-<label>Where<input class="j-p" placeholder="City or neighborhood, state"></label><label>What happened<textarea rows="4"></textarea></label>{reach()}{send()}</form>
+<label>Where<input class="j-p" placeholder="City or neighborhood, state"></label><label>Your story<textarea rows="4"></textarea></label>{reach()}{send()}</form>
 <div class="jp" aria-live="polite"><p class="jp-h">Contents · next issue</p><div class="jp-e"><span class="pg">?</span><span><span class="k j-ko">Community</span><span class="t j-to">Your headline</span><span class="by j-bo">By you</span></span></div></div></div>{DONE}{PROM}</section>''',
      css='''.bys{list-style:none;margin:0 auto 34px;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font:15px var(--text)}.bys li{border-left:4px solid var(--c);padding-left:8px;text-align:left}.bys span{display:block;font:700 11px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
 select{font:16px var(--text);padding:10px;border:1px solid var(--rule);border-radius:4px;background:var(--card);color:var(--ink)}
@@ -134,8 +134,8 @@ select{font:16px var(--text);padding:10px;border:1px solid var(--rule);border-ra
 var n=J.querySelector('input[autocomplete=name]').value,p=J.querySelector('.j-p').value;J.querySelector('.j-bo').textContent='By '+(n||'you')+(p?' · '+p:'')}
 J.addEventListener('input',up);J.addEventListener('change',up);''')
 
-idea("K", "coming-up", "Coming up", "Tell us before it happens. Captures leads while there is still time to ask for photographs.",
-     ["Leads"], f'''<section class="ap" id="K">{head("Something coming up?", "Tell us before it happens. We may ask for a photograph or a few lines afterward.")}
+idea("K", "coming-up", "Coming up", "Tell us ahead of time. Captures leads while there is still time to plan photographs.",
+     ["Leads"], f'''<section class="ap" id="K">{head("Something coming up?", "Tell us ahead of time. We may ask for a photograph or a few lines afterward.")}
 <form class="sf" novalidate><div class="two"><label>When<input type="date" min="{TODAY.isoformat()}"></label><label>Where<input placeholder="City or neighborhood, state"></label></div>
 <label>What’s planned<textarea rows="3" placeholder="A devotional gathering, a children’s class picnic, a neighborhood conversation…"></textarea></label>
 <fieldset class="ck"><legend>Afterward, you could</legend><label><input type="checkbox"> Send a few photographs</label><label><input type="checkbox"> Write a few lines</label><label><input type="checkbox"> Talk with an editor by phone</label></fieldset>
@@ -145,7 +145,7 @@ idea("K", "coming-up", "Coming up", "Tell us before it happens. Captures leads w
 idea("L", "photo-first", "Photo first", "Start with a picture. The form grows around it: where, who took it, and that everyone pictured agreed.",
      ["Non-writers", "Any language"], f'''<section class="ap" id="L">{head("Start with a photograph.", "A picture from your neighborhood, and a line about it.")}
 <form class="sf lf" novalidate><label class="dz"><input type="file" accept="image/jpeg,image/png" class="lf-i"><span class="dz-t"><b>Choose a photograph</b><small>JPEG or PNG</small></span><img alt="" hidden></label>
-<div class="lf-m" hidden><label>What’s happening<input placeholder="Where, and what we’re seeing"></label><label>Who took it<input placeholder="Photographer’s name"></label>
+<div class="lf-m" hidden><label>About the photograph<input placeholder="Where it was taken, and what we’re seeing"></label><label>Who took it<input placeholder="Photographer’s name"></label>
 <label class="cb"><input type="checkbox"> Everyone pictured agreed to share it</label>{reach()}{send("Send it")}</div></form>{DONE}{PROM}</section>''',
      css='''.dz{display:grid;place-items:center;min-height:300px;border:2px dashed var(--rule);border-radius:6px;background:var(--card);cursor:pointer;position:relative;overflow:hidden}.dz input{position:absolute;opacity:0;inset:0;cursor:pointer}
 .dz-t{display:grid;gap:4px;text-align:center}.dz-t b{font:600 20px var(--text);color:var(--ink)}.dz-t small{font:13px var(--ui);color:var(--mute)}.dz img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
@@ -177,7 +177,7 @@ idea("O", "young-voices", "Young voices", "For children and junior youth, with a
 <div>{head("What did you make? What did you see?", "Show us, with a grown-up’s help.", "Young voices")}
 <div class="yb" role="group" aria-label="How"><button type="button" data-w="d" aria-pressed="false"><span>✎</span>Draw it</button><button type="button" data-w="s" aria-pressed="false"><span>●</span>Say it</button><button type="button" data-w="w" aria-pressed="false"><span>¶</span>Write it</button></div>
 <form class="sf" novalidate hidden><div class="pn" data-w="d" hidden><label>Your drawing<input type="file" accept="image/*"></label></div>
-<div class="pn" data-w="s" hidden><div class="rec"><button type="button" class="rb"><i></i><span>Start recording</span></button><span class="rt">Tell us what happened.</span><audio controls hidden></audio></div></div>
+<div class="pn" data-w="s" hidden><div class="rec"><button type="button" class="rb"><i></i><span>Start recording</span></button><span class="rt">Tell it in your own words.</span><audio controls hidden></audio></div></div>
 <div class="pn" data-w="w" hidden><label>Your story<textarea rows="4"></textarea></label></div>
 <div class="two"><label>Your first name<input></label><label>Your age<input inputmode="numeric"></label></div>
 <div class="two"><label>A grown-up’s name<input></label><label>A grown-up’s email or phone<input></label></div>{send("Send it")}</form>{DONE}</div></div>{PROM}</section>''',
@@ -218,7 +218,7 @@ echo = [("gregory", "gregory-group-hd.jpg", "Race amity", "Is a place near you c
         ("twoartists", "ta-portrait.jpg", "In conversation", "Do you make art that grows from your faith?"),
         ("endeavor", "az-ace.jpg", "Across America", "Did “A Common Endeavor” start a conversation where you live?"),
         ("abs", "abs-stage-duo.jpg", "Scholarship", "Is your study group bringing its field to bear on your neighborhood?")]
-idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in its own color: did something like this happen where you are?",
+idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in its own color: is something like this unfolding where you are?",
      ["Everyone"], f'''<section class="ap" id="R">{head("Something like this where you are?", "The invitation moves into the stories: each one ends by asking about yours. Here are all five.")}
 <div class="ec">{"".join(f'<form class="ecf" novalidate style="--c:{T[s]}"><img src="{I}{im}" alt="" loading="lazy"><div><p class="k">{k}</p><p class="q">{q}</p><div class="eci"><input placeholder="Tell us in a line, and where" aria-label="{q}"><button class="sbtn" type="submit">Send</button></div><p class="ok" hidden>Thank you. We’ll write back.</p></div></form>' for s, im, k, q in echo)}</div>{PROM}</section>''',
      css='''.ec{display:grid;gap:14px;max-width:820px;margin:0 auto;text-align:left}.ecf{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--c);padding:14px}

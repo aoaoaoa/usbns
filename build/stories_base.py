@@ -26,7 +26,7 @@ DONE = '<div class="done" hidden><b>Thank you.</b> Story submissions open soon. 
 
 def form(extra=""):
     return ('<form class="sf" novalidate>' + extra +
-            '<label>What happened<textarea rows="4" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>'
+            '<label>Your story<textarea rows="4" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>'
             '<div class="two"><label>Your name<input autocomplete="name"></label><label>Email or phone<input autocomplete="email"></label></div>'
             '<button class="sbtn" type="submit">Send your story <span aria-hidden="true">→</span></button></form>' + DONE)
 
@@ -75,9 +75,9 @@ ICO = {"pen": '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>', "mic
        "globe": '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17"/>'}
 tiles = "".join(f'<button type="button" class="wy" data-w="{k}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true">{ICO[ic]}</svg>{t}</button>' for k, t, ic in W)
 pan = {
- "w": '<label>What happened, and where<textarea rows="5" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>',
- "v": '<div class="rec"><button type="button" class="rb"><i></i><span>Start recording</span></button><span class="rt">Up to 3 minutes. Say where it happened and who was there.</span><audio controls hidden></audio></div>',
- "p": '<label>Photographs<input type="file" accept="image/jpeg,image/png" multiple></label><label>Who took them<input placeholder="Photographer’s name"></label><label>A line about what’s happening<input placeholder="Where, and what we’re seeing"></label>',
+ "w": '<label>Your story, and where<textarea rows="5" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>',
+ "v": '<div class="rec"><button type="button" class="rb"><i></i><span>Start recording</span></button><span class="rt">Up to 3 minutes, in your own words.</span><audio controls hidden></audio></div>',
+ "p": '<label>Photographs<input type="file" accept="image/jpeg,image/png" multiple></label><label>Who took them<input placeholder="Photographer’s name"></label><label>A line about the photograph<input placeholder="Where it was taken, and what we’re seeing"></label>',
  "l": '<label>Who or what should we know about?<textarea rows="3" placeholder="A person, a gathering, a project. We’ll follow up."></textarea></label><label>How to reach them, if you know<input></label>',
  "g": '<label>Language<input placeholder="Español, Tagalog, Farsi, ASL…"></label><label>Your story, in that language<textarea rows="4"></textarea></label>'}
 pans = "".join(f'<div class="pn" data-w="{k}" hidden>{v}</div>' for k, v in pan.items())
@@ -94,8 +94,8 @@ Esec = f'''<section class="ap" id="E" data-n="From report to page" hidden>
 <p class="kk">Contribute</p><h1>Every story in this issue began as a report from a community.</h1>
 <ol class="rt3">
 <li><span class="no">1</span><b>You send a few paragraphs</b><div class="nt">{PRINT}</div></li>
-<li><span class="no">2</span><b>We write back</b></li>
-<li><span class="no">3</span><b>It may become a story</b><div class="pg">{pages}</div></li></ol>
+<li><span class="no">2</span><b>Our editors read every item</b></li>
+<li><span class="no">3</span><b>We contact you before anything is published</b><div class="pg">{pages}</div></li></ol>
 <div class="ef">{form('<label>Where<input placeholder="City or neighborhood, state"></label>')}</div><p class="prom">Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p></section>'''
 
 CSS = r'''
