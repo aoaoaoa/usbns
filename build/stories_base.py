@@ -75,7 +75,7 @@ ICO = {"pen": '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>', "mic
        "globe": '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 2.6 14.4 0 17M12 3.5c-2.6 2.6-2.6 14.4 0 17"/>'}
 tiles = "".join(f'<button type="button" class="wy" data-w="{k}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true">{ICO[ic]}</svg>{t}</button>' for k, t, ic in W)
 pan = {
- "w": '<label>Your story, and where<textarea rows="5" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>',
+ "w": '<label>Tell us your story<textarea rows="5" placeholder="A few lines is plenty. Write it the way you’d tell a friend."></textarea></label>',
  "v": '<div class="rec"><button type="button" class="rb"><i></i><span>Start recording</span></button><span class="rt">Up to 3 minutes, in your own words.</span><audio controls hidden></audio></div>',
  "p": '<label>Photographs<input type="file" accept="image/jpeg,image/png" multiple></label><label>Who took them<input placeholder="Photographer’s name"></label><label>A line about the photograph<input placeholder="Where it was taken, and what we’re seeing"></label>',
  "l": '<label>Who or what should we know about?<textarea rows="3" placeholder="A person, a gathering, a project. We’ll follow up."></textarea></label><label>How to reach them, if you know<input></label>',
