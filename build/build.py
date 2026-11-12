@@ -2209,7 +2209,7 @@ def _office(name, role, phone, email):
 def _ml(e): return f'<a href="mailto:{e}">{esc(e)}</a>'
 def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}</a>'
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
-CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#media">Media inquiries</a><a href="#national">National offices</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a></nav>'
+CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#media">Media inquiries</a><a href="#national">National offices</a><a href="#submit">Submitting articles or photographs</a><a href="#feedback">Feedback</a><a href="#subs">Subscriptions</a></nav>'
     '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
     f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
     f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
@@ -2223,6 +2223,9 @@ CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The Ameri
     '<div class="v2"><a class="door" href="https://link.bahai.us/TAB_submit"><span class="dk">Online</span><b>Submit a story or photographs</b><span class="ds">Log in with your Bahá’í Online Services account (BOSA).</span><span class="go">Submit <span aria-hidden="true">→</span></span></a>'
     '<a class="door" href="mailto:TAB@usbnc.org"><span class="dk">By email</span><b>Write to the editors</b><span class="ds">Questions, leads, or a story idea in a few lines.</span><span class="go">TAB@usbnc.org <span aria-hidden="true">→</span></span></a></div>'
     '<ul class="fx"><li>Up to 800 words</li><li>Photos in TIFF or JPEG, people identified</li><li>We may edit for length and style</li></ul>'
+    '<h2 id="feedback">Feedback</h2><p>Tell us about your visit: what worked, what didn’t, and what you’d like to see.</p>'
+    f'<div class="v2"><a class="door" href="mailto:research@bahai.us"><span class="dk">By email</span><b>Share your experience of the site</b><span class="ds">A few lines is plenty.</span><span class="go">research@bahai.us <span aria-hidden="true">→</span></span></a>'
+    f'<a class="door" href="{SURVEY_FORM}" target="_blank" rel="noopener"><span class="dk">5 minutes</span><b>Take the reader survey</b><span class="ds">Share your ideas to shape the magazine’s future.</span><span class="go">Take part <span aria-hidden="true">→</span></span></a></div>'
     '<h2 id="subs">Subscriptions</h2>'
     f'<section class="ct"><h3>Bahá’í Subscriber Service</h3><p class="r">Bahá’í Subscriber Service distributes the magazines and periodicals published by the National Spiritual Assembly of the Bahá’ís of the United States</p><dl><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>E-mail</dt><dd>{_ml("subscription@usbnc.org")}</dd></dl></section>'
     '<p><b>Subscription Rates (in U.S. dollars) six issues per year.</b> Available by subscription to Bahá’ís outside the contiguous U.S.: Currently $36 (one year) / $60 (two years)</p>'
