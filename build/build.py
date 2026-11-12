@@ -1666,7 +1666,8 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
-{_ns["takepart_html"]("", SUB_SECTION).replace('class="tkp"', 'class="tkp edask"', 1)}
+{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1)}
+{_ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1)}
 {NEXT_LINE}
 {footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}
@@ -2247,7 +2248,7 @@ def build_page(title, h1, body):
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
             f'<style>{css}{PT_CSS}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl' in body else ""}</style>\n</head>\n<body>\n'
             + PT_HEADER +
-            f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
+            f'<main><h1 class="sh7">{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
 def _office(name, role, phone, email):
     return (f'<section class="ct"><h3>{esc(name)}</h3><p class="r">{esc(role)}</p><dl><dt>Phone (office)</dt><dd><a href="tel:+1{re.sub(r"[^0-9]", "", phone)}">{esc(phone)}</a></dd>'

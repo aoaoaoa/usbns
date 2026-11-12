@@ -250,3 +250,6 @@ FOOTER_CSS += """
 .sqi{position:relative;padding-left:22px;font-style:italic}.sqi::before{content:"“";position:absolute;left:0;top:-.15em;font:400 30px/1 "Literata",Georgia,serif;color:#b8782e;font-style:normal}
 .sqi cite{font:700 11px var(--ui,sans-serif)!important;letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--ink,#1d1a16);margin-left:6px}
 """
+
+# Design shift 7: one section heading pattern (double rule, then the heading) on pages that open with a bare heading
+FOOTER_CSS += "h1.sh7::before{content:\"\";display:block;width:80px;border-top:4px double var(--ink,#1d1a16);margin:0 0 16px}"
