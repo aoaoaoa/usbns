@@ -16,7 +16,7 @@ PV = [("visits", "Visits", "Visitors to this website are not tracked, except to 
       ("security", "Security", "Steps have been taken to secure all information collected from unauthorized access, use or disclosure."),
       ("links", "Other websites", "This website may include links to websites with different privacy policies.")]
 PRIV = ('<h1>Privacy policy</h1><p class="lede">This site collects personal information only when you give it to us, and uses it only for the purpose you gave it.</p>'
-        '<div class="gl pg">' + "".join(f"<section><h3>{h}</h3><p>{x}</p></section>" for h, x in PG) + '</div><p class="note">This summary is for convenience. The policy below governs.</p>'
+        '<div class="gl pg">' + "".join(f"<section><h3>{h}</h3><p>{x}</p></section>" for h, x in PG) + '</div>'
         '<ol class="cl">' + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in PV) + "</ol>")
 PCHG = [("Two dense paragraphs", "split into six short, labeled sections: visits, cookies, information you give us, text messages, security, other websites."),
         ("Text messages", "the SMS sentences gathered in one place, in the order a reader meets them: opting in, what is shared, how to opt out. The opt-out words are set as keys."),

@@ -2206,7 +2206,7 @@ def build_page(title, h1, body):
             f'<title>{title} · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
-            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl"' in body else ""}</style>\n</head>\n<body>\n'
+            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "mh2" in body else ""}{TERMS_CSS if 'class="gl' in body else ""}</style>\n</head>\n<body>\n'
             '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
             f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
@@ -2266,20 +2266,34 @@ _GLANCE = [("You may", ["Share, link to and display the Content", "Crop or resiz
            ("Ask first", ["Commercial use", "Any edit beyond cropping or resizing", f"Write to {_TML}"])]
 TERMS = (f'<p class="lede">Everything on this site is protected by copyright and shared under a {_CC}, on the terms below.</p>'
     '<div class="gl" aria-label="At a glance">' + "".join(f'<section><h3>{h}</h3><ul>{"".join(f"<li>{x}</li>" for x in L)}</ul></section>' for h, L in _GLANCE) + '</div>'
-    '<p class="note">This summary is for convenience. The terms below govern.</p>'
     '<h2 id="copyright">Copyright</h2>'
     f'<p>All material on this website, including but not limited to text, photographs, images, illustrations, maps, audio clips and video clips (“Content”), is protected by copyrights, trademarks and other intellectual property rights. The {NSA} (“the National Assembly”) retains full legal protection for its Content under all applicable United States and international laws, and grants use of it under the terms of the {_CC}.</p>'
     '<h2 id="terms">Terms of use</h2><p>You are welcome to access and use the Content subject to these conditions:</p><ol class="cl">'
     + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in _CLAUSES) + '</ol>'
     '<p>These conditions may be revised at any time without notice.</p>')
+# Privacy policy: consolidated (Nov 12, 2026). Same substance as the earlier two paragraphs, in six labeled sections.
+_TOLL = "1‑800‑228‑6483 (1‑800‑22UNITE)"  # non-breaking hyphens
+_STOPW = ["STOP", "QUIT", "END", "REVOKE", "OPT OUT", "CANCEL", "UNSUBSCRIBE"]
+_PG = [("Not tracked", "Visits are counted only in aggregate, never by person."), ("Only what you give us", "Personal details come only from forms you fill in."), ("Texts are your choice", "Opt in when you give your number; text STOP to end.")]
+_PV = [("visits", "Visits", "Visitors to this website are not tracked, except to produce aggregate statistical data which does not identify individual users."),
+       ("cookies", "Cookies", "Where cookies are used to provide essential functionality, they are not used to track use of the website or to store personally identifiable information."),
+       ("forms", "Information you give us", "We collect information that personally identifies you only when you provide it to us by filling in an online form. This may include your name, email address, address and telephone number. All identifiable personal information that you provide will be kept confidential and will only be used by authorized individuals to fulfill the purpose for which it was originally collected, or for a use consistent with that purpose."),
+       ("sms", "Text messages", "When you provide your mobile number, you will be given the choice to opt in to SMS communications, including messages sent from our toll-free SMS number, " + _TOLL + ". Mobile information collected, including information provided for receiving SMS messages sent via standard long-code numbers or via our toll-free number, will not be shared with third parties or affiliates for marketing or promotional purposes. Text messaging originator opt-in data and consent will not be shared with third parties."
+               '<span class="sw">To opt out at any time, text ' + " · ".join(f"<kbd>{w}</kbd>" for w in _STOPW) + "</span>"),
+       ("security", "Security", "Steps have been taken to secure all information collected from unauthorized access, use or disclosure."),
+       ("links", "Other websites", "This website may include links to websites with different privacy policies.")]
+PRIVACY_HTML = ('<p class="lede">This site collects personal information only when you give it to us, and uses it only for the purpose you gave it.</p>'
+    '<div class="gl pg">' + "".join(f"<section><h3>{h}</h3><p>{x}</p></section>" for h, x in _PG) + '</div>'
+    '<ol class="cl">' + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in _PV) + "</ol>")
 TERMS_CSS = (".lede{font:400 21px/1.5 var(--text)!important}"
     ".gl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 8px}.gl section{background:var(--card);border:1px solid var(--rule);border-top:4px solid #1b5e6b;padding:14px 16px}.gl section:nth-child(2){border-top-color:#b8782e}.gl section:nth-child(3){border-top-color:#222e4c}"
     ".gl h3{font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px}.gl ul{margin:0;padding-left:1.1em;font:15px/1.45 var(--ui)}.gl li{margin:0 0 6px}.note{font:13px var(--ui)!important;color:var(--mute)}"
     "ol.cl{list-style:none;counter-reset:c;margin:0 0 1.4em;padding:0}ol.cl li{counter-increment:c;position:relative;padding:14px 0 14px 46px;border-top:1px solid var(--rule);font:17px/1.6 var(--text);scroll-margin-top:16px}"
     "ol.cl li::before{content:counter(c);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--rule);display:grid;place-items:center;font:700 14px var(--ui);color:#b8782e}"
     "ol.cl li:target{background:color-mix(in oklab,#b8782e 10%,transparent)}ol.cl b{font-family:var(--ui);font-size:15px}"
+    ".pg p{font:15px/1.45 var(--ui)!important;margin:0!important}.gl+.cl{margin-top:26px}.sw{display:block;margin-top:10px;font:14px/2 var(--ui)}kbd{font:700 12px var(--ui);border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:2px 7px;background:var(--card)}"
     "@media (max-width:640px){.gl{grid-template-columns:1fr}}")
-for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", _prose(PRIVACY)), ("contact", "Contacts", "How can we help?", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
+for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", PRIVACY_HTML), ("contact", "Contacts", "How can we help?", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
 
