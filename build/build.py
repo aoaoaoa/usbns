@@ -764,12 +764,12 @@ def prayer_html(pr):
     return f'<blockquote class="passage prayer illum">{"".join(corner(n) for n in range(1,5))}{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
 
 # end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
-NEXT_LINE = ('<section class="nxl" aria-label="Coming next"><div class="wrap"><div class="m1"><span class="k">Coming next</span><b>The Education issue</b><span class="w">Winter 2027</span>'
+NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
     '<span class="q">“Education can, alone, cause it to reveal its treasures…” <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
 NEXT_CSS = (".nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
     ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
-def build_tab(member=False, menu="contents"):
+def build_tab(member=False, menu="contents", lite=False):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
@@ -865,7 +865,7 @@ def build_tab(member=False, menu="contents"):
         nt = "".join(f'''<li{' class="svn"' if "1052" in n["src"] else ""}>{('<img src="img/'+n["img"]+'" alt="'+esc(n.get("alt") or n["title"]+" cover")+'" loading="lazy">') if n.get("img") else ""}{('<a class="svm" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><img src="img/motif/m09.webp" alt="" loading="lazy"></a>') if "1052" in n["src"] else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
-        lead = ""
+        letter_art = lead; lead = ""
         D = [("abiding","Abiding in God's Law","32"),("huquq","Ḥuqúqu'lláh","30"),("comic",comic_rec["short"],comic_rec["pages"].split("–")[0]),("fund","Bahá'í Fund","42"),("rhythm","Rhythm of Bahá'í Life","39"),("books","Bookstore","36"),("notices","Notices","40")]
         import member_data as _md
         _sub = {"abiding": _md.ABIDING, "huquq": _md.HUQUQ, "fund": _md.FUND, "rhythm": _md.RHYTHM, "books": _md.BOOKS}
@@ -876,6 +876,13 @@ def build_tab(member=False, menu="contents"):
         head = dhead
         recs = {"huquq": HUQUQ, "comic": comic_rec, "abiding": ABIDING, "fund": FUND, "rhythm": RHYTHM, "books": BOOKS}
         rows += [("letter", "Letter", "2", "var(--mem)", L["kicker"], L["title"])] + [(s, t, p, "var(--mem)", recs[s]["kicker"] if s in recs else "Announcements", t) for s, t, p in D]
+        if lite:  # translated members editions: the six stories and the mid-year letter, without the departments
+            depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter</small></h2>' + letter_art + comic_story
+            _lr = [("letter", L["kicker"], L["title"]), ("comic", comic_rec["kicker"], "Adventures in pioneering: " + comic_rec["title"])]
+            dindex = '<h2 class="fih">The full issue</h2><ol class="fi2">' + "".join(f'<li><a href="#{s_}"><span class="kk">{esc(k_)}</span><span class="t">{esc(t_)}</span></a></li>' for s_, k_, t_ in _lr) + '</ol>'
+            dhead = "".join(f'<a href="#{a["slug"]}" style="--tint:{tints[a["slug"]]}"><span>{shorts[a["slug"]]}</span><i class="fill"></i></a>' for a in FEAT) + '<a href="#letter" class="mem more" style="--tint:var(--mem)"><span>Letter</span><i class="fill"></i></a><a href="#comic" class="mem" style="--tint:var(--mem)"><span>Comic</span><i class="fill"></i></a>'
+            head = dhead
+            rows = rows[:len(FEAT)] + [("letter", "Letter", "2", "var(--mem)", L["kicker"], L["title"]), ("comic", comic_rec["short"], comic_rec["pages"].split("–")[0], "var(--mem)", comic_rec["kicker"], comic_rec["title"])]
     import re as _re
     vol = _re.sub(r"Volume (\d+), Number (\d+)", r"Vol. \1 · No. \2", ISSUE["vol"]); ms = _re.findall(r"[A-Z][a-z]+", ISSUE["date"]); yr = _re.findall(r"\d{4}", ISSUE["date"])
     when = f'{ms[0][:3]}–{ms[-1][:3]} {yr[-1]}' if ms and yr else ISSUE["date"]
@@ -2153,6 +2160,8 @@ shutil.copy(os.path.join(HERE, "favicon.svg"), os.path.join(SITE, "favicon.svg")
 shutil.copy(os.path.join(HERE, "apple-touch-icon.png"), os.path.join(SITE, "apple-touch-icon.png"))
 for _f in ("icon-192.png", "icon-512.png", "manifest.webmanifest"): shutil.copy(os.path.join(HERE, _f), os.path.join(SITE, _f))
 os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
+# source for the translated members editions (build_intl.py): six stories and the letter
+with open(os.path.join(HERE if 'HERE' in globals() else os.path.dirname(os.path.abspath(__file__)), "out", "lite.html"), "w") as f: f.write(standalone(build_tab(member=True, lite=True)))
 with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
 # /test/: the curated edition as it stands, with trial treatments layered on (masthead: story-color stripes in "Bahá’í", gold italic "The", letterpress)
