@@ -2199,15 +2199,50 @@ def build_page(title, h1, body):
             f'<title>{title} · The American Bahá’í</title>\n<link rel="icon" type="image/svg+xml" href="../favicon.svg">\n'
             '<link rel="apple-touch-icon" sizes="180x180" href="/usbns/magazine/apple-touch-icon.png">\n'
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,400&display=swap">\n'
-            f'<style>{css}{FOOTER_CSS}</style>\n</head>\n<body>\n'
+            f'<style>{css}{FOOTER_CSS}{CONTACT_CSS if "tabm" in body else ""}</style>\n</head>\n<body>\n'
             '<header class="pt"><div><a href="/usbns/magazine/landing/"><small>The</small>American Bahá’í</a></div></header>\n'
             f'<main><h1>{h1}</h1>{body}</main>\n{footer_html("/usbns/magazine/landing/")}\n</body>\n</html>\n')
 def _prose(items): return "".join((f"<h2>{esc(t)}</h2>" if k == "h" else f"<p>{esc(t)}</p>") for k, t in items)
 def _office(name, role, phone, email):
     return (f'<section class="ct"><h3>{esc(name)}</h3><p class="r">{esc(role)}</p><dl><dt>Phone (office)</dt><dd><a href="tel:+1{re.sub(r"[^0-9]", "", phone)}">{esc(phone)}</a></dd>'
             f'<dt>E-mail</dt><dd><a href="mailto:{email}">{esc(email)}</a></dd></dl></section>')
-CONTACT = ('<h2>National and local</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
-    + _office("Bah\u00e1\u2019\u00ed Office of Public Affairs", "General Inquiries", "(202) 833-8990", "tab@usbnc.org"))
+def _ml(e): return f'<a href="mailto:{e}">{esc(e)}</a>'
+def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}</a>'
+# Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
+CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a><a href="#move">Change of address</a><a href="#national">National and local</a></nav>'
+    '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
+    f'<div><h3>Editors</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p><p><b>Nadia Mehretab</b>, {_ml("nmehretab@usbnc.org")}</p></div>'
+    f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
+    '<p class="ph">Photography by license or by permission of community members.</p>'
+    f'<div class="snd"><h3>Send items for possible publication to</h3><p>The American Bahá’í, 1233 Central St., Evanston, IL 60201, email {_ml("TAB@usbnc.org")}</p></div></section>'
+    '<h2 id="submit">Submitting articles or photographs</h2>'
+    '<p><b>Full information is on the web</b>—go to <a href="https://link.bahai.us/TAB_submit">https://link.bahai.us/TAB_submit</a> and <b>log in with your Bahá’í Online Services account</b> (BOSA).</p>'
+    '<p>Every item will be carefully considered, but we cannot guarantee publication.</p>'
+    '<p>Articles should be clear, concise and relevant to the aims of the current Plan. Limit: 800 words. <b>We may edit stories for length and style.</b> We cannot print advance articles to publicize locally sponsored events, but may be able to list them in the Calendar pages.</p>'
+    '<p>Photographs should be bright, well-composed and in focus. Please identify people when possible. <b>Electronic images</b> should be high resolution, in TIFF or JPEG format.</p>'
+    '<h2 id="subs">Subscriptions</h2>'
+    f'<section class="ct"><h3>Bahá’í Subscriber Service</h3><p class="r">Bahá’í Subscriber Service distributes the magazines and periodicals published by the National Spiritual Assembly of the Bahá’ís of the United States</p><dl><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>E-mail</dt><dd>{_ml("subscription@usbnc.org")}</dd></dl></section>'
+    '<p><b>Subscription Rates (in U.S. dollars) six issues per year.</b> Available by subscription to Bahá’ís outside the contiguous U.S.: Currently $36 (one year) / $60 (two years)</p>'
+    f'<section class="ct"><h3>Back issues</h3><p class="r">Back issues: $3 + shipping/handling available from the Bahá’í Distribution Service:</p><dl><dt>Address</dt><dd>1233 Central Street • Evanston, IL 60201-1611</dd><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>Web</dt><dd><a href="https://www.bahaibookstore.com">www.bahaibookstore.com</a></dd></dl></section>'
+    '<h2 id="move">Change of address</h2>'
+    '<p>Do you have an upcoming or recent change of address? You can keep receiving The American Bahá’í with little or no interruption in any of the following ways:</p><ol class="tl">'
+    '<li><b>Update your address online!</b> You have two choices: Visit <a href="https://updatemyinfo.bahai.us">updatemyinfo.bahai.us</a> OR: Sign in to <a href="https://www.bahai.us/community">www.bahai.us/community</a> with your Bahá’í Online Services Account and navigate to Profile &gt; My Profile.</li>'
+    '<li>OR: Inform your Spiritual Assembly secretary about your new address and the date of your move; the local secretary can use eMembership or the mail to inform the national Membership Office of the change.</li>'
+    f'<li>OR: Contact the Membership Office directly at {_ml("Membership@usbnc.org")}</li></ol>'
+    f'<p>Contact the Membership Office at the Bahá’í National Center ({_ml("Membership@usbnc.org")}) if you wish to receive your own copy of The American Bahá’í in addition to the one your household already receives.</p>'
+    '<h2 id="national">National and local</h2><p>Editors, journalists, and other media professionals are encouraged to contact the Bahai US Office of Public Affairs.</p>'
+    + _office("Bahá’í Office of Public Affairs", "General Inquiries", "(202) 833-8990", "usnsa-opa@usbnc.org")
+    + f'<section class="ct"><h3>Bahá’í National Center offices</h3><dl><dt>Phone</dt><dd>{_tel("(847) 733-3400")}</dd><dt>Address</dt><dd>1233 Central St. | Evanston, IL 60201</dd></dl></section>'
+    + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>')
+CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-10px 0 28px}.toc2 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;background:var(--card)}.toc2 a:hover{border-color:var(--ink)}"
+    ".tabm{scroll-margin-top:16px;margin:0 0 8px;background:var(--card);border:1px solid var(--rule);overflow:hidden}"
+    ".tabm .wm{margin:0;background:#222e4c;color:#fff;font:400 clamp(28px,4vw,38px)/1 var(--text);letter-spacing:-.01em;padding:18px 22px}.tabm .wm small{display:block;font:italic 400 15px var(--text);color:#f2cfc6;margin:0 0 2px 2px}"
+    ".tabm .mh{display:grid;grid-template-columns:1.3fr 1fr;gap:18px 28px;padding:20px 22px 4px}.tabm h3{font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#b8782e;margin:0 0 8px}"
+    ".tabm .mh p{font:16px/1.5 var(--ui);margin:0 0 4px}.tabm .ph{font:14px/1.5 var(--ui);color:var(--mute);padding:8px 22px 0;margin:0}"
+    ".tabm .snd{margin:18px 22px 22px;padding:14px 16px;border-left:4px solid #b8782e;background:var(--paper)}.tabm .snd p{font:17px/1.5 var(--text);margin:0}"
+    "main ol.tl{margin:0 0 1.4em;padding-left:1.4em;font:18px/1.65 var(--text)}main ol.tl li{margin:0 0 .8em;padding-left:.3em}main ol.tl li::marker{color:#b8782e;font-weight:700}"
+    ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}"
+    "@media (max-width:560px){.tabm .mh{grid-template-columns:1fr}}")
 NSA = "National Spiritual Assembly of the Bahá’ís of the United States"
 TERMS = ('<h2>Copyright</h2>'
     '<p>All material on this website, including but not limited to, text, photographs, images, illustrations, maps, audio clips, and video clips (“Content”) is protected by copyrights, trademarks, and other intellectual property rights. The ' + NSA + ' retains full legal protection for its Content under all applicable United States and international laws.</p>'
