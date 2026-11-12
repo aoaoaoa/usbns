@@ -370,8 +370,8 @@ def colophon_html():
         t = " · ".join(_h.escape(x) for x in names) + " · "
         lab = ' aria-label="Places named in this issue"' if label else ' aria-hidden="true"'
         return f'<div class="cpr{" rev" if rev else ""}"{lab}><div class="cpt"><span>{t}</span><span aria-hidden="true">{t}</span></div></div>'
-    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:46px;display:grid;gap:28px;overflow:hidden}'
-           '.colp .wrap{max-width:760px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(18px,2vw,21px);line-height:1.6;color:var(--cc);text-wrap:pretty}'
+    css = ('.colp{--cn:#222e4c;--cc:#fbf7ef;--cb:#f2cfc6;background:var(--cn);color:var(--cc);padding-block:30px;display:grid;gap:16px;overflow:hidden}'
+           '.colp .wrap{max-width:700px;text-align:center}.colp p{margin:0 auto;font-family:var(--text);font-size:clamp(17px,1.8vw,19px);line-height:1.55;color:var(--cc);text-wrap:pretty}'
            '.cpr{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}'
            '.cpt{display:flex;width:max-content;animation:cpd 200s linear infinite;font:500 13px "Barlow Condensed","Arial Narrow",var(--ui),sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--cb);opacity:.55;white-space:nowrap}'
            '.cpt span{padding-right:.4em}.cpr.rev .cpt{animation-direction:reverse;animation-duration:240s;opacity:.35}.cpr:hover .cpt{animation-play-state:paused}'
