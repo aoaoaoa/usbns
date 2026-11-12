@@ -769,7 +769,7 @@ NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><di
 NEXT_CSS = (".nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:18px 0;margin:8px 0 0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
     ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
-def build_tab(member=False, menu="contents", lite=False):
+def build_tab(member=False, menu="contents", lite=False, letter=None):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
     bands = ["#1b5e6b", "#8a3a1e", "#3b3f7a", "#5c2a4e", "#2f5d3a", "#8b6a1a"]
@@ -832,7 +832,7 @@ def build_tab(member=False, menu="contents", lite=False):
     rows = [(a["slug"], a["short"], a["pages"].split("–")[0], tints[a["slug"]], a["kicker"], a["title"]) for a in FEAT]
     if member:
         from member_data import LETTER, HUQUQ, ABIDING, FUND, RHYTHM, BOOKS, NOTICES
-        L = LETTER
+        L = letter or LETTER
         lead = f'''<article class="story letter members" id="{L["slug"]}">
   <header class="shead"><p class="kicker-top">{esc(L["kicker"])}</p><h2>{esc(L["title"])}</h2><p class="dek">{esc(L["dek"])}</p></header>
   <aside class="margin"><p class="kicker">Mid-year letter</p><p class="pp">{"Print pages" if "–" in str(L["pages"]) else "Print page"} {L["pages"]}</p></aside>
@@ -1636,7 +1636,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
     <p class="the">The</p>
     <h1><svg class="stroke" viewBox="0 0 720 90" preserveAspectRatio="none" aria-hidden="true"><path d="M20 55 C 160 20, 300 80, 440 45 S 640 30, 700 50"/><path d="M40 70 C 200 40, 380 90, 560 55 S 660 50, 690 62"/></svg>American Bahá’í</h1>
     <p class="sub">{SUB}</p>
-    <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span>{'<span><a href="../">Curated edition</a></span>' if member else '<span class="lang" hidden><a href="es/" hreflang="es" lang="es">Español</a></span>'}</div>
+    <div class="line"><span>{esc(ISSUE["date"])}</span><span>{"Full edition" if member else "Curated edition"}</span>{('<span><a href="../../">Curated edition</a></span><span class="lang"><a href="../" hreflang="en" lang="en">English</a></span>' if lite else '<span><a href="../">Curated edition</a></span><span class="lang"><a href="zh/" hreflang="zh-Hans" lang="zh-Hans">中文</a> · <a href="fa/" hreflang="fa" lang="fa">فارسی</a></span>') if member else '<span class="lang" hidden><a href="es/" hreflang="es" lang="es">Español</a></span>'}</div>
   </div>
   <figure class="painting"><div class="mat"><img src="img/cover-paint-v2.jpg" alt="Oil painting by Juliet Bogan: two figures in a flowering meadow look toward terraced green farmland and ochre mountains under a pale sky"></div><figcaption><span>Cover painting by {esc(ISSUE["cover_artist"])}</span><span>Oil on canvas</span></figcaption></figure>
 </header>
@@ -2162,6 +2162,13 @@ for _f in ("icon-192.png", "icon-512.png", "manifest.webmanifest"): shutil.copy(
 os.makedirs(os.path.join(SITE, "members"), exist_ok=True)
 # source for the translated members editions (build_intl.py): six stories and the letter
 with open(os.path.join(HERE if 'HERE' in globals() else os.path.dirname(os.path.abspath(__file__)), "out", "lite.html"), "w") as f: f.write(standalone(build_tab(member=True, lite=True)))
+import importlib.util as _ilu
+for _lg in ("zh", "fa"):
+    _p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "intl", f"letter_{_lg}.py")
+    if not os.path.exists(_p): continue
+    _sp = _ilu.spec_from_file_location(f"letter_{_lg}", _p); _m = _ilu.module_from_spec(_sp); _sp.loader.exec_module(_m)
+    import member_data as _md2
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "out", f"lite_{_lg}.html"), "w") as f: f.write(standalone(build_tab(member=True, lite=True, letter=_m.letter(_md2.LETTER))))
 with open(os.path.join(SITE, "members", "index.html"), "w") as f: f.write(standalone(build_tab(member=True)).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/'))
 # the colour-index menu variant: same build, so it follows every change to the main pages
 # /test/: the curated edition as it stands, with trial treatments layered on (masthead: story-color stripes in "Bahá’í", gold italic "The", letterpress)
