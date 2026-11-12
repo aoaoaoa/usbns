@@ -177,6 +177,11 @@ import os
 os.makedirs('/home/claude/usbns/magazine/landing/alt', exist_ok=True)
 import sys; sys.path.insert(0,'/home/claude/tab')
 from typo import curl
-open(P, 'w').write(curl(_main))
+OG=('<meta name="description" content="This issue explores the many ways creative expression can contribute to the transformation of individuals and communities, from music and visual art to the creative practices woven into grassroots efforts.">\n<meta property="og:type" content="website">\n<meta property="og:site_name" content="The American Bahá’í">\n<meta property="og:title" content="The American Bahá’í: The Arts Issue">\n<meta property="og:description" content="This issue explores the many ways creative expression can contribute to the transformation of individuals and communities, from music and visual art to the creative practices woven into grassroots efforts.">\n<meta property="og:url" content="https://aoaoaoa.github.io/usbns/magazine/landing/">\n<meta property="og:image" content="https://aoaoaoa.github.io/usbns/magazine/img/share-cover.jpg">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
+import re as _re
+def _addog(h):
+    h=_re.sub(r'<meta name="description"[^>]*>\n?|<meta (?:property="og:[^"]*"|name="twitter:card")[^>]*>\n?','',h)
+    return h.replace('</title>','</title>\n'+OG.rstrip('\n'),1)
+open(P, 'w').write(curl(_addog(_main)))
 open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(curl(alt))
 print('ok')
