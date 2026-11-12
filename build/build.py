@@ -2209,7 +2209,7 @@ def _office(name, role, phone, email):
 def _ml(e): return f'<a href="mailto:{e}">{esc(e)}</a>'
 def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}</a>'
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
-CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#national">National and local</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a><a href="#move">Change of address</a></nav>'
+CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The American Bahá’í</a><a href="#national">National and local</a><a href="#submit">Submitting articles or photographs</a><a href="#subs">Subscriptions</a></nav>'
     '<section class="tabm" id="tab"><p class="wm"><small>The</small>American Bahá’í</p><div class="mh">'
     f'<div><h3>Editor</h3><p><b>Neena Rouhani</b>, {_ml("nrouhani@usbnc.org")}</p></div>'
     f'<div><h3>Designer</h3><p><b>Luthando Mazibuko</b>, {_ml("lmazibuko@usbnc.org")}</p></div></div>'
@@ -2226,12 +2226,6 @@ CONTACT = ('<nav class="toc2" aria-label="On this page"><a href="#tab">The Ameri
     f'<section class="ct"><h3>Bahá’í Subscriber Service</h3><p class="r">Bahá’í Subscriber Service distributes the magazines and periodicals published by the National Spiritual Assembly of the Bahá’ís of the United States</p><dl><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>E-mail</dt><dd>{_ml("subscription@usbnc.org")}</dd></dl></section>'
     '<p><b>Subscription Rates (in U.S. dollars) six issues per year.</b> Available by subscription to Bahá’ís outside the contiguous U.S.: Currently $36 (one year) / $60 (two years)</p>'
     f'<section class="ct"><h3>Back issues</h3><p class="r">Back issues: $3 + shipping/handling available from the Bahá’í Distribution Service:</p><dl><dt>Address</dt><dd>1233 Central Street • Evanston, IL 60201-1611</dd><dt>Phone</dt><dd>{_tel("1.800.999.9019")}</dd><dt>Web</dt><dd><a href="https://www.bahaibookstore.com">www.bahaibookstore.com</a></dd></dl></section>'
-    '<h2 id="move">Change of address</h2>'
-    '<p>Do you have an upcoming or recent change of address? You can keep receiving The American Bahá’í with little or no interruption in any of the following ways:</p><ol class="tl">'
-    '<li><b>Update your address online!</b> You have two choices: Visit <a href="https://updatemyinfo.bahai.us">updatemyinfo.bahai.us</a> OR: Sign in to <a href="https://www.bahai.us/community">www.bahai.us/community</a> with your Bahá’í Online Services Account and navigate to Profile &gt; My Profile.</li>'
-    '<li>OR: Inform your Spiritual Assembly secretary about your new address and the date of your move; the local secretary can use eMembership or the mail to inform the national Membership Office of the change.</li>'
-    f'<li>OR: Contact the Membership Office directly at {_ml("Membership@usbnc.org")}</li></ol>'
-    f'<p>Contact the Membership Office at the Bahá’í National Center ({_ml("Membership@usbnc.org")}) if you wish to receive your own copy of The American Bahá’í in addition to the one your household already receives.</p>'
     + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>')
 CONTACT_CSS = ("main h2{scroll-margin-top:16px}.toc2{display:flex;flex-wrap:wrap;gap:6px 8px;margin:-10px 0 28px}.toc2 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;background:var(--card)}.toc2 a:hover{border-color:var(--ink)}"
     ".tabm{scroll-margin-top:16px;margin:0 0 8px;background:var(--card);border:1px solid var(--rule);overflow:hidden}"
