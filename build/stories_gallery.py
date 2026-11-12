@@ -1,4 +1,4 @@
-# /magazine/story-ctas/: a running gallery of story-submission landing ideas. One page per idea, plus the gallery.
+# /magazine/story-ctas/: a running gallery of story-submission ideas, each designed as a popup over the magazine. One page per idea, plus the gallery.
 # To add an idea: append to IDEAS (code, slug, name, blurb, tags, added, html, css, js) and run this file. Nothing typed on any page is sent or kept.
 import json, os, re, datetime
 import stories_base as b
@@ -258,13 +258,54 @@ FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=B
 NAVCSS = '''.bar0 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;white-space:nowrap}.bar0 .cd{font:700 13px var(--ui);background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 10px;white-space:nowrap}
 .bar0 .pn2{margin-left:auto;display:flex;gap:14px}.bar0 .pn2 a{color:var(--mute)}'''
 
+POPCSS = '''html,body{min-height:100%}body{overflow:hidden}
+.behind{position:fixed;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(29,26,22,.52);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .25s}
+body.open .scrim{opacity:1}
+.pop{position:fixed;z-index:60;left:50%;top:50%;width:min(var(--pw,880px),calc(100vw - 32px));--mh:min(720px,calc(100dvh - 120px));overflow:hidden;
+ background:var(--paper);border-radius:10px;box-shadow:0 30px 80px rgba(29,26,22,.38),0 0 0 1px rgba(29,26,22,.08);transform:translate(-50%,-46%);opacity:0;visibility:hidden;
+ transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .22s,visibility 0s .32s;margin-top:22px}
+body.open .pop{transform:translate(-50%,-50%);opacity:1;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .22s}
+.pop:focus{outline:none}
+.pop .ap{max-width:none;margin:0;padding:0;text-align:left;display:grid;grid-template-columns:minmax(250px,31%) minmax(0,1fr);min-height:min(480px,var(--mh))}
+.ph{align-self:stretch;background:#222e4c;color:#fbf7ef;padding:44px 30px 30px;display:flex;flex-direction:column;gap:0;max-height:var(--mh);overflow:auto}
+.ph .kk{color:#f2cfc6;margin:0 0 16px}.ph .kk::before{margin:0 0 14px;border-color:#f2cfc6}
+.ph h1{color:#fbf7ef;font-size:clamp(26px,2.6vw,34px);line-height:1.12;text-align:left;margin:0 0 14px;max-width:none;text-wrap:balance}
+.ph .ld{color:rgba(251,247,239,.82);text-align:left;margin:0;font-size:17px;max-width:none}
+.ph .mk{margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:24px;font:600 12px/1.35 var(--ui);color:rgba(251,247,239,.7)}
+.ph .mk img{width:44px;height:58px;object-fit:cover;border-radius:2px;box-shadow:0 4px 12px rgba(0,0,0,.35)}.ph .mk b{display:block;color:#fbf7ef;font:700 13px var(--text)}
+.pb{padding:clamp(36px,4vw,48px) clamp(20px,3vw,40px) 32px;min-width:0;max-height:var(--mh);overflow:auto;overscroll-behavior:contain;align-self:center}
+.pb>*:first-child{margin-top:0}
+.px{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);font:400 22px/1 var(--ui);cursor:pointer;display:grid;place-items:center}
+.px:hover{border-color:var(--ink)}
+.reopen{position:fixed;z-index:40;left:50%;bottom:28px;transform:translateX(-50%);font:700 15px var(--ui);background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 10px 30px rgba(29,26,22,.3)}
+body.open .reopen{display:none}
+.bar0{position:fixed;z-index:70;top:0;left:0;right:0}
+@media (max-width:760px){.pop{height:auto;max-height:calc(100dvh - 120px);overflow:auto;overscroll-behavior:contain}.pop .ap{grid-template-columns:minmax(0,1fr);height:auto}.ph{padding:30px 56px 22px 20px;overflow:visible;max-height:none}.ph .mk{display:none}.pb{padding:24px 16px 28px;overflow:visible;max-height:none}}
+@media (max-width:600px){.pop{left:0;right:0;top:auto;bottom:0;width:100%;max-height:calc(100dvh - 64px);border-radius:16px 16px 0 0;transform:translateY(40px);margin:0}
+ body.open .pop{transform:none}.px{border-color:rgba(251,247,239,.4);background:#222e4c;color:#fbf7ef}}
+@media (prefers-reduced-motion:reduce){.pop,body.open .pop,.scrim{transition:none}}'''
+POPJS = r'''var P=document.getElementById('pop'),Bd=document.body,last=null;
+function op(){last=document.activeElement;Bd.classList.add('open');P.removeAttribute('aria-hidden');P.inert=false;setTimeout(function(){P.focus()},40)}
+function cl(){Bd.classList.remove('open');P.setAttribute('aria-hidden','true');P.inert=true;var r=document.querySelector('.reopen');r&&r.focus()}
+document.querySelector('.px').onclick=cl;document.querySelector('.scrim').onclick=cl;document.querySelector('.reopen').onclick=op;
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&Bd.classList.contains('open'))cl()});
+requestAnimationFrame(function(){requestAnimationFrame(op)});'''
 def page(i, x):
     pv, nx = IDEAS[i - 1] if i else None, IDEAS[i + 1] if i + 1 < len(IDEAS) else None
     nav = (f'<nav class="bar0" aria-label="Ideas"><a href="../">← All ideas</a><span class="cd">{x["code"]}</span><b>{x["name"]}</b>'
            f'<span class="pn2">{f"""<a href="../{pv["slug"]}/">← {pv["code"]}</a>""" if pv else ""}{f"""<a href="../{nx["slug"]}/">{nx["code"]} →</a>""" if nx else ""}</span></nav>')
+    pw = x.get("pw", 1060)
+    m = re.match(r'\s*(<section class="ap"[^>]*>)\s*(<p class="kk">.*?</p>\s*<h1>.*?</h1>\s*(?:<p class="ld">.*?</p>)?)(.*)</section>\s*$', x["html"], re.S)
+    mk = f'<p class="mk"><img src="{I}cover-full-v2.jpg" alt=""><span><b>The American Bahá’í</b>October / November / December 2026</span></p>'
+    body = f'{m.group(1)}<header class="ph">{m.group(2)}{mk}</header><div class="pb">{m.group(3)}</div></section>' 
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>{x["code"]} · {x["name"]}</title><link rel="icon" href="{R}favicon.svg">{FONTS}<style>{b.CSS}{NAVCSS}{x["css"]}</style></head><body>{nav}<main>{x["html"]}</main>'
-            f'<script>(function(){{{REC}{DONEJS}{x["js"]}}})();</script></body></html>')
+            f'<title>{x["code"]} · {x["name"]}</title><link rel="icon" href="{R}favicon.svg">{FONTS}<style>{b.CSS}{NAVCSS}{POPCSS}{x["css"]}</style></head><body>{nav}'
+            f'<iframe class="behind" src="{R}" title="The magazine, behind the popup" tabindex="-1" aria-hidden="true" inert></iframe><div class="scrim"></div>'
+            f'<button type="button" class="reopen">Send a story <span aria-hidden="true">→</span></button>'
+            f'<div class="pop" id="pop" role="dialog" aria-modal="true" aria-label="{x["name"]}" tabindex="-1" style="--pw:{pw}px" aria-hidden="true" inert>'
+            f'<button type="button" class="px" aria-label="Close">×</button>{body}</div>'
+            f'<script>(function(){{{REC}{DONEJS}{x["js"]};{POPJS}}})();</script></body></html>')
 
 GCSS = '''.gw{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,72px) 16px 80px}.gh{max-width:720px;margin:0 0 28px}.gh h1{margin:0 0 12px;max-width:none;text-align:left}.gh .kk::before{margin-left:0}.gh .ld{margin:0;text-align:left;text-wrap:pretty}
 .fl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.fl button{font:600 13px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}.fl button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -281,7 +322,7 @@ def gallery():
     js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
             f'<title>Story Invitation Ideas</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
-            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1></header>'
+            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1><p class="ld">Each one opens as a popup over the magazine.</p></header>'
             f'<div class="fl" role="group" aria-label="Filter by who it reaches">{fl}</div><ul class="gg">{cards}</ul></main><script>{js}</script></body></html>')
 
 if __name__ == "__main__":

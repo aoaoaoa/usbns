@@ -77,7 +77,33 @@ textarea{resize:vertical}
 @media (max-width:760px){.bq,.rt3{grid-template-columns:1fr}.rt3::before{display:none}.bq img{display:none}.two{grid-template-columns:1fr}.wr{flex-direction:column}.wr .sbtn{justify-content:center}}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 .bar0 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;white-space:nowrap}.bar0 .cd{font:700 13px var(--ui);background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 10px;white-space:nowrap}
-.bar0 .pn2{margin-left:auto;display:flex;gap:14px}.bar0 .pn2 a{color:var(--mute)}.pc{perspective:1600px;max-width:760px;margin:0 auto}.pc-in{position:relative;aspect-ratio:3/2;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.bar0 .pn2{margin-left:auto;display:flex;gap:14px}.bar0 .pn2 a{color:var(--mute)}html,body{min-height:100%}body{overflow:hidden}
+.behind{position:fixed;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(29,26,22,.52);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .25s}
+body.open .scrim{opacity:1}
+.pop{position:fixed;z-index:60;left:50%;top:50%;width:min(var(--pw,880px),calc(100vw - 32px));--mh:min(720px,calc(100dvh - 120px));overflow:hidden;
+ background:var(--paper);border-radius:10px;box-shadow:0 30px 80px rgba(29,26,22,.38),0 0 0 1px rgba(29,26,22,.08);transform:translate(-50%,-46%);opacity:0;visibility:hidden;
+ transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .22s,visibility 0s .32s;margin-top:22px}
+body.open .pop{transform:translate(-50%,-50%);opacity:1;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .22s}
+.pop:focus{outline:none}
+.pop .ap{max-width:none;margin:0;padding:0;text-align:left;display:grid;grid-template-columns:minmax(250px,31%) minmax(0,1fr);min-height:min(480px,var(--mh))}
+.ph{align-self:stretch;background:#222e4c;color:#fbf7ef;padding:44px 30px 30px;display:flex;flex-direction:column;gap:0;max-height:var(--mh);overflow:auto}
+.ph .kk{color:#f2cfc6;margin:0 0 16px}.ph .kk::before{margin:0 0 14px;border-color:#f2cfc6}
+.ph h1{color:#fbf7ef;font-size:clamp(26px,2.6vw,34px);line-height:1.12;text-align:left;margin:0 0 14px;max-width:none;text-wrap:balance}
+.ph .ld{color:rgba(251,247,239,.82);text-align:left;margin:0;font-size:17px;max-width:none}
+.ph .mk{margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:24px;font:600 12px/1.35 var(--ui);color:rgba(251,247,239,.7)}
+.ph .mk img{width:44px;height:58px;object-fit:cover;border-radius:2px;box-shadow:0 4px 12px rgba(0,0,0,.35)}.ph .mk b{display:block;color:#fbf7ef;font:700 13px var(--text)}
+.pb{padding:clamp(36px,4vw,48px) clamp(20px,3vw,40px) 32px;min-width:0;max-height:var(--mh);overflow:auto;overscroll-behavior:contain;align-self:center}
+.pb>*:first-child{margin-top:0}
+.px{position:absolute;top:10px;right:10px;z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);font:400 22px/1 var(--ui);cursor:pointer;display:grid;place-items:center}
+.px:hover{border-color:var(--ink)}
+.reopen{position:fixed;z-index:40;left:50%;bottom:28px;transform:translateX(-50%);font:700 15px var(--ui);background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:13px 22px;cursor:pointer;box-shadow:0 10px 30px rgba(29,26,22,.3)}
+body.open .reopen{display:none}
+.bar0{position:fixed;z-index:70;top:0;left:0;right:0}
+@media (max-width:760px){.pop{height:auto;max-height:calc(100dvh - 120px);overflow:auto;overscroll-behavior:contain}.pop .ap{grid-template-columns:minmax(0,1fr);height:auto}.ph{padding:30px 56px 22px 20px;overflow:visible;max-height:none}.ph .mk{display:none}.pb{padding:24px 16px 28px;overflow:visible;max-height:none}}
+@media (max-width:600px){.pop{left:0;right:0;top:auto;bottom:0;width:100%;max-height:calc(100dvh - 64px);border-radius:16px 16px 0 0;transform:translateY(40px);margin:0}
+ body.open .pop{transform:none}.px{border-color:rgba(251,247,239,.4);background:#222e4c;color:#fbf7ef}}
+@media (prefers-reduced-motion:reduce){.pop,body.open .pop,.scrim{transition:none}}.pc{perspective:1600px;max-width:760px;margin:0 auto}.pc-in{position:relative;aspect-ratio:3/2;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
 .pc.back .pc-in{transform:rotateY(180deg)}.pc-f,.pc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:6px;box-shadow:0 16px 36px rgba(29,26,22,.2);overflow:hidden}
 .pc-f img{width:100%;height:100%;object-fit:cover;display:block}.pc-g{position:absolute;left:18px;bottom:16px;background:var(--card);color:var(--ink);font:italic 400 18px var(--text);padding:6px 12px;border-radius:3px}.pc-g b{font-style:normal}
 .pc-b{transform:rotateY(180deg);background:#fffdf6;color:#1d1a16;display:grid;grid-template-columns:1.1fr 1fr;gap:0;text-align:left;padding:18px}
@@ -88,7 +114,7 @@ textarea{resize:vertical}
 .pc-a{font:15px/1.5 var(--text);margin:4px 0 6px}.pc-b .sbtn{position:absolute;right:18px;bottom:18px;font-size:16px;padding:10px 16px}
 .pc-flip{margin:18px 0 0}.pcb{font:600 15px var(--ui);background:none;border:1px solid var(--rule);color:var(--ink);border-radius:999px;padding:10px 18px;cursor:pointer}
 @media (max-width:700px){.pc-in{aspect-ratio:auto;height:240px;transition:transform .7s cubic-bezier(.2,.8,.2,1),height 0s .35s}.pc.back .pc-in{height:660px}.pc-b{grid-template-columns:1fr;padding:14px}.pc-b textarea{border-right:0;border-bottom:1px solid #d9d2c4;min-height:160px}.pc-r{padding:12px 0 56px}.pc-pm{right:70px}}
-@media (prefers-reduced-motion:reduce){.pc-in{transition:none}}</style></head><body><nav class="bar0" aria-label="Ideas"><a href="../">← All ideas</a><span class="cd">E</span><b>A postcard home</b><span class="pn2"><a href="../report-to-page/">← D</a><a href="../one-sentence/">F →</a></span></nav><main><section class="ap" id="F"><p class="kk">Contribute</p><h1>Send us a postcard.</h1><p class="ld">A few lines from where you live, the way you’d write home.</p>
+@media (prefers-reduced-motion:reduce){.pc-in{transition:none}}</style></head><body><nav class="bar0" aria-label="Ideas"><a href="../">← All ideas</a><span class="cd">E</span><b>A postcard home</b><span class="pn2"><a href="../report-to-page/">← D</a><a href="../one-sentence/">F →</a></span></nav><iframe class="behind" src="../../" title="The magazine, behind the popup" tabindex="-1" aria-hidden="true" inert></iframe><div class="scrim"></div><button type="button" class="reopen">Send a story <span aria-hidden="true">→</span></button><div class="pop" id="pop" role="dialog" aria-modal="true" aria-label="A postcard home" tabindex="-1" style="--pw:1060px" aria-hidden="true" inert><button type="button" class="px" aria-label="Close">×</button><section class="ap" id="F"><header class="ph"><p class="kk">Contribute</p><h1>Send us a postcard.</h1><p class="ld">A few lines from where you live, the way you’d write home.</p><p class="mk"><img src="../../img/cover-full-v2.jpg" alt=""><span><b>The American Bahá’í</b>October / November / December 2026</span></p></header><div class="pb">
 <div class="pc"><div class="pc-in">
 <div class="pc-f"><img src="../../img/cover-paint-v2.jpg" alt="The cover painting of this issue" loading="lazy"><span class="pc-g">Greetings from <b class="pc-t">your town</b></span></div>
 <form class="pc-b" novalidate><textarea aria-label="Your message" placeholder="This week in our neighborhood…"></textarea>
@@ -96,7 +122,7 @@ textarea{resize:vertical}
 <p class="pc-a">The American Bahá’í<br>1233 Central St., Evanston, IL 60201</p>
 <label>From<input class="pc-fr" placeholder="City or neighborhood, state"></label><label>Your name<input autocomplete="name"></label><label>Email or phone<input autocomplete="email"></label></div>
 <button class="sbtn" type="submit">Mail it <span aria-hidden="true">→</span></button></form></div></div>
-<p class="pc-flip"><button type="button" class="pcb">Turn it over</button></p><div class="done" hidden><b>Thank you.</b> Story submissions open soon. This study keeps nothing you type.</div><p class="prom">We’ll write before publishing anything you send. Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p></section></main><script>(function(){function REC(root){var rb=root.querySelector('.rb');if(!rb)return;var au=root.querySelector('.rec audio'),mr=null,ch=[];
+<p class="pc-flip"><button type="button" class="pcb">Turn it over</button></p><div class="done" hidden><b>Thank you.</b> Story submissions open soon. This study keeps nothing you type.</div><p class="prom">We’ll write before publishing anything you send. Prefer email? <a href="mailto:tab@usbnc.org">tab@usbnc.org</a></p></div></section></div><script>(function(){function REC(root){var rb=root.querySelector('.rb');if(!rb)return;var au=root.querySelector('.rec audio'),mr=null,ch=[];
 rb.addEventListener('click',function(){if(mr&&mr.state==='recording'){mr.stop();return}
 if(!navigator.mediaDevices||!window.MediaRecorder){rb.querySelector('span').textContent='Recording isn’t available in this browser';return}
 navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){ch=[];mr=new MediaRecorder(s);mr.ondataavailable=function(e){ch.push(e.data)};
@@ -104,4 +130,9 @@ mr.onstop=function(){s.getTracks().forEach(function(t){t.stop()});au.src=URL.cre
 mr.start();rb.classList.add('on');rb.querySelector('span').textContent='Stop';setTimeout(function(){if(mr.state==='recording')mr.stop()},180000)}).catch(function(){rb.querySelector('span').textContent='Microphone not allowed'})})}[].forEach.call(document.querySelectorAll('form.sf,form.lt,form.sn'),function(f){f.addEventListener('submit',function(e){e.preventDefault();var d=f.closest('.ap').querySelector('.done');f.hidden=true;[].forEach.call(f.closest('.ap').querySelectorAll('.unf form,.where'),function(x){if(x!==f)x.hidden=true});if(d){d.hidden=false;d.setAttribute('tabindex','-1');d.focus()}})});var F=document.getElementById('F'),pc=F.querySelector('.pc'),bt=F.querySelector('.pcb'),fr=F.querySelector('.pc-fr');
 bt.onclick=function(){pc.classList.toggle('back');bt.textContent=pc.classList.contains('back')?'Turn it back':'Turn it over';if(pc.classList.contains('back'))setTimeout(function(){F.querySelector('textarea').focus()},400)};
 fr.addEventListener('input',function(){var v=fr.value.trim()||'your town';F.querySelector('.pc-t').textContent=v;F.querySelector('.pm-t').textContent=v.split(',')[0].toUpperCase().slice(0,14)});
-F.querySelector('.pc-b').addEventListener('submit',function(e){e.preventDefault();this.closest('.pc').hidden=true;bt.hidden=true;F.querySelector('.done').hidden=false})})();</script></body></html>
+F.querySelector('.pc-b').addEventListener('submit',function(e){e.preventDefault();this.closest('.pc').hidden=true;bt.hidden=true;F.querySelector('.done').hidden=false});var P=document.getElementById('pop'),Bd=document.body,last=null;
+function op(){last=document.activeElement;Bd.classList.add('open');P.removeAttribute('aria-hidden');P.inert=false;setTimeout(function(){P.focus()},40)}
+function cl(){Bd.classList.remove('open');P.setAttribute('aria-hidden','true');P.inert=true;var r=document.querySelector('.reopen');r&&r.focus()}
+document.querySelector('.px').onclick=cl;document.querySelector('.scrim').onclick=cl;document.querySelector('.reopen').onclick=op;
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&Bd.classList.contains('open'))cl()});
+requestAnimationFrame(function(){requestAnimationFrame(op)});})();</script></body></html>
