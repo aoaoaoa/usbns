@@ -844,7 +844,7 @@ def build_tab(member=False, menu="contents"):
   <header class="shead"><p class="kicker-top">{esc(d["kicker"])}</p><h2>{esc(d["title"])}</h2>{dek}</header>
   <aside class="margin"><p class="kicker">{esc(d["kicker"])}</p><p class="pp">{"Print pages" if "–" in str(d["pages"]) else "Print page"} {d["pages"]}</p></aside>'''
         huq = dept_open(HUQUQ) + f'<div class="prose">{first_para_dropcap(body_html(HUQUQ["body"]))}</div></article>'
-        qs = "".join(f'<section class="qblock"><h3>{esc(q)}</h3>' + "".join(f'<blockquote class="passage"><p>{esc(t)}</p><cite>{esc(c)}</cite></blockquote>' for t,c in items) + '</section>' for q,items in ABIDING["questions"])
+        qs = "".join(f'<section class="qblock"><h3>{esc(q)}</h3>' + "".join(f'<blockquote class="passage lead"><p>{esc(t)}</p><cite>{esc(c)}</cite></blockquote>' for t,c in items) + '</section>' for q,items in ABIDING["questions"])
         abide = dept_open(ABIDING) + f'''<div class="prose compilation"><blockquote class="passage lead"><p>{esc(ABIDING["epigraph"][0])}</p><cite>{esc(ABIDING["epigraph"][1])}</cite></blockquote>{qs}</div></article>'''
         fund = dept_open(FUND) + f'<div class="prose">{first_para_dropcap(body_html(FUND["body"]))}</div></article>'
         R = RHYTHM
@@ -1198,6 +1198,14 @@ main,.head{{position:relative;z-index:1}}
 .dept .prose.shelf,.dept .prose.calendar{{grid-column:1/-1;display:block;max-width:none}}
 .dept .prose.calendar{{max-width:72ch;grid-column:2/4}}
 .dept .prose.shelf{{grid-column:2/4}}
+/* Abiding in God's Law: every passage in the opening treatment, the compilation across the text and open columns, two balanced columns under each question */
+#abiding .prose.compilation{{grid-column:2/4;max-width:none;display:block}}
+#abiding .compilation>.passage.lead{{max-width:780px;margin:0 auto .6em}} #abiding .compilation>.passage.lead p{{font-size:19px}}
+#abiding .qblock{{columns:2 320px;column-gap:clamp(22px,3vw,40px);margin:3.4em 0 0}}
+#abiding .qblock h3{{column-span:all;text-align:center;max-width:32ch;margin:0 auto 2.2em;text-wrap:balance}} #abiding .qblock h3::before{{margin:0 auto 12px}}
+#abiding .qblock .passage.lead{{break-inside:avoid;display:inline-block;width:100%;margin:14px 0 2.2em;padding:40px clamp(16px,2.4vw,28px) 26px}}
+#abiding .qblock:not(:has(.passage:nth-of-type(2))){{columns:auto;max-width:700px;margin-left:auto;margin-right:auto}} #abiding .qblock .passage.lead p{{font-size:16.5px;line-height:1.6}}
+@media (max-width:980px){{#abiding .prose.compilation{{grid-column:1}}}}
 #rhythm,#books{{zoom:.85}}
 .dept .margin,.letter .margin{{grid-row:2}}
 .dept .prose,.letter .prose{{grid-row:2}}
@@ -2218,7 +2226,7 @@ def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}<
 # Contacts: the magazine's own details first, as printed on the Contact Information page of the issue (p. 84), then the national offices
 # Contacts, "How can we help?": pick a need, see only the contacts that answer it. Contacts as on the print page (p. 84) and as since agreed.
 _CT = {
- "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "link.bahai.us/TAB_submit", "https://link.bahai.us/TAB_submit"),
+ "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "Submit your story", "https://link.bahai.us/TAB_submit"),
  "editors": ("Write to the editors", "Questions, leads, or a story idea in a few lines", "TAB@usbnc.org", "mailto:TAB@usbnc.org"),
  "feedback": ("Share your experience of the site", "What worked, what didn’t, and what you’d like to see", "research@bahai.us", "mailto:research@bahai.us"),
  "survey": ("Take the reader survey", "Share your ideas to shape the magazine’s future", "5 minutes", SURVEY_FORM),
@@ -2231,6 +2239,7 @@ _ROUTES = [("I have a story or photographs", ["submit", "editors"]), ("I have fe
            ("I want the magazine", ["subs", "back"]), ("I’m a journalist", ["media"]), ("I need the National Center", ["nc"])]
 def _card(k):
     h, d, v, u = _CT[k]; ext = ' target="_blank" rel="noopener"' if u.startswith("https") else ""
+    if k == "submit": u, ext = "#", " data-submit"  # opens the Submit your story dialog, as in the footer
     return f'<a class="c" href="{u}"{ext}><b>{h}</b><span class="d">{d}</span><span class="v">{v} <span aria-hidden="true">→</span></span></a>'
 CONTACT = ('<div class="rt" role="group" aria-label="What do you need?">' + "".join(f'<button type="button" aria-pressed="{str(k == 0).lower()}" data-k="{k}">{q}</button>' for k, (q, _) in enumerate(_ROUTES)) + '</div>'
     + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' for k, (q, L) in enumerate(_ROUTES))
@@ -2270,7 +2279,7 @@ TERMS = (f'<p class="lede">Everything on this site is protected by copyright and
     f'<p>All material on this website, including but not limited to text, photographs, images, illustrations, maps, audio clips and video clips (“Content”), is protected by copyrights, trademarks and other intellectual property rights. The {NSA} (“the National Assembly”) retains full legal protection for its Content under all applicable United States and international laws, and grants use of it under the terms of the {_CC}.</p>'
     '<h2 id="terms">Terms of use</h2><p>You are welcome to access and use the Content subject to these conditions:</p><ol class="cl">'
     + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in _CLAUSES) + '</ol>'
-    '<p>These conditions may be revised at any time without notice.</p>')
+    '')
 # Privacy policy: consolidated (Nov 12, 2026). Same substance as the earlier two paragraphs, in six labeled sections.
 _TOLL = "1‑800‑228‑6483 (1‑800‑22UNITE)"  # non-breaking hyphens
 _STOPW = ["STOP", "QUIT", "END", "REVOKE", "OPT OUT", "CANCEL", "UNSUBSCRIBE"]

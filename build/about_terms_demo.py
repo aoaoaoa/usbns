@@ -118,12 +118,12 @@ GLANCE = [("You may", ["Share, link to and display the Content", "Crop or resize
           ("Ask first", ["Commercial use", "Any edit beyond cropping or resizing", f"Write to {ML}"])]
 PROPOSED = (f'<p class="lede">Everything on this site is protected by copyright and shared under a {CC}, on the terms below.</p>'
     '<div class="gl" aria-label="At a glance">' + "".join(f'<section><h3>{h}</h3><ul>{"".join(f"<li>{x}</li>" for x in L)}</ul></section>' for h, L in GLANCE) + '</div>'
-    ''
+    '</div>'
     '<h2 id="copyright">Copyright</h2>'
     f'<p>All material on this website, including but not limited to text, photographs, images, illustrations, maps, audio clips and video clips (“Content”), is protected by copyrights, trademarks and other intellectual property rights. The {NSA} (“the National Assembly”) retains full legal protection for its Content under all applicable United States and international laws, and grants use of it under the terms of the {CC}.</p>'
     '<h2 id="terms">Terms of use</h2><p>You are welcome to access and use the Content subject to these conditions:</p><ol class="cl">'
     + "".join(f'<li id="{i}"><b>{h}.</b> {x}</li>' for i, h, x in CLAUSES) + '</ol>'
-    '<p>These conditions may be revised at any time without notice.</p>')
+    '')
 
 CHANGES = [("Two copyright paragraphs", "merged; both said the National Assembly retains full legal protection under all applicable laws."),
            ("The National Assembly’s full name", "written once, then “the National Assembly” (the current page already uses that short form once)."),
