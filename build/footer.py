@@ -71,7 +71,7 @@ FOOTER_CSS = """
 .colo .cw{color:#f2cfc6}.colo .cr{display:none}
 .colo nav a{color:#f2cfc6;font:700 17px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.08em}
 .colo li{font-size:17px}.colo li+li::before{content:"";margin:0 13px}
-.colo nav a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.colo nav a:hover{color:#fff;text-decoration:underline}
 .colo .cs>span:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .colo .cs a{color:#f2cfc6;border-color:rgba(242,207,198,.35)}
 .colo .cs a:hover{background:#f2cfc6;color:#222e4c;border-color:#f2cfc6}

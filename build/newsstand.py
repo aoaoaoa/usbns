@@ -175,6 +175,8 @@ alt = alt.replace('src="../', 'src="../../').replace('href="../', 'href="../../'
 alt = alt.replace('<title>', '<meta name="robots" content="noindex"><title>', 1)
 import os
 os.makedirs('/home/claude/usbns/magazine/landing/alt', exist_ok=True)
-open(P, 'w').write(_main)
-open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(alt)
+import sys; sys.path.insert(0,'/home/claude/tab')
+from typo import curl
+open(P, 'w').write(curl(_main))
+open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(curl(alt))
 print('ok')
