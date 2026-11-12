@@ -65,7 +65,7 @@ D2 = (depth(unhide(b.Dsec)).replace('id="D"', 'id="D2"').replace('data-n="Any wa
       .replace("<label>Tell us your story<textarea", "<label>In your own words<textarea")
       .replace("Up to 3 minutes, in your own words.", "Up to 3 minutes. Talk as you would to a friend.")
       .replace("<label>Who or what should we know about?<textarea", "<label>Who should we hear from?<textarea"))
-idea("D2", "start-with-what-you-have", "Start with what you have", "D in new wording: five ways in, named the way people talk.",
+idea("D2", "start-with-what-you-have", "Start with what you have", "Five ways in, named the way people talk: writing, speaking, a photograph, a name, your own language.",
      ["Everyone", "Any language", "Non-writers"], D2,
      js="""var Dd=document.getElementById('D2'),ws=[].slice.call(Dd.querySelectorAll('.wy')),df=Dd.querySelector('.dw');
 ws.forEach(function(w){w.addEventListener('click',function(){ws.forEach(function(x){x.setAttribute('aria-pressed',x===w)});df.hidden=false;
@@ -241,8 +241,10 @@ idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in i
 @media (max-width:600px){.ecf{grid-template-columns:1fr}.ecf img{width:100%;height:120px}}''',
      js='''[].forEach.call(document.querySelectorAll('#R .ecf'),function(f){f.addEventListener('submit',function(e){e.preventDefault();f.querySelector('.eci').hidden=true;f.querySelector('.ok').hidden=false})})''')
 
-# discarded Nov 12, 2026: P print and post, I quote first, J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
-IDEAS[:] = [x for x in IDEAS if x["code"] not in {"I","J","K","L","M","N","O","P","Q","R"}]
+# discarded Nov 12, 2026: D any way you can (kept as D2's base), P print and post, I quote first, J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
+IDEAS[:] = [x for x in IDEAS if x["code"] not in {"D","I","J","K","L","M","N","O","P","Q","R"}]
+# reset Nov 12, 2026: the remaining ideas lettered afresh in order (was A, C, D2, E, F, G, H)
+for _k, _x in enumerate(IDEAS): _x["code"] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[_k]
 
 # ---------------------------------------------------------------- shared runtime
 REC = r'''function REC(root){var rb=root.querySelector('.rb');if(!rb)return;var au=root.querySelector('.rec audio'),mr=null,ch=[];
