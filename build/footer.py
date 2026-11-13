@@ -138,7 +138,7 @@ def ask_dialogs():
         '<label class="dfl ln"><span class="vh">Who was there</span><input name="people" placeholder="Names only with their permission"></label></div></li>'
         '<li><span class="sn" aria-hidden="true">3</span><div class="sb"><h3>A photograph or two</h3>'
         '<label class="drop"><input type="file" name="photos" accept="image/*" multiple class="vh"><span class="dz"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3v12H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><b>Choose photographs</b><small class="dzn">JPEG or PNG, as many as you like</small></span></label>'
-        '<label class="dfl ln"><span>Photographer’s name</span><input name="photographer"></label></div></li>'
+        '<label class="dfl ln"><span>Photographer’s name</span><input name="photographer"></label><p class="dguide">New to photographing gatherings? <a href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">See the field guide</a>.</p></div></li>'
         '<li><span class="sn" aria-hidden="true">4</span><div class="sb"><h3>What you learned</h3>'
         '<label class="dfl ln"><span class="vh">What you learned</span><textarea name="learned" rows="3" placeholder="What others could take from it"></textarea></label></div></li>'
         '</ol>'
@@ -147,7 +147,7 @@ def ask_dialogs():
         '<label class="dfl ln"><span>Email address</span><input type="email" name="email" autocomplete="email" required></label></div>'
         '<p class="dfine l">We will get in touch and work with you before anything you share is used.</p></fieldset>'
         '<button class="dgo" type="submit">Send your story</button></form>'
-        '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div></div></dialog>')
+        '<div class="ddone" hidden><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p><p class="dguide"><a href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">The field guide <span aria-hidden="true">→</span></a></p></div></div></dialog>')
     return sub + st + ABOUT_HTML.replace('{X}', _X) + ASK_JS
 
 ASK_JS = r'''<script>(function(){
@@ -198,6 +198,7 @@ ASK_CSS = """
 .askdlg input:focus,.askdlg textarea:focus{outline:2px solid #222e4c;outline-offset:1px}
 .askdlg .dfl.err input,.askdlg .dfl.err textarea{border-color:#c9462c}.askdlg .dfl.err>span::after{content:" required";color:#c9462c;font-weight:500}
 .askdlg .dgo{width:100%;min-height:50px;border:0;border-radius:999px;background:#222e4c;color:#fff;font:600 16px var(--ui,sans-serif);cursor:pointer}.askdlg .dgo:hover{background:#2c3a60}
+.askdlg .dguide{margin:10px 0 0;font-size:13.5px;color:var(--mute,#6a635a)}.askdlg .dguide a{color:inherit;text-decoration:underline;text-underline-offset:3px}.askdlg .ddone .dguide{margin-top:12px;font-size:14.5px}
 .askdlg .dfine{margin:12px 0 0;text-align:center;font-size:13px;color:var(--mute,#6a635a)}
 .askdlg .ddone{padding:10px 0 4px}.askdlg .ddone h3{font:700 22px "Literata",Georgia,serif;margin:0 0 6px}.askdlg .ddone p{margin:0;color:var(--mute,#6a635a);font-size:15.5px;line-height:1.5}.askdlg .ddone:focus{outline:none}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}

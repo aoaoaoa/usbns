@@ -217,6 +217,17 @@ def _uhj(h):
     m = re.search(r'<section id="current"[^>]*>.*?</section>', h, re.S)
     return h[:m.end()] + '\n' + blk + h[m.end():] if m else h
 _main = _uhj(_main)
+
+def _fgl(h):  # the field guide beside Send a story in the contribute band
+    G = 'https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/'
+    a = '<a class="sbtn" href="#" data-submit>Send a story <span aria-hidden="true">→</span></a>'
+    if 'class="fgl"' not in h and a in h:
+        h = h.replace(a, '<div class="sbgo">' + a + '<a class="fgl" href="' + G + '" target="_blank" rel="noopener">Read the field guide first</a></div>', 1)
+    k = '.sbtn{display:inline-flex;'
+    if '.sbgo{' not in h and k in h:
+        h = h.replace(k, '.sbgo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}.fgl{font:600 14px "Bricolage Grotesque",system-ui,sans-serif;color:var(--ink,#1d1a16);text-decoration:underline;text-underline-offset:4px}' + k, 1)
+    return h
+_main = _fgl(_main)
 open(P, 'w').write(curl(_addog(_main)))
 open('/home/claude/usbns/magazine/landing/alt/index.html', 'w').write(curl(alt))
 print('ok')

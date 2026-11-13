@@ -188,6 +188,7 @@ CSS_ADD = r'''/* nsadd */
 .route li:last-child .no{background:#222e4c;border-color:#222e4c;color:#f2cfc6}
 .route b{display:block;font:700 20px/1.1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .route span{display:block;font-size:14px;line-height:1.45;color:var(--mute)}
+.sbgo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}.fgl{font:600 14px var(--ui,system-ui);color:var(--ink,#1d1a16);text-decoration:underline;text-underline-offset:4px}
 .sbtn{display:inline-flex;align-items:center;gap:10px;font:700 19px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;background:#222e4c;color:#f2cfc6;padding:14px 24px;border-radius:3px;transition:transform .2s,box-shadow .2s}
 .sbtn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.2)}.sbtn:focus-visible{outline:2px solid var(--link);outline-offset:3px}
 @media (max-width:860px){.sbm .wrap{grid-template-columns:1fr}.sbm .art{max-width:520px}}
@@ -333,7 +334,8 @@ def submit_html(pre, href="#"):
             '<div class="nt"><p>There are amazing stories of unity and spiritual growth happening in neighborhoods everyday as a result of the community building process inspired by the teachings of the Bahá’í Faith.</p>'
             '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div></div>'
             f'<div class="ckl"><div class="meter" aria-hidden="true"><i></i></div><ul>{items}</ul></div>'
-            f'<a class="sbtn" href="{href}" data-submit>Send a story <span aria-hidden="true">→</span></a>'
+            f'<div class="sbgo"><a class="sbtn" href="{href}" data-submit>Send a story <span aria-hidden="true">→</span></a>'
+            '<a class="fgl" href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">Read the field guide first</a></div>'
             f'</div></section>{js}<!-- /nsadd:submit -->\n')
 
 def contents_html(pre):

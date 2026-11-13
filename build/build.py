@@ -2351,22 +2351,23 @@ _CT = {
 }
 _ROUTES = [("I have a story or photographs", ["submit", "editors"]), ("I have feedback on the site", ["feedback", "survey"]),
            ("I want the magazine", ["subs", "back"]), ("I’m a journalist", ["media"]), ("I need the National Center", ["nc"])]
+FGN = '<p class="fgn" data-k="0">Before you take pictures: <a href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">the field guide <span aria-hidden="true">→</span></a></p>'
 def _card(k):
     h, d, v, u = _CT[k]; ext = ' target="_blank" rel="noopener"' if u.startswith("https") else ""
     if k == "submit": u, ext = "#", " data-submit"  # opens the Submit your story dialog, as in the footer
     return f'<a class="c" href="{u}"{ext}><b>{h}</b><span class="d">{d}</span><span class="v">{v} <span aria-hidden="true">→</span></span></a>'
 CONTACT = ('<div class="rt" role="group" aria-label="What do you need?">' + "".join(f'<button type="button" aria-pressed="{str(k == 0).lower()}" data-k="{k}">{q}</button>' for k, (q, _) in enumerate(_ROUTES)) + '</div>'
-    + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' for k, (q, L) in enumerate(_ROUTES))
+    + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' + (FGN if k == 0 else '') for k, (q, L) in enumerate(_ROUTES))
     + '<section class="mh2"><p class="wm"><small>The</small>American Bahá’í</p>'
     + '<p><b>Editor</b> Neena Rouhani · <a href="mailto:nrouhani@usbnc.org">nrouhani@usbnc.org</a></p><p><b>Designer</b> Luthando Mazibuko · <a href="mailto:lmazibuko@usbnc.org">lmazibuko@usbnc.org</a></p>'
     + '<p class="ph">Photography by license or by permission of community members.</p></section>'
     + '<p class="fine">The American Bahá’í (ISSN 1062-1113) is published once every 2 months for a total of 5 issues per year by the National Spiritual Assembly of the Bahá’ís of the United States, 1233 Central St., Evanston, IL 60201-1611. Entire contents Copyright ©2026 by the National Spiritual Assembly of the Bahá’ís of the United States. World rights reserved.</p>'
     # every panel shows without script; with script, only the chosen one
-    + "<script>(function(){var B=[].slice.call(document.querySelectorAll('.rt button')),P=[].slice.call(document.querySelectorAll('.rp'));function go(k){B.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.k===k)});P.forEach(function(p){p.hidden=p.dataset.k!==k})}"
+    + "<script>(function(){var B=[].slice.call(document.querySelectorAll('.rt button')),P=[].slice.call(document.querySelectorAll('.rp,.fgn'));function go(k){B.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.k===k)});P.forEach(function(p){p.hidden=p.dataset.k!==k})}"
       "B.forEach(function(b){b.onclick=function(){go(b.dataset.k)}});go('0');document.documentElement.classList.add('rtjs')})();</script>")
 CONTACT_CSS = ("main{max-width:980px!important}.rt{display:none;flex-wrap:wrap;gap:8px;margin:-6px 0 20px}.rtjs .rt{display:flex}"
     ".rt button{font:600 15px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;cursor:pointer}.rt button[aria-pressed=true]{background:#222e4c;color:#f2cfc6;border-color:#222e4c}.rt button:focus-visible{outline:2px solid var(--link);outline-offset:2px}"
-    ".rp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:0 0 14px}.rp[hidden]{display:none}"
+    ".fgn{margin:-2px 0 18px;font:14px var(--ui);color:var(--mute)}.fgn a{color:var(--ink)}.fgn[hidden]{display:none}.rp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:0 0 14px}.rp[hidden]{display:none}"
     ".c{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink)!important;background:var(--card);border:1px solid var(--rule);border-top:4px solid #222e4c;padding:18px}.c:hover{border-color:var(--ink)}.c:focus-visible{outline:2px solid var(--link);outline-offset:3px}"
     ".c b{font:700 19px/1.25 var(--text)}.c .d{font:14px/1.5 var(--ui);color:var(--mute)}.c .v{font:700 15px var(--ui);color:var(--link)}"
     ".mh2{margin:40px 0 0;background:var(--card);border:1px solid var(--rule);overflow:hidden}.mh2 .wm{margin:0 0 14px!important;background:#222e4c;color:#fff;font:400 30px/1 var(--text)!important;padding:16px 20px}.mh2 .wm small{display:block;font:italic 14px var(--text);color:#f2cfc6}"
