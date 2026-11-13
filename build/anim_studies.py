@@ -77,7 +77,11 @@ def _cy(x): return 200 + sum(24*math.sin(x/560*2*math.pi*f + i*.9) for i,f in en
 chord = " ".join(f'{x},{_cy(x):.1f}' for x in range(-10, 571, 4))
 half_l = " ".join(f'{x},{_cy(x):.1f}' for x in range(280, -11, -4)); half_r = " ".join(f'{x},{_cy(x):.1f}' for x in range(280, 571, 4))
 ws = "".join(f'<polyline class="wv6" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" points="{wave(F0[i], 24, i*.9, rev=(i%2==1))}"/>' for i in range(5))
-m6 = ('<div class="pn lu ch" data-k="staff"><figure class="pq"><blockquote><p>…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.</p></blockquote>'
+m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><radialGradient id="bl6"><stop offset="0" stop-color="#fff6ea" stop-opacity=".8"/><stop offset=".5" stop-color="#f3c98e" stop-opacity=".28"/><stop offset="1" stop-color="#f3c98e" stop-opacity="0"/></radialGradient></defs>'
+           f'{ws}<ellipse class="bl6" cx="280" cy="200" rx="300" ry="92" fill="url(#bl6)"/><polyline class="cg6" points="{chord}"/><polyline class="cd6" points="{half_l}"/><polyline class="cd6" points="{half_r}"/></svg>',
+           "…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.",
+           ("‘Abdu’l-Bahá", "Paris Talks, “Beauty and Harmony in Diversity”"), "lu ch")
+m7 = ('<div class="pn lu ch" data-k="staff"><figure class="pq"><blockquote><p>…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.</p></blockquote>'
       '<figcaption><b>‘Abdu’l-Bahá</b><span>Paris Talks, “Beauty and Harmony in Diversity”</span></figcaption></figure>'
       '<svg class="art helix" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg></div>')
 
@@ -88,14 +92,16 @@ A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when 
      ("M3", "anim-light", "My light is in thee", "proposed", "The Send a story popup, for a call in a later issue, in the same place as M1; or the receipt after sending.",
       "A dawn rises from below and, one by one, lights a sky of stars that draw toward their neighbors: each person a lamp, each light joining the others.", m3),
      ("M4", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
-      "Five staff lines enter flat at the left and twist, as they cross, into a double helix; the notes on the staff become its rungs. Many notes, one chord; many people, one human family.", m6),
+      "Five voices arrive from both sides and meet in the middle; light blooms where they meet, and the chord opens outward from that center.", m6),
      ("M5", "anim-small", "Smaller sizes", "proposed", "A column, a popup, a sidebar or a card: wherever the full stage is too large.",
-      "M1, M3 and M4 at two smaller sizes, the composition kept whole. Type scales with the panel but never below 12 px; the small size is 4:3 so the art keeps clear of the citation.", None)]
+      "M1, M3, M4 and M6 at two smaller sizes, the composition kept whole. Type scales with the panel but never below 12 px; the small size is 4:3 so the art keeps clear of the citation.", None)]
 def _sm(name, html):
     return (f'<section class="smb"><h2>{name}</h2><div class="smr">'
             f'<div class="sm m"><p class="lbl">Medium · 600 px <button type="button" class="rp">Replay</button></p>{html}</div>'
             f'<div class="sm s"><p class="lbl">Small · 380 px, 4:3 <button type="button" class="rp">Replay</button></p>{html}</div></div></section>')
-A[-1] = A[-1][:6] + ("".join(_sm(nm, h) for nm, h in (("Gems revealed", m1), ("My light is in thee", m3), ("A perfect chord", m6))),)
+A.append(("M6", "anim-strand", "From staff to strand", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call: an alternative to M4.",
+          "Five staff lines enter flat at the left and twist, as they cross, into a double helix; the notes on the staff become its rungs. Many notes, one chord; many people, one human family.", m7))
+A[4] = A[4][:6] + ("".join(_sm(nm, h) for nm, h in (("Gems revealed", m1), ("My light is in thee", m3), ("A perfect chord", m6), ("From staff to strand", m7))),)
 
 CSS = r"""
 .an-w{max-width:980px;margin:0 auto;padding:clamp(28px,5vw,56px) 16px 72px}
