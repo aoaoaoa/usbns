@@ -128,6 +128,7 @@ textarea{resize:vertical}
 .x4f{position:sticky;top:0;max-height:calc(100vh - 150px);overflow:auto;background:var(--card,#fdfcf9);border:1px solid var(--rule,#d6cebf);border-top:3px solid #23406f;padding:14px 16px}
 .gchk{border-top:3px double var(--rule,#d6cebf);padding:12px 0 4px;margin-bottom:6px}.ghint{margin:-4px 0 6px;font:12.5px var(--ui);color:var(--mute)}
 .gjump{display:block;font:700 14px var(--ui);color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline dotted color-mix(in oklab,currentColor 40%,transparent);text-underline-offset:3px}.gjump:hover,.gjump:focus-visible{color:#23406f}
+.grl li{cursor:pointer}.grl li .ck{cursor:pointer}.grl li:hover .ck{border-color:#23406f;box-shadow:0 0 0 3px color-mix(in oklab,#23406f 15%,transparent)}
 .glit{animation:glit 1.8s ease-out}@keyframes glit{0%,40%{box-shadow:0 0 0 3px #b8862e,0 0 0 8px color-mix(in oklab,#b8862e 25%,transparent)}100%{box-shadow:0 0 0 0 transparent}}
 .gbox:has(.x5g){width:min(1180px,100%)}.x5g .xg.n6{grid-template-columns:repeat(6,minmax(0,1fr))}.x5g .xg.n2{max-width:50%}
 .gsix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 18px;margin-top:6px}.gsix div{border-top:2px solid #23406f;padding:8px 0;font:13px/1.45 var(--ui);color:var(--mute)}.gsix i{font:700 18px var(--text);color:#23406f;font-style:normal;margin-right:6px}.gsix b{color:var(--ink,#1d1a16)}.gsix small{display:block;margin-top:2px;font-size:13px}
@@ -152,7 +153,8 @@ var p1=D.querySelector('.p1,.x4');if(p1&&p1.querySelector('.gready')){var tick=f
 var n=0;[].forEach.call(p1.querySelectorAll('.grl li'),function(li,i){li.classList.toggle('on',!!on[i]);n+=on[i]});p1.querySelector('.gready b').textContent=n};p1.addEventListener('input',tick);p1.addEventListener('change',tick)}
 [].forEach.call(D.querySelectorAll('.gdrop input'),function(f){f.onchange=function(){var l=f.parentNode;l.classList.toggle('on',!!f.files.length);l.querySelector('b').textContent=f.files.length?f.files.length+' chosen':'Choose photographs'}});
 var GO=['.gdrop','[data-r="1"]','.gwho','[data-r="3"]','.gdrop','[data-r="5"]'];
-[].forEach.call(D.querySelectorAll('.gjump'),function(b){b.onclick=function(){var f=p1.querySelector(GO[+b.dataset.go]);if(!f)return;var box=f.closest('.gf,.gdrop')||f;box.scrollIntoView({behavior:'smooth',block:'center'});
-box.classList.remove('glit');void box.offsetWidth;box.classList.add('glit');setTimeout(function(){(f.matches('input,textarea')?f:f.querySelector('input')).focus({preventScroll:true})},450)}});
+function jump(i){var f=p1&&p1.querySelector(GO[i]);if(!f)return;var box=f.closest('.gf,.gdrop')||f;box.scrollIntoView({behavior:'smooth',block:'center'});
+box.classList.remove('glit');void box.offsetWidth;box.classList.add('glit');setTimeout(function(){(f.matches('input,textarea')?f:f.querySelector('input')).focus({preventScroll:true})},450)}
+[].forEach.call(D.querySelectorAll('.grl li'),function(li){li.addEventListener('click',function(e){if(e.target.closest('.gask'))return;jump(+li.dataset.i)})});
 var sd=D.querySelector('.gsend');if(sd)sd.onclick=function(){var a=this.parentNode;a.innerHTML='<div class="gdone" role="status"><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div>'};
 op();})();</script></body></html>
