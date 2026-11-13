@@ -42,7 +42,7 @@ FIG = {
  "video": _frame('<rect x="20" y="20" width="120" height="70" rx="4" fill="var(--soft)"/><path d="M70 40v30l26-15z" fill="var(--bgf)"/><rect x="20" y="98" width="120" height="4" fill="var(--edge)"/><rect x="20" y="98" width="44" height="4" fill="var(--acc)"/>', "A short horizontal video"),
  "service": _frame(_p(48, 50, 1.1) + _p(100, 50, 1.1, "var(--soft)") + '<rect x="58" y="78" width="44" height="26" fill="var(--acc)" opacity=".5"/>', "Young people serving together"),
 }
-from figs import FIG  # redrawn set: light, floor and depth of field
+from figs import FIG  # abstract color placeholders
 def fig(k): return FIG[k]
 
 # ---------------- R4 Brief board
@@ -96,7 +96,7 @@ r4 += '<div class="g band"><div class="w"><h2>Every brief, every time</h2><p cla
 def card(k, t, d, no=""): return f'<figure class="fc">{fig(k)}<figcaption><span class="fn">Fig. {no}</span><b>{t}</b>{d}</figcaption></figure>'
 TIPS = ["Be conscientious of your presence in the space", "Keep a steady hand", "Review your work on a bigger screen", "Capture a series of angles", "Be ready for spontaneous moments"]
 r5 = ('<section class="r5"><div class="g"><div class="w gh"><p class="kk">Field guide</p><h1 class="h">Capturing the story where you are</h1>'
-      '<p class="ld">A short guide for anyone sending photographs or video to The American Bahá’í. Most of it works with a phone. The drawings stand in for photographs, to show the idea.</p>'
+      '<p class="ld">A short guide for anyone sending photographs or video to The American Bahá’í. Most of it works with a phone. Color placeholders stand in for photographs.</p>'
       '<h2>Five habits</h2><ol class="tips">' + "".join(f"<li>{t}</li>" for t in TIPS) + '</ol>'
       '<nav class="toc" aria-label="In this guide"><p class="ml">In this guide</p>@@TOC@@</nav></div></div>')
 SECS = []
