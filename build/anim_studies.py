@@ -1,4 +1,4 @@
-"""Animations for the calls to action, shown in the story-ctas gallery under Animations.
+"""Animations for the calls to action, shown in the labs gallery under Animations.
 M1 and M2 are live on the site (the Send a story popup); M3 and M4 are proposals in the same manner as M1:
 a passage from the Writings, set small, with an image that enacts its metaphor."""
 import math

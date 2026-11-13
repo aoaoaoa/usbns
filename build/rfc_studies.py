@@ -1,5 +1,5 @@
 # Open call (RFC) studies, compiled with Capturing Content (bicentenary.bahai.org support document). Used by stories_gallery.py.
-IMG = {}  # image key -> src; defaults to the magazine's own img/ from a story-ctas page
+IMG = {}  # image key -> src; defaults to the magazine's own img/ from a labs page
 def im(k, alt=""): return f'<img src="{IMG.get(k, "../../img/" + k)}" alt="{alt}" loading="lazy">'
 ARR = '<span aria-hidden="true">→</span>'
 THEMES = [("Education", "Winter 2027", "In homes February 2027", "now"), ("National Convention", "Spring 2027", "In homes May 2027", "next"), ("Race Unity", "Summer 2027", "In homes August 2027", "later")]

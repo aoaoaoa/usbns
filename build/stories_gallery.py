@@ -1,10 +1,10 @@
-# /magazine/story-ctas/: a running gallery of story-submission ideas, each designed as a popup over the magazine. One page per idea, plus the gallery.
+# /magazine/labs/: a running gallery of story-submission ideas, each designed as a popup over the magazine. One page per idea, plus the gallery.
 # To add an idea: append to IDEAS (code, slug, name, blurb, tags, added, html, css, js) and run this file. Nothing typed on any page is sent or kept.
 import json, os, re, datetime
 import stories_base as b
 
 D = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(D, "site", "magazine", "story-ctas")
+OUT = os.path.join(D, "site", "magazine", "labs")
 R = "../../"               # magazine root, from an idea page
 I = R + "img/"
 T = b.TINT
@@ -347,8 +347,8 @@ def gallery():
     fl = '<button type="button" aria-pressed="true" data-t="">All</button>' + "".join(f'<button type="button" aria-pressed="false" data-t="{t}">{t}</button>' for t in tags)
     js = '''var B=[].slice.call(document.querySelectorAll('.fl button')),C=[].slice.call(document.querySelectorAll('.gc')),G=[].slice.call(document.querySelectorAll('.gg'));B.forEach(function(b){b.onclick=function(){B.forEach(function(x){x.setAttribute('aria-pressed',x===b)});var t=b.dataset.t;C.forEach(function(c){c.hidden=t&&c.dataset.t.split('|').indexOf(t)<0});G.forEach(function(g){var e=!g.querySelector('.gc:not([hidden])');g.hidden=e;g.previousElementSibling.hidden=e})}})'''
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>Story Invitation Ideas</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
-            f'<header class="gh"><p class="kk">The American Bahá’í · Studies</p><h1>Story invitation ideas</h1></header>'
+            f'<title>Laboratory · The American Bahá’í</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
+            f'<header class="gh"><p class="kk">The American Bahá’í · Laboratory</p><h1>Invitations, studies, tests, and research product sketches</h1></header>'
             f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
             f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul><h2 class="gs" id="animations">Animations <small>Motion for the calls to action: two live, two proposed</small></h2><ul class="gg">{acards}</ul></main><script>{js}</script></body></html>')
 
@@ -369,4 +369,12 @@ if __name__ == "__main__":
     shutil.copytree(os.path.join(D, "stories_thumbs"), os.path.join(OUT, "thumbs"), dirs_exist_ok=True)  # screenshots of each idea page, refreshed by hand
     json.dump([x["slug"] for x in IDEAS], open(os.path.join(OUT, "slugs.json"), "w"))
     json.dump([x["slug"] for x in RFCS], open(os.path.join(OUT, "rfc_slugs.json"), "w"))
+    OLD = os.path.join(D, "site", "magazine", "story-ctas")
+    import shutil as _sh; _sh.rmtree(OLD, ignore_errors=True)
+    def _redir(rel, depth):
+        os.makedirs(os.path.join(OLD, rel), exist_ok=True)
+        u = "../" * depth + "labs/" + (rel + "/" if rel else "")
+        open(os.path.join(OLD, rel, "index.html"), "w").write(f'<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>Moved</title><link rel="canonical" href="{u}"><meta http-equiv="refresh" content="0;url={u}"><p>This page has moved to <a href="{u}">{u}</a>.</p>')
+    _redir("", 1)
+    for x in IDEAS + RFCS + ANIMS: _redir(x["slug"], 2)
     print("ok", len(IDEAS))
