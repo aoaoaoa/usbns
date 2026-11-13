@@ -6,6 +6,15 @@ RULES = [("Send originals", "Full-size files straight from the camera or phone, 
          ("Video", "Steady and horizontal for the library; vertical welcome for social. Ten seconds per shot or longer."),
          ("A few lines", "What happened and why it mattered, in your own words and in any language.")]
 HABITS = ["Be conscientious of your presence in the space", "Keep a steady hand", "Review your work on a bigger screen", "Capture a series of angles", "Be ready for spontaneous moments"]
+IMG = "../../img/guide/"
+FRAME = [("wide", "Wide", "A sense of the space; context."), ("mid", "Mid", "Many people, close enough to see faces."), ("medium-close", "Medium close", "One feels part of the space."),
+         ("close", "Close", "A sense of focus."), ("extreme-close", "Extreme close", "Emotion, more dramatically."), ("audience-view", "From the audience", "The perspective of the audience.")]
+SHOTS = [("thirds", "Composition", "Balance within a grid of thirds."), ("audience-wide", "Audience", "A wide shot with many faces clearly visible."),
+         ("stage-title", "Stage", "The title in the shot leaves no room for confusion about the event."), ("circle", "Community", "The angle helps one feel part of the circle."),
+         ("action-focus", "Action", "Focus on one person, blur the rest."), ("devotion", "Devotion", "Different forms; creative, careful approaches."),
+         ("candid", "Candid", "Both are welcome."), ("posed", "Posed", "No group is too small.")]
+STRIP = ["wide", "thirds", "reaction", "stage-title", "circle", "action-focus", "devotion", "candid"]
+def ph(f, alt=""): return f'<img src="{IMG}{f}.jpg" alt="{alt}" loading="lazy">'
 MOM = [("Framing", "One wide, some mid, a few close.", "#e8532a", "#f3b562"),
        ("Composition", "Room around the subject; mind the edges.", "#1b5e6b", "#7fc0c9"),
        ("Audience", "Faces are what a reader looks for.", "#f05a7e", "#f7c1cf"),
@@ -42,17 +51,19 @@ def form(asides=None):
 # P1 guide beside the form, rules tick as fields fill
 p1_rules = "".join(f'<li data-i="{i}"><span class="ck" aria-hidden="true"></span><div><b>{a}</b><small>{b}</small>' + ('<label class="gask"><input type="checkbox" data-r="2"> Everyone pictured has agreed</label>' if i == 2 else '') + ('<em>if you send any</em>' if i == 4 else '') + '</div></li>' for i, (a, b) in enumerate(RULES))
 P1 = (f'<div class="p1"><div class="p1f">{HEAD}{form()}</div><aside class="p1g"><p class="gk">Before you send</p><p class="gready"><b>0</b> of 6 ready</p><ol class="grl">{p1_rules}</ol>'
-      '<p class="gk" style="margin-top:18px">Five habits</p><ol class="ghb">' + "".join(f"<li>{x}</li>" for x in HABITS) + '</ol></aside></div>')
+      '<p class="gk" style="margin-top:18px">Five habits</p><ol class="ghb">' + "".join(f"<li>{x}</li>" for x in HABITS) + '</ol>'
+      '<p class="gk" style="margin-top:18px">Send a range</p><div class="grange">' + "".join(f'<figure>{ph(f)}<figcaption>{n}</figcaption></figure>' for f, n, d in (FRAME[0], FRAME[1], FRAME[3])) + '</div></aside></div>')
 
 # P2 guidance at each step
 def rule(i, extra=""): a, b = RULES[i]; return f'<p class="gru"><b>{a}</b>{b}{extra}</p>'
-strip = '<div class="gstrip" aria-label="Eight kinds of moment">' + "".join(f'<figure><span style="{sw(c1, c2)}"></span><figcaption>{t}</figcaption></figure>' for t, d, c1, c2 in MOM) + '</div>'
+strip = '<div class="gstrip" aria-label="Eight kinds of moment">' + "".join(f'<figure>{ph(f)}<figcaption>{t}</figcaption></figure>' for f, (t, d, c1, c2) in zip(STRIP, MOM)) + '</div>'
 P2 = (f'<div class="p2">{HEAD}' + form({1: '<aside>' + rule(3) + '</aside>', 2: '<aside>' + rule(2) + '</aside>',
        3: '<aside>' + rule(0) + rule(1) + rule(4) + '</aside>', 4: '<aside>' + rule(5) + '</aside>'}).replace('<label class="gdrop">', strip + '<label class="gdrop">', 1) + '</div>')
 
 # P3 picture guide first
 P3 = ('<div class="p3"><p class="gk">Field guide</p><h2 class="gh">Capturing the story where you are</h2><p class="gl">Most of it works with a phone. Send a range, then tell us what happened.</p>'
-      '<div class="gmom">' + "".join(f'<figure><span style="{sw(c1, c2)}"></span><figcaption><b>{t}</b>{d}</figcaption></figure>' for t, d, c1, c2 in MOM) + '</div>'
+      '<h3 class="gfh">Framing, from wide to close</h3><div class="gframe">' + "".join(f'<figure>{ph(f)}<figcaption><b>{n}</b>{d}</figcaption></figure>' for f, n, d in FRAME) + '</div>'
+      '<div class="gmom">' + "".join(f'<figure>{ph(f)}<figcaption><b>{t}</b>{d}</figcaption></figure>' for f, t, d in SHOTS) + '</div>'
       '<ol class="ghb5">' + "".join(f"<li><i>{i + 1}</i>{x}</li>" for i, x in enumerate(HABITS)) + '</ol>'
       f'<div class="p3f">{HEAD}{form()}</div></div>')
 
@@ -96,6 +107,11 @@ V = [("GF1", "form-beside", "Guide beside the form", "The four steps on the left
      ("GF3", "form-pictures", "Picture guide first", "The eight kinds of moment and the five habits come first, the form follows on the same scroll.", P3)]
 
 CSS += r"""
+.gstrip img,.gmom img,.gframe img,.grange img{display:block;width:100%;object-fit:cover;border-radius:3px;background:var(--rule,#e6dfd2)}
+.gstrip img{aspect-ratio:1}.gmom img{aspect-ratio:4/3}.gframe img{aspect-ratio:3/2}.grange img{aspect-ratio:3/2}
+.gfh{font:700 17px var(--text);margin:0 0 10px}.gframe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin:0 0 24px}.gframe figure,.grange figure{margin:0}.gframe figcaption{font:12px/1.35 var(--ui);color:var(--mute);margin-top:5px}.gframe b{display:block;color:var(--ink,#1d1a16);font:700 13px var(--ui)}
+.grange{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}.grange figcaption{font:600 11px var(--ui);color:var(--mute);margin-top:3px}
+@media (max-width:760px){.gframe{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .gp{padding-top:56px}.gbox{max-height:calc(100% - 8px)}.gtop{display:none}.gbox{padding-top:28px}
 .gx2{position:sticky;top:-28px;float:right;margin:-14px -8px 0 0;width:40px;height:40px;border:1px solid var(--rule,#d6cebf);background:var(--paper,#f5f1e8);border-radius:50%;font:400 22px/1 var(--ui);color:inherit;cursor:pointer;z-index:3}
 .reopen2{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:90;font:600 14px var(--ui);background:#23406f;color:#fff;border:0;border-radius:3px;padding:14px 18px;cursor:pointer}
