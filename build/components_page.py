@@ -28,7 +28,7 @@ TINTS = [("tint-endeavor", "Across America", "Communities engage in a common end
 CH = [("colour", "Colour", "tint-endeavor", "Warm paper, dark ink, and one tint per feature that does the navigating."),
       ("type", "Type", "tint-gregory", "Bricolage Grotesque points the way; Literata carries the reading."),
       ("space", "Space and shape", "tint-newyorkers", "One column, a 16px gutter, square plates and rules, round only where a finger presses."),
-      ("marks", "Marks and icons", "tint-twoartists", "The nine-pointed star, the app icons, and single-ink social glyphs."),
+      ("marks", "Marks and icons", "tint-twoartists", "The mark, the app icons, and single-ink social glyphs."),
       ("components", "Components", "tint-abs", "The controls readers touch: buttons, the running head, forms and dialogs."),
       ("patterns", "Patterns", "tint-comic", "How a feature is set: the opener, the reading line, the voices and the close.")]
 
@@ -230,7 +230,7 @@ page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 {chap(2, *CH[1])}<div class="fams">{FAMS}</div>{typ}</div></section>
 {chap(3, *CH[2])}<h3 class="sub">Spacing</h3><div class="spxs">{spc}</div><div class="ruler">wrap-max · {wrap["value"]}: {e(wrap["usage"])}</div>
 <h3 class="sub">Radius <small>plates and rules stay square</small></h3><div class="rxs">{rad}</div></div></section>
-{chap(4, *CH[3])}<h3 class="sub">The mark</h3><div class="mk"><img class="big" src="../favicon.svg" alt="The nine-pointed star in a teal gradient"><div><p class="dk" style="margin:0 0 18px">The nine-pointed star in a vertical teal gradient. Use at 16 to 48px on paper or bar; the name is set in Bricolage Grotesque beside it.</p><div class="apps"><img src="../icon-512.png" alt="App icon, 512px" width="120" height="120"><img src="../apple-touch-icon.png" alt="Home-screen icon" width="72" height="72"></div></div></div>
+{chap(4, *CH[3])}<h3 class="sub">The mark</h3><div class="mk"><img class="big" src="../favicon.svg" alt="The mark"><div><p class="dk" style="margin:0 0 18px">Use at 16 to 48px on paper or bar; the name is set in Bricolage Grotesque beside it.</p><div class="apps"><img src="../icon-512.png" alt="App icon, 512px" width="120" height="120"><img src="../apple-touch-icon.png" alt="Home-screen icon" width="72" height="72"></div></div></div>
 <h3 class="sub">Interface glyphs <small>24px, 1.8 stroke, round caps, currentColor</small></h3><div class="ics">{gly}</div>
 <h3 class="sub">Social <small>single ink, footer</small></h3><div class="ics">{soc}</div></div></section>
 {chap(5, *CH[4])}<div class="specs">{comp}</div></div></section>
