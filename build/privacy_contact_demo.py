@@ -3,7 +3,7 @@ import os, re
 from about_terms_demo import shell, switch, SWITCH_CSS, SWITCH_JS, TERMS_CSS, SITE, NSA
 
 # ------------------------------------------------------------------ PRIVACY (same substance as the live text, reorganized)
-TOLL = "1-800-228-6483 (1-800-22UNITE)"
+TOLL = "1-800-228-6483 (1-800-22 UNITE)"
 STOPW = ["STOP", "QUIT", "END", "REVOKE", "OPT OUT", "CANCEL", "UNSUBSCRIBE"]
 PG = [("Not tracked", "Visits are counted only in aggregate, never by person."),
       ("Only what you give us", "Personal details come only from forms you fill in."),
