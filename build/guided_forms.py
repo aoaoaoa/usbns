@@ -36,7 +36,7 @@ def sw(c1, c2): return f'background:linear-gradient(135deg,{c1} 0 45%,{c2} 45% 7
 HEAD = ('<p class="gk">Contribute</p><h2 class="gh">Know a story like these?</h2>'
         '<p class="gl">Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p>')
 def f_where(): return '<label class="gf"><span>Where</span><input type="text" data-r="3" placeholder="Town or neighborhood, state"></label><label class="gf"><span>What happened</span><textarea rows="3" data-r="5"></textarea><small>A few paragraphs is plenty.</small></label>'
-def f_who(): return '<label class="gf"><span>Who was there</span><textarea rows="2"></textarea></label>'
+def f_who(): return '<label class="gf"><span>Who was there</span><textarea rows="2" class="gwho"></textarea></label>'
 def f_photo(): return '<label class="gdrop"><input type="file" multiple accept="image/jpeg,image/png" data-r="0"><b>Choose photographs</b><small>JPEG or PNG, as many as you like</small></label><label class="gf"><span>Photographer’s name</span><input type="text" data-r="1"></label>'
 def f_learn(): return '<label class="gf"><span>What you learned</span><textarea rows="2" data-r="5"></textarea></label>'
 def f_about(): return ('<div class="gab"><p class="gk">About you</p><div class="g2"><label class="gf"><span>Your name</span><input type="text"></label><label class="gf"><span>Email address</span><input type="email"></label></div>'
@@ -138,7 +138,7 @@ def section(k, t, ld, items, num):
     return f'<section class="xs" id="x-{k}-{num}"><h3><span>{num:02d}</span>{t}</h3>' + (f'<p class="xl">{ld}</p>' if ld else '') + frames(items) + '</section>'
 def tips4(): return '<ol class="xtips">' + "".join(f"<li><i>{i + 1}</i>{x}</li>" for i, x in enumerate(TIPS)) + '</ol>'
 def rules4(tick=False):
-    return '<ol class="grl">' + "".join(f'<li data-i="{i}"><span class="ck" aria-hidden="true"></span><div><b>{a}</b><small>{b}</small>' + ('<label class="gask"><input type="checkbox" data-r="2"> Everyone pictured has agreed</label>' if (tick and i == 2) else '') + '</div></li>' for i, (a, b) in enumerate(RULES)) + '</ol>'
+    return '<ol class="grl">' + "".join(f'<li data-i="{i}"><span class="ck" aria-hidden="true"></span><div><button type="button" class="gjump" data-go="{i}">{a}</button><small>{b}</small>' + ('<label class="gask"><input type="checkbox" data-r="2"> Everyone pictured has agreed</label>' if (tick and i == 2) else '') + '</div></li>' for i, (a, b) in enumerate(RULES)) + '</ol>'
 def index(v): return '<nav class="xidx" aria-label="In this guide"><a href="#x-tips-' + v + '">Tips</a>' + "".join(f'<a href="#x-{k}-{i + 1}">{t}</a>' for i, (k, t, l, it) in enumerate(SEC)) + f'<a href="#x-send-{v}" class="xgo">Send a story ↓</a></nav>'
 
 GUIDE_HEAD = '<p class="gk">Field guide · Capturing content</p><h2 class="gh">Capturing the story where you are</h2><p class="gl">Helpful guidelines for those documenting activities or gathering content.</p>'
@@ -147,7 +147,16 @@ GUIDE_HEAD = '<p class="gk">Field guide · Capturing content</p><h2 class="gh">C
 N = 0
 g4 = ('<div class="x4"><div class="x4g">' + GUIDE_HEAD + index("4") + f'<section class="xs" id="x-tips-4"><h3><span>✶</span>Five tips</h3>{tips4()}</section>' +
       "".join(section(k, t, l, it, i + 1) for i, (k, t, l, it) in enumerate(SEC)) + MB + '</div>'
-      '<aside class="x4f" id="x-send-4"><p class="gk">Send a story</p><p class="gready"><b>0</b> of 6 ready</p>' + rules4(True) + '<div class="x4form">' + form() + '</div></aside></div>')
+      '<aside class="x4f" id="x-send-4"><p class="gk">Send a story</p><div class="x4form">' +
+      step(1, "What happened, and where", f_where()) + step(2, "Who was there", f_who()) + step(3, "A photograph or two", f_photo()) + step(4, "What you learned", f_learn()) +
+      '<div class="gchk"><p class="gk">Before you send</p><p class="gready"><b>0</b> of 6 ready</p><p class="ghint">Tap a line to find its field.</p>' + rules4(True) + '</div>' + f_about() + '</div></aside></div>')
+
+# GF5 the guide alone, as a popup, no submission fields
+N = 0
+g5 = ('<div class="x5g">' + GUIDE_HEAD + index("5").replace('Send a story ↓', 'Before you send ↓') + f'<section class="xs" id="x-tips-5"><h3><span>✶</span>Five tips</h3>{tips4()}</section>' +
+      "".join(section(k, t, l, it, i + 1) for i, (k, t, l, it) in enumerate(SEC)) + MB +
+      '<section class="xs gstd" id="x-send-5"><h3><span>✶</span>Before you send</h3><div class="gsix">' + "".join(f'<div><i>{i + 1}</i><b>{a}</b><small>{b}</small></div>' for i, (a, b) in enumerate(RULES)) + '</div>'
+      '<p class="gnext"><a href="../form-manual/">Ready? Send a story <span aria-hidden="true">→</span></a></p></section></div>')
 
 
 CSS += r"""
@@ -165,6 +174,13 @@ CSS += r"""
 /* GF4 */
 .x4{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
 .x4f{position:sticky;top:0;max-height:calc(100vh - 150px);overflow:auto;background:var(--card,#fdfcf9);border:1px solid var(--rule,#d6cebf);border-top:3px solid #23406f;padding:14px 16px}
+.gchk{border-top:3px double var(--rule,#d6cebf);padding:12px 0 4px;margin-bottom:6px}.ghint{margin:-4px 0 6px;font:12.5px var(--ui);color:var(--mute)}
+.gjump{display:block;font:700 14px var(--ui);color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline dotted color-mix(in oklab,currentColor 40%,transparent);text-underline-offset:3px}.gjump:hover,.gjump:focus-visible{color:#23406f}
+.glit{animation:glit 1.8s ease-out}@keyframes glit{0%,40%{box-shadow:0 0 0 3px #b8862e,0 0 0 8px color-mix(in oklab,#b8862e 25%,transparent)}100%{box-shadow:0 0 0 0 transparent}}
+.gbox:has(.x5g){width:min(1180px,100%)}.x5g .xg.n6{grid-template-columns:repeat(6,minmax(0,1fr))}.x5g .xg.n2{max-width:50%}
+.gsix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 18px;margin-top:6px}.gsix div{border-top:2px solid #23406f;padding:8px 0;font:13px/1.45 var(--ui);color:var(--mute)}.gsix i{font:700 18px var(--text);color:#23406f;font-style:normal;margin-right:6px}.gsix b{color:var(--ink,#1d1a16)}.gsix small{display:block;margin-top:2px;font-size:13px}
+.gnext{margin:22px 0 0}.gnext a{display:inline-flex;align-items:center;gap:6px;font:600 14px var(--ui);letter-spacing:.06em;text-transform:uppercase;background:#23406f;color:#fff;text-decoration:none;border-radius:3px;padding:14px 20px;min-height:44px;box-sizing:border-box}
+@media (max-width:860px){.x5g .xg.n6{grid-template-columns:repeat(2,minmax(0,1fr))}.x5g .xg.n2{max-width:none}.gsix{grid-template-columns:minmax(0,1fr)}}
 .x4f .gs{padding:12px 0}.x4f .gs h3{font-size:16px}.x4f .gl,.x4f .gh,.x4f .gk:first-child+.gh{display:none}.x4f .grl li{padding:7px 0}
 @media (max-width:860px){.x4,.x6s{grid-template-columns:minmax(0,1fr)}.x4f,.x6f{position:static;max-height:none}.xg,.xg.n4{grid-template-columns:repeat(2,minmax(0,1fr))}.xg.n2{max-width:none}.xtips,.x5six{grid-template-columns:minmax(0,1fr)}.xtips li+li{border-left:0;border-top:1px solid var(--rule,#d6cebf);padding-left:0}.xwhy{display:none}}
 """
@@ -172,7 +188,8 @@ CSS += r"""
 V = [("GF1", "form-beside", "Guide beside the form", "The four steps on the left; the six rules on the right tick themselves as the form fills, with the five habits beneath.", P1),
      ("GF2", "form-steps", "Guidance at each step", "Each step carries its own rule in the margin; the photograph step holds the eight kinds of moment as a strip.", P2),
      ("GF3", "form-pictures", "Picture guide first", "The eight kinds of moment and the five habits come first, the form follows on the same scroll.", P3),
-     ("GF4", "form-manual", "Field manual", "The whole Capturing Content guide scrolls on the left, all 32 frames captioned; the form and the six standards stay in view on the right and tick as you go.", g4)]
+     ("GF4", "form-manual", "Field manual", "The whole Capturing Content guide scrolls on the left, all 32 frames captioned; the form stays in view on the right, its six standards at the foot, ticking as you go.", g4),
+     ("GF5", "field-guide", "The field guide, on its own", "The whole Capturing Content guide as a popup with no form: five tips, 32 captioned frames, the six standards, and a way on to Send a story.", g5)]
 
 CSS += r"""
 .gstrip img,.gmom img,.gframe img,.grange img{display:block;width:100%;object-fit:cover;border-radius:3px;background:var(--rule,#e6dfd2)}
@@ -188,8 +205,11 @@ CSS += r"""
 JS = r"""var D=document,P=D.querySelector('.gp'),R=D.querySelector('.reopen2');
 function op(){P.hidden=false;R.hidden=true;D.querySelector('.gx2').focus()}function cl(){P.hidden=true;R.hidden=false;R.focus()}
 D.querySelector('.gx2').onclick=cl;D.querySelector('.gbk0').onclick=cl;R.onclick=op;D.addEventListener('keydown',function(e){if(e.key==='Escape'&&!P.hidden)cl()});
-var p1=D.querySelector('.p1,.x4');if(p1){var tick=function(){var on=[0,0,0,0,0,0];[].forEach.call(p1.querySelectorAll('[data-r]'),function(f){var r=+f.dataset.r,v=f.type==='checkbox'?f.checked:f.type==='file'?f.files.length:f.value.trim();if(v){on[r]=1;if(r===0)on[4]=1}});
+var p1=D.querySelector('.p1,.x4');if(p1&&p1.querySelector('.gready')){var tick=function(){var on=[0,0,0,0,0,0];[].forEach.call(p1.querySelectorAll('[data-r]'),function(f){var r=+f.dataset.r,v=f.type==='checkbox'?f.checked:f.type==='file'?f.files.length:f.value.trim();if(v){on[r]=1;if(r===0)on[4]=1}});
 var n=0;[].forEach.call(p1.querySelectorAll('.grl li'),function(li,i){li.classList.toggle('on',!!on[i]);n+=on[i]});p1.querySelector('.gready b').textContent=n};p1.addEventListener('input',tick);p1.addEventListener('change',tick)}
 [].forEach.call(D.querySelectorAll('.gdrop input'),function(f){f.onchange=function(){var l=f.parentNode;l.classList.toggle('on',!!f.files.length);l.querySelector('b').textContent=f.files.length?f.files.length+' chosen':'Choose photographs'}});
-D.querySelector('.gsend').onclick=function(){var a=this.parentNode;a.innerHTML='<div class="gdone" role="status"><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div>'};
+var GO=['.gdrop','[data-r="1"]','.gwho','[data-r="3"]','.gdrop','[data-r="5"]'];
+[].forEach.call(D.querySelectorAll('.gjump'),function(b){b.onclick=function(){var f=p1.querySelector(GO[+b.dataset.go]);if(!f)return;var box=f.closest('.gf,.gdrop')||f;box.scrollIntoView({behavior:'smooth',block:'center'});
+box.classList.remove('glit');void box.offsetWidth;box.classList.add('glit');setTimeout(function(){(f.matches('input,textarea')?f:f.querySelector('input')).focus({preventScroll:true})},450)}});
+var sd=D.querySelector('.gsend');if(sd)sd.onclick=function(){var a=this.parentNode;a.innerHTML='<div class="gdone" role="status"><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div>'};
 op();"""
