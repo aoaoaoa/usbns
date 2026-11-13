@@ -384,6 +384,7 @@ if __name__ == "__main__":
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
     import shutil; shutil.copy(os.path.join(D, "vendor", "qrcode.min.js"), OUT)  # qrcodejs 1.0.0, MIT
     shutil.copytree(os.path.join(D, "stories_guide"), os.path.join(OUT, "..", "img", "guide"), dirs_exist_ok=True)  # photographs from the Capturing Content guide, for the guided forms
+    shutil.copytree(os.path.join(D, "stories_guide2"), os.path.join(OUT, "..", "img", "guide2"), dirs_exist_ok=True)  # every photograph in the guide, for GF4
     shutil.copytree(os.path.join(D, "stories_thumbs"), os.path.join(OUT, "thumbs"), dirs_exist_ok=True)  # screenshots of each idea page, refreshed by hand
     json.dump([x["slug"] for x in IDEAS], open(os.path.join(OUT, "slugs.json"), "w"))
     json.dump([x["slug"] for x in RFCS], open(os.path.join(OUT, "rfc_slugs.json"), "w"))

@@ -102,9 +102,77 @@ CSS = r"""
 .p3f{border-top:3px double var(--ink,#1d1a16);padding-top:18px}
 @media (max-width:760px){.p1,.gs.ga,.g2{grid-template-columns:minmax(0,1fr)}.p1g{position:static}.gmom,.gbrs{grid-template-columns:repeat(2,minmax(0,1fr))}.ghb5{grid-template-columns:minmax(0,1fr)}.ghb5 li+li{border-left:0;border-top:1px solid var(--rule,#d6cebf);padding-left:0}.gstrip{grid-template-columns:repeat(4,minmax(0,1fr))}.gp-sw button{padding:10px 9px}.gp-sw button span{display:none}}
 """
+# GF4 field manual: the whole Capturing Content guide beside the form
+IMG2 = "../../img/guide2/"
+def im2(n, alt=""): return f'<img src="{IMG2}p{n:02d}.jpg" alt="{alt}" loading="lazy">'
+TIPS = ["Be conscientious of your presence in the space", "Be ready for spontaneous opportunities", "Review your work on a bigger screen", "Capture a series of angles", "Keep a steady hand"]
+SEC = [
+ ("framing", "Framing", "You may know these well; a reminder of the basics, from wide to close.", [
+   (6, "Wide shot", "A sense of the space; context."), (9, "Mid shot", "Many people, close enough to see their faces."), (11, "Medium close-up", "One feels part of the space."),
+   (8, "Close-up", "A sense of focus."), (7, "Extreme close-up", "Emotion, in a more dramatic way."), (10, "From the audience", "The perspective of the audience.")]),
+ ("composition", "Composition", "", [
+   (12, "Rule of thirds", "Balance within a grid of thirds."), (14, "Vanishing point", "Adds a sense of depth."), (15, "Depth and focus", "Well composed, with depth and focus."), (13, "Over the shoulder", "Captures warm interactions between people.")]),
+ ("audience", "Audience", "Faces are what a reader looks for.", [
+   (16, "Audience wide shot", "Many people, faces clearly visible."), (19, "Reaction", "An audience reaction shot."), (18, "Extreme wide shot", "The space, a diverse range of people, the atmosphere."), (17, "Stage, from the crowd", "A stage shot among the audience.")]),
+ ("stage", "Stage", "", [
+   (20, "Title in the shot", "No room for confusion about what the event was. The microphone does not hide her face; both eyes show."), (23, "Dynamic", "A dynamic stage shot."), (22, "Light", "Notice the dynamic range of lighting."), (21, "Close to the audience", "The engagement adds to the sense of community.")]),
+ ("community", "Community", "Neighborhood gatherings can be spontaneous, intimate and delicate. On a phone, wipe your lens and set your focus.", [
+   (24, "In the circle", "The angle helps one feel part of the circle."), (27, "Layers", "Many layers of engagement: age, gender, activity."), (26, "Group photo", "Everyone’s face; no group is too small."), (25, "Conversation", "Friends talking, the space undisturbed. Use silent mode, or a zoom lens.")]),
+ ("action", "Action", "Be considerate of what you focus on. Match the shutter speed to the light and to the speed of the action.", [
+   (28, "One in focus", "Blur the rest; the subject holds the eye."), (31, "Faces", "Whatever is happening, one is drawn to faces."), (30, "Joy", "Joy, in whatever form, says more than words."), (29, "Fast shutter", "A faster shutter, less risk of blur.")]),
+ ("devotion", "Devotion", "Devotion takes different forms, and asks for creative, careful approaches.", [
+   (32, "", ""), (35, "", ""), (34, "", ""), (33, "", "")]),
+ ("candid", "Candid and posed", "Both are welcome; send some of each.", [(37, "Candid", ""), (38, "Posed", "")]),
+]
+MB = '<p class="xmb"><b>More examples.</b> The Bahá’í Media Bank at <a href="https://media.bahai.org" target="_blank" rel="noopener">media.bahai.org</a> holds many good examples; it helps to look there first.</p>'
+N = 0
+def frames(items, cls="xg"):
+    global N
+    out = []
+    for n, t, d in items:
+        N += 1
+        cap = f'<figcaption><i>{N:02d}</i>{f"<b>{t}</b>" if t else ""}{d}</figcaption>' if (t or d) else f'<figcaption><i>{N:02d}</i></figcaption>'
+        out.append(f'<figure>{im2(n, t)}{cap}</figure>')
+    return f'<div class="{cls} n{len(items)}">' + "".join(out) + '</div>'
+def section(k, t, ld, items, num):
+    return f'<section class="xs" id="x-{k}-{num}"><h3><span>{num:02d}</span>{t}</h3>' + (f'<p class="xl">{ld}</p>' if ld else '') + frames(items) + '</section>'
+def tips4(): return '<ol class="xtips">' + "".join(f"<li><i>{i + 1}</i>{x}</li>" for i, x in enumerate(TIPS)) + '</ol>'
+def rules4(tick=False):
+    return '<ol class="grl">' + "".join(f'<li data-i="{i}"><span class="ck" aria-hidden="true"></span><div><b>{a}</b><small>{b}</small>' + ('<label class="gask"><input type="checkbox" data-r="2"> Everyone pictured has agreed</label>' if (tick and i == 2) else '') + '</div></li>' for i, (a, b) in enumerate(RULES)) + '</ol>'
+def index(v): return '<nav class="xidx" aria-label="In this guide"><a href="#x-tips-' + v + '">Tips</a>' + "".join(f'<a href="#x-{k}-{i + 1}">{t}</a>' for i, (k, t, l, it) in enumerate(SEC)) + f'<a href="#x-send-{v}" class="xgo">Send a story ↓</a></nav>'
+
+GUIDE_HEAD = '<p class="gk">Field guide · Capturing content</p><h2 class="gh">Capturing the story where you are</h2><p class="gl">Helpful guidelines for those documenting activities or gathering content.</p>'
+
+# GF4 field manual: the guide scrolls on the left, the form stays on the right
+N = 0
+g4 = ('<div class="x4"><div class="x4g">' + GUIDE_HEAD + index("4") + f'<section class="xs" id="x-tips-4"><h3><span>✶</span>Five tips</h3>{tips4()}</section>' +
+      "".join(section(k, t, l, it, i + 1) for i, (k, t, l, it) in enumerate(SEC)) + MB + '</div>'
+      '<aside class="x4f" id="x-send-4"><p class="gk">Send a story</p><p class="gready"><b>0</b> of 6 ready</p>' + rules4(True) + '<div class="x4form">' + form() + '</div></aside></div>')
+
+
+CSS += r"""
+.gbox:has(.x4){width:min(1180px,100%)}
+.xidx{position:sticky;top:-28px;z-index:1;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:var(--paper,#f5f1e8);padding:8px 0;margin:0 0 8px;border-bottom:1px solid var(--rule,#d6cebf)}
+.xidx a{font:600 12.5px var(--ui);color:inherit;text-decoration:none;border:1px solid var(--rule,#d6cebf);border-radius:999px;padding:0 12px;min-height:34px;display:inline-flex;align-items:center;white-space:nowrap}.xidx a.xgo{background:#23406f;color:#fff;border-color:#23406f}
+.xs{padding:18px 0 6px;scroll-margin-top:110px}.xs h3{display:flex;gap:10px;align-items:baseline;margin:0 0 4px;font:700 20px var(--text)}.xs h3 span{font:700 12px var(--ui);color:#b8862e;min-width:20px}
+.xl{margin:0 0 10px;font:16px/1.5 var(--text);color:var(--mute);max-width:64ch}
+.xg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.xg.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.xg.n2{grid-template-columns:repeat(2,minmax(0,1fr));max-width:66%}
+.xg figure{margin:0}.xg img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:3px;background:var(--rule,#e6dfd2)}.xg figcaption i{display:block;font:700 10.5px var(--ui);font-style:normal;color:#b8862e;margin-bottom:2px}.gask input{width:auto;flex:none;margin:0;min-height:0}
+.xg figure,.xg img,
+.xg figcaption{font:12.5px/1.4 var(--ui);color:var(--mute);margin-top:6px}.xg figcaption b{display:block;font:700 13.5px var(--ui);color:var(--ink,#1d1a16)}.xg figcaption i,
+.xtips{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-block:1px solid var(--rule,#d6cebf)}.xtips li{padding:10px 10px 10px 0;font:600 13px/1.35 var(--ui)}.xtips li+li{border-left:1px solid var(--rule,#d6cebf);padding-left:10px}.xtips i{display:block;font:700 20px var(--text);color:#b8862e;font-style:normal}
+.xmb{margin:18px 0 0;padding:12px 14px;border-left:3px solid #b8862e;background:var(--card,#fdfcf9);font:14px/1.5 var(--ui)}.xmb a{color:#23406f}
+/* GF4 */
+.x4{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;align-items:start}
+.x4f{position:sticky;top:0;max-height:calc(100vh - 150px);overflow:auto;background:var(--card,#fdfcf9);border:1px solid var(--rule,#d6cebf);border-top:3px solid #23406f;padding:14px 16px}
+.x4f .gs{padding:12px 0}.x4f .gs h3{font-size:16px}.x4f .gl,.x4f .gh,.x4f .gk:first-child+.gh{display:none}.x4f .grl li{padding:7px 0}
+@media (max-width:860px){.x4,.x6s{grid-template-columns:minmax(0,1fr)}.x4f,.x6f{position:static;max-height:none}.xg,.xg.n4{grid-template-columns:repeat(2,minmax(0,1fr))}.xg.n2{max-width:none}.xtips,.x5six{grid-template-columns:minmax(0,1fr)}.xtips li+li{border-left:0;border-top:1px solid var(--rule,#d6cebf);padding-left:0}.xwhy{display:none}}
+"""
+
 V = [("GF1", "form-beside", "Guide beside the form", "The four steps on the left; the six rules on the right tick themselves as the form fills, with the five habits beneath.", P1),
      ("GF2", "form-steps", "Guidance at each step", "Each step carries its own rule in the margin; the photograph step holds the eight kinds of moment as a strip.", P2),
-     ("GF3", "form-pictures", "Picture guide first", "The eight kinds of moment and the five habits come first, the form follows on the same scroll.", P3)]
+     ("GF3", "form-pictures", "Picture guide first", "The eight kinds of moment and the five habits come first, the form follows on the same scroll.", P3),
+     ("GF4", "form-manual", "Field manual", "The whole Capturing Content guide scrolls on the left, all 32 frames captioned; the form and the six standards stay in view on the right and tick as you go.", g4)]
 
 CSS += r"""
 .gstrip img,.gmom img,.gframe img,.grange img{display:block;width:100%;object-fit:cover;border-radius:3px;background:var(--rule,#e6dfd2)}
@@ -120,7 +188,7 @@ CSS += r"""
 JS = r"""var D=document,P=D.querySelector('.gp'),R=D.querySelector('.reopen2');
 function op(){P.hidden=false;R.hidden=true;D.querySelector('.gx2').focus()}function cl(){P.hidden=true;R.hidden=false;R.focus()}
 D.querySelector('.gx2').onclick=cl;D.querySelector('.gbk0').onclick=cl;R.onclick=op;D.addEventListener('keydown',function(e){if(e.key==='Escape'&&!P.hidden)cl()});
-var p1=D.querySelector('.p1');if(p1){var tick=function(){var on=[0,0,0,0,0,0];[].forEach.call(p1.querySelectorAll('[data-r]'),function(f){var r=+f.dataset.r,v=f.type==='checkbox'?f.checked:f.type==='file'?f.files.length:f.value.trim();if(v){on[r]=1;if(r===0)on[4]=1}});
+var p1=D.querySelector('.p1,.x4');if(p1){var tick=function(){var on=[0,0,0,0,0,0];[].forEach.call(p1.querySelectorAll('[data-r]'),function(f){var r=+f.dataset.r,v=f.type==='checkbox'?f.checked:f.type==='file'?f.files.length:f.value.trim();if(v){on[r]=1;if(r===0)on[4]=1}});
 var n=0;[].forEach.call(p1.querySelectorAll('.grl li'),function(li,i){li.classList.toggle('on',!!on[i]);n+=on[i]});p1.querySelector('.gready b').textContent=n};p1.addEventListener('input',tick);p1.addEventListener('change',tick)}
 [].forEach.call(D.querySelectorAll('.gdrop input'),function(f){f.onchange=function(){var l=f.parentNode;l.classList.toggle('on',!!f.files.length);l.querySelector('b').textContent=f.files.length?f.files.length+' chosen':'Choose photographs'}});
 D.querySelector('.gsend').onclick=function(){var a=this.parentNode;a.innerHTML='<div class="gdone" role="status"><h3>Thank you.</h3><p>Story submissions open soon. Please keep your notes and photographs; we’d love to receive them.</p></div>'};
