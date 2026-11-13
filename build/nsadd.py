@@ -109,12 +109,12 @@ CSS_ADD = r'''/* nsadd */
 /* earlier issues: four, balanced */
 .arch .wrap{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);grid-template-areas:"h t" "m t";column-gap:clamp(24px,5vw,72px);align-content:start}
 .arch .rowh{grid-area:h;align-self:end;margin:0 0 12px}.arch .more{grid-area:m;align-self:start;margin:0}
-.arch .tiles{grid-area:t;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.6vw,36px);padding:6px 4px 0}
+.arch .tiles{grid-area:t;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2.2vw,28px);padding:6px 4px 0}
 .arch .tile{width:auto;margin:0;transform:rotate(calc(var(--r) * .4))}
 .arch .tile:nth-child(n+5){display:none}
 .arch .tile:hover,.arch .tile:focus-visible{transform:rotate(0) translateY(-8px)}
 .arch .tile .cv{padding:12px}
-.arch .tile .cv small{font-size:12px}.arch .tile .cv em{font-size:clamp(44px,6vw,72px)}
+.arch .tile .cv small{font-size:11px}.arch .tile .cv em{font-size:clamp(36px,4.6vw,56px)}
 @media (max-width:860px){.arch .wrap{grid-template-columns:1fr;grid-template-areas:"h" "t" "m"}.arch .more{margin-top:28px}}
 @media (max-width:600px){.arch .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 18px}}
 /* read / listen switch */
@@ -218,7 +218,7 @@ CSS_ADD = r'''/* nsadd */
 @media (max-width:520px){.sbc .ckl ul{grid-template-columns:1fr}}
 /* centered heads */
 .secin .rowh{justify-content:center;text-align:center;flex-direction:column;align-items:center;gap:14px}
-.arch .wrap{grid-template-columns:1fr!important;grid-template-areas:"h" "t" "m"!important;justify-items:center}.arch .rowh{text-align:center;margin-bottom:28px!important}.arch .tiles{width:100%;max-width:840px}.arch .more{margin-top:28px!important}
+.arch .wrap{grid-template-columns:1fr!important;grid-template-areas:"h" "t" "m"!important;justify-items:center}.arch .rowh{text-align:center;margin-bottom:28px!important}.arch .tiles{width:100%;max-width:660px}.arch .more{margin-top:28px!important}
 .secin h2::before,.arch h2::before,.sbm h2::before{border-top:4px double var(--ink);padding-top:12px;width:60px;margin-left:auto;margin-right:auto;white-space:nowrap;text-align:center;width:auto;display:table}
 .sbm h2::before{margin-left:0}
 .sbc h2::before{margin-left:auto!important;margin-right:auto}

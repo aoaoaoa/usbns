@@ -11,6 +11,20 @@ WAYS = [("idea", "Share an idea", "A minute", "A sentence about something worth 
         ("write", "Write with us", "A few weeks", "Report and write a story with an editor beside you.", "Published with your byline."),
         ("join", "Join the contributor network", "Ongoing", "Writers, photographers, videographers and local correspondents.", "Hear about themes first and work from the full guide.")]
 USES = [("Feature", "A full story in the magazine"), ("Microstory", "A photograph or clip with a few lines"), ("Social", "Shared on the magazine’s channels"), ("Photo library", "B-roll and stills for future stories")]
+
+def ico(d): return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>'
+IC = {"idea": ico('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/>'),
+      "photo": ico('<rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l2-3h4l2 3"/>'),
+      "pitch": ico('<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'),
+      "write": ico('<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/>'),
+      "join": ico('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 1.5 6 5"/>'),
+      "Feature": ico('<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+      "Microstory": ico('<rect x="3" y="4" width="18" height="12" rx="1"/><path d="M3 13l5-4 4 3 3-2 6 4M6 20h12"/>'),
+      "Social": ico('<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 11l7.6-4M8.2 13l7.6 4"/>'),
+      "Photo library": ico('<rect x="7" y="3" width="14" height="11" rx="1"/><path d="M3 7v13h14"/>'),
+      "video": ico('<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/>'),
+      "pin": ico('<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>')}
+def meter(i): return '<span class="mt" aria-hidden="true">' + "".join('<i class="on"></i>' if j <= i else '<i></i>' for j in range(5)) + '</span>'
 FORM = '<form class="mini" onsubmit="event.preventDefault();this.classList.add(\'sent\')"><label for="{i}">{l}</label><div class="fr"><input id="{i}" placeholder="{p}"><button type="submit">{b} ' + ARR + '</button></div><p class="ok" role="status">Thank you. This is a demo; nothing was sent.</p></form>'
 
 # ---------------- R1 The open call
@@ -24,10 +38,10 @@ r1 = f'''<section class="r1"><div class="g"><div class="w hero">
 <figure class="sq"><blockquote><p>Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.</p></blockquote><figcaption><b>Bahá’u’lláh</b><span>Gleanings from the Writings of Bahá’u’lláh, CXXII</span></figcaption></figure>
 <p class="kd">We’re looking for</p><ul class="look"><li>Children’s classes</li><li>Junior youth groups</li><li>Study circles</li><li>Tutor training</li><li>Seasonal Bahá’í schools</li><li class="lw">Learning wherever it happens</li></ul></div>
 <figure class="hf">{im("ny-table.jpg","Children’s hands painting with watercolors at a picnic table")}<figcaption>Crown Heights, Brooklyn · this issue</figcaption></figure></div></div>
-<div class="g band"><div class="w"><h2>Five ways to take part</h2><ol class="ways">''' + "".join(f'<li><span class="t">{t}</span><b>{n}</b><p>{d}</p><p class="u">{u}</p></li>' for k,n,t,d,u in WAYS) + f'''</ol>{WELCOME}</div></div>
-<div class="g"><div class="w two"><div><h2>Where it can go</h2><ul class="uses">''' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in USES) + f'''</ul></div>
+<div class="g band"><div class="w"><h2>Five ways to take part</h2><ol class="ways">''' + "".join(f'<li><span class="ic">{IC[k]}</span><span class="t">{t}</span>{meter(i)}<b>{n}</b><p>{d}</p><p class="u">{u}</p></li>' for i,(k,n,t,d,u) in enumerate(WAYS)) + f'''</ol>{WELCOME}</div></div>
+<div class="g"><div class="w two"><div><h2>Where it can go</h2><ul class="uses">''' + "".join(f'<li><span class="ic">{IC[a]}</span><b>{a}</b><span>{b}</span></li>' for a,b in USES) + f'''</ul></div>
 <div><h2>Coming up</h2><ul class="up">''' + "".join(f'<li class="{s}"><b>{n}</b><span>{se} · {h}</span><i>{"Gathering now" if s=="now" else "Opens next" if s=="next" else "Later in 2027"}</i></li>' for n,se,h,s in THEMES) + f'''</ul></div></div></div>
-<div class="g"><div class="w cta"><p>New to this? Start with the <a href="#">field guide</a>, or just send what you have.</p><a class="btn" href="#">Send a story {ARR}</a></div></div></section>'''
+<div class="g"><div class="w cta nv"><p>New to this? Start with the <a href="#">field guide</a>, or just send what you have.</p><a class="btn" href="#">Send a story {ARR}</a></div></div></section>'''
 
 # ---------------- R2 Ways in, by time
 r2 = '<section class="r2"><div class="g"><div class="w"><p class="kk">Open call · Education · Winter 2027</p><h1 class="h">Everyone has something to contribute.</h1>' + WELCOME + '</div></div><div class="g"><div class="w lad">'
@@ -37,7 +51,7 @@ for i,(k,n,t,d,u) in enumerate(WAYS):
            "pitch":("ri3","Your pitch, in one line","A junior youth group in our town runs the food pantry…","Pitch it"),
            "write":("ri4","What would you like to write about?","Study circles at the community college","Ask an editor"),
            "join":("ri5","Your email","you@example.org","Join")}[k]
-    r2 += f'<article class="step" style="--n:{i}"><p class="tm">{t}</p><div><h2>{n}</h2><p>{d}</p><p class="u">{u}</p>{FORM.format(i=fld[0],l=fld[1],p=fld[2],b=fld[3])}</div></article>'
+    r2 += f'<article class="step" style="--n:{i}"><div class="tmc"><span class="ic">{IC[k]}</span><p class="tm">{t}</p>{meter(i)}</div><div><h2>{n}</h2><p>{d}</p><p class="u">{u}</p>{FORM.format(i=fld[0],l=fld[1],p=fld[2],b=fld[3])}</div></article>'
 r2 += '</div></div></section>'
 
 # ---------------- R3 The cycle
@@ -49,12 +63,13 @@ for n,se,h,s in THEMES:
 r3 += f'</div></div><div class="g"><div class="w note3"><p>Dates for each phase are set by the editors. This study shows only the order, and the issues already announced.</p></div></div><div class="g"><div class="w"><div class="sub3"><p class="kk">Hear when a call opens</p><form class="mini" onsubmit="event.preventDefault();this.classList.add(\'sent\')"><label for="rc">Email address</label><div class="fr"><input id="rc" type="email" placeholder="you@example.org"><button type="submit">Notify me {ARR}</button></div><p class="ok" role="status">Thank you. This is a demo; nothing was sent.</p></form></div></div></div></section>'
 
 # ---------------- R6 Contributor desk
+RIC = ["write", "photo", "video", "pin"]
 ROLES = [("Contributing writer", "Report and write features with an editor."), ("Photographer", "Cover gatherings and classes near you, and build the photo library."), ("Videographer", "Short clips and b-roll for social and future stories."), ("Local correspondent", "Keep an eye out in your area and send leads.")]
 OFFER = ["Each theme before it’s announced", "An editor’s notes on your work", "The full content guide and specs", "Your name with everything we use"]
 r6 = f'''<section class="r6"><div class="g"><div class="w d6"><div class="dl"><p class="kk">Contributor network</p><h1 class="h">Tell the stories of your community, with us.</h1>
 <p class="ld">The American Bahá’í is building a circle of contributors across the country. No experience in journalism is needed: care for your community and a willingness to learn are enough.</p>
-<h2>What we offer</h2><ul class="of">''' + "".join(f"<li>{o}</li>" for o in OFFER) + '''</ul></div>
-<form class="apply" onsubmit="event.preventDefault();this.classList.add('sent')"><h2>Express interest</h2><fieldset><legend>I’d like to</legend>''' + "".join(f'<label><input type="checkbox" name="role" id="ro{i}"><span><b>{a}</b>{b}</span></label>' for i,(a,b) in enumerate(ROLES)) + '''</fieldset>
+<h2>What we offer</h2><ul class="of of2">''' + "".join(f"<li><em>0{i+1}</em>{o}</li>" for i,o in enumerate(OFFER)) + '''</ul></div>
+<form class="apply" onsubmit="event.preventDefault();this.classList.add('sent')"><h2>Express interest</h2><fieldset><legend>I’d like to</legend>''' + "".join(f'<label><input type="checkbox" name="role" id="ro{i}"><span class="ric">{IC[RIC[i]]}</span><span><b>{a}</b>{b}</span></label>' for i,(a,b) in enumerate(ROLES)) + '''</fieldset>
 <label for="an">Name</label><input id="an" autocomplete="name"><label for="ae">Email</label><input id="ae" type="email" autocomplete="email"><label for="aw">Where you live</label><input id="aw" placeholder="Town or neighborhood, state">
 <label for="ak">A link to something you’ve made (optional)</label><input id="ak" placeholder="Photos, writing, video"><button type="submit">Send ''' + ARR + '''</button><p class="ok" role="status">Thank you. This is a demo; nothing was sent.</p></form></div></div></section>'''
 
@@ -151,6 +166,35 @@ section>.g{padding-block:48px}section>.g+.g{padding-top:0}section>.band+.g{paddi
 .apply>label{font:600 14px var(--ui);margin-top:8px}.apply button{justify-self:start;margin-top:14px}
 @media (max-width:900px){.fr6{grid-template-columns:repeat(3,minmax(0,1fr))}.cyc{grid-template-columns:minmax(0,1fr)}}
 .ways li{}@media (max-width:900px){.ways li{grid-template-columns:minmax(0,1fr);gap:4px}}@media (max-width:600px){.look{grid-template-columns:minmax(0,1fr)}}@media (max-width:700px){.hf img{transform:none;aspect-ratio:4/3;max-height:none}.hero,.two,.d6{grid-template-columns:minmax(0,1fr);gap:32px}.step{grid-template-columns:minmax(0,1fr);gap:8px}.fr6{grid-template-columns:repeat(2,minmax(0,1fr))}.cmp{grid-template-columns:minmax(0,1fr)}.cmp dd{border-top:0;padding-top:0}}
+/* spruce */
+.ic{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:color-mix(in oklab,var(--gold) 12%,var(--card));color:var(--gold);flex:none}.ic svg{width:22px;height:22px}
+.mt{display:inline-flex;gap:3px;align-items:flex-end}.mt i{display:block;width:6px;border-radius:1px;background:var(--rule)}.mt i:nth-child(1){height:6px}.mt i:nth-child(2){height:9px}.mt i:nth-child(3){height:12px}.mt i:nth-child(4){height:15px}.mt i:nth-child(5){height:18px}.mt i.on{background:var(--gold)}
+.r1 .hero{padding-top:16px}.r1 h1{position:relative}.hf{position:relative}.hf img{border-radius:4px;box-shadow:0 18px 40px -18px rgba(29,26,22,.45)}.hf::before{content:"";position:absolute;inset:-14px 14px 14px -14px;border:1px solid var(--gold);border-radius:4px;z-index:-1;opacity:.5}
+.r1 .band h2,.r1 .two h2{display:flex;align-items:baseline;gap:12px}.r1 .band h2::after,.r1 .two h2::after{content:"";flex:1;border-top:1px solid var(--rule);transform:translateY(-6px)}
+.ways{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;border:0}
+.ways li{grid-template-columns:auto 1fr;grid-template-rows:auto auto auto 1fr auto;gap:10px 10px;align-items:center;align-content:start;border:1px solid var(--rule);border-top:3px solid var(--gold);background:var(--paper);border-radius:4px;padding:18px 16px 20px}
+.ways .ic{grid-row:1;grid-column:1}.ways .t{grid-row:1;grid-column:2}.ways .mt{grid-row:2;grid-column:1/-1}.ways b,.ways p{grid-column:1/-1}.ways b{font-size:18px;margin-top:4px}.ways .u{border-top:1px dashed var(--rule);padding-top:10px;align-self:end}
+.wel{background:var(--navy);border:0;color:var(--onnavy)}.wel li{color:var(--onnavy2)}.wel b{color:var(--onnavy)}.wel li::before{color:var(--blush);content:"✓";width:20px;height:20px;border:1.5px solid var(--blush);border-radius:50%;display:grid;place-items:center;font-size:11px;line-height:1;margin-top:2px}
+.uses{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.uses li{grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;row-gap:0;align-items:center;border:1px solid var(--rule);border-radius:4px;background:var(--card);padding:14px}.uses .ic{grid-row:1/3;width:36px;height:36px}.uses li>span:not(.ic){font-size:14px;color:var(--mute)}
+.up{position:relative;padding-left:26px}.up::before{content:"";position:absolute;left:7px;top:18px;bottom:18px;border-left:2px dotted var(--rule)}.up li{position:relative;border-top:0;padding:10px 0 16px}.up li::before{content:"";position:absolute;left:-26px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--rule)}.up .now::before{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 5px color-mix(in oklab,var(--teal) 20%,transparent)}.up .next::before{border-color:var(--teal)}
+.cta.nv{background:var(--navy);color:var(--onnavy);border:0;border-radius:6px;padding:28px clamp(20px,4vw,40px)}.cta.nv p{color:var(--onnavy)}.cta.nv a:not(.btn){color:var(--blush)}.cta.nv .btn{background:var(--blush);color:var(--navy)}
+.r2>.g:first-child{background:var(--card);border-bottom:1px solid var(--rule);padding-block:56px}.r2 .h{font-size:clamp(36px,5.4vw,60px);max-width:14ch}.r2 .wel{margin-top:28px}
+.lad{position:relative;padding-top:12px}.step{position:relative;grid-template-columns:220px minmax(0,1fr);border-top:0;padding:26px 0}.step+.step{border-top:1px dashed var(--rule)}
+.tmc{display:grid;gap:10px;align-content:start;justify-items:start}.tmc .ic{width:48px;height:48px}.tmc .ic svg{width:24px;height:24px}
+.step>div:last-child{background:var(--card);border:1px solid var(--rule);border-left:3px solid var(--gold);border-radius:4px;padding:20px 22px}
+.r3>.g:first-child{padding-bottom:28px}.r3 .h{font-size:clamp(40px,6vw,72px)}
+.cyc{position:relative;padding-top:34px}.cyc::before{content:"";position:absolute;top:10px;left:16.6%;right:16.6%;border-top:2px dotted var(--rule)}
+.iss{position:relative;box-shadow:0 12px 30px -20px rgba(29,26,22,.35)}.iss::before{content:"";position:absolute;top:-30px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--card);border:2px solid var(--rule)}.iss.now::before{background:var(--teal);border-color:var(--teal);box-shadow:0 0 0 5px color-mix(in oklab,var(--teal) 20%,transparent)}
+.iss header{border-bottom:1px solid var(--rule);padding-bottom:14px}.iss.now header{border-color:color-mix(in oklab,var(--onnavy) 25%,transparent)}.iss h2{font-size:26px}
+.iss .st{border-top:1px solid var(--rule);padding-top:12px}.iss.now .st{border-color:color-mix(in oklab,var(--onnavy) 25%,transparent);color:var(--blush)}
+.sub3{max-width:none;background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:26px clamp(20px,4vw,36px);display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:24px;align-items:center}.sub3 .kk{margin:0}.sub3 .mini{margin:0}
+.r6>.g:first-child{padding-block:56px}.r6 .h{font-size:clamp(36px,5vw,58px)}
+.of2{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.of2 li{padding:16px;border:1px solid var(--rule);border-radius:4px;background:var(--card);font:600 15px/1.4 var(--ui);display:grid;gap:6px}.of2 li::before{display:none}.of2 em{font:700 26px/1 var(--cond);font-style:normal;color:var(--gold)}
+.apply{border-top:4px solid var(--navy)}.apply fieldset label{grid-template-columns:20px 32px 1fr;align-items:center}.ric{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:color-mix(in oklab,var(--navy) 8%,var(--card));color:var(--navy)}.ric svg{width:18px;height:18px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ric{color:var(--blush)}:root:not([data-theme="light"]) .apply{border-top-color:var(--blush)}}:root[data-theme="dark"] .ric{color:var(--blush)}:root[data-theme="dark"] .apply{border-top-color:var(--blush)}
+@media (max-width:1000px){.ways{grid-template-columns:repeat(2,minmax(0,1fr))}.ways li:last-child{grid-column:1/-1}}
+@media (max-width:900px){.cyc::before{display:none}.iss::before{display:none}.cyc{padding-top:0}.sub3{grid-template-columns:1fr}}
+@media (max-width:700px){.ways{grid-template-columns:minmax(0,1fr)}.uses,.of2{grid-template-columns:minmax(0,1fr)}.step{grid-template-columns:minmax(0,1fr)}.tmc{grid-template-columns:auto auto 1fr;align-items:center;gap:12px}.hf::before{display:none}}
 """
 JS = """var T=[].slice.call(document.querySelectorAll('[role=tab]'));function go(i){T.forEach(function(x,j){x.setAttribute('aria-selected',j===i);document.getElementById('v'+j).hidden=j!==i});scrollTo(0,0)}
 T.forEach(function(t,i){t.onclick=function(){go(i)}});[].forEach.call(document.querySelectorAll('[data-go]'),function(a){a.onclick=function(e){e.preventDefault();go(+a.dataset.go)}});
