@@ -772,7 +772,7 @@ def prayer_html(pr):
 # end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
 NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
     '<span class="q sqi">Education can, alone, cause it to reveal its treasures… <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
-NEXT_CSS = (".nxl{padding:34px 0 38px}.nxl+.colo{margin-top:0!important}.nxl .wrap{padding-top:0!important;padding-bottom:0!important}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);border-bottom:1px solid var(--rule);padding:16px 0;margin:0;font:17px/1.5 \"Literata\",Georgia,serif}"
+NEXT_CSS = (".nxl{padding:30px 0 26px}.nxl+.colo{margin-top:0!important}.nxl .wrap{padding-top:0!important;padding-bottom:0!important}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);padding:16px 0 0;margin:0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
     ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
 def build_tab(member=False, menu="contents", lite=False, letter=None):

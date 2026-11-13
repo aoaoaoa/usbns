@@ -67,19 +67,13 @@ m5 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax
            + "".join(f'<path class="bd" style="--i:{i}" d="{d}"/>' for i,d in enumerate(borders)) + "".join(arcs)
            + "".join(f'<circle class="ct" cx="{x}" cy="{y}" r="3.2"/>' for x,y in cities) + '</svg>',
            "The earth is but one country, and mankind its citizens.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXVII"))
-# M6 Perfect chord: five voices, each its own pitch, travel and breathe; they draw together into one dancing chord while five notes stack on the staff
+# M6 Perfect chord: five waves in five colors draw together and resolve into one bold chord
 WC = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#b8d4a8"]
-K = [2, 3, 4, 5, 6]          # cycles per 560 units: five pitches, every path loops seamlessly
-def _w(i, a=15):
-    return " ".join(f'{x},{a*math.sin(x/560*2*math.pi*K[i] + i*.9):.1f}' for x in range(0, 1121, 5))
-chord_pts = " ".join(f'{x},{sum(15*math.sin(x/560*2*math.pi*K[i] + i*.9) for i in range(5))/2.2:.1f}' for x in range(0, 1121, 4))
-staff = "".join(f'<line class="sf" x1="16" x2="544" y1="{150 + k*20}" y2="{150 + k*20}"/>' for k in range(5))
-lanes = "".join(f'<g class="ln" style="--i:{i};--o:{(i-2)*27}px"><g transform="translate(0 190)"><g class="bz" style="--i:{i}"><polyline class="wv2" style="--i:{i};--c:{WC[i]}" points="{_w(i)}"/></g></g></g>' for i in range(5))
-START = [(-400, 20), (-320, -20), (-250, 40), (-170, -40), (-90, 0)]
-heads = "".join(f'<g class="nh" style="--i:{i};--dx:{dx}px;--dy:{dy}px"><g class="nb" style="--i:{i}"><ellipse cx="500" cy="{230 - i*20}" rx="10" ry="7" fill="{WC[i]}" transform="rotate(-20 500 {230 - i*20})"/></g></g>' for i,(dx,dy) in enumerate(START))
-m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">{staff}{lanes}'
-           f'<g class="cdw"><g transform="translate(0 190)"><polyline class="cdg2" points="{chord_pts}"/><polyline class="cd2" points="{chord_pts}"/></g></g>'
-           f'<line class="stem" x1="509" y1="227" x2="509" y2="112"/>{heads}</svg>',
+def wave(f, a, ph):
+    return " ".join(f'{x},{200 + a*math.sin(x/560*2*math.pi*f + ph):.1f}' for x in range(-10, 571, 5))
+ws = "".join(f'<polyline class="wv3" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" points="{wave(1.6+i*.55, 24, i*.9)}"/>' for i in range(5))
+chord = " ".join(f'{x},{200 + sum(24*math.sin(x/560*2*math.pi*(1.6+i*.55) + i*.9) for i in range(5))/2.3:.1f}' for x in range(-10, 571, 4))
+m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">{ws}<polyline class="cg3" points="{chord}"/><polyline class="cd3" points="{chord}"/></svg>',
            "…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.",
            ("‘Abdu’l-Bahá", "Paris Talks, “Beauty and Harmony in Diversity”"), "lu ch")
 
@@ -113,16 +107,10 @@ CSS = r"""
 .caret{display:inline-block;width:2px;height:1.1em;background:var(--teal);vertical-align:-3px;margin-left:1px;animation:cr 1s steps(1) infinite}@keyframes cr{50%{opacity:0}}.th{margin:6px 0 0;font:14px/1.5 var(--ui);color:var(--mute)}
 /* M3 */.dawn{transform-origin:280px 320px;transform:scale(.05);opacity:.4;will-change:transform,opacity;animation:dawn 10s cubic-bezier(.33,0,.2,1) .3s forwards}@keyframes dawn{to{transform:scale(1);opacity:1}}
 .sk{fill:#fbf8ff;opacity:.7;animation:tw 4.8s ease-in-out var(--t) infinite}@keyframes tw{50%{opacity:1}}.qh{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.7);will-change:transform,opacity;animation:qh 5s cubic-bezier(.33,0,.2,1) 4.2s forwards}@keyframes qh{to{opacity:1;transform:scale(1)}}.sr{opacity:0;will-change:opacity;animation:srl 2.2s cubic-bezier(.4,0,.2,1) calc(.6s + var(--d) * 3.8s) forwards}@keyframes srl{to{opacity:1}}
-.lk{stroke:#ffd9a6;stroke-width:.9;opacity:0;animation:lk 2.4s cubic-bezier(.4,0,.2,1) calc(1.8s + var(--d) * 3.8s) forwards}@keyframes lk{to{opacity:.9}}
-/* M6 */.ln{transform:translateY(var(--o));will-change:transform,opacity;animation:lnj 3.4s cubic-bezier(.45,0,.2,1) calc(1.2s + var(--i) * .18s) forwards}@keyframes lnj{to{transform:translateY(0);opacity:.55}}
-.bz{transform-box:fill-box;transform-origin:center;animation:brt calc(2.2s + var(--i) * .35s) ease-in-out infinite alternate}@keyframes brt{to{transform:scaleY(1.45)}}
-.wv2{fill:none;stroke:var(--c);stroke-width:3.4;stroke-linecap:round;will-change:transform;animation:drift calc(4.4s + var(--i) * 1.1s) linear infinite}@keyframes drift{to{transform:translateX(-560px)}}
-.cdw{opacity:0;animation:fadein 2s ease 4.2s forwards}@keyframes fadein{to{opacity:1}}
-.cd2,.cdg2{fill:none;stroke-linecap:round;stroke-linejoin:round;will-change:transform;animation:drift 9s linear infinite}.cd2{stroke:#fffaf5;stroke-width:4.4}.cdg2{stroke:#f3c98e;stroke-width:18;opacity:.18}
-.nh{transform:translate(var(--dx),var(--dy));opacity:0;will-change:transform,opacity;animation:nmv 2.6s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .22s) forwards}@keyframes nmv{15%{opacity:1}to{transform:none;opacity:1}}
-.nb{animation:nbob 1.4s ease-in-out calc(4.6s + var(--i) * .17s) infinite alternate}@keyframes nbob{to{transform:translateY(-4px)}}
-.stem{stroke:#fffaf5;stroke-width:2;opacity:0;animation:fadein 1s ease 4.4s forwards}
-.old6.wv{fill:none;stroke:var(--c);stroke-width:3.2;stroke-linecap:round;opacity:.95;transform:translateY(var(--o));will-change:transform,opacity;animation:join 3.4s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .15s) forwards}@keyframes join{70%{opacity:.85}to{transform:none;opacity:.16}}
+.lk{stroke:#ffe6c4;stroke-width:.6;opacity:0;animation:lk 2.4s cubic-bezier(.4,0,.2,1) calc(1.8s + var(--d) * 3.8s) forwards}@keyframes lk{to{opacity:.22}}
+/* M6 */.wv3{fill:none;stroke:var(--c);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;opacity:.95;transform:translateY(var(--o));will-change:transform,opacity;animation:join3 3.6s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .16s) forwards}@keyframes join3{65%{opacity:.9}to{transform:none;opacity:.32}}
+.cg3{fill:none;stroke:#f3c98e;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg3 2.6s ease 4s forwards}@keyframes cg3{to{opacity:.2}}
+.cd3{fill:none;stroke:#fffaf5;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1500;stroke-dashoffset:1500;animation:grow 2.6s cubic-bezier(.4,0,.2,1) 3.9s forwards}@keyframes grow{to{stroke-dashoffset:0}}
 .nt{fill:var(--c);transform:translateY(var(--o));will-change:transform,opacity;animation:join 3.4s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .15s) forwards}.sf{stroke:#fbf7ef;stroke-width:.6;opacity:.08}
 .cdg{fill:none;stroke:#f3c98e;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg 2.4s ease 4s forwards}@keyframes cg{to{opacity:.16}}
 .cd{fill:none;stroke:#fffaf5;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:grow 2.4s cubic-bezier(.4,0,.2,1) 3.9s forwards}
@@ -140,6 +128,6 @@ def body(x):
             f'<div class="ab"><div><h2>Where it goes</h2><p>{where}</p></div><div><h2>What it does</h2><p>{why}</p></div></div>'
             + ('' if st == "live" and slug == "anim-prompts" else '<button type="button" class="rpl">Replay</button>') + '</main>')
 
-CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 112%,#8a9be0 0%,#5263a8 34%,#33407a 66%,#252d5a 100%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}.lk{stroke-width:1}"
+CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 112%,#8a9be0 0%,#5263a8 34%,#33407a 66%,#252d5a 100%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}"
 
 CSS += ".pn.lu .pq p{text-shadow:0 1px 12px rgba(29,34,54,.85)}"
