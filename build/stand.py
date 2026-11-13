@@ -266,7 +266,7 @@ def _key(h):  # a key beside Subscribe opens the members sign-in; 9 lets the rea
           "function cl(){G.hidden=true;if(last)last.focus()}"
           "[].forEach.call(D.querySelectorAll('[data-mem]'),function(a){a.addEventListener('click',op)});"
           "G.querySelector('.mgx').onclick=cl;G.querySelector('.mgb').onclick=cl;D.addEventListener('keydown',function(e){if(e.key==='Escape'&&!G.hidden)cl()});"
-          "G.querySelector('form').onsubmit=function(e){e.preventDefault();if(I.value.trim()==='9'){L.textContent='Welcome.';C.classList.add('ok');setTimeout(function(){T.classList.add('go')},350);setTimeout(function(){location.href='../members/#members'},1500);return}"
+          "G.querySelector('form').onsubmit=function(e){e.preventDefault();if(I.value.trim()==='9'){L.textContent='Welcome.';C.classList.add('ok');setTimeout(function(){T.classList.add('go')},350);setTimeout(function(){location.href='../members/'},1500);return}"
           "n++;C.classList.remove('shake');void C.offsetWidth;C.classList.add('shake');L.textContent=n>2?'Your number is printed in the field. Type exactly that.':'Not quite. Look closely at the empty field.';I.select()}})();")
     h = h.replace('</head>', '<!-- key --><style>' + css + '</style><!-- /key --></head>', 1)
     i = h.rfind('</body>')
