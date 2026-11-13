@@ -11,7 +11,7 @@ G = [(70,182),(170,226),(260,172),(350,236),(430,192),(510,222),(120,250),(300,2
 m1 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path fill="#2a3150" d="M0 150C120 130 220 165 330 145S500 130 560 150V300H0z"/><path fill="#323a5e" d="M0 200C140 186 260 214 380 196S520 188 560 200V300H0z"/><path fill="#3b446b" d="M0 244C130 236 280 256 400 240S520 236 560 244V300H0z"/>'
            + "".join(f'<polygon class="gm" style="--i:{i}" points="{x},{y-9} {x+7},{y} {x},{y+9} {x-7},{y}"/>' for i,(x,y) in enumerate(G)) + '</svg>',
            "Regard man as a mine rich in gems of inestimable value. Education can, alone, cause it to reveal its treasures, and enable mankind to benefit therefrom.",
-           ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXXII"))
+           ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXXII"), "big")
 # M2 Prompts (live)
 m2 = ('<div class="pn light"><div class="tw"><p class="tl">What happened <small>A few paragraphs is plenty.</small></p><div class="fld"><span class="twt"></span><b class="caret"></b></div>'
       '<p class="th">The four step headings of the form, typed in turn while the field is empty. It stops the moment the reader clicks in.</p></div></div>')
@@ -137,3 +137,5 @@ def body(x):
 CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 112%,#8a9be0 0%,#5263a8 34%,#33407a 66%,#252d5a 100%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}"
 
 CSS += ".pn.lu .pq p{text-shadow:0 1px 12px rgba(29,34,54,.85)}"
+
+CSS += ".pn.big .pq{max-width:720px}.pn.big .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45;text-shadow:0 1px 12px rgba(29,34,54,.85)}.pn.big .pq::before{font-size:56px;top:12px}"
