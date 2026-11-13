@@ -564,7 +564,7 @@ _c = _ns["CSS_ADD"]; _i = _c.index("/* dateline above the header */"); CAL_CSS =
 CHIP_JS = "<script>(function(){var D=document.querySelector('.head .dl');if(!D)return;var HP=D.parentNode,HA=D.nextSibling,H=document.documentElement;\nfunction mv(){var R=document.querySelector('.rhd .r');if(!R)return;var rh=R.parentNode;rh.removeAttribute('aria-hidden');var want=H.classList.contains('rhon')&&!H.classList.contains('rhmenu')?R:HP;if(D.parentNode!==want){D.open=false;if(want===R)R.insertBefore(D,R.firstChild);else HP.insertBefore(D,HA)}}\nvar q=0;addEventListener('scroll',function(){if(!q){q=1;requestAnimationFrame(function(){q=0;mv()})}},{passive:true});\ndocument.addEventListener('click',function(e){if(D.open&&!D.contains(e.target))D.open=false});\ndocument.addEventListener('keydown',function(e){if(e.key==='Escape'&&D.open){D.open=false;D.querySelector('summary').focus()}});mv()})();</script>"
 FI2_CSS = ".fih{margin:40px 0 14px;color:var(--mem)}.fi2{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}.fi2 a{display:grid;gap:3px;padding:12px 0 14px;border-top:2px solid var(--mem);text-decoration:none;color:inherit}.fi2 .kk{font:600 14.5px/1.25 var(--ui);color:var(--ink)}.fi2 .t{font:italic 300 16px/1.35 var(--text);color:var(--mute)}.fi2 a:hover .kk,.fi2 a:focus-visible .kk{color:var(--mem)}@media (max-width:600px){.fi2{grid-template-columns:1fr}}\n"
 from endasks import END_CSS, SUB_SECTION
-END_ASKS_CSS = ".edask{--card:var(--bar,#fdfcf9);--soft:color-mix(in oklab,var(--ink) 82%,var(--paper))}" + END_CSS + ".edask.sbm{background:var(--bar,#fdfcf9)!important;border-top:0!important}.edask.sbx{background:var(--paper)!important;border-top:1px solid var(--rule)}.edask .wrap{max-width:1120px}"
+END_ASKS_CSS = ".edask{--card:var(--bar,#fdfcf9);--soft:color-mix(in oklab,var(--ink) 82%,var(--paper))}" + END_CSS + ".edask.sbm{background:var(--bar,#fdfcf9)!important;border-top:0!important}.edask{position:relative;z-index:2}.edask.sbx{background:color-mix(in oklab,#f2cfc6 42%,var(--paper))!important;border-top:3px double var(--ink);border-bottom:0}.edask.sbm{background:var(--bar,#fdfcf9)!important;border-top:1px solid var(--rule)!important;background-image:radial-gradient(color-mix(in oklab,var(--rule) 70%,transparent) 1px,transparent 1.2px)!important;background-size:22px 22px!important}@media (prefers-color-scheme:dark){:root:not([data-theme='light']) .edask.sbx{background:color-mix(in oklab,#f2cfc6 10%,var(--paper))!important}}:root[data-theme='dark'] .edask.sbx{background:color-mix(in oklab,#f2cfc6 10%,var(--paper))!important}.nxl{position:relative;z-index:2;background:var(--paper)}.edask .wrap{max-width:1120px}"
 MAST_CSS = ('.cover .mast .the{font:italic 400 clamp(22px,2.6vw,34px)/1 "Literata",Georgia,serif;letter-spacing:0;margin:0 0 -.12em .06em;color:#b8782e;filter:drop-shadow(0 1px 0 rgba(255,255,255,.7))}'
     '.cover h1{color:#3a332c;-webkit-text-stroke:1.4px #120e0b;paint-order:stroke fill;text-shadow:none;filter:drop-shadow(0 1px 0 rgba(255,255,255,.7))}'
     '.cover .mast .sub{text-shadow:none}'
@@ -863,10 +863,18 @@ def build_tab(member=False, menu="contents", lite=False, letter=None):
         def book(it):
             t, sub, desc, price = it[:4]; url = it[4] if len(it) > 4 else None
             h = f'<a href="{url}" target="_blank" rel="noopener">{esc(t)}</a>' if url else esc(t)
-            buy = f' <a class="buy" href="{url}" target="_blank" rel="noopener">View at the Bahá\'í Bookstore</a>' if url else ""
-            return f'<li><h3>{h}</h3>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p>{esc(desc)}</p>{("<p class=price>"+esc(price)+buy+"</p>") if price else ""}</li>'
-        bk = "".join(book(it) for it in B["items"])
-        books = dept_open(B) + f'<div class="prose shelf"><ul class="books">{bk}</ul><p class="note">{esc(B["contact"])}</p></div></article>'
+            buy = f'<a class="buy" href="{url}" target="_blank" rel="noopener">Bahá\'í Bookstore <span aria-hidden="true">↗</span></a>' if url else ""
+            return f'<li><h4>{h}</h4>{("<p class=sub>"+esc(sub)+"</p>") if sub else ""}<p class=ds>{esc(desc)}</p>{("<p class=price><span>"+esc(price)+"</span>"+buy+"</p>") if price else ""}</li>'
+        GRP = [("Books", ("Whole Earth Farming", "Yukon Golden Hearts Discovered", "Fire and Gold", "No Day Comes Twice")),
+               ("For children", ("Birds Who Try Their Best", "Beautiful Words", "What Makes ‘Abdu'l-Bahá Special?", "Radiant Hearts", "Shining Stars")),
+               ("To share", ("A Unifying Vision in Action", "Light of Unity", "Words of Light", "The Bahá'ís", "Bahá'í Prayers"))]
+        seen = set(); grp = ""
+        for g, ts in GRP:
+            its = [it for it in B["items"] if it[0] in ts]; seen.update(it[0] for it in its)
+            if its: grp += f'<h3 class="bkg">{esc(g)}<small>{len(its)}</small></h3><ul class="books">' + "".join(book(it) for it in its) + '</ul>'
+        rest = [it for it in B["items"] if it[0] not in seen]
+        if rest: grp += '<ul class="books">' + "".join(book(it) for it in rest) + '</ul>'
+        books = dept_open(B) + f'<div class="prose shelf">{grp}<p class="note">{esc(B["contact"])}</p></div></article>'
         nt = "".join(f'''<li{' class="svn"' if "1052" in n["src"] else ""}>{('<img src="img/'+n["img"]+'" alt="'+esc(n.get("alt") or n["title"]+" cover")+'" loading="lazy">') if n.get("img") else ""}{('<a class="svm" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener" aria-label="Take the reader survey"><img src="img/motif/m09.webp" alt="" loading="lazy"></a>') if "1052" in n["src"] else ""}<p class="k">{esc(n["kicker"])}</p><h3>{esc(n["title"])}</h3><p>{esc(n["text"])}</p>{('<a class="svb" href="'+SURVEY_FORM+'" data-survey target="_blank" rel="noopener">Take the survey here</a>') if "1052" in n["src"] else ""}<cite>{esc(n["src"])}</cite></li>''' for n in NOTICES)
         notices = f'''<article class="story dept members" id="notices"><header class="shead"><p class="kicker-top">Announcements</p><h2>Notices</h2></header><aside class="margin"><p class="kicker">Notices</p><p class="pp">Print pages 40–48</p></aside><div class="prose"><ul class="notices">{nt}</ul></div></article>'''
         depts = '<h2 class="reg members" id="members">The full issue<small>The National Spiritual Assembly\'s mid-year letter and the departments of the printed issue</small></h2>' + lead + abide + huq + comic_story + fund + rhythm + books + notices + f'<section class="story dept members visit" id="visitation" aria-label="From the Tablet of Visitation"><div class="prose">{prayer_html(RHYTHM["prayer"])}</div></section>'
@@ -1189,20 +1197,20 @@ main,.head{{position:relative;z-index:1}}
 .members .passage.prayer.illum cite{{justify-content:center;clear:both;padding-top:8px}}
 .members.compilation h3::before,.members .compilation h3::before{{content:"";display:block;width:16px;height:16px;margin:0 0 12px;background:var(--star) center/contain no-repeat}}
 
-.shelf .books{{list-style:none;margin:0 0 1.6em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 28px}}
-.shelf .books li{{border-top:1px solid var(--rule);padding-top:12px}}
-.shelf li h3{{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:-.015em;text-transform:none;color:inherit;padding-top:0;border-top:0;line-height:1.6;margin:0 0 4px}}
-.shelf .sub{{font-family:var(--ui);font-size:12.5px;color:var(--mute);margin:0 0 8px}}
-.shelf .books p{{font-size:15px;line-height:1.5;margin:0 0 8px}}
-.shelf .price{{font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--accent)}}
-.shelf li h3 a{{color:inherit;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%}}
-.shelf li h3 a:hover,.shelf li h3 a:focus-visible{{color:var(--accent)}}
-.shelf .buy{{display:block;margin-top:4px;font-weight:500;color:var(--accent)}}
+.shelf .bkg{{display:flex;align-items:baseline;gap:10px;font:700 11.5px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:2.2em 0 0;padding:0 0 10px;border:0;border-bottom:3px double var(--ink)}} .shelf .bkg:first-child{{margin-top:0}} .shelf .bkg small{{font-size:11px;color:var(--mute);letter-spacing:.08em}}
+.shelf .books{{list-style:none;margin:0 0 .4em;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));column-gap:32px}}
+.shelf .books li{{border-bottom:1px solid var(--rule);padding:14px 0 12px;display:grid;gap:4px;align-content:start}}
+.shelf li h4{{font-family:var(--text);font-weight:700;font-size:17px;letter-spacing:0;text-transform:none;color:inherit;line-height:1.3;margin:0}}
+.shelf .sub{{font-family:var(--ui);font-size:12.5px;line-height:1.4;color:var(--mute);margin:0}}
+.shelf .ds{{font-size:14.5px;line-height:1.5;margin:2px 0 0;color:var(--ink)}}
+.shelf .price{{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-family:var(--ui);font-size:12.5px;font-weight:600;color:var(--mute);margin:4px 0 0}}
+.shelf li h4 a{{color:inherit;text-decoration:none}} .shelf li h4 a:hover,.shelf li h4 a:focus-visible{{color:var(--accent);text-decoration:underline;text-underline-offset:3px}}
+.shelf .buy{{color:var(--accent);font-weight:600;text-decoration:none;white-space:nowrap}} .shelf .buy:hover{{text-decoration:underline;text-underline-offset:3px}}
 .notices{{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:28px}}
 .dept .prose:has(.notices){{grid-column:2/4;display:block;max-width:none}}
 .notices li{{border-top:3px solid var(--accent);padding-top:14px}}
 .notices img{{display:block;width:120px;height:auto;border:1px solid var(--rule);margin:0 0 12px}}
-.notices li{{container-type:inline-size}} .notices img[src*="aac-2027"],.notices img[src*="also-stone"]{{width:100%;aspect-ratio:1;object-fit:cover;margin:0 0 14px;box-sizing:border-box}} .notices img[src*="bstar"]{{width:auto;height:100cqw;max-width:100%;object-fit:contain;margin:0 auto 14px}}
+.notices{{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))!important;gap:30px 40px!important}} .notices li{{display:grid;grid-template-columns:clamp(104px,30%,150px) minmax(0,1fr);column-gap:20px;align-content:start;padding-top:16px!important}} .notices li>*{{grid-column:2}} .notices li>img,.notices li>.svm{{grid-column:1;grid-row:1/span 12;align-self:start;width:100%!important;height:auto!important;aspect-ratio:1;margin:0!important;box-sizing:border-box}} .notices li>img{{object-fit:cover}} .notices li>img[src*="bstar"]{{object-fit:contain;border:0;background:none}} .notices li h3{{font-size:19px!important;line-height:1.3!important;margin:0 0 6px!important}} .notices li p{{font-size:15px!important;line-height:1.5!important}} @media (max-width:560px){{.notices{{grid-template-columns:minmax(0,1fr)!important}} .notices li{{display:block!important}} .notices li>img,.notices li>.svm{{float:left;width:92px!important;margin:4px 14px 8px 0!important}} .notices li>p,.notices li>cite,.notices li>a{{clear:none}} .notices li::after{{content:"";display:table;clear:both}}}}
 .notices .k{{font-family:var(--ui);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}}
 .notices li h3{{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.02em;text-transform:none;color:inherit;padding-top:0;border-top:0;line-height:1.6;margin:0 0 8px}}
 .notices p{{font-size:15.5px;line-height:1.55;margin:0 0 8px}}
