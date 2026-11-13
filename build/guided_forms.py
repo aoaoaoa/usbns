@@ -61,7 +61,7 @@ P2 = (f'<div class="p2">{HEAD}' + form({1: '<aside>' + rule(3) + '</aside>', 2: 
        3: '<aside>' + rule(0) + rule(1) + rule(4) + '</aside>', 4: '<aside>' + rule(5) + '</aside>'}).replace('<label class="gdrop">', strip + '<label class="gdrop">', 1) + '</div>')
 
 # P3 picture guide first
-P3 = ('<div class="p3"><p class="gk">Field guide</p><h2 class="gh">Capturing the story where you are</h2><p class="gl">Most of it works with a phone. Send a range, then tell us what happened.</p>'
+P3 = ('<div class="p3"><p class="gk">Field guide</p><h2 class="gh">Capturing the story where you are</h2><p class="gl">Helpful guidelines for those documenting activities or gathering content.</p>'
       '<h3 class="gfh">Framing, from wide to close</h3><div class="gframe">' + "".join(f'<figure>{ph(f)}<figcaption><b>{n}</b>{d}</figcaption></figure>' for f, n, d in FRAME) + '</div>'
       '<div class="gmom">' + "".join(f'<figure>{ph(f)}<figcaption><b>{t}</b>{d}</figcaption></figure>' for f, t, d in SHOTS) + '</div>'
       '<ol class="ghb5">' + "".join(f"<li><i>{i + 1}</i>{x}</li>" for i, x in enumerate(HABITS)) + '</ol>'
