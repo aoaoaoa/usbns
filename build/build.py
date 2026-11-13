@@ -2276,9 +2276,11 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
   new IntersectionObserver(function(e){var v=e[0].isIntersecting;if(v&&!on){clearTimeout(t);q.src=A+'?r='+(++n)}on=v},{threshold:.5}).observe(q)});
 })();</script>"""
 def build_test():
-    # /test/ is a live clone of the curated edition, ready for trials. Earlier trials kept above, not applied: TEST_CSS (blind deboss), TEST_MOTION/TEST_MOTION_JS (one moving thing per screen).
+    # /test/ is a live clone of the curated edition with the All Sites network bar (reset Nov 13). Earlier trials kept above, not applied: TEST_CSS (blind deboss), TEST_MOTION/TEST_MOTION_JS (one moving thing per screen).
     h = standalone(build_tab()).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/')
-    return h.replace('</head>', '<meta name="robots" content="noindex"></head>', 1)
+    h = h.replace('</head>', '<meta name="robots" content="noindex"></head>', 1)
+    import all_sites  # /test/ trial: the national network bar and All Sites panel
+    return all_sites.apply(h)
 # /test/ trial: inline photos framed by a white box and a thin rule instead of the cover-painting mat
 TEST_FRAME = ('<style>.prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{background:#fff!important;border:1px solid #d6cebf!important;padding:6px!important;box-shadow:0 1px 2px rgba(40,25,10,.06)}'
   '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .prose .photo img,:root:not([data-theme="light"]) .prose .portraits img,:root:not([data-theme="light"]) .band .bi img,:root:not([data-theme="light"]) .prose .mountp img{background:#1f1c17!important;border-color:#3a342b!important}}'
@@ -2341,6 +2343,7 @@ def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}<
 # Contacts, "How can we help?": pick a need, see only the contacts that answer it. Contacts as on the print page (p. 84) and as since agreed.
 _CT = {
  "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "Send a story", "https://link.bahai.us/TAB_submit"),
+ "guide": ("Field guide", "Capturing the story where you are: five tips, 32 examples", "Open the guide", "https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/"),
  "editors": ("Write to the editors", "Questions, leads, or a story idea in a few lines", "TAB@usbnc.org", "mailto:TAB@usbnc.org"),
  "feedback": ("Share your experience of the site", "What worked, what didn’t, and what you’d like to see", "research@bahai.us", "mailto:research@bahai.us"),
  "survey": ("Take the reader survey", "Share your ideas to shape the magazine’s future", "5 minutes", SURVEY_FORM),
@@ -2349,15 +2352,16 @@ _CT = {
  "media": ("Office of Public Affairs", "For editors, journalists, and other media professionals", "(202) 833-8990 · usnsa-opa@usbnc.org", "mailto:usnsa-opa@usbnc.org"),
  "nc": ("Bahá’í National Center offices", "1233 Central St., Evanston, IL 60201", "(847) 733-3400", "tel:+18477333400"),
 }
-_ROUTES = [("I have a story or photographs", ["submit", "editors"]), ("I have feedback on the site", ["feedback", "survey"]),
+_ROUTES = [("I have a story or photographs", ["submit", "editors", "guide"]), ("I have feedback on the site", ["feedback", "survey"]),
            ("I want the magazine", ["subs", "back"]), ("I’m a journalist", ["media"]), ("I need the National Center", ["nc"])]
 FGN = '<p class="fgn" data-k="0">Before you take pictures: <a href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">the field guide <span aria-hidden="true">→</span></a></p>'
 def _card(k):
     h, d, v, u = _CT[k]; ext = ' target="_blank" rel="noopener"' if u.startswith("https") else ""
     if k == "submit": u, ext = "#", " data-submit"  # opens the Submit your story dialog, as in the footer
-    return f'<a class="c" href="{u}"{ext}><b>{h}</b><span class="d">{d}</span><span class="v">{v} <span aria-hidden="true">→</span></span></a>'
+    vf = '<svg class="cvf" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"/><circle cx="12" cy="12" r="3.2"/></svg>' if k == "guide" else ""
+    return f'<a class="c{" cfg" if k == "guide" else ""}" href="{u}"{ext}>{vf}<b>{h}</b><span class="d">{d}</span><span class="v">{v} <span aria-hidden="true">→</span></span></a>'
 CONTACT = ('<div class="rt" role="group" aria-label="What do you need?">' + "".join(f'<button type="button" aria-pressed="{str(k == 0).lower()}" data-k="{k}">{q}</button>' for k, (q, _) in enumerate(_ROUTES)) + '</div>'
-    + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' + (FGN if k == 0 else '') for k, (q, L) in enumerate(_ROUTES))
+    + "".join(f'<div class="rp" data-k="{k}" aria-label="{q}">{"".join(_card(x) for x in L)}</div>' for k, (q, L) in enumerate(_ROUTES))
     + '<section class="mh2"><p class="wm"><small>The</small>American Bahá’í</p>'
     + '<p><b>Editor</b> Neena Rouhani · <a href="mailto:nrouhani@usbnc.org">nrouhani@usbnc.org</a></p><p><b>Designer</b> Luthando Mazibuko · <a href="mailto:lmazibuko@usbnc.org">lmazibuko@usbnc.org</a></p>'
     + '<p class="ph">Photography by license or by permission of community members.</p></section>'
@@ -2369,7 +2373,7 @@ CONTACT_CSS = ("main{max-width:980px!important}.rt{display:none;flex-wrap:wrap;g
     ".rt button{font:600 15px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;cursor:pointer}.rt button[aria-pressed=true]{background:#222e4c;color:#f2cfc6;border-color:#222e4c}.rt button:focus-visible{outline:2px solid var(--link);outline-offset:2px}"
     ".fgn{margin:-2px 0 18px;font:14px var(--ui);color:var(--mute)}.fgn a{color:var(--ink)}.fgn[hidden]{display:none}.rp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:0 0 14px}.rp[hidden]{display:none}"
     ".c{display:grid;gap:6px;align-content:start;text-decoration:none;color:var(--ink)!important;background:var(--card);border:1px solid var(--rule);border-top:4px solid #222e4c;padding:18px}.c:hover{border-color:var(--ink)}.c:focus-visible{outline:2px solid var(--link);outline-offset:3px}"
-    ".c b{font:700 19px/1.25 var(--text)}.c .d{font:14px/1.5 var(--ui);color:var(--mute)}.c .v{font:700 15px var(--ui);color:var(--link)}"
+    ".c.cfg{border-top-color:#1b5e6b}.cvf{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#1b5e6b}.c b{font:700 19px/1.25 var(--text)}.c .d{font:14px/1.5 var(--ui);color:var(--mute)}.c .v{font:700 15px var(--ui);color:var(--link)}"
     ".mh2{margin:40px 0 0;background:var(--card);border:1px solid var(--rule);overflow:hidden}.mh2 .wm{margin:0 0 14px!important;background:#222e4c;color:#fff;font:400 30px/1 var(--text)!important;padding:16px 20px}.mh2 .wm small{display:block;font:italic 14px var(--text);color:#f2cfc6}"
     ".mh2 p{font:15px/1.5 var(--ui)!important;margin:0 20px 8px!important}.mh2 p b{display:inline-block;min-width:80px;color:var(--mute)}.mh2 .ph{color:var(--mute);margin-bottom:18px!important}"
     ".fine{font:14px/1.6 var(--ui)!important;color:var(--mute);margin-top:40px!important;padding-top:16px;border-top:1px solid var(--rule)}")
