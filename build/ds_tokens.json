@@ -1,0 +1,435 @@
+{
+ "name": "The American Bahá’í",
+ "version": 1,
+ "color": {
+  "themes": [
+   {
+    "id": "light",
+    "name": "Light"
+   },
+   {
+    "id": "dark",
+    "name": "Dark"
+   }
+  ],
+  "tokens": [
+   {
+    "name": "paper",
+    "value": {
+     "light": "#f5f1e8",
+     "dark": "#15130f"
+    },
+    "usage": "Page ground. Body background behind every edition."
+   },
+   {
+    "name": "cream",
+    "value": {
+     "light": "#f7f2ea",
+     "dark": "#1c1915"
+    },
+    "usage": "Plate ground behind feature art and comic panels; US map land fill."
+   },
+   {
+    "name": "bar",
+    "value": {
+     "light": "#fdfcf9",
+     "dark": "#221e19"
+    },
+    "usage": "Running head bar and cards set above paper."
+   },
+   {
+    "name": "tabon",
+    "value": {
+     "light": "#f5f1e8",
+     "dark": "#15130f"
+    },
+    "usage": "Ground of the active tab in the running head."
+   },
+   {
+    "name": "tabon-white",
+    "value": {
+     "light": "#ffffff",
+     "dark": "#1f1c17"
+    },
+    "usage": "Popups and dialogs that sit above the page."
+   },
+   {
+    "name": "ink",
+    "value": {
+     "light": "#1d1a16",
+     "dark": "#efe9dd"
+    },
+    "usage": "Text and headlines on paper, cream and bar. 15.4:1 on paper in both themes."
+   },
+   {
+    "name": "mute",
+    "value": {
+     "light": "#6a635a",
+     "dark": "#a39b8e"
+    },
+    "usage": "Secondary text on paper: dek, margin labels, captions, page numbers. 5.3:1 light, 6.8:1 dark."
+   },
+   {
+    "name": "rule",
+    "value": {
+     "light": "#d9d2c4",
+     "dark": "#2f2a22"
+    },
+    "usage": "Hairlines: index rows, plate borders, prose section rules, button outlines."
+   },
+   {
+    "name": "barrule",
+    "value": {
+     "light": "#d9d2c4",
+     "dark": "#2f2a22"
+    },
+    "usage": "Bottom rule of the running head bar."
+   },
+   {
+    "name": "accent",
+    "value": {
+     "light": "#1b5e6b",
+     "dark": "#7fc0c9"
+    },
+    "usage": "Default accent when no story tint applies: links, kicker, prose subheads, focus ring. Each story overrides it with its tint. 6.5:1 light, 9.1:1 dark on paper."
+   },
+   {
+    "name": "mem",
+    "value": {
+     "light": "#5b4a8a",
+     "dark": "#b3a3e0"
+    },
+    "usage": "Marks material only in the full (members) edition: the Letter tab and the Full issue tag. 6.7:1 light, 8.2:1 dark on paper."
+   },
+   {
+    "name": "tint-gregory",
+    "value": "#e8532a",
+    "usage": "Story tint, set as --accent on the Race amity: The Louis Gregory Bahá'í Institute feature section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes. As text it is 3.27:1 on light paper, below 4.5:1; keep it to large numerals, rules and fills there."
+   },
+   {
+    "name": "tint-newyorkers",
+    "value": "#f05a7e",
+    "usage": "Story tint, set as --accent on the Community: New Yorkers create more unified communities through the arts section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes. As text it is 2.88:1 on light paper, below 4.5:1; keep it to large numerals, rules and fills there."
+   },
+   {
+    "name": "tint-twoartists",
+    "value": "#b07a4a",
+    "usage": "Story tint, set as --accent on the In conversation: Two artists reimagine the role of art section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes. As text it is 3.25:1 on light paper, below 4.5:1; keep it to large numerals, rules and fills there."
+   },
+   {
+    "name": "tint-abs",
+    "value": "#c9462c",
+    "usage": "Story tint, set as --accent on the Scholarship: Association for Bahá'í Studies at 50 section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes. As text it is 4.24:1 on light paper, below 4.5:1; keep it to large numerals, rules and fills there."
+   },
+   {
+    "name": "tint-endeavor",
+    "value": "#1b5e6b",
+    "usage": "Story tint, set as --accent on the Across America: Communities engage in a common endeavor section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes."
+   },
+   {
+    "name": "tint-comic",
+    "value": "#e9a21f",
+    "usage": "Story tint, set as --accent on the Adventures in pioneering: Sparkling spirits in Indianapolis section: chapter rule and numeral, kicker, listen button, running-head tab underline. Same in both themes. As text it is 1.93:1 on light paper, below 4.5:1; keep it to large numerals, rules and fills there."
+   },
+   {
+    "name": "band-1",
+    "value": "#1b5e6b",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   },
+   {
+    "name": "band-2",
+    "value": "#8a3a1e",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   },
+   {
+    "name": "band-3",
+    "value": "#3b3f7a",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   },
+   {
+    "name": "band-4",
+    "value": "#5c2a4e",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   },
+   {
+    "name": "band-5",
+    "value": "#2f5d3a",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   },
+   {
+    "name": "band-6",
+    "value": "#8b6a1a",
+    "usage": "Voice band ground in the full edition, cycled in this order between features; carries a quoted passage in #f7f2ea type."
+   }
+  ]
+ },
+ "type": {
+  "fonts": [],
+  "families": {
+   "disp": "\"Bricolage Grotesque\", \"Helvetica Neue\", Arial, sans-serif",
+   "text": "\"Literata\", Georgia, serif",
+   "ui": "\"Bricolage Grotesque\", \"Helvetica Neue\", Arial, sans-serif"
+  },
+  "groups": [
+   {
+    "name": "Display",
+    "family": "disp",
+    "styles": [
+     {
+      "name": "masthead",
+      "fontSize": "150px",
+      "lineHeight": 0.9,
+      "fontWeight": 800,
+      "usage": "Cover title. Fluid: clamp(56px, 11vw, 150px).",
+      "letterSpacing": "-0.04em",
+      "opticalSize": 96
+     },
+     {
+      "name": "chapter-numeral",
+      "fontSize": "120px",
+      "lineHeight": 0.78,
+      "fontWeight": 800,
+      "usage": "Feature number beside the chapter rule, in the story tint. Fluid: clamp(64px, 9vw, 120px).",
+      "letterSpacing": "-0.05em"
+     },
+     {
+      "name": "story-headline",
+      "fontSize": "104px",
+      "lineHeight": 0.92,
+      "fontWeight": 700,
+      "usage": "Feature headline, max 14ch, balanced. Fluid: clamp(50px, 9vw, 104px); 76px max on phones.",
+      "letterSpacing": "-0.035em",
+      "opticalSize": 96
+     },
+     {
+      "name": "dek",
+      "fontSize": "28px",
+      "lineHeight": 1.55,
+      "fontWeight": 300,
+      "usage": "Standfirst under a headline, in mute. Fluid: clamp(20px, 2vw, 28px). Line height inherited from body."
+     },
+     {
+      "name": "qa",
+      "fontSize": "20px",
+      "lineHeight": 1.55,
+      "fontWeight": 700,
+      "usage": "Question lines in interview features.",
+      "letterSpacing": "-0.01em"
+     },
+     {
+      "name": "brand",
+      "fontSize": "17px",
+      "lineHeight": 1.55,
+      "fontWeight": 700,
+      "usage": "Publication name in the running head.",
+      "letterSpacing": "-0.02em"
+     }
+    ]
+   },
+   {
+    "name": "Text",
+    "family": "text",
+    "styles": [
+     {
+      "name": "prose",
+      "fontSize": "19.5px",
+      "lineHeight": 1.6,
+      "fontWeight": 400,
+      "usage": "Feature body copy.",
+      "opticalSize": 18
+     },
+     {
+      "name": "body",
+      "fontSize": "18px",
+      "lineHeight": 1.55,
+      "fontWeight": 400,
+      "usage": "Default page text outside features."
+     },
+     {
+      "name": "voice",
+      "fontSize": "38px",
+      "lineHeight": 1.36,
+      "fontWeight": 600,
+      "usage": "Quoted passage on a voice band. Fluid: clamp(24px, 2.8vw, 38px).",
+      "letterSpacing": "-0.01em",
+      "opticalSize": 72
+     },
+     {
+      "name": "index-entry",
+      "fontSize": "22px",
+      "lineHeight": 1.25,
+      "fontWeight": 300,
+      "usage": "Contents list entries, italic.",
+      "fontStyle": "italic"
+     },
+     {
+      "name": "pull-quote",
+      "fontSize": "21px",
+      "lineHeight": 1.5,
+      "fontWeight": 400,
+      "usage": "Pull quotes in the text column, italic. Fluid: clamp(18px, 1.7vw, 21px).",
+      "fontStyle": "italic"
+     },
+     {
+      "name": "cover-sub",
+      "fontSize": "20px",
+      "lineHeight": 1.55,
+      "fontWeight": 300,
+      "usage": "Masthead subtitle, italic. Fluid: clamp(15px, 1.5vw, 20px). Line height inherited from body.",
+      "fontStyle": "italic"
+     }
+    ]
+   },
+   {
+    "name": "Interface",
+    "family": "ui",
+    "styles": [
+     {
+      "name": "nav-tab",
+      "fontSize": "15px",
+      "lineHeight": 1.55,
+      "fontWeight": 600,
+      "usage": "Running-head tabs, each underlined 4px in its story tint. Line height inherited from body.",
+      "letterSpacing": "-0.01em"
+     },
+     {
+      "name": "popup",
+      "fontSize": "14px",
+      "lineHeight": 1.5,
+      "fontWeight": 400,
+      "usage": "Chart popups and small panels."
+     },
+     {
+      "name": "button",
+      "fontSize": "13px",
+      "lineHeight": 1.55,
+      "fontWeight": 400,
+      "usage": "Share and pill buttons. Line height inherited from body."
+     },
+     {
+      "name": "subhead",
+      "fontSize": "13px",
+      "lineHeight": 1.55,
+      "fontWeight": 600,
+      "usage": "Prose section heads: uppercase, accent colour, rule above. Line height inherited from body.",
+      "letterSpacing": "0.14em"
+     },
+     {
+      "name": "label",
+      "fontSize": "12px",
+      "lineHeight": 1.6,
+      "fontWeight": 400,
+      "usage": "Margin column (kicker, byline) and chapter labels: uppercase, mute.",
+      "letterSpacing": "0.12em"
+     },
+     {
+      "name": "caption",
+      "fontSize": "12px",
+      "lineHeight": 1.55,
+      "fontWeight": 400,
+      "usage": "Plate captions in mute. Line height inherited from body.",
+      "letterSpacing": "0.06em"
+     }
+    ]
+   }
+  ]
+ },
+ "spacing": {
+  "tokens": [
+   {
+    "name": "space-hair",
+    "value": "8px",
+    "usage": "Gap between icon and label in buttons; small inline gaps."
+   },
+   {
+    "name": "space-cap",
+    "value": "10px",
+    "usage": "Vertical padding of plate captions; band caption top margin."
+   },
+   {
+    "name": "space-cap-x",
+    "value": "14px",
+    "usage": "Horizontal padding of plate captions and popups; share button right padding."
+   },
+   {
+    "name": "space-gutter",
+    "value": "16px",
+    "usage": "Page side gutter (.wrap) and chapter rule top padding; never less than the safe-area inset."
+   },
+   {
+    "name": "space-headline",
+    "value": "22px",
+    "usage": "Space under a feature headline."
+   },
+   {
+    "name": "wrap-max",
+    "value": "1120px",
+    "usage": "Maximum width of the page column; voice bands run to 1240px."
+   }
+  ]
+ },
+ "radius": {
+  "tokens": [
+   {
+    "name": "radius-hair",
+    "value": "2px",
+    "usage": "Focus outlines on tiles, progress bars."
+   },
+   {
+    "name": "radius-btn",
+    "value": "3px",
+    "usage": "Square action buttons in the ask and nudge panels."
+   },
+   {
+    "name": "radius-sm",
+    "value": "4px",
+    "usage": "Small cards and checklist rows."
+   },
+   {
+    "name": "radius-field",
+    "value": "10px",
+    "usage": "Dialog inputs and drop zones."
+   },
+   {
+    "name": "radius-dialog",
+    "value": "14px",
+    "usage": "Share, survey and ask dialogs."
+   },
+   {
+    "name": "radius-pill",
+    "value": "999px",
+    "usage": "Share button and nudge pills."
+   },
+   {
+    "name": "radius-disc",
+    "value": "50%",
+    "usage": "Listen button and chart dots."
+   }
+  ]
+ },
+ "meta": {
+  "source": "github",
+  "repo": "aoaoaoa/usbns",
+  "ref": "main@cef0b72",
+  "package": "build",
+  "paths": {
+   "tokens": [
+    "build/build.py",
+    "magazine/index.html",
+    "magazine/members/index.html"
+   ],
+   "fonts": [],
+   "assets": [
+    "build/favicon.svg",
+    "magazine/icon-512.png",
+    "magazine/apple-touch-icon.png",
+    "build/icons/"
+   ],
+   "docs": [
+    "README.md"
+   ]
+  },
+  "components": {},
+  "synced": "2026-11-13"
+ }
+}
