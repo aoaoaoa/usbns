@@ -78,11 +78,11 @@ BR = [("Photo", "A children’s class in session", "wide", "Wide shot",
        "Prayers before a class or at a gathering, captured quietly and respectfully.",
        ["Ask first; take few frames", "No flash; use the light in the room", "Hands, a lit room, a bowed head can say enough"],
        ["Photo library", "Feature"])]
-r4 = '<section class="r4"><div class="g"><div class="w"><p class="kk">Open briefs · Education · Winter 2027</p><h1 class="h">What we’re looking for right now</h1><p class="ld">Pick a brief that fits what you have. Each one says what we need, how to capture it, and where it may appear. If none fits, send what you have anyway.</p>'
+r4 = '<section class="r4"><div class="g"><div class="w"><p class="kk">Open briefs · Education · Winter 2027</p><h1 class="h">What we’re looking for right now</h1><p class="ld">Pick a brief that fits what you have. Each one says what we need, how to capture it, and where it may appear. If none fits, send what you have anyway.</p><p class="cnt">' + f'{len(BR)} open briefs' + '</p>'
 r4 += '<div class="flt" role="group" aria-label="Filter briefs"><button aria-pressed="true" data-f="">All</button>' + "".join(f'<button aria-pressed="false" data-f="{x}">{x}</button>' for x in ("Photo","Video","Pitch","Words")) + '</div></div></div><div class="g"><div class="w brd">'
-for k,t,fk,sh,d,how,us in BR:
-    r4 += (f'<article class="br" data-k="{k}"><figure>{fig(fk)}<span class="sh">{sh}</span></figure><div class="bt"><p class="kd">{k}</p><h2>{t}</h2><p>{d}</p>'
-           '<ul class="how">' + "".join(f"<li>{x}</li>" for x in how) + '</ul><ul class="use">' + "".join(f"<li>{u}</li>" for u in us) + f'</ul><a href="#" class="tk">Send a story {ARR}</a></div></article>')
+for n,(k,t,fk,sh,d,how,us) in enumerate(BR,1):
+    r4 += (f'<article class="br" data-k="{k}"><figure>{fig(fk)}<span class="sh">{sh}</span></figure><div class="bt"><p class="kd"><span class="kn">{k}</span><span class="no">No. {n:02d}</span></p><h2>{t}</h2><p>{d}</p>'
+           '<p class="ml">How</p><ul class="how">' + "".join(f"<li>{x}</li>" for x in how) + '</ul><p class="use"><span class="ml">Appears in</span>' + " · ".join(us) + f'</p><a href="#" class="tk">Send a story {ARR}</a></div></article>')
 r4 += '</div></div>'
 EVERY = [("Consent first", "Everyone recognizable has agreed to be pictured. For children, a parent or guardian, and first names only."),
          ("Credit", "The photographer’s name travels with every file."),
@@ -90,24 +90,27 @@ EVERY = [("Consent first", "Everyone recognizable has agreed to be pictured. For
          ("Originals", "Full-size files straight from the camera or phone, not screenshots or copies sent through messaging apps."),
          ("Video", "Horizontal for the library; vertical welcome for social; ten seconds or more per shot, steady."),
          ("Words", "A few lines on what happened, in your own words. Any language.")]
-r4 += '<div class="g band"><div class="w"><h2>Every brief, every time</h2><p class="pr">Proposed standards, to be confirmed by the editors.</p><ul class="spec">' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in EVERY) + '</ul><p class="mb">New to taking pictures at gatherings? The <a href="#" data-go="1">field guide</a> covers framing, composition and each kind of moment.</p></div></div></section>'
+r4 += '<div class="g band"><div class="w"><h2>Every brief, every time</h2><p class="pr">Proposed standards, to be confirmed by the editors.</p><ol class="spec num">' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in EVERY) + '</ol><a class="fgl" href="#" data-go="1"><span>New to taking pictures at gatherings?</span><b>The field guide covers framing, composition and each kind of moment ' + ARR + '</b></a></div></div></section>'
 
 # ---------------- R5 Field guide (all of Capturing Content, extended for The American Bahá’í)
-def card(k, t, d): return f'<figure class="fc">{fig(k)}<figcaption><b>{t}</b>{d}</figcaption></figure>'
+def card(k, t, d, no=""): return f'<figure class="fc">{fig(k)}<figcaption><span class="fn">Fig. {no}</span><b>{t}</b>{d}</figcaption></figure>'
 TIPS = ["Be conscientious of your presence in the space", "Keep a steady hand", "Review your work on a bigger screen", "Capture a series of angles", "Be ready for spontaneous moments"]
 r5 = ('<section class="r5"><div class="g"><div class="w gh"><p class="kk">Field guide</p><h1 class="h">Capturing the story where you are</h1>'
       '<p class="ld">A short guide for anyone sending photographs or video to The American Bahá’í. Most of it works with a phone. The drawings stand in for photographs, to show the idea.</p>'
-      '<h2>Five habits</h2><ol class="tips">' + "".join(f"<li>{t}</li>" for t in TIPS) + '</ol></div></div>')
-def sec(title, lead, cards, cols=3, band=False):
-    return (f'<div class="g{" band" if band else ""}"><div class="w"><h2>{title}</h2>' + (f'<p class="sl">{lead}</p>' if lead else '') +
-            f'<div class="fg c{cols}">' + "".join(card(*c) for c in cards) + '</div></div></div>')
+      '<h2>Five habits</h2><ol class="tips">' + "".join(f"<li>{t}</li>" for t in TIPS) + '</ol>'
+      '<nav class="toc" aria-label="In this guide"><p class="ml">In this guide</p>@@TOC@@</nav></div></div>')
+SECS = []
+def sec(title, lead, cards, cols=3, band=False, pre=""):
+    SECS.append(title); n = len(SECS)
+    return (f'<div class="g{" band" if band else ""}" id="fs{n}"><div class="w"><h2><span class="sn">{n:02d}</span>{title}</h2>' + (f'<p class="sl">{lead}</p>' if lead else '') + pre +
+            f'<div class="fg c{cols}">' + "".join(card(*c, f"{n}.{i}") for i, c in enumerate(cards, 1)) + '</div></div></div>')
 r5 += sec("Framing, from wide to close", "A reminder of the basics. Send a range: one wide, some mid, a few close.", [
     ("wide", "Wide shot", "Gives a sense of the space and provides context."),
     ("mid", "Mid-shot", "Shows many people while staying close enough to see their faces."),
     ("mcu", "Medium close-up", "Makes the viewer feel part of the space."),
     ("cu", "Close-up", "Gives a sense of focus."),
     ("ecu", "Extreme close-up", "Shows emotion in a more dramatic way."),
-    ("audview", "Audience perspective", "Shows the event as the audience sees it.")], band=True)
+    ("audview", "Audience perspective", "Shows the event as the audience sees it.")], band=True, pre='<div class="scale" aria-hidden="true"><span>Wide</span><i></i><span>Close</span></div>')
 r5 += sec("Composition", "", [
     ("thirds", "Grid of thirds", "Balance the picture on a grid of thirds; place the subject on a line or where two meet."),
     ("vanish", "Vanishing point", "Lines running into the distance add a sense of depth."),
@@ -145,6 +148,6 @@ SPEC = [("Send originals", "Full-size files straight from the camera or phone, n
         ("Say where and when", "Town or neighborhood, state, and the date."),
         ("Video", "Steady and horizontal for the library; vertical welcome for social. Ten seconds per shot or longer."),
         ("A few lines", "What happened and why it mattered, in your own words and in any language.")]
-r5 += ('<div class="g band"><div class="w"><h2>Before you send</h2><p class="pr">Proposed standards, to be confirmed by the editors.</p><ul class="spec">' + "".join(f"<li><b>{a}</b>{b}</li>" for a,b in SPEC) +
+r5 += ('<div class="g band"><div class="w"><h2>Before you send</h2><p class="pr">Proposed standards, to be confirmed by the editors.</p><p class="ready" aria-live="polite"><span>0</span> of ' + str(len(SPEC)) + ' ready</p><ul class="spec chk">' + "".join(f'<li><label><input type="checkbox"><b>{a}</b><span>{b}</span></label></li>' for a,b in SPEC) +
        '</ul><p class="mb">For examples of strong pictures of community life, browse the Bahá’í Media Bank at media.bahai.org.</p></div></div></section>')
-
+r5 = r5.replace("@@TOC@@", "<ol>" + "".join(f'<li><a href="#fs{i}" data-to="fs{i}"><span>{i:02d}</span>{t}</a></li>' for i, t in enumerate(SECS, 1)) + "</ol>")
