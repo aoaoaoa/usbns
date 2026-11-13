@@ -28,10 +28,11 @@ for i, a in enumerate(pts):
     near = sorted(pts, key=lambda b: math.hypot(a[0]-b[0], a[1]-b[1]))[1:2]
     for b in near:
         if math.hypot(a[0]-b[0], a[1]-b[1]) < 48: lines.append((a, b, max(dist(a), dist(b))))
-m3 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><radialGradient id="lu" cx="50%" cy="100%" r="60%"><stop offset="0" stop-color="#fff1e8" stop-opacity="1"/><stop offset=".5" stop-color="#e9bf86" stop-opacity=".5"/><stop offset="1" stop-color="#e2b072" stop-opacity="0"/></radialGradient></defs>'
+m3 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><radialGradient id="hl"><stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset=".22" stop-color="#ffe9cc" stop-opacity=".85"/><stop offset=".55" stop-color="#f3c98e" stop-opacity=".28"/><stop offset="1" stop-color="#e2b072" stop-opacity="0"/></radialGradient><radialGradient id="lu" cx="50%" cy="100%" r="60%"><stop offset="0" stop-color="#fff6ee" stop-opacity="1"/><stop offset=".5" stop-color="#f0c88f" stop-opacity=".6"/><stop offset="1" stop-color="#e2b072" stop-opacity="0"/></radialGradient></defs>'
            '<circle class="dawn" cx="280" cy="320" r="430" fill="url(#lu)"/>' + "".join(f'<circle class="sk" style="--t:{(i%9)*.4:.1f}s" cx="{x}" cy="{y}" r="{r}"/>' for i,(x,y,r) in enumerate(sky))
            + "".join(f'<line class="lk" style="--d:{d/240:.2f}" x1="{a[0]}" y1="{a[1]}" x2="{b[0]}" y2="{b[1]}"/>' for a,b,d in lines)
-           + "".join(f'<circle class="pt" style="--d:{dist(p)/240:.2f}" cx="{p[0]}" cy="{p[1]}" r="{1.4 + (i%4)*.6:.2f}"/>' for i,p in enumerate(pts)) + '</svg>',
+           + "".join(f'<circle class="pb" cx="{p[0]}" cy="{p[1]}" r="{1.4 + (i%4)*.6:.2f}"/>' for i,p in enumerate(pts))
+           + "".join(f'<g class="sr" style="--d:{dist(p)/240 + rnd.random()*.25:.2f}"><circle cx="{p[0]}" cy="{p[1]}" r="{(1.4 + (i%4)*.6)*5.5:.1f}" fill="url(#hl)"/><circle cx="{p[0]}" cy="{p[1]}" r="{1.6 + (i%4)*.65:.2f}" fill="#fffaf5"/></g>' for i,p in enumerate(pts)) + '</svg>',
            "So powerful is the light of unity that it can illuminate the whole earth.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXXXII"), "lu")
 # M4 One tree
 LEAF = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#d8c3a5", "#b8d4a8", "#e8a48f"]
@@ -94,9 +95,9 @@ CSS = r"""
 .tl{margin:0;font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}.tl small{font:500 12px var(--ui);letter-spacing:0;text-transform:none;margin-left:8px}
 .fld{min-height:120px;background:repeating-linear-gradient(transparent 0 31px,var(--rule) 31px 32px);font:16px/32px var(--ui);color:var(--mute);padding:0 2px}
 .caret{display:inline-block;width:2px;height:1.1em;background:var(--teal);vertical-align:-3px;margin-left:1px;animation:cr 1s steps(1) infinite}@keyframes cr{50%{opacity:0}}.th{margin:6px 0 0;font:14px/1.5 var(--ui);color:var(--mute)}
-/* M3 */.dawn{transform-origin:280px 320px;transform:scale(.05);animation:dawn 9s cubic-bezier(.25,.5,.3,1) .4s forwards}@keyframes dawn{to{transform:scale(1)}}
-.sk{fill:#f4f0fb;opacity:.6;animation:tw 3.6s ease-in-out var(--t) infinite}@keyframes tw{50%{opacity:1}}.pt{fill:#6b75a0;animation:ptl 1.1s ease calc(.6s + var(--d) * 3.6s) forwards}@keyframes ptl{to{fill:#fffaf5;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 10px #f3c98e) drop-shadow(0 0 18px #e2b072)}}
-.lk{stroke:#f3c98e;stroke-width:.8;opacity:0;animation:lk 1.4s ease calc(1.6s + var(--d) * 3.6s) forwards}@keyframes lk{to{opacity:.85}}
+/* M3 */.dawn{transform-origin:280px 320px;transform:scale(.05);opacity:.4;will-change:transform,opacity;animation:dawn 10s cubic-bezier(.33,0,.2,1) .3s forwards}@keyframes dawn{to{transform:scale(1);opacity:1}}
+.sk{fill:#fbf8ff;opacity:.7;animation:tw 4.8s ease-in-out var(--t) infinite}@keyframes tw{50%{opacity:1}}.pb{fill:#7d87b4}.sr{opacity:0;will-change:opacity;animation:srl 2.2s cubic-bezier(.4,0,.2,1) calc(.6s + var(--d) * 3.8s) forwards}@keyframes srl{to{opacity:1}}
+.lk{stroke:#ffd9a6;stroke-width:.9;opacity:0;animation:lk 2.4s cubic-bezier(.4,0,.2,1) calc(1.8s + var(--d) * 3.8s) forwards}@keyframes lk{to{opacity:.9}}
 /* M4 */.br{fill:none;stroke:#8a7356;stroke-width:3;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:grow 2.2s ease calc(.3s + var(--d) * 1s) forwards}.br:first-child{stroke-width:5}@keyframes grow{to{stroke-dashoffset:0}}
 .lf{fill:var(--c);opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:leaf .7s cubic-bezier(.2,.9,.3,1.3) calc(1.4s + var(--i) * .16s) forwards}@keyframes leaf{from{opacity:0;transform:scale(0)}to{opacity:.92;transform:scale(1)}}
 /* M5 */.gr{fill:none;stroke:#3b446b;stroke-width:1}.bd{fill:none;stroke:#86c6d1;stroke-width:1.2;stroke-dasharray:5 4;opacity:.8;animation:bd 1.6s ease calc(.6s + var(--i) * .25s) forwards}@keyframes bd{to{opacity:0}}
@@ -116,4 +117,4 @@ def body(x):
             f'<div class="ab"><div><h2>Where it goes</h2><p>{where}</p></div><div><h2>What it does</h2><p>{why}</p></div></div>'
             + ('' if st == "live" and slug == "anim-prompts" else '<button type="button" class="rpl">Replay</button>') + '</main>')
 
-CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 120%,#4a5a92 0%,#2a3460 45%,#1d2236 85%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}.lk{stroke-width:1}"
+CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 115%,#6a7cc0 0%,#3d4b86 40%,#262f58 75%,#1f2546 100%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}.lk{stroke-width:1}"
