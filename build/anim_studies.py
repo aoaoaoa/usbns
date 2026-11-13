@@ -33,7 +33,7 @@ m3 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax
            + "".join(f'<line class="lk" style="--d:{d/240:.2f}" x1="{a[0]}" y1="{a[1]}" x2="{b[0]}" y2="{b[1]}"/>' for a,b,d in lines)
            + "".join(f'<circle class="pb" cx="{p[0]}" cy="{p[1]}" r="{1.4 + (i%4)*.6:.2f}"/>' for i,p in enumerate(pts))
            + "".join(f'<g class="sr" style="--d:{dist(p)/240 + rnd.random()*.25:.2f}"><circle cx="{p[0]}" cy="{p[1]}" r="{(1.4 + (i%4)*.6)*5.5:.1f}" fill="url(#hl)"/><circle cx="{p[0]}" cy="{p[1]}" r="{1.6 + (i%4)*.65:.2f}" fill="#fffaf5"/></g>' for i,p in enumerate(pts)) + '</svg>',
-           "So powerful is the light of unity that it can illuminate the whole earth.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXXXII"), "lu")
+           "Thou art My lamp and My light is in thee.", ("Bahá’u’lláh", "The Hidden Words, Arabic 11"), "lu")
 # M4 One tree
 LEAF = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#d8c3a5", "#b8d4a8", "#e8a48f"]
 lv = []
@@ -71,8 +71,8 @@ A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when 
       "Gems surface from layers of earth while the passage is read. The call’s own text becomes the image.", m1),
      ("M2", "anim-prompts", "The prompts write themselves", "live", "The Send a story popup: the What happened field.",
       "While the field is empty, the form’s four step headings type in turn, so the blank box always suggests a first line.", m2),
-     ("M3", "anim-light", "The light of unity", "proposed", "The Race Unity call (Summer 2027), in the same place as M1.",
-      "A dawn rises from below; scattered points brighten as the light reaches them, then draw toward their neighbors.", m3),
+     ("M3", "anim-light", "My light is in thee", "proposed", "The Send a story popup, for a call in a later issue, in the same place as M1; or the receipt after sending.",
+      "A dawn rises from below and, one by one, lights a sky of stars that draw toward their neighbors: each person a lamp, each light joining the others.", m3),
      ("M4", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
       "Five waves in five colors move toward one another and resolve into a single chord.", m6)]
 
