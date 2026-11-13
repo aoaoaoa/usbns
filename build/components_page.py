@@ -28,7 +28,7 @@ TINTS = [("tint-endeavor", "Across America", "Communities engage in a common end
 CH = [("colour", "Colour", "tint-endeavor", "Warm paper, dark ink, and one tint per feature that does the navigating."),
       ("type", "Type", "tint-gregory", "Bricolage Grotesque points the way; Literata carries the reading."),
       ("space", "Space and shape", "tint-newyorkers", "One column, a 16px gutter, square plates and rules, round only where a finger presses."),
-      ("marks", "Marks and icons", "tint-twoartists", "The mark, the app icons, and single-ink social glyphs."),
+      ("marks", "Icons", "tint-twoartists", "Interface glyphs and single-ink social glyphs."),
       ("components", "Components", "tint-abs", "The controls readers touch: buttons, the running head, forms and dialogs."),
       ("patterns", "Patterns", "tint-comic", "How a feature is set: the opener, the reading line, the voices and the close.")]
 
@@ -90,8 +90,6 @@ def svgfile(n):
     s = open(os.path.join(ICONS, n)).read(); s = re.sub(r"<\?xml.*?\?>", "", s)
     return re.sub(r"<svg", '<svg aria-hidden="true"', s, count=1)
 soc = "".join(f'<div class="ic"><span>{svgfile(n)}</span><b>{n[:-4]}</b></div>' for n in ["facebook.svg", "instagram.svg", "linkedin.svg", "x-twitter.svg", "youtube.svg"])
-STAR = open("/home/claude/usbns/magazine/favicon.svg").read()
-STAR = re.sub(r"<\?xml.*?\?>", "", STAR)
 GLY = {"share": '<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v7.5h14V12"/>', "play": '<path d="M8 5.5v13l11-6.5z"/>', "pause": '<path d="M8 5v14M16 5v14"/>',
        "key": '<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/>', "arrow": '<path d="M5 12h14M13 6l6 6-6 6"/>', "close": '<path d="M6 6l12 12M18 6 6 18"/>'}
 def g(n, sz=24): return f'<svg viewBox="0 0 24 24" width="{sz}" height="{sz}" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{GLY[n]}</svg>'
@@ -111,7 +109,7 @@ comp = "".join([
  spec("Pace", "dv", '<div class="x-dv" role="radiogroup" aria-label="Send me"><label><input type="radio" name="dvx"><span><b>One story</b><small>as each is published</small></span></label><label><input type="radio" name="dvx" checked><span><b>A few stories</b><small>two or three at a time</small></span></label><label><input type="radio" name="dvx"><span><b>The full issue</b><small>four to six stories</small></span></label></div>', "How much arrives at a time. The middle choice is preselected.", True),
  spec("Story field and drop zone", "dfl drop", '<div class="x-form"><label class="x-f"><span>Where</span><input placeholder="Town or neighborhood, state"></label><label class="x-drop"><input type="file" class="vh"><b>Choose photographs</b><small>JPEG or PNG, as many as you like</small></label></div>', "Fields on tabon-white with radius-field; the drop zone dashed until files are chosen.", True),
  spec("Checklist line", "grl", f'<ol class="x-grl"><li class="on"><span class="ck"></span><div><b>Say where and when</b><small>Town or neighborhood, state, and the date.</small></div></li><li><span class="ck"></span><div><b>Send originals</b><small>Full-size files, not screenshots.</small></div></li></ol>', "Ticks as the form fills; tapping a line lights the field it governs."),
- spec("Members sign-in", "mg", '<div class="x-dlg"><span class="x-star">' + STAR + '</span><p class="x-mk">The full issue</p><p class="x-mh">Members</p><label class="x-f"><span>Bahá’í ID number</span><input placeholder="9" inputmode="numeric"></label><p class="x-clue">Not quite. Look closely at the empty field.</p><button type="button" class="x-go">Sign in</button></div>', "A dialog on tabon-white, radius-dialog. The clue appears under the field after a miss."),
+ spec("Members sign-in", "mg", '<div class="x-dlg"><p class="x-mk">The full issue</p><p class="x-mh">Members</p><label class="x-f"><span>Bahá’í ID number</span><input placeholder="9" inputmode="numeric"></label><p class="x-clue">Not quite. Look closely at the empty field.</p><button type="button" class="x-go">Sign in</button></div>', "A dialog on tabon-white, radius-dialog. The clue appears under the field after a miss."),
 ])
 
 # 6 patterns
@@ -219,7 +217,7 @@ FAMS = "".join(f'<div class="fm"><div class="aa" style="font-family:var(--font-{
 n_styles = sum(len(g["styles"]) for g in T["type"]["groups"])
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
 <title>Components · The American Bahá’í</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{CSS}</style></head><body>
-<header class="rh"><div class="wrap"><a class="br" href="../landing/">{STAR.replace("<svg", "<svg aria-hidden=\"true\"", 1)}<span>The American Bahá’í</span><small>Components</small></a><nav aria-label="Sections">{navs}</nav><button type="button" class="tg" aria-pressed="false">Dark</button></div></header>
+<header class="rh"><div class="wrap"><a class="br" href="../landing/"><span>The American Bahá’í</span><small>Components</small></a><nav aria-label="Sections">{navs}</nav><button type="button" class="tg" aria-pressed="false">Dark</button></div></header>
 <main>
 <section class="cv"><div class="wrap"><div class="strip" aria-hidden="true"><i style="background:var(--tint-endeavor)"></i><i style="background:var(--tint-gregory)"></i><i style="background:var(--tint-newyorkers)"></i><i style="background:var(--tint-twoartists)"></i><i style="background:var(--tint-abs)"></i><i style="background:var(--tint-comic)"></i><i><span>1</span></i></div>
 <h1>Components</h1><p class="csub">The design system of The American Bahá’í</p>
@@ -230,8 +228,7 @@ page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 {chap(2, *CH[1])}<div class="fams">{FAMS}</div>{typ}</div></section>
 {chap(3, *CH[2])}<h3 class="sub">Spacing</h3><div class="spxs">{spc}</div><div class="ruler">wrap-max · {wrap["value"]}: {e(wrap["usage"])}</div>
 <h3 class="sub">Radius <small>plates and rules stay square</small></h3><div class="rxs">{rad}</div></div></section>
-{chap(4, *CH[3])}<h3 class="sub">The mark</h3><div class="mk"><img class="big" src="../favicon.svg" alt="The mark"><div><p class="dk" style="margin:0 0 18px">Use at 16 to 48px on paper or bar; the name is set in Bricolage Grotesque beside it.</p><div class="apps"><img src="../icon-512.png" alt="App icon, 512px" width="120" height="120"><img src="../apple-touch-icon.png" alt="Home-screen icon" width="72" height="72"></div></div></div>
-<h3 class="sub">Interface glyphs <small>24px, 1.8 stroke, round caps, currentColor</small></h3><div class="ics">{gly}</div>
+{chap(4, *CH[3])}<h3 class="sub">Interface glyphs <small>24px, 1.8 stroke, round caps, currentColor</small></h3><div class="ics">{gly}</div>
 <h3 class="sub">Social <small>single ink, footer</small></h3><div class="ics">{soc}</div></div></section>
 {chap(5, *CH[4])}<div class="specs">{comp}</div></div></section>
 {chap(6, *CH[5])}<div class="specs" style="--accent:var(--tint-endeavor)">{pat}</div></div></section>
