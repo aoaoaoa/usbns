@@ -36,7 +36,7 @@ def body(here_href):
 TITLE = "Selected National Bahá’í US Websites &amp; Other Resources"
 CSS = r"""
 .asbar{background:#fff;border-bottom:1px solid #e5e5e5;position:relative;z-index:2}
-.asbar .asin{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(26px,env(safe-area-inset-right,0px))}
+.asbar .asin{display:flex;align-items:center;justify-content:flex-end;gap:12px;min-height:40px;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(26px,env(safe-area-inset-right,0px))}
 .asbar .asn{font:600 12px/1 "Source Sans 3","Source Sans Pro",system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b6b6b;text-decoration:none}
 .ast-btn{display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:4px 6px;margin-right:-6px;cursor:pointer;color:#4a4a4a;font:600 12.5px/1 "Source Sans 3","Source Sans Pro",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;min-height:36px}
 .ast-btn .asg{width:15px;height:15px;fill:#555}.ast-btn:hover{color:#111}.ast-btn:hover .asg{fill:#111}.ast-btn:focus-visible{outline:2px solid #2b5f8a;outline-offset:2px}
@@ -73,7 +73,7 @@ D.addEventListener('keydown',function(e){if(e.key==='Escape')close();if(e.key===
 FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400&display=swap">'
 
 def apply(h, here_href="./", before='<div class="head">'):
-    bar = (f'<div class="asbar"><div class="asin"><a class="asn" href="https://www.bahai.us/" target="_blank" rel="noopener">The Bahá’ís of the United States</a>'
+    bar = (f'<div class="asbar"><div class="asin">'
            f'<button type="button" class="ast-btn" data-as aria-haspopup="dialog">{GRID}<span>All sites</span></button></div></div>')
     panel = (f'<div class="asp" hidden><div class="asbk"></div><div class="asd" role="dialog" aria-modal="true" aria-labelledby="ash">'
              f'<div class="ash"><h2 id="ash">All sites</h2><button type="button" class="asx" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4 4 20"/></svg></button></div>'
