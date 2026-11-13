@@ -222,8 +222,7 @@ page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 <header class="rh"><div class="wrap"><a class="br" href="../landing/">{STAR.replace("<svg", "<svg aria-hidden=\"true\"", 1)}<span>The American Bahá’í</span><small>Components</small></a><nav aria-label="Sections">{navs}</nav><button type="button" class="tg" aria-pressed="false">Dark</button></div></header>
 <main>
 <section class="cv"><div class="wrap"><div class="strip" aria-hidden="true"><i style="background:var(--tint-endeavor)"></i><i style="background:var(--tint-gregory)"></i><i style="background:var(--tint-newyorkers)"></i><i style="background:var(--tint-twoartists)"></i><i style="background:var(--tint-abs)"></i><i style="background:var(--tint-comic)"></i><i><span>1</span></i></div>
-<h1>Components</h1><p class="csub">The design system of The American Bahá’í, set the way the magazine sets itself.</p>
-<p class="meta"><span><b>{len(cols)}</b> colours, two themes</span><span><b>{n_styles}</b> text styles</span><span><b>{len(T["spacing"]["tokens"])}</b> spacing</span><span><b>{len(T["radius"]["tokens"])}</b> radii</span><span>Synced {T["meta"]["synced"]}</span></p>
+<h1>Components</h1><p class="csub">The design system of The American Bahá’í</p>
 <ol class="toc">{toc}</ol></div></section>
 {chap(1, *CH[0])}<h3 class="sub">Grounds, ink and rules <small>each swatch: light theme left, dark right</small></h3><div class="sws">{sw}</div>
 <h3 class="sub">Story tints <small>set as --accent on each feature; the same in both themes</small></h3><div class="tts">{tints}</div>
