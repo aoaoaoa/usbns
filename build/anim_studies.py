@@ -58,18 +58,20 @@ m5 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax
            "The earth is but one country, and mankind its citizens.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXVII"))
 # M6 Perfect chord
 def wave(f, a, ph, y0=0):
-    pts = " ".join(f'{x},{220 + y0 + a*math.sin(x/560*2*math.pi*f + ph):.1f}' for x in range(0, 561, 8))
+    pts = " ".join(f'{x},{205 + y0 + a*math.sin(x/560*2*math.pi*f + ph):.1f}' for x in range(0, 561, 6))
     return pts
 WC = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#b8d4a8"]
-ws = "".join(f'<polyline class="wv" style="--i:{i};--c:{WC[i]};--o:{(i-2)*24}px" points="{wave(2+i*.5, 14, i*.9)}"/>' for i in range(5))
-chord = " ".join(f'{x},{220 + sum(14*math.sin(x/560*2*math.pi*(2+i*.5) + i*.9) for i in range(5))/2.6:.1f}' for x in range(0, 561, 6))
-m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">{ws}<polyline class="cd" points="{chord}"/></svg>',
+ws = "".join(f'<polyline class="wv" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" points="{wave(2+i*.5, 22, i*.9)}"/>' for i in range(5))
+chord = " ".join(f'{x},{205 + sum(22*math.sin(x/560*2*math.pi*(2+i*.5) + i*.9) for i in range(5))/2.4:.1f}' for x in range(0, 561, 5))
+staff = "".join(f'<line class="sf" x1="0" x2="560" y1="{145 + k*30}" y2="{145 + k*30}"/>' for k in range(5))
+notes = "".join(f'<circle class="nt" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" cx="40" cy="{205 + 22*math.sin(40/560*2*math.pi*(2+i*.5) + i*.9):.1f}" r="7"/>' for i in range(5))
+m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">{staff}{ws}{notes}<polyline class="cdg" points="{chord}"/><polyline class="cd" points="{chord}"/></svg>',
            "…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.",
-           ("‘Abdu’l-Bahá", "Paris Talks, “Beauty and Harmony in Diversity”"))
+           ("‘Abdu’l-Bahá", "Paris Talks, “Beauty and Harmony in Diversity”"), "lu ch")
 
 A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when opened from Coming next: the Education call and its quotation.",
       "Gems surface from layers of earth while the passage is read. The call’s own text becomes the image.", m1),
-     ("M2", "anim-prompts", "The prompts write themselves", "live", "The Send a story popup: the What happened field.",
+     ("M2", "anim-prompts", "Prompts in the empty field", "live", "The Send a story popup: the What happened field.",
       "While the field is empty, the form’s four step headings type in turn, so the blank box always suggests a first line.", m2),
      ("M3", "anim-light", "My light is in thee", "proposed", "The Send a story popup, for a call in a later issue, in the same place as M1; or the receipt after sending.",
       "A dawn rises from below and, one by one, lights a sky of stars that draw toward their neighbors: each person a lamp, each light joining the others.", m3),
@@ -102,8 +104,11 @@ CSS = r"""
 .lf{fill:var(--c);opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:leaf .7s cubic-bezier(.2,.9,.3,1.3) calc(1.4s + var(--i) * .16s) forwards}@keyframes leaf{from{opacity:0;transform:scale(0)}to{opacity:.92;transform:scale(1)}}
 /* M5 */.gr{fill:none;stroke:#3b446b;stroke-width:1}.bd{fill:none;stroke:#86c6d1;stroke-width:1.2;stroke-dasharray:5 4;opacity:.8;animation:bd 1.6s ease calc(.6s + var(--i) * .25s) forwards}@keyframes bd{to{opacity:0}}
 .ac{fill:none;stroke:#e2b072;stroke-width:1.4;stroke-dasharray:200;stroke-dashoffset:200;animation:grow 1s ease calc(2.2s + var(--i) * .3s) forwards}.ct{fill:#f2cfc6}
-/* M6 */.wv{fill:none;stroke:var(--c);stroke-width:1.6;opacity:.9;transform:translateY(var(--o));animation:join 2.6s cubic-bezier(.5,0,.3,1) calc(.6s + var(--i) * .12s) forwards}@keyframes join{70%{opacity:.9}to{transform:none;opacity:.12}}
-.cd{fill:none;stroke:#fbf7ef;stroke-width:2.4;stroke-dasharray:1200;stroke-dashoffset:1200;animation:grow 1.8s ease 3s forwards}
+/* M6 */.wv{fill:none;stroke:var(--c);stroke-width:3.2;stroke-linecap:round;opacity:.95;transform:translateY(var(--o));will-change:transform,opacity;animation:join 3.4s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .15s) forwards}@keyframes join{70%{opacity:.85}to{transform:none;opacity:.16}}
+.nt{fill:var(--c);transform:translateY(var(--o));will-change:transform,opacity;animation:join 3.4s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .15s) forwards}.sf{stroke:#fbf7ef;stroke-width:.6;opacity:.08}
+.cdg{fill:none;stroke:#f3c98e;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg 2.4s ease 4s forwards}@keyframes cg{to{opacity:.16}}
+.cd{fill:none;stroke:#fffaf5;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:grow 2.4s cubic-bezier(.4,0,.2,1) 3.9s forwards}
+.pn.ch{background:radial-gradient(ellipse at 50% 80%,#4b4f8a 0%,#2c3466 45%,#1d2236 90%)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important}}
 """
 JS = r"""
