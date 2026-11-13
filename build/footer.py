@@ -41,7 +41,7 @@ def colophon_bits(issue_href):
     strip = (f'<p class="strip"><span><b>This issue</b><a href="{issue_href}">The Arts</a></span>'
              '<span><b>Coming next</b>Education · <a href="#" data-submit="next">Send a story</a></span></p>')
     places = f'<p class="cpr" aria-label="Places named in this issue"><span>{t} · {t} · </span></p>'
-    return line + strip, places
+    return line, places
 COLO_CSS = (".colo .fl{margin:0 auto;max-width:640px;font:400 clamp(15px,1.5vw,16.5px)/1.6 \"Bricolage Grotesque\",var(--ui),sans-serif;color:#fbf7ef;text-wrap:pretty}.colo .fl b{color:#f2cfc6;font-weight:700}"
             ".colo .strip{margin:2px 0 4px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 28px;font:15px \"Bricolage Grotesque\",var(--ui),sans-serif;color:#ddd3c4}"
             ".colo .strip b{font:700 11px \"Bricolage Grotesque\",var(--ui),sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#f2cfc6;margin-right:8px}"
@@ -60,7 +60,6 @@ def footer_html(home="./", issue=None):
             '<div class="cr" aria-hidden="true"></div>' + line +
             '<div class="c3">' + ''.join(f'<div><span>{l}</span><a href="{h}"{x}>{t}</a></div>' for l, t, h, x in ASKS) + '</div>'
             f'<nav aria-label="Footer"><ul>{nav}</ul></nav>'
-            f'<div class="cs"><span>Follow us</span><span class="ic">{fol}</span></div>'
             f'<p class="cp">{PUBLISHER}</p></div>' + places + '</footer>' + (f'<style>{COLO_CSS}</style>' if issue else '') + ask_dialogs())
 
 FOOTER_CSS = """
