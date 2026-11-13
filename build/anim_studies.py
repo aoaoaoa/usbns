@@ -1,5 +1,5 @@
 """Animations for the calls to action, shown in the story-ctas gallery under Animations.
-M1 and M2 are live on the site (the Send a story popup); M3 to M6 are proposals in the same manner as M1:
+M1 and M2 are live on the site (the Send a story popup); M3 and M4 are proposals in the same manner as M1:
 a passage from the Writings, set small, with an image that enacts its metaphor."""
 import math
 STATUS = {"live": "Live on the site", "proposed": "Proposed"}
@@ -18,18 +18,19 @@ m2 = ('<div class="pn light"><div class="tw"><p class="tl">What happened <small>
 # M3 Light of unity
 import random
 rnd = random.Random(7)
-pts = [(rnd.randint(30, 530), rnd.randint(150, 280)) for _ in range(34)]
+pts = [(rnd.randint(14, 546), rnd.randint(118, 292)) for _ in range(150)]
+sky = [(rnd.randint(4, 556), rnd.randint(4, 296), rnd.choice((.6, .8, 1.0))) for _ in range(170)]
 ox, oy = 280, 320
 def dist(p): return math.hypot(p[0]-ox, p[1]-oy)
 lines = []
 for i, a in enumerate(pts):
-    near = sorted(pts, key=lambda b: math.hypot(a[0]-b[0], a[1]-b[1]))[1:3]
+    near = sorted(pts, key=lambda b: math.hypot(a[0]-b[0], a[1]-b[1]))[1:2]
     for b in near:
-        lines.append((a, b, max(dist(a), dist(b))))
+        if math.hypot(a[0]-b[0], a[1]-b[1]) < 48: lines.append((a, b, max(dist(a), dist(b))))
 m3 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><radialGradient id="lu" cx="50%" cy="100%" r="60%"><stop offset="0" stop-color="#f2cfc6" stop-opacity=".55"/><stop offset=".5" stop-color="#e2b072" stop-opacity=".18"/><stop offset="1" stop-color="#e2b072" stop-opacity="0"/></radialGradient></defs>'
-           '<circle class="dawn" cx="280" cy="320" r="360" fill="url(#lu)"/>'
+           '<circle class="dawn" cx="280" cy="320" r="360" fill="url(#lu)"/>' + "".join(f'<circle class="sk" style="--t:{(i%9)*.4:.1f}s" cx="{x}" cy="{y}" r="{r}"/>' for i,(x,y,r) in enumerate(sky))
            + "".join(f'<line class="lk" style="--d:{d/240:.2f}" x1="{a[0]}" y1="{a[1]}" x2="{b[0]}" y2="{b[1]}"/>' for a,b,d in lines)
-           + "".join(f'<circle class="pt" style="--d:{dist(p)/240:.2f}" cx="{p[0]}" cy="{p[1]}" r="{2.2 + (i%3)*.7:.1f}"/>' for i,p in enumerate(pts)) + '</svg>',
+           + "".join(f'<circle class="pt" style="--d:{dist(p)/240:.2f}" cx="{p[0]}" cy="{p[1]}" r="{1.2 + (i%4)*.55:.2f}"/>' for i,p in enumerate(pts)) + '</svg>',
            "So powerful is the light of unity that it can illuminate the whole earth.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXXXII"))
 # M4 One tree
 LEAF = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#d8c3a5", "#b8d4a8", "#e8a48f"]
@@ -70,11 +71,7 @@ A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when 
       "While the field is empty, the form’s four step headings type in turn, so the blank box always suggests a first line.", m2),
      ("M3", "anim-light", "The light of unity", "proposed", "The Race Unity call (Summer 2027), in the same place as M1.",
       "A dawn rises from below; scattered points brighten as the light reaches them, then draw toward their neighbors.", m3),
-     ("M4", "anim-tree", "Leaves of one branch", "proposed", "The landing’s Contribute section, beside “Every story in this issue began as a report from a community.”",
-      "A branch grows across the panel and leaves open in many tints along it: diversity on one stem, one leaf for each community that sends a story.", m4),
-     ("M5", "anim-country", "One country", "proposed", "The National Convention call (Spring 2027), or the colophon’s places.",
-      "Faint borders dissolve across a curved earth while arcs join one place to the next.", m5),
-     ("M6", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
+     ("M4", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
       "Five waves in five colors move toward one another and resolve into a single chord.", m6)]
 
 CSS = r"""
@@ -97,7 +94,7 @@ CSS = r"""
 .fld{min-height:120px;background:repeating-linear-gradient(transparent 0 31px,var(--rule) 31px 32px);font:16px/32px var(--ui);color:var(--mute);padding:0 2px}
 .caret{display:inline-block;width:2px;height:1.1em;background:var(--teal);vertical-align:-3px;margin-left:1px;animation:cr 1s steps(1) infinite}@keyframes cr{50%{opacity:0}}.th{margin:6px 0 0;font:14px/1.5 var(--ui);color:var(--mute)}
 /* M3 */.dawn{transform-origin:280px 320px;transform:scale(.05);animation:dawn 3.4s cubic-bezier(.3,.6,.3,1) .3s forwards}@keyframes dawn{to{transform:scale(1)}}
-.pt{fill:#5b6488;animation:ptl .6s ease calc(.4s + var(--d) * 1.4s) forwards}@keyframes ptl{to{fill:#f2cfc6;filter:drop-shadow(0 0 4px #e2b072)}}
+.sk{fill:#c9c3d8;opacity:.25;animation:tw 3.6s ease-in-out var(--t) infinite}@keyframes tw{50%{opacity:.7}}.pt{fill:#5b6488;animation:ptl .6s ease calc(.4s + var(--d) * 1.4s) forwards}@keyframes ptl{to{fill:#f2cfc6;filter:drop-shadow(0 0 4px #e2b072)}}
 .lk{stroke:#e2b072;stroke-width:.8;opacity:0;animation:lk .8s ease calc(1.8s + var(--d) * 1.4s) forwards}@keyframes lk{to{opacity:.45}}
 /* M4 */.br{fill:none;stroke:#8a7356;stroke-width:3;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:grow 2.2s ease calc(.3s + var(--d) * 1s) forwards}.br:first-child{stroke-width:5}@keyframes grow{to{stroke-dashoffset:0}}
 .lf{fill:var(--c);opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:leaf .7s cubic-bezier(.2,.9,.3,1.3) calc(1.4s + var(--i) * .16s) forwards}@keyframes leaf{from{opacity:0;transform:scale(0)}to{opacity:.92;transform:scale(1)}}
