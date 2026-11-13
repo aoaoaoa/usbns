@@ -204,6 +204,8 @@ def _arch(h):
         h = h.replace('</head>', '<style>.tile .cv.ph{padding:0!important;background:var(--card);overflow:hidden}.tile .cv.ph img{display:block;width:100%;height:100%;object-fit:cover}</style>\n</head>', 1)
     return h
 _main = _arch(_main)
+def _nomem(h): return re.sub(r'<a class="mem" href="[^"]*members/">Members</a>', '', h)
+_main = _nomem(_main); alt = _nomem(alt)
 
 def _uhj(h):
     h = re.sub(r'<!-- uhj -->.*?<!-- /uhj -->\n?', '', h, flags=re.S)
