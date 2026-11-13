@@ -670,8 +670,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .dock svg{fill:currentColor}
 .dock .dp{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff} .dock .dp svg{width:16px;height:16px}
 .dock .ic-play{display:none} .dock.paused .ic-play{display:block} .dock.paused .ic-pause{display:none}
-.dock .ds{min-width:42px;height:30px;font:600 12.5px var(--ui);border:1px solid var(--rule)!important;border-radius:999px;font-variant-numeric:tabular-nums}
-.dock .dj{width:34px;height:34px;border-radius:50%} .dock .dj:hover,.dock .dx:hover,.dock .ds:hover{background:var(--tabon)}
+.dock .dj{width:34px;height:34px;border-radius:50%} .dock .dj:hover,.dock .dx:hover{background:var(--tabon)}
 .dock .dj svg{width:24px;height:24px} .dock .dj text{font:700 6.5px var(--ui);fill:currentColor}
 .dock .dt{flex:0 1 auto;min-width:0;font-size:13.5px;font-weight:600;color:inherit;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:4px}
 .dock .dt:hover{color:var(--accent)}
@@ -682,7 +681,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .dock .dbar b{position:absolute;top:5px;left:calc(var(--p,0%) - 6px);width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--bar)}
 .dock .dx{width:34px;height:34px;border-radius:50%} .dock .dx svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 html.docked body{padding-bottom:84px}
-.dock.na .dp,.dock.na .ds,.dock.na .dj,.dock.na .dbar{opacity:.35;pointer-events:none} .dock.na .dbar b{display:none} .dock.na .dtime{font-style:italic}
+.dock.na .dp,.dock.na .dj,.dock.na .dbar{opacity:.35;pointer-events:none} .dock.na .dbar b{display:none} .dock.na .dtime{font-style:italic}
 @media (max-width:700px){
  .dock .dk{flex-wrap:wrap;padding:8px 8px 6px}
  .dock .dt{order:-1;flex:1 1 100%;margin:0 0 2px 4px;font-size:13px}
@@ -1150,7 +1149,6 @@ new MutationObserver(function(){if(d.open)go();else stop()}).observe(d,{attribut
 <div class="dock" id="dock" role="region" aria-label="Audio player" hidden>
   <div class="dk">
     <button class="dp" type="button" aria-label="Pause"><svg class="ic-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg><svg class="ic-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg></button>
-    <button class="ds" type="button" aria-label="Playback speed">1×</button>
     <button class="dj" type="button" data-j="-15" aria-label="Back 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
     <button class="dj" type="button" data-j="15" aria-label="Forward 15 seconds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/><text x="12" y="16.2" text-anchor="middle">15</text></svg></button>
     <a class="dt" href="#" tabindex="-1" aria-label="Story being read"></a>
@@ -1407,7 +1405,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&D.open){D.o
 
 (function(){
   var L=[].slice.call(document.querySelectorAll('.listen')); if(!L.length)return;
-  var dock=document.getElementById('dock'), dk=dock.querySelector('.dk'), dp=dock.querySelector('.dp'), ds=dock.querySelector('.ds'), dt=dock.querySelector('.dt'), dtime=dock.querySelector('.dtime'), bar=dock.querySelector('.dbar'), dx=dock.querySelector('.dx');
+  var dock=document.getElementById('dock'), dk=dock.querySelector('.dk'), dp=dock.querySelector('.dp'), dt=dock.querySelector('.dt'), dtime=dock.querySelector('.dtime'), bar=dock.querySelector('.dbar'), dx=dock.querySelector('.dx');
   var speeds=[1,1.25,1.5,2,0.85], si=0, cur=null;
   var fmt=function(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');};
   function sync(){if(!cur)return;if(cur.na){bar.style.setProperty('--p','0%');dtime.textContent='Audio not yet added';return;}var au=cur.au,p=au.duration?au.currentTime/au.duration*100:0;bar.style.setProperty('--p',p+'%');bar.setAttribute('aria-valuenow',Math.round(p));bar.setAttribute('aria-valuetext',fmt(au.currentTime)+' of '+fmt(au.duration));dtime.textContent=fmt(au.currentTime)+' / '+fmt(au.duration);}
@@ -1434,7 +1432,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&D.open){D.o
   });
   function close(){if(cur)cur.au.pause();dock.classList.remove('on');document.documentElement.classList.remove('docked');setTimeout(function(){if(!dock.classList.contains('on'))dock.hidden=true;},360);state();}
   dp.addEventListener('click',function(){if(!cur)return;if(cur.au.paused){var r=cur.au.play();if(r&&r.catch)r.catch(function(){});}else cur.au.pause();});
-  ds.addEventListener('click',function(){si=(si+1)%speeds.length;ds.textContent=speeds[si]+'×';if(cur)cur.au.playbackRate=speeds[si];});
   [].forEach.call(dock.querySelectorAll('.dj'),function(b){b.addEventListener('click',function(){if(!cur||!cur.au.duration)return;cur.au.currentTime=Math.max(0,Math.min(cur.au.duration,cur.au.currentTime+ +b.dataset.j));sync();});});
   dx.addEventListener('click',close);
   function seek(x){if(!cur||!cur.au.duration)return;var r=bar.getBoundingClientRect();cur.au.currentTime=Math.max(0,Math.min(1,(x-r.left)/r.width))*cur.au.duration;sync();}
