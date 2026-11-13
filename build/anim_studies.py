@@ -67,13 +67,18 @@ m5 = panel('<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax
            + "".join(f'<path class="bd" style="--i:{i}" d="{d}"/>' for i,d in enumerate(borders)) + "".join(arcs)
            + "".join(f'<circle class="ct" cx="{x}" cy="{y}" r="3.2"/>' for x,y in cities) + '</svg>',
            "The earth is but one country, and mankind its citizens.", ("Bahá’u’lláh", "Gleanings from the Writings of Bahá’u’lláh, CXVII"))
-# M6 Perfect chord: five waves in five colors draw together and resolve into one bold chord
+# M6 Perfect chord: voices arrive from both sides, meet in the middle, light blooms where they meet, and the chord opens outward inside it
 WC = ["#e2b072", "#f2cfc6", "#86c6d1", "#c9953f", "#b8d4a8"]
-def wave(f, a, ph):
-    return " ".join(f'{x},{200 + a*math.sin(x/560*2*math.pi*f + ph):.1f}' for x in range(-10, 571, 5))
-ws = "".join(f'<polyline class="wv3" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" points="{wave(1.6+i*.55, 24, i*.9)}"/>' for i in range(5))
-chord = " ".join(f'{x},{200 + sum(24*math.sin(x/560*2*math.pi*(1.6+i*.55) + i*.9) for i in range(5))/2.3:.1f}' for x in range(-10, 571, 4))
-m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">{ws}<polyline class="cg3" points="{chord}"/><polyline class="cd3" points="{chord}"/></svg>',
+F0 = [1.6 + i*.55 for i in range(5)]
+def wave(f, a, ph, rev=False):
+    xs = list(range(-10, 571, 5)); xs = xs[::-1] if rev else xs
+    return " ".join(f'{x},{200 + a*math.sin(x/560*2*math.pi*f + ph):.1f}' for x in xs)
+def _cy(x): return 200 + sum(24*math.sin(x/560*2*math.pi*f + i*.9) for i,f in enumerate(F0))/2.3
+chord = " ".join(f'{x},{_cy(x):.1f}' for x in range(-10, 571, 4))
+half_l = " ".join(f'{x},{_cy(x):.1f}' for x in range(280, -11, -4)); half_r = " ".join(f'{x},{_cy(x):.1f}' for x in range(280, 571, 4))
+ws = "".join(f'<polyline class="wv6" style="--i:{i};--c:{WC[i]};--o:{(i-2)*30}px" points="{wave(F0[i], 24, i*.9, rev=(i%2==1))}"/>' for i in range(5))
+m6 = panel(f'<svg class="art" viewBox="0 0 560 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><radialGradient id="bl6"><stop offset="0" stop-color="#fff6ea" stop-opacity=".8"/><stop offset=".5" stop-color="#f3c98e" stop-opacity=".28"/><stop offset="1" stop-color="#f3c98e" stop-opacity="0"/></radialGradient></defs>'
+           f'{ws}<ellipse class="bl6" cx="280" cy="200" rx="300" ry="92" fill="url(#bl6)"/><polyline class="cg6" points="{chord}"/><polyline class="cd6" points="{half_l}"/><polyline class="cd6" points="{half_r}"/></svg>',
            "…the diversity in the human family should be the cause of love and harmony, as it is in music where many different notes blend together in the making of a perfect chord.",
            ("‘Abdu’l-Bahá", "Paris Talks, “Beauty and Harmony in Diversity”"), "lu ch")
 
@@ -84,7 +89,7 @@ A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when 
      ("M3", "anim-light", "My light is in thee", "proposed", "The Send a story popup, for a call in a later issue, in the same place as M1; or the receipt after sending.",
       "A dawn rises from below and, one by one, lights a sky of stars that draw toward their neighbors: each person a lamp, each light joining the others.", m3),
      ("M4", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
-      "Five waves in five colors move toward one another and resolve into a single chord.", m6)]
+      "Five voices arrive from both sides and meet in the middle; light blooms where they meet, and the chord opens outward from that center.", m6)]
 
 CSS = r"""
 .an-w{max-width:980px;margin:0 auto;padding:clamp(28px,5vw,56px) 16px 72px}
@@ -108,9 +113,10 @@ CSS = r"""
 /* M3 */.dawn{transform-origin:280px 320px;transform:scale(.05);opacity:.4;will-change:transform,opacity;animation:dawn 10s cubic-bezier(.33,0,.2,1) .3s forwards}@keyframes dawn{to{transform:scale(1);opacity:1}}
 .sk{fill:#fbf8ff;opacity:.7;animation:tw 4.8s ease-in-out var(--t) infinite}@keyframes tw{50%{opacity:1}}.qh{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.7);will-change:transform,opacity;animation:qh 5s cubic-bezier(.33,0,.2,1) 4.2s forwards}@keyframes qh{to{opacity:1;transform:scale(1)}}.sr{opacity:0;will-change:opacity;animation:srl 2.2s cubic-bezier(.4,0,.2,1) calc(.6s + var(--d) * 3.8s) forwards}@keyframes srl{to{opacity:1}}
 .lk{stroke:#ffe6c4;stroke-width:.6;opacity:0;animation:lk 2.4s cubic-bezier(.4,0,.2,1) calc(1.8s + var(--d) * 3.8s) forwards}@keyframes lk{to{opacity:.22}}
-/* M6 */.wv3{fill:none;stroke:var(--c);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;opacity:.95;transform:translateY(var(--o));will-change:transform,opacity;animation:join3 3.6s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .16s) forwards}@keyframes join3{65%{opacity:.9}to{transform:none;opacity:.32}}
-.cg3{fill:none;stroke:#f3c98e;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg3 2.6s ease 4s forwards}@keyframes cg3{to{opacity:.2}}
-.cd3{fill:none;stroke:#fffaf5;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1500;stroke-dashoffset:1500;animation:grow 2.6s cubic-bezier(.4,0,.2,1) 3.9s forwards}@keyframes grow{to{stroke-dashoffset:0}}
+/* M6 */.wv6{fill:none;stroke:var(--c);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;transform:translateY(var(--o));will-change:transform,opacity;animation:in6 1.6s ease calc(.4s + var(--i) * .25s) forwards,j6 2.6s cubic-bezier(.45,0,.2,1) calc(2.2s + var(--i) * .1s) forwards}@keyframes in6{to{stroke-dashoffset:0}}@keyframes j6{to{transform:none;opacity:.34}}
+.bl6{transform-box:fill-box;transform-origin:center;opacity:0;transform:scale(.1);will-change:transform,opacity;animation:bl6 2.8s cubic-bezier(.2,.7,.2,1) 4.3s forwards}@keyframes bl6{40%{opacity:1}to{opacity:.55;transform:scale(1)}}
+.cg6{fill:none;stroke:#fff1dc;stroke-width:32;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg6 2.2s ease 4.6s forwards}@keyframes cg6{to{opacity:.26}}
+.cd6{fill:none;stroke:#fffdf9;stroke-width:8.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:800;stroke-dashoffset:800;animation:grow 2.1s cubic-bezier(.4,0,.2,1) 4.5s forwards}@keyframes grow{to{stroke-dashoffset:0}}
 .nt{fill:var(--c);transform:translateY(var(--o));will-change:transform,opacity;animation:join 3.4s cubic-bezier(.45,0,.2,1) calc(.8s + var(--i) * .15s) forwards}.sf{stroke:#fbf7ef;stroke-width:.6;opacity:.08}
 .cdg{fill:none;stroke:#f3c98e;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:0;animation:cg 2.4s ease 4s forwards}@keyframes cg{to{opacity:.16}}
 .cd{fill:none;stroke:#fffaf5;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:grow 2.4s cubic-bezier(.4,0,.2,1) 3.9s forwards}
