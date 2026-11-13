@@ -89,7 +89,14 @@ A = [("M1", "anim-gems", "Gems revealed", "live", "The Send a story popup, when 
      ("M3", "anim-light", "My light is in thee", "proposed", "The Send a story popup, for a call in a later issue, in the same place as M1; or the receipt after sending.",
       "A dawn rises from below and, one by one, lights a sky of stars that draw toward their neighbors: each person a lamp, each light joining the others.", m3),
      ("M4", "anim-chord", "A perfect chord", "proposed", "The end of the arts stories in this issue (New Yorkers, Two artists), or the Race Unity call.",
-      "Five voices arrive from both sides and meet in the middle; light blooms where they meet, and the chord opens outward from that center.", m6)]
+      "Five voices arrive from both sides and meet in the middle; light blooms where they meet, and the chord opens outward from that center.", m6),
+     ("M5", "anim-small", "Smaller sizes", "proposed", "A column, a popup, a sidebar or a card: wherever the full stage is too large.",
+      "M1, M3 and M4 at two smaller sizes, the composition kept whole. Type scales with the panel but never below 12 px; the small size is 4:3 so the art keeps clear of the citation.", None)]
+def _sm(name, html):
+    return (f'<section class="smb"><h2>{name}</h2><div class="smr">'
+            f'<div class="sm m"><p class="lbl">Medium · 600 px <button type="button" class="rp">Replay</button></p>{html}</div>'
+            f'<div class="sm s"><p class="lbl">Small · 380 px, 4:3 <button type="button" class="rp">Replay</button></p>{html}</div></div></section>')
+A[-1] = A[-1][:6] + ("".join(_sm(nm, h) for nm, h in (("Gems revealed", m1), ("My light is in thee", m3), ("A perfect chord", m6))),)
 
 CSS = r"""
 .an-w{max-width:980px;margin:0 auto;padding:clamp(28px,5vw,56px) 16px 72px}
@@ -124,6 +131,7 @@ CSS = r"""
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important}}
 """
 JS = r"""
+[].forEach.call(document.querySelectorAll('.rp'),function(b){b.onclick=function(){var p=b.closest('.sm').querySelector('.pn'),h=p.innerHTML;p.innerHTML='';void p.offsetWidth;p.innerHTML=h}});
 (function(){var t=document.querySelector('.twt');if(!t)return;var P=['What happened, and where…','Who was there…','A photograph or two…','What you learned…'],pi=0,ci=0,del=0,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function run(){var p=P[pi];if(rm){t.textContent=p;pi=(pi+1)%4;return setTimeout(run,3000)}if(!del){ci++;t.textContent=p.slice(0,ci);if(ci>=p.length){del=1;return setTimeout(run,1900)}return setTimeout(run,48)}ci--;t.textContent=p.slice(0,ci);if(ci<=0){del=0;pi=(pi+1)%4;return setTimeout(run,380)}setTimeout(run,16)}run()})();
 var rp=document.querySelector('.rpl');if(rp)rp.onclick=function(){var p=document.querySelector('.pn');if(p.classList.contains('light'))return;var h=p.innerHTML;p.innerHTML='';void p.offsetWidth;p.innerHTML=h};
@@ -132,10 +140,19 @@ def body(x):
     code, slug, name, st, where, why, html = x
     return (f'<main class="an-w"><header class="an-h"><p class="kk">Animation · {code}</p><h1>{name}</h1></header><span class="st {st}">{STATUS[st]}</span>{html}'
             f'<div class="ab"><div><h2>Where it goes</h2><p>{where}</p></div><div><h2>What it does</h2><p>{why}</p></div></div>'
-            + ('' if st == "live" and slug == "anim-prompts" else '<button type="button" class="rpl">Replay</button>') + '</main>')
+            + ('' if slug in ("anim-prompts", "anim-small") else '<button type="button" class="rpl">Replay</button>') + '</main>')
 
 CSS += ".pn.lu{background:radial-gradient(ellipse at 50% 112%,#8a9be0 0%,#5263a8 34%,#33407a 66%,#252d5a 100%)}.pn.lu .pq{max-width:720px}.pn.lu .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45}.pn.lu .pq::before{font-size:56px;top:12px}"
 
 CSS += ".pn.lu .pq p{text-shadow:0 1px 12px rgba(29,34,54,.85)}"
 
 CSS += ".pn.big .pq{max-width:720px}.pn.big .pq p{font-size:clamp(18px,2.2vw,22px);line-height:1.45;text-shadow:0 1px 12px rgba(29,34,54,.85)}.pn.big .pq::before{font-size:56px;top:12px}"
+
+CSS += (".smb{border-top:1px solid var(--rule);padding:24px 0 6px}.smb:first-of-type{border-top:0}.smb h2{font:700 20px/1.2 var(--text);margin:0 0 14px}"
+ ".smr{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}.sm.m{width:min(100%,560px)}.sm.s{width:min(100%,360px)}"
+ ".lbl{font:700 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}"
+ ".lbl button{font:600 12px var(--ui);background:none;border:1px solid var(--rule);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer;letter-spacing:0;text-transform:none}"
+ ".sm .pn{aspect-ratio:16/9!important;min-height:0!important;margin:0!important;border-radius:8px;container-type:inline-size}.sm.s .pn{aspect-ratio:4/3!important}"
+ ".sm .pq{padding:3.4cqw 4cqw 0 7.6cqw!important;max-width:74cqw!important}.sm .pq::before{left:3.2cqw!important;top:2cqw!important;font-size:max(26px,6.4cqw)!important}"
+ ".sm .pq p{font-size:max(12px,2.15cqw)!important;line-height:1.45!important}.sm .pq figcaption{margin-top:max(8px,1.8cqw)!important;padding-top:max(6px,1.2cqw)!important;font-size:max(10px,1.5cqw)!important}.sm .pq figcaption b{font-size:max(9.5px,1.4cqw)!important}"
+ "@media (max-width:420px){.sm .pn{aspect-ratio:4/3!important}}")

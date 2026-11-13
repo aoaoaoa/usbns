@@ -350,7 +350,7 @@ def gallery():
             f'<title>Laboratory · The American Bahá’í</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
             f'<header class="gh"><p class="kk">The American Bahá’í · Laboratory</p><h1>Invitations, studies, tests, and research product sketches</h1></header>'
             f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
-            f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul><h2 class="gs" id="animations">Animations <small>Motion for the calls to action: two live, two proposed</small></h2><ul class="gg">{acards}</ul></main><script>{js}</script></body></html>')
+            f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul><h2 class="gs" id="animations">Animations <small>Motion for the calls to action: two live, three proposed</small></h2><ul class="gg">{acards}</ul></main><script>{js}</script></body></html>')
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
