@@ -2211,7 +2211,7 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
 def build_test():
     # /test/ is a live clone of the curated edition, ready for trials. Earlier trials kept above, not applied: TEST_CSS (blind deboss), TEST_MOTION/TEST_MOTION_JS (one moving thing per screen).
     h = standalone(build_tab()).replace('href="FAVICON"', 'href="../favicon.svg"').replace('data-src="audio/', 'data-src="../audio/')
-    return h.replace('</head>', '<meta name="robots" content="noindex">' + TEST_FRAME + '</head>', 1)
+    return h.replace('</head>', '<meta name="robots" content="noindex"></head>', 1)
 # /test/ trial: inline photos framed by a white box and a thin rule instead of the cover-painting mat
 TEST_FRAME = ('<style>.prose .photo img,.prose .portraits img,.band .bi img,.prose .mountp img{background:#fff!important;border:1px solid #d6cebf!important;padding:6px!important;box-shadow:0 1px 2px rgba(40,25,10,.06)}'
   '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .prose .photo img,:root:not([data-theme="light"]) .prose .portraits img,:root:not([data-theme="light"]) .band .bi img,:root:not([data-theme="light"]) .prose .mountp img{background:#1f1c17!important;border-color:#3a342b!important}}'
