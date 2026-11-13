@@ -1220,13 +1220,18 @@ main,.head{{position:relative;z-index:1}}
 .dept .prose.calendar{{max-width:72ch;grid-column:2/4}}
 .dept .prose.shelf{{grid-column:2/4}}
 /* Abiding in God's Law: every passage in the opening treatment, the compilation across the text and open columns, two balanced columns under each question */
-#abiding .prose.compilation{{grid-column:2/4;max-width:none;display:block}}
-#abiding .compilation>.passage.lead{{max-width:780px;margin:0 auto .6em}} #abiding .compilation>.passage.lead p{{font-size:19px}}
-#abiding .qblock{{columns:2 320px;column-gap:clamp(22px,3vw,40px);margin:3.4em 0 0}}
-#abiding .qblock h3{{column-span:all;text-align:center;max-width:32ch;margin:0 auto 2.2em;text-wrap:balance}} #abiding .qblock h3::before{{margin:0 auto 12px}}
-#abiding .qblock .passage.lead{{break-inside:avoid;display:inline-block;width:100%;margin:14px 0 2.2em;padding:40px clamp(16px,2.4vw,28px) 26px}}
-#abiding .qblock:not(:has(.passage:nth-of-type(2))){{columns:auto;max-width:700px;margin-left:auto;margin-right:auto}} #abiding .qblock .passage.lead p{{font-size:16.5px;line-height:1.6}}
-@media (max-width:980px){{#abiding .prose.compilation{{grid-column:1}}}}
+#abiding .prose.compilation{{grid-column:2/3!important;max-width:66ch!important;display:block!important;background:var(--bar,#fdfcf9);border:1px solid var(--rule);padding:clamp(22px,4vw,44px) clamp(20px,4vw,48px)!important;position:relative;z-index:1}}
+#abiding .compilation .passage.lead,#abiding .compilation .passage{{all:unset;display:block;margin:0 0 1.9em;padding:0 0 0 18px!important;border-left:2px solid color-mix(in oklab,var(--gilt,#a47628) 60%,transparent)!important;background:none!important;text-align:left!important;box-shadow:none!important}}
+#abiding .compilation .passage::before,#abiding .compilation .passage::after{{content:none!important}}
+#abiding .compilation .passage p{{font:400 18.5px/1.62 var(--text)!important;font-style:normal!important;color:var(--ink)!important;margin:0 0 .5em!important;text-align:left!important;max-width:none!important}}
+#abiding .compilation .passage p::first-letter{{all:unset}}
+#abiding .compilation .passage cite{{display:block!important;font:italic 14px/1.45 var(--text)!important;letter-spacing:0!important;text-transform:none!important;color:var(--mute)!important;text-align:left!important}}
+#abiding .compilation .passage cite::before,#abiding .compilation .passage cite::after{{content:none!important}}
+#abiding .compilation>.passage:first-child{{border-left:0!important;padding:0 0 1.4em!important;border-bottom:3px double var(--rule)!important;margin-bottom:2em}} #abiding .compilation>.passage:first-child p{{font-size:21px!important;font-style:italic!important;line-height:1.55!important}}
+#abiding .compilation .qblock{{all:unset;display:block;margin:0 0 1.2em}}
+#abiding .compilation .qblock h3{{all:unset;display:block;font:700 22px/1.3 var(--text)!important;color:var(--ink);margin:1.6em 0 1em!important;text-align:left!important;text-transform:none!important;letter-spacing:0!important}} #abiding .compilation .qblock h3::before,#abiding .compilation .qblock h3::after{{content:none!important}}
+#abiding .compilation .qblock:first-of-type h3{{margin-top:.4em!important}}
+@media (max-width:900px){{#abiding .prose.compilation{{grid-column:1/-1!important}}}}
 #rhythm,#books{{zoom:.85}}
 .dept .margin,.letter .margin{{grid-row:2}}
 .dept .prose,.letter .prose{{grid-row:2}}
