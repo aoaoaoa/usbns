@@ -1723,7 +1723,7 @@ a:focus-visible{{outline:2px solid var(--accent);outline-offset:3px}}
 {depts}
 </div>
 </main>
-{ENDX if member else SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1) + _ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1)}
+{SUB_SECTION.replace('class="sbx"', 'class="sbx edask"', 1) + _ns["submit_html"]("", "#").replace('<section class="sbm sbc"', '<section class="sbm sbc edask"', 1)}
 {NEXT_LINE}
 {footer_html("https://aoaoaoa.github.io/usbns/magazine/landing/")}
 {DOCK}
