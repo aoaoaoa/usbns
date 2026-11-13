@@ -42,6 +42,7 @@ FIG = {
  "video": _frame('<rect x="20" y="20" width="120" height="70" rx="4" fill="var(--soft)"/><path d="M70 40v30l26-15z" fill="var(--bgf)"/><rect x="20" y="98" width="120" height="4" fill="var(--edge)"/><rect x="20" y="98" width="44" height="4" fill="var(--acc)"/>', "A short horizontal video"),
  "service": _frame(_p(48, 50, 1.1) + _p(100, 50, 1.1, "var(--soft)") + '<rect x="58" y="78" width="44" height="26" fill="var(--acc)" opacity=".5"/>', "Young people serving together"),
 }
+from figs import FIG  # redrawn set: light, floor and depth of field
 def fig(k): return FIG[k]
 
 # ---------------- R4 Brief board
