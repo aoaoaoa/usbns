@@ -777,12 +777,12 @@ def prayer_html(pr):
     corner = lambda n: f'<svg class="jc jc{n}" viewBox="0 0 40 40" aria-hidden="true"><polygon points="{_star9(20,20,18,11)}" fill="var(--gilt)"/><circle cx="20" cy="20" r="5" fill="var(--lap)"/></svg>'
     return f'<blockquote class="passage prayer illum">{"".join(corner(n) for n in range(1,5))}{rose}<p class="lines">{versal}<span class="vh">{esc(first)}</span>{body}</p><cite>{esc(src)}</cite></blockquote>'
 
-# end of the issue: the next issue, one line (theme and season from the landing slate; quotation, Gleanings CXXII)
+# end of the issue: the next issue, one line (theme and season from the landing slate)
 NEXT_LINE = ('<section class="nxl" aria-label="Next issue"><div class="wrap"><div class="m1"><span class="k">Next issue</span><b>Education</b><span class="w">Winter 2027</span>'
-    '<span class="q sqi">Education can, alone, cause it to reveal its treasures… <cite>Bahá’u’lláh</cite></span><a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
+    '<a href="#" data-submit="next">Send a story <span aria-hidden="true">→</span></a></div></div></section>')
 NEXT_CSS = (".nxl{padding:30px 0 26px}.nxl+.colo{margin-top:0!important}.nxl .wrap{padding-top:0!important;padding-bottom:0!important}.nxl .m1{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;border-top:3px double var(--ink);padding:16px 0 0;margin:0;font:17px/1.5 \"Literata\",Georgia,serif}"
     ".nxl .k{font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e}.nxl b{font:700 26px \"Literata\",Georgia,serif}.nxl .w{font:13px var(--ui);color:var(--mute)}"
-    ".nxl .q{font-style:italic;color:var(--mute);flex:1 1 260px}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
+    ".nxl .m1>a{margin-left:auto}.nxl cite{font:normal 12px var(--ui)}.nxl a{font:700 15px var(--ui);color:var(--link,var(--accent))}@media print{.nxl{display:none}}")
 def build_tab(member=False, menu="contents", lite=False, letter=None):
     tints = {"gregory":"#e8532a","newyorkers":"#f05a7e","twoartists":"#b07a4a","abs":"#c9462c","endeavor":"#1b5e6b","comic":"#e9a21f"}
     secs = []
