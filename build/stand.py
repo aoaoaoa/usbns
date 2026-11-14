@@ -243,7 +243,7 @@ def _key(h):  # a key beside Subscribe opens the members sign-in; 9 lets the rea
            '.mgc{position:relative;box-sizing:border-box;width:min(400px,100%);background:var(--card,#fdfcf9);color:var(--ink);border-radius:8px;padding:30px 28px 22px;text-align:center;box-shadow:0 30px 70px -20px rgba(0,0,0,.55);font-family:var(--ui)}'
            '.mgx{position:absolute;top:10px;right:10px;width:40px;height:40px;border:0;background:none;font:400 24px/1 var(--ui);color:var(--mute);cursor:pointer;border-radius:50%}'
            '.mgs{display:block;width:34px;height:34px;margin:0 auto 10px;color:#c99a3e}.mgs svg{width:100%;height:100%}'
-           '.mgk{margin:0;font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#5b4a8a}.mgc h2{margin:4px 0 8px;font:700 28px/1.15 "Literata",Georgia,serif}'
+           '.mgk{margin:4px 0 12px;font:700 11px var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#5b4a8a}.mgc h2{margin:4px 0 8px;font:700 28px/1.15 "Literata",Georgia,serif}'
            '.mgl{margin:0 0 18px;font:15px/1.5 "Literata",Georgia,serif;color:var(--mute)}.mgf{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;text-align:left}.mgf label{font:600 13px var(--ui)}'
            '.mgf input{font:600 22px/1.2 var(--ui);letter-spacing:.2em;text-align:center;padding:12px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);min-height:52px;width:100%;min-width:0;box-sizing:border-box}'
            '.mgf input::placeholder{color:#c99a3e;opacity:1}.mgf input:focus{outline:2px solid #5b4a8a;outline-offset:2px}'
