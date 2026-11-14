@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>B1 · A magazine that learns</title><link rel="icon" href="../../favicon.svg"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Literata:ital,opsz,wght@0,7..72,300..900;1,7..72,300..700&display=swap"><style>
+:root{--paper:#f5f1e8;--card:#fdfcf9;--ink:#1d1a16;--soft:#3d3831;--mute:#6a635a;--rule:#d9d2c4;--link:#1b5e6b;--ph:#e7e1d4;--navy:#222e4c;--blush:#f2cfc6;--gold:#b8782e;--ui:"Bricolage Grotesque",system-ui,sans-serif;--text:"Literata",Georgia,serif;--cond:"Barlow Condensed","Arial Narrow",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#17150f;--card:#211e17;--ink:#f1ece2;--soft:#d6cfc2;--mute:#a59d90;--rule:#3a352c;--link:#7cc0cc;--ph:#2a2620;--navy:#f2cfc6;--blush:#222e4c;--gold:#e0a85e}}
+:root[data-theme="dark"]{--paper:#17150f;--card:#211e17;--ink:#f1ece2;--soft:#d6cfc2;--mute:#a59d90;--rule:#3a352c;--link:#7cc0cc;--ph:#2a2620;--navy:#f2cfc6;--blush:#222e4c;--gold:#e0a85e}
+*{box-sizing:border-box}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 var(--text)}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:3px}
+.bar0{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--rule);font:13px var(--ui);display:flex;gap:6px;align-items:center;padding:8px 16px;overflow-x:auto;scrollbar-width:none}
+.bar0 b{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--mute);white-space:nowrap;margin-right:6px}
+.bar0 button{font:600 13px var(--ui);border:1px solid var(--rule);background:none;color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.bar0 button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.bar0 .nk{margin-left:auto;color:var(--mute);white-space:nowrap}
+.ap{max-width:1040px;margin:0 auto;padding:clamp(40px,7vw,88px) 16px 72px;text-align:center}
+.kk{font:700 12px/1 var(--ui);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+.kk::before{content:"";display:block;width:94px;height:4px;border:1px solid var(--ink);border-width:1px 0;margin:0 auto 14px}
+h1{font:700 clamp(32px,4.6vw,54px)/1.06 var(--text);letter-spacing:-.01em;margin:0 auto 16px;max-width:20ch;text-wrap:balance}
+.ld{font-size:clamp(17px,1.6vw,20px);color:var(--soft);margin:0 auto 32px;max-width:44ch;text-wrap:balance}
+.sbtn{display:inline-flex;align-items:center;gap:10px;font:700 19px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase;border:0;background:var(--navy);color:var(--blush);padding:14px 24px;border-radius:3px;cursor:pointer;white-space:nowrap}
+.sbtn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.sf,.steps{display:grid;gap:14px;text-align:left;max-width:640px;margin:0 auto}
+label,legend{display:grid;gap:6px;font:600 14px var(--ui);color:var(--soft)}
+input,textarea{font:16px/1.4 var(--text);color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:4px;padding:11px 12px;width:100%}
+textarea{resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sf .sbtn{justify-self:start}
+.prom{font:14px/1.5 var(--ui);color:var(--mute);margin:26px auto 0}
+.done{max-width:640px;margin:18px auto 0;background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--gold);padding:16px 18px;text-align:left;font:15px/1.5 var(--ui)}
+/* A */
+.mapw{position:relative;max-width:820px;margin:0 auto 26px}
+.usm{width:100%;height:auto;display:block}
+.usm .na{fill:var(--ph)}.usm .st{fill:none;stroke:var(--paper);stroke-width:.8}
+.usm circle{stroke:var(--paper);stroke-width:1.2}.usm circle.big{stroke-width:1.6}
+.usm .yr{fill:none;stroke:var(--gold);stroke-width:2}.usm .yd{fill:var(--gold);stroke:none}
+.key{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 16px;font:700 14px/1.5 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.key i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:-1px}
+.where{max-width:640px;margin:0 auto 22px;text-align:left}.where label{margin-bottom:6px}
+.wr{display:flex;gap:10px}.wr input{flex:1;min-width:0}
+.yt{font:700 18px var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin:6px 0 14px}
+/* B */
+.bq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start;text-align:left}
+.bq h1,.bq .ld{margin-left:0}.bq .kk::before{margin-left:0}.bq img{width:min(260px,70%);height:auto;display:block}
+.steps{max-width:none;margin:0;min-height:300px;align-content:start}
+.bar{height:4px;background:var(--rule);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.q{border:0;margin:0;padding:0;display:grid;gap:12px}
+.q legend{font:700 clamp(24px,2.8vw,32px)/1.15 var(--text);color:var(--ink);padding:0;margin-bottom:12px}
+.qn{display:block;font:700 12px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.q small{font:14px var(--ui);color:var(--mute)}
+.nav{display:flex;gap:10px;align-items:center;margin-top:8px}
+.nav .bk,.nav .sk{font:600 15px var(--ui);background:none;border:0;color:var(--soft);cursor:pointer;padding:10px 6px}
+.nav .nx{margin-left:auto}
+/* C */
+.sts{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin:0 auto 26px;text-align:left}
+.st{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;background:var(--card);border:1px solid var(--rule);border-left:5px solid var(--c,var(--gold));border-radius:4px;padding:10px;cursor:pointer;color:var(--ink);font:inherit;text-align:left}
+.st img{width:76px;height:76px;object-fit:cover;border-radius:2px;display:block}
+.st b{display:block;font:600 17px/1.25 var(--text);margin-bottom:4px}.st small{font:13px var(--ui);color:var(--mute)}
+.st.own{grid-template-columns:1fr;border-left-style:dashed;grid-column:1/-1;text-align:center;justify-items:center}
+.st[aria-pressed=true]{outline:2px solid var(--c,var(--gold));outline-offset:2px}
+/* D */
+.wys{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 auto 26px;max-width:760px}
+.wy{display:inline-flex;align-items:center;gap:10px;font:600 16px var(--ui);background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:12px 18px;cursor:pointer}
+.wy svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.wy[aria-pressed=true]{background:var(--navy);color:var(--blush);border-color:var(--navy)}
+.rec{display:grid;gap:10px;justify-items:start}
+.rb{display:inline-flex;align-items:center;gap:10px;font:600 16px var(--ui);background:var(--card);color:var(--ink);border:1px solid var(--rule);border-radius:999px;padding:12px 18px;cursor:pointer}
+.rb i{width:12px;height:12px;border-radius:50%;background:#c9462c}.rb.on i{border-radius:2px}
+.rt{font:14px var(--ui);color:var(--mute)}
+/* E */
+.rt3{list-style:none;padding:0;margin:8px 0 36px;display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:28px;text-align:left;position:relative}
+.rt3::before{content:"";position:absolute;left:0;right:0;top:30px;height:5px;background:repeating-linear-gradient(-45deg,#c9462c 0 10px,transparent 10px 14px,#2f4f6e 14px 24px,transparent 24px 28px);opacity:.85}
+.rt3 .no{position:relative;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);font:italic 700 30px/1 var(--text);margin-bottom:14px}
+.rt3 li:last-child .no{background:var(--navy);border-color:var(--navy);color:var(--blush)}
+.rt3>li>b{display:block;font:700 20px/1.1 var(--cond);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.rt3 .sm{font:15px/1.5 var(--ui);color:var(--mute);margin:0 0 12px}
+.nt{background:#fffdf6;color:#1d1a16;box-shadow:0 8px 22px rgba(29,26,22,.12);padding:14px 16px;transform:rotate(-.8deg);font-size:15px;line-height:1.5}.nt p{margin:0 0 .6em}.nt p:last-child{margin:0}
+.pg{display:grid;gap:8px}.pg a{display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center;text-decoration:none;color:var(--ink);font:700 14px/1.2 var(--cond);letter-spacing:.05em;text-transform:uppercase;border-left:4px solid var(--c);padding-left:8px}
+.pg img{width:54px;height:40px;object-fit:cover;display:block}
+.ef{max-width:640px;margin:0 auto}
+@media (max-width:760px){.bq,.rt3{grid-template-columns:1fr}.rt3::before{display:none}.bq img{display:none}.two{grid-template-columns:1fr}.wr{flex-direction:column}.wr .sbtn{justify-content:center}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+.bar0{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--rule);font:13px var(--ui);display:flex;gap:6px;align-items:center;padding:8px max(16px,env(safe-area-inset-left,0px));overflow-x:auto;scrollbar-width:none}.bar0 b{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--mute);white-space:nowrap;margin-right:6px}.bar0 a{font:600 13px var(--ui);color:var(--ink);text-decoration:none;white-space:nowrap}.bar0 .cd{font:700 13px var(--ui);background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.bar0 .pn2{margin-left:auto;display:flex;gap:14px}.bar0 .pn2 a{color:var(--mute)}body{margin:0;background:#fdfcf9}a{color:#1b5e6b}</style></head><body><nav class="bar0" aria-label="Briefs"><a href="../">← All ideas</a><span class="cd">B1</span><b>A magazine that learns</b></nav><div style="background: #fdfcf9; color: #1d1a16; font-family: Literata, Georgia, serif;">
+<div style="max-width: 1120px; margin: 0 auto; padding: 48px 16px 96px; display: flex; flex-direction: column; gap: 56px;">
+
+<header style="display: flex; flex-wrap: wrap; gap: 40px; border-bottom: 2px solid #1d1a16; padding-bottom: 40px;">
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+<p style="margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">The American Bahá’í · Brief</p>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 800; font-size: clamp(44px, 6vw, 80px); line-height: 0.92; letter-spacing: -0.035em;">A magazine that learns</h1>
+<p style="margin: 0; font-size: 20px; line-height: 1.5; font-weight: 300; font-style: italic; color: #6a635a;">A strategic learning redesign for The American Bahá’í</p>
+<p style="margin: 0; max-width: 58ch; font-size: 19px; line-height: 1.6;">Recast as a system of engaging, newsletter-oriented story products and well-placed invitations, The American Bahá’í magazine can work as a learning platform, research tool, and content engine that supplies resources and insight to support the needs of many different content projects and audiences.</p>
+</div>
+<nav aria-label="Contents" style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column;">
+<span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a; padding-bottom: 10px;">Contents</span>
+<a href="#c1" style="display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #d9d2c4; color: #1d1a16; text-decoration: none; font-size: 20px; font-style: italic; font-weight: 300;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-style: normal; font-size: 13px; font-weight: 700; color: #1b5e6b;">01</span>The digital edition</a>
+<a href="#c2" style="display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #d9d2c4; color: #1d1a16; text-decoration: none; font-size: 20px; font-style: italic; font-weight: 300;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-style: normal; font-size: 13px; font-weight: 700; color: #1b5e6b;">02</span>From readers to collaborators</a>
+<a href="#c3" style="display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #d9d2c4; color: #1d1a16; text-decoration: none; font-size: 20px; font-style: italic; font-weight: 300;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-style: normal; font-size: 13px; font-weight: 700; color: #1b5e6b;">03</span>What the audience shares</a>
+<a href="#c4" style="display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #d9d2c4; color: #1d1a16; text-decoration: none; font-size: 20px; font-style: italic; font-weight: 300;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-style: normal; font-size: 13px; font-weight: 700; color: #1b5e6b;">04</span>The 2026 Audience Report</a>
+<a href="#c5" style="display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #d9d2c4; border-bottom: 1px solid #d9d2c4; color: #1d1a16; text-decoration: none; font-size: 20px; font-style: italic; font-weight: 300;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-style: normal; font-size: 13px; font-weight: 700; color: #1b5e6b;">05</span>How we will know</a>
+</nav>
+</header>
+
+<figure style="margin: 0; display: flex; flex-direction: column; gap: 16px;">
+<div role="img" aria-label="Nested bands, outermost to innermost: readers, planners, sources, contributors, collaborators" style="background: #f5f1e8; border: 1px solid #d9d2c4; border-radius: 999px; padding: 10px 10px 10px 28px; display: flex; align-items: center; gap: 16px; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 14px; font-weight: 600; overflow-x: auto;">
+<span style="flex: none;">Readers</span>
+<div style="flex: 1 1 auto; min-width: 0; background: #ece6da; border: 1px solid #d9d2c4; border-radius: 999px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 16px;">
+<span style="flex: none;">Planners</span>
+<div style="flex: 1 1 auto; min-width: 0; background: #e3dccd; border: 1px solid #d0c8b8; border-radius: 999px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 16px;">
+<span style="flex: none;">Sources</span>
+<div style="flex: 1 1 auto; min-width: 0; background: #d9d1c0; border: 1px solid #c9bfad; border-radius: 999px; padding: 8px 8px 8px 24px; display: flex; align-items: center; gap: 16px;">
+<span style="flex: none;">Contributors</span>
+<div style="flex: 1 1 auto; min-width: 140px; background: #1b5e6b; color: #f7f2ea; border-radius: 999px; padding: 14px 24px; text-align: center;">Collaborators</div>
+</div>
+</div>
+</div>
+</div>
+<figcaption style="max-width: 72ch; font-size: 16px; line-height: 1.55; font-style: italic; color: #6a635a;">Each ring of the model answers a need documented in our recent audience report. An invitation sits at every edge (the open questions, Send a story, the field guide, a reply from the editors), drawing some readers one ring inward.</figcaption>
+</figure>
+
+<section id="c1" style="display: flex; flex-wrap: wrap; gap: 40px; border-top: 1px solid #d9d2c4; padding-top: 28px;">
+<h2 style="flex: 1 1 240px; margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;"><span style="display: block; font-size: 13px; color: #1b5e6b; letter-spacing: 0.12em; padding-bottom: 6px;">01</span>The digital edition</h2>
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px;">
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">The proposed digital edition rebuilds each issue story by story. Working from the final magazine proof, it gives every story an opening drawn from its print design (a broadside for Louis Gregory, a brush-stroke title for New Yorkers, a pen-traced script for two artists, a scholarly footnote for fifty years of Bahá’í studies, postmarks on a quilt for communities across America) to lead a richly reimagined, fully accessible, mobile-first layout. It then extends each story with the digital canvas: dynamic timelines, infographic explanations, marginalia, expanded photography sections, animated art, embedded video, audio versions and interactive maps. Stories go out as each is ready, by newsletter at the pace a reader chooses, and finally gather as the issue.</p>
+</div>
+</section>
+
+<section id="c2" style="display: flex; flex-wrap: wrap; gap: 40px; border-top: 1px solid #d9d2c4; padding-top: 28px;">
+<h2 style="flex: 1 1 240px; margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;"><span style="display: block; font-size: 13px; color: #1b5e6b; letter-spacing: 0.12em; padding-bottom: 6px;">02</span>From readers to collaborators</h2>
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px;">
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">TAB’s digital edition widens readership from its print base, placing curated, feature stories online, designed mobile first and in audio, reaching readers print could not: those conducting searches with spiritual or service-oriented terms, younger Bahá’ís who read on their phones, seekers who arrive through share links, and readers with impaired vision or other disabilities. Each comes in by a route fitted to them: the landing page, the newsletter, the curated public site, or sign-in with a Bahá’í ID to the members’ full edition.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+<div style="border: 1px solid #d9d2c4; border-radius: 4px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Newsletter pace</span><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 18px; font-weight: 700;">One story as it is published</span></div>
+<div style="border: 1px solid #d9d2c4; border-radius: 4px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Newsletter pace</span><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 18px; font-weight: 700;">A few at a time</span></div>
+<div style="border: 1px solid #d9d2c4; border-radius: 4px; padding: 16px; display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Newsletter pace</span><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 18px; font-weight: 700;">The full issue</span></div>
+</div>
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">The newsletter carries the season between issues: each subscriber chooses one story as it is published, a few at a time, or the full issue, so a reader can take a little without committing to everything, the open question stays in view between visits, and every email leads to a story that ends in Send a story. Each issue then puts questions and themes to the community, and readers help plan each season through reader surveys, open questions and theme notices. Answering from their local context, they become sources of leads and of what is being learned; then contributors of stories, photographs and field notes; and, for some, regular writers, photographers and filmmakers working with the editors. Everyone who sends something hears back within a promised time.</p>
+</div>
+</section>
+
+<section id="c3" style="display: flex; flex-wrap: wrap; gap: 40px; border-top: 1px solid #d9d2c4; padding-top: 28px;">
+<h2 style="flex: 1 1 240px; margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;"><span style="display: block; font-size: 13px; color: #1b5e6b; letter-spacing: 0.12em; padding-bottom: 6px;">03</span>What the audience shares</h2>
+<div style="flex: 999 1 560px; min-width: 0;">
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">What the audience shares is banked as lead reports and in media repositories, each item recorded with consent, credit and information for reuse. From that bank the magazine draws fresh stories and story ingredients for many projects: features from the grassroots, told in fresher styles and from more places; microstories for social media and newsletters; a photo, b-roll and stock library of recent, real activity; briefs for what the content planners might consider next; notes to share in learning desk meetings; and raw assets other teams can draw on for their projects and audiences. Each season also runs as a small test, and the magazine tracks what draws readers inward to deeper engagement.</p>
+</div>
+</section>
+
+<section id="c4" style="display: flex; flex-wrap: wrap; gap: 40px; border-top: 1px solid #d9d2c4; padding-top: 28px;">
+<h2 style="flex: 1 1 240px; margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;"><span style="display: block; font-size: 13px; color: #1b5e6b; letter-spacing: 0.12em; padding-bottom: 6px;">04</span>The 2026 Audience Report</h2>
+<div style="flex: 999 1 560px; min-width: 0;">
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">The model treats its readers and visitors as the 2026 Audience Report describes its subject: people in motion, moving between orientations as their needs change. The report found that seekers first look for real gatherings and real people, and that engaged readers want practical guidance and genuine voices; the new TAB model supplies both from the grassroots, in stories and footage made by the people who were there. It urges empowering individual Bahá’ís, especially youth, to create authentic content, and the model moves readers toward regular work with the editors. The report also found that open-ended channels draw out what short forms leave behind (a person’s journey, the obstacles, the friends who helped), the accounts Send a story is built to gather. Its coda observes that the channels we build determine what our audience can tell us. The magazine is built as such a channel, so what readers send each season will inform and enrich future cycles, the report’s among them.</p>
+</div>
+</section>
+
+<section id="c5" style="display: flex; flex-wrap: wrap; gap: 40px; border-top: 1px solid #d9d2c4; padding-top: 28px;">
+<h2 style="flex: 1 1 240px; margin: 0; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15;"><span style="display: block; font-size: 13px; color: #1b5e6b; letter-spacing: 0.12em; padding-bottom: 6px;">05</span>How we will know</h2>
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px;">
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">Each ring has its own engagement and success signals.</p>
+<div style="overflow-x: auto;">
+<table style="width: 100%; border-collapse: collapse; font-size: 16px; line-height: 1.45;">
+<thead><tr><th scope="col" style="text-align: left; padding: 10px 16px 10px 0; border-bottom: 2px solid #1d1a16; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;">Ring</th><th scope="col" style="text-align: left; padding: 10px 0; border-bottom: 2px solid #1d1a16; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;">Signals</th></tr></thead>
+<tbody>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Readers</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Reach online, in audio and by newsletter, with sign-ups, opens, listens, time spent, shares, return visits and the pace each reader chooses</td></tr>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Planners</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Survey responses and answers to each open question</td></tr>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Sources</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Leads by region</td></tr>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Contributors</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Stories sent, field guide use and submissions that meet the standards</td></tr>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Collaborators</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Second submissions, briefs taken on and replies sent on time</td></tr>
+<tr><th scope="row" style="text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid #d9d2c4; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-weight: 700; white-space: nowrap;">Beyond the magazine</th><td style="padding: 12px 0; border-bottom: 1px solid #d9d2c4;">Library items reused and requests from other teams</td></tr>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.65;">Each season can also run small tests, e.g. whether a question (“What helps a class grow where you live?”) draws more answers than a plain invitation to send a story. Heatmaps show where reading stops, whether the call at the close of a story is reached, and what readers especially engage with. Results are written up as Learning notes at the season’s end and shared where relevant.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #d9d2c4; border-radius: 4px;">
+<div style="flex: 1 1 200px; padding: 16px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid #d9d2c4;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Over one issue</span><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 18px; font-weight: 700;">Reach</span></div>
+<div style="flex: 1 1 200px; padding: 16px; display: flex; flex-direction: column; gap: 4px;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Over a few issues</span><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 18px; font-weight: 700;">Readers moving inward</span></div>
+<div style="flex: 1 1 100%; padding: 24px 24px 28px; display: flex; flex-direction: column; gap: 8px; background: #f5f1e8; border-top: 1px solid #d9d2c4;"><span style="font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a635a;">Over years</span><span style="max-width: 34ch; font-family: 'Bricolage Grotesque', Arial, sans-serif; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance;">Whether TAB has become what this plan proposes: a learning platform, research tool and content engine for many projects and audiences</span></div>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+</body></html>
