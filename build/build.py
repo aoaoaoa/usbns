@@ -2425,17 +2425,16 @@ for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy"
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
 
-# the field guide, public: the Capturing Content guide as a page of the magazine. Its last link opens the Send a story dialog here, in field-guide mode.
-import guided_forms as _gf
-_g = _gf.g5.replace(_gf.GUIDE_HEAD, "").replace("../../img/", "../img/")
-_g = _g.replace('<a href="../form-manual/">Ready? Send a story <span aria-hidden="true">→</span></a>', '<a href="#" data-submit="guide">Ready? Send a story <span aria-hidden="true">→</span></a>')
+# the field guide, public (FG1): the Capturing Content guide as a page of the magazine, in three steps. Its last link opens the Send a story dialog here, in field-guide mode.
+import field_guide as _fgm
+_g = _fgm.HTML + _fgm.JS
 assert 'data-submit="guide"' in _g
 # inside the popup, Send a story is handed to the page behind it
 _g += """<script>(function(){if(window.parent===window)return;document.addEventListener('click',function(e){var a=e.target.closest('a[data-submit="guide"]');if(!a)return;e.preventDefault();e.stopPropagation();parent.postMessage({tab:'guide-send'},location.origin)},true)})()</script>"""
-FG_CSS = ("html.embed .pt,html.embed .colo{display:none!important}html.embed main{padding-top:28px!important}html.embed .xidx{padding-right:52px}"
+FG_CSS = ("html.embed .pt,html.embed .colo{display:none!important}html.embed main{padding-top:28px!important}html.embed .fg1 .tabs{margin-right:52px}"
           "main{max-width:1120px!important}main h1{max-width:20ch}.fgk{font:700 12px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e;margin:0 0 12px!important}"
-          ".fgld{font:20px/1.5 var(--text)!important;color:var(--mute);max-width:46ch}.xidx{top:0!important;background:var(--paper)!important}.x5g .gnext a{cursor:pointer}")
-_FG = f'<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script><style>{_gf.CSS}{FG_CSS}</style><p class="fgld">Helpful guidelines for those documenting activities or gathering content.</p>{_g}'
+          ".fgld{font:20px/1.5 var(--text)!important;color:var(--mute);max-width:46ch}")
+_FG = f'<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script><style>{_fgm.CSS}{FG_CSS}</style><p class="fgld">Helpful guidelines for those documenting activities or gathering content.</p>{_g}'
 os.makedirs(os.path.join(SITE, "field-guide"), exist_ok=True)
 with open(os.path.join(SITE, "field-guide", "index.html"), "w") as f:
     f.write(build_page("Field guide", "Capturing the story where you are", _FG).replace('<h1 class="sh7">', '<p class="fgk">Field guide · Capturing content</p><h1 class="sh7">', 1))
