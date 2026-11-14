@@ -2343,7 +2343,7 @@ def _tel(t): return f'<a href="tel:+1{re.sub(r"[^0-9]", "", t)[-10:]}">{esc(t)}<
 # Contacts, "How can we help?": pick a need, see only the contacts that answer it. Contacts as on the print page (p. 84) and as since agreed.
 _CT = {
  "submit": ("Submit a story or photographs", "Online, with your Bahá’í Online Services account (BOSA)", "Send a story", "https://link.bahai.us/TAB_submit"),
- "guide": ("Field guide", "Capturing the story where you are: five tips, 32 examples", "Open the guide", "https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/"),
+ "guide": ("Field guide", "Capturing the story where you are: five tips, 32 examples", "Open the guide", "/usbns/magazine/field-guide/"),
  "editors": ("Write to the editors", "Questions, leads, or a story idea in a few lines", "TAB@usbnc.org", "mailto:TAB@usbnc.org"),
  "feedback": ("Share your experience of the site", "What worked, what didn’t, and what you’d like to see", "research@bahai.us", "mailto:research@bahai.us"),
  "survey": ("Take the reader survey", "Share your ideas to shape the magazine’s future", "5 minutes", SURVEY_FORM),
@@ -2354,7 +2354,7 @@ _CT = {
 }
 _ROUTES = [("I have a story or photographs", ["submit", "editors", "guide"]), ("I have feedback on the site", ["feedback", "survey"]),
            ("I want the magazine", ["subs", "back"]), ("I’m a journalist", ["media"]), ("I need the National Center", ["nc"])]
-FGN = '<p class="fgn" data-k="0">Before you take pictures: <a href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">the field guide <span aria-hidden="true">→</span></a></p>'
+FGN = '<p class="fgn" data-k="0">Before you take pictures: <a href="/usbns/magazine/field-guide/" target="_blank" rel="noopener">the field guide <span aria-hidden="true">→</span></a></p>'
 def _card(k):
     h, d, v, u = _CT[k]; ext = ' target="_blank" rel="noopener"' if u.startswith("https") else ""
     if k == "submit": u, ext = "#", " data-submit"  # opens the Submit your story dialog, as in the footer
@@ -2424,6 +2424,18 @@ TERMS_CSS = (".lede{font:400 21px/1.5 var(--text)!important}"
 for _slug, _title, _h1, _body in (("privacy", "Privacy policy", "Privacy policy", PRIVACY_HTML), ("contact", "Contacts", "How can we help?", CONTACT), ("terms", "Terms of use", "Terms of use", TERMS)):
     os.makedirs(os.path.join(SITE, _slug), exist_ok=True)
     with open(os.path.join(SITE, _slug, "index.html"), "w") as f: f.write(build_page(_title, _h1, _body))
+
+# the field guide, public: the Capturing Content guide as a page of the magazine. Its last link opens the Send a story dialog here, in field-guide mode.
+import guided_forms as _gf
+_g = _gf.g5.replace(_gf.GUIDE_HEAD, "").replace("../../img/", "../img/")
+_g = _g.replace('<a href="../form-manual/">Ready? Send a story <span aria-hidden="true">→</span></a>', '<a href="#" data-submit="guide">Ready? Send a story <span aria-hidden="true">→</span></a>')
+assert 'data-submit="guide"' in _g
+FG_CSS = ("main{max-width:1120px!important}main h1{max-width:20ch}.fgk{font:700 12px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:#b8782e;margin:0 0 12px!important}"
+          ".fgld{font:20px/1.5 var(--text)!important;color:var(--mute);max-width:46ch}.xidx{top:0!important;background:var(--paper)!important}.x5g .gnext a{cursor:pointer}")
+_FG = f'<style>{_gf.CSS}{FG_CSS}</style><p class="fgld">Helpful guidelines for those documenting activities or gathering content.</p>{_g}'
+os.makedirs(os.path.join(SITE, "field-guide"), exist_ok=True)
+with open(os.path.join(SITE, "field-guide", "index.html"), "w") as f:
+    f.write(build_page("Field guide", "Capturing the story where you are", _FG).replace('<h1 class="sh7">', '<p class="fgk">Field guide · Capturing content</p><h1 class="sh7">', 1))
 
 # shared-link previews: title, description and the cover painting for every published page
 _BASE = "https://aoaoaoa.github.io/usbns/magazine/"

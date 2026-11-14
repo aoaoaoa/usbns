@@ -335,7 +335,7 @@ def submit_html(pre, href="#"):
             '<p><b>We need your help to find them and share them!</b> Please send us story ideas, article leads, photos of community activities, your field notes on how community building unfolds where you live, and what is being learned along the way.</p></div></div>'
             f'<div class="ckl"><div class="meter" aria-hidden="true"><i></i></div><ul>{items}</ul></div>'
             f'<div class="sbgo"><a class="sbtn" href="{href}" data-submit>Send a story <span aria-hidden="true">→</span></a>'
-            '<a class="fgl" href="https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/" target="_blank" rel="noopener">Read the field guide first</a></div>'
+            '<a class="fgl" href="/usbns/magazine/field-guide/" target="_blank" rel="noopener">Read the field guide first</a></div>'
             f'</div></section>{js}<!-- /nsadd:submit -->\n')
 
 def contents_html(pre):

@@ -4,7 +4,8 @@ import json, os, re, datetime
 import stories_base as b
 
 D = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(D, "site", "magazine", "labs")
+LABS = "studio-4qk9t2"  # unlisted; never linked from public pages
+OUT = os.path.join(D, "site", "magazine", LABS)
 R = "../../"               # magazine root, from an idea page
 I = R + "img/"
 T = b.TINT
@@ -394,6 +395,5 @@ if __name__ == "__main__":
         os.makedirs(os.path.join(OLD, rel), exist_ok=True)
         u = "../" * depth + "labs/" + (rel + "/" if rel else "")
         open(os.path.join(OLD, rel, "index.html"), "w").write(f'<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>Moved</title><link rel="canonical" href="{u}"><meta http-equiv="refresh" content="0;url={u}"><p>This page has moved to <a href="{u}">{u}</a>.</p>')
-    _redir("", 1)
-    for x in IDEAS + RFCS + GFS + ANIMS: _redir(x["slug"], 2)
+    # the old /labs/ and /story-ctas/ addresses are retired with no redirect: the studio is for the editor only
     print("ok", len(IDEAS))

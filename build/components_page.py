@@ -233,7 +233,7 @@ page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name
 {chap(5, *CH[4])}<div class="specs">{comp}</div></div></section>
 {chap(6, *CH[5])}<div class="specs" style="--accent:var(--tint-endeavor)">{pat}</div></div></section>
 </main>
-<footer class="colo"><div class="wrap"><b>The American Bahá’í</b><span>Tokens synced from aoaoaoa/usbns. Story tints keep their color in both themes.</span><span><a href="../landing/">The magazine</a> · <a href="../labs/">Labs</a></span></div></footer>
+<footer class="colo"><div class="wrap"><b>The American Bahá’í</b><span>Tokens synced from aoaoaoa/usbns. Story tints keep their color in both themes.</span><span><a href="../landing/">The magazine</a></span></div></footer>
 <script>(function(){{var H=document.documentElement,b=document.querySelector('.tg');function cur(){{var t=H.getAttribute('data-theme');return t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}}
 function show(){{var c=cur();b.textContent=c==='dark'?'Light':'Dark';b.setAttribute('aria-pressed',c==='dark')}}
 try{{var s=localStorage.getItem('tab-ds-theme');if(s)H.setAttribute('data-theme',s)}}catch(e){{}}show();

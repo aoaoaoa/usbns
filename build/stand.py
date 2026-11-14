@@ -219,7 +219,7 @@ def _uhj(h):
 _main = _uhj(_main)
 
 def _fgl(h):  # the field guide beside Send a story in the contribute band
-    G = 'https://aoaoaoa.github.io/usbns/magazine/labs/field-guide/'
+    G = '/usbns/magazine/field-guide/'
     a = '<a class="sbtn" href="#" data-submit>Send a story <span aria-hidden="true">→</span></a>'
     if 'class="fgl"' not in h and a in h:
         h = h.replace(a, '<div class="sbgo">' + a + '<a class="fgl" href="' + G + '" target="_blank" rel="noopener">Read the field guide first</a></div>', 1)
