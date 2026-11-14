@@ -4,7 +4,7 @@ import json, os, re, datetime
 import stories_base as b
 
 D = os.path.dirname(os.path.abspath(__file__))
-LABS = "studio-4qk9t2"  # unlisted; never linked from public pages
+LABS = "labs"  # reachable by direct URL only; never linked from any live page
 OUT = os.path.join(D, "site", "magazine", LABS)
 R = "../../"               # magazine root, from an idea page
 I = R + "img/"
@@ -344,12 +344,11 @@ def gf_page(i, x):
             f'<div class="gp"><div class="gbk0"></div><div class="gbox" role="dialog" aria-modal="true" aria-label="{x["name"]}"><button type="button" class="gx2" aria-label="Close">×</button>{x["html"]}</div></div>'
             f'<script>(function(){{{gf.JS}}})();</script></body></html>')
 
-BRIEFS = [dict(code="B1", slug="brief-magazine-that-learns", name="A magazine that learns", blurb="The strategic learning redesign as a one-page site: contents, the rings, signals by ring and the three time scales.", tags=["Briefs"], added=datetime.date(2026, 11, 14),
+BRIEFS = [dict(code="B1", slug="brief-magazine-that-learns", href="../brief/", name="A magazine that learns", blurb="The strategic learning redesign as a one-page site: contents, the rings, signals by ring and the three time scales.", tags=["Briefs"], added=datetime.date(2026, 11, 14),
                html=open(os.path.join(D, "briefs", "magazine-that-learns.html")).read())]
-def brief_page(i, x):
-    nav = f'<nav class="bar0" aria-label="Briefs"><a href="../">← All ideas</a><span class="cd">{x["code"]}</span><b>{x["name"]}</b></nav>'
+def brief_page(i, x):  # served at /magazine/brief/, outside the labs, with no link back to them
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
-            f'<title>{x["code"]} · {x["name"]}</title><link rel="icon" href="{R}favicon.svg">{FONTS}<style>{b.CSS}{BAR0}{NAVCSS}body{{margin:0;background:#fdfcf9}}a{{color:#1b5e6b}}</style></head><body>{nav}{x["html"]}</body></html>')
+            f'<title>{x["name"]} · The American Bahá’í</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}body{{margin:0;background:#fdfcf9}}a{{color:#1b5e6b}}</style></head><body>{x["html"]}</body></html>')
 
 GCSS = '''.gw{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,72px) 16px 80px}.gh{max-width:720px;margin:0 0 28px}.gh h1{margin:0 0 12px;max-width:none;text-align:left}.gh .kk::before{margin-left:0}.gh .ld{margin:0;text-align:left;text-wrap:pretty}
 .fl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}.fl button{font:600 13px var(--ui);border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer}.fl button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -360,7 +359,7 @@ GCSS = '''.gw{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,72px) 16px 8
 .gc p{font:14px/1.45 var(--ui);color:var(--soft);margin:0}.gs{font:700 22px/1.2 var(--text);margin:44px 0 16px;padding-top:20px;border-top:1px solid var(--rule)}.fl+.gs{margin-top:8px}.gs small{display:block;font:500 13px var(--ui);color:var(--mute);margin-top:4px}.gc .tg{font:600 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}'''
 def gallery():
     tags = sorted({t for x in IDEAS for t in x["tags"]}, key=lambda t: (t != "Everyone", t)) + ["Guided forms", "RFC / Open calls", "Animations", "Briefs"]
-    card = lambda x: (f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x["slug"]}/"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
+    card = lambda x: (f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x.get("href", x["slug"] + "/")}"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
                       f'<span class="tx"><span class="cn"><span class="cd">{x["code"]}</span><b>{x["name"]}</b></span><p>{x["blurb"]}</p><span class="tg">{" · ".join(x["tags"])} · {x["added"].strftime("%b %-d, %Y")}</span></span></a></li>')
     bcards = "".join(card(x) for x in BRIEFS); rcards = "".join(card(x) for x in RFCS); gcards = "".join(card(x) for x in GFS); acards = "".join(card(x) for x in ANIMS)
     cards = "".join(f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x["slug"]}/"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
@@ -389,8 +388,8 @@ if __name__ == "__main__":
         os.makedirs(os.path.join(OUT, x["slug"]), exist_ok=True)
         open(os.path.join(OUT, x["slug"], "index.html"), "w").write(gf_page(i, x))
     for i, x in enumerate(BRIEFS):
-        os.makedirs(os.path.join(OUT, x["slug"]), exist_ok=True)
-        open(os.path.join(OUT, x["slug"], "index.html"), "w").write(brief_page(i, x))
+        BD = os.path.join(D, "site", "magazine", "brief"); os.makedirs(BD, exist_ok=True)
+        open(os.path.join(BD, "index.html"), "w").write(brief_page(i, x))
     json.dump([x["slug"] for x in ANIMS], open(os.path.join(OUT, "anim_slugs.json"), "w"))
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
     import shutil; shutil.copy(os.path.join(D, "vendor", "qrcode.min.js"), OUT)  # qrcodejs 1.0.0, MIT
