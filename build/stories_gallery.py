@@ -390,6 +390,15 @@ if __name__ == "__main__":
     for i, x in enumerate(BRIEFS):
         BD = os.path.join(D, "site", "magazine", "brief"); os.makedirs(BD, exist_ok=True)
         open(os.path.join(BD, "index.html"), "w").write(brief_page(i, x))
+        # the labs repo copy (/labs/digitab/) is built from the same source, so the two stay in step;
+        # its only differences: absolute links back to the magazine, and the audience report linked to /labs/audience/
+        LD = os.path.join(D, "..", "labs", "digitab")
+        if os.path.isdir(os.path.dirname(LD)):
+            h = brief_page(i, x).replace('href="../favicon.svg"', 'href="https://aoaoaoa.github.io/usbns/magazine/favicon.svg"').replace('href="../landing/"', 'href="https://aoaoaoa.github.io/usbns/magazine/landing/"')
+            h = h.replace('documented in our recent audience report.', 'documented in our recent <a href="../audience/">audience report</a>.', 1)
+            h = h.replace('as the 2026 Audience Report describes its subject', 'as the <a href="../audience/">2026 Audience Report</a> describes its subject', 1)
+            assert h.count('href="../audience/"') == 2 and 'href="../' not in h.replace('href="../audience/"', ''), "digitab links"
+            os.makedirs(LD, exist_ok=True); open(os.path.join(LD, "index.html"), "w").write(h)
     json.dump([x["slug"] for x in ANIMS], open(os.path.join(OUT, "anim_slugs.json"), "w"))
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
     import shutil; shutil.copy(os.path.join(D, "vendor", "qrcode.min.js"), OUT)  # qrcodejs 1.0.0, MIT
