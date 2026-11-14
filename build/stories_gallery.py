@@ -398,6 +398,9 @@ if __name__ == "__main__":
             h = h.replace('documented in our recent audience report.', 'documented in our recent <a href="../audience/">audience report</a>.', 1)
             h = h.replace('as the 2026 Audience Report describes its subject', 'as the <a href="../audience/">2026 Audience Report</a> describes its subject', 1)
             assert h.count('href="../audience/"') == 2 and 'href="../' not in h.replace('href="../audience/"', ''), "digitab links"
+            import labs_gate  # the labs copy sits behind the same password as /labs/audience/
+            h = labs_gate.gate(h, "A magazine that learns")
+            assert "Recast as a system" not in h, "digitab plaintext leaked"
             os.makedirs(LD, exist_ok=True); open(os.path.join(LD, "index.html"), "w").write(h)
     json.dump([x["slug"] for x in ANIMS], open(os.path.join(OUT, "anim_slugs.json"), "w"))
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
