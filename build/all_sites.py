@@ -72,14 +72,28 @@ t.addEventListener('click',open);[].forEach.call(p.querySelectorAll('.asx,.asbk'
 D.addEventListener('keydown',function(e){if(e.key==='Escape')close();if(e.key==='Tab'&&!p.hidden){var f=p.querySelectorAll('a,button'),a=f[0],z=f[f.length-1];if(e.shiftKey&&D.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&D.activeElement===z){e.preventDefault();a.focus()}}})})();</script>"""
 FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400&display=swap">'
 
-def apply(h, here_href="./", before='<div class="head">'):
-    bar = (f'<div class="asbar"><div class="asin">'
-           f'<button type="button" class="ast-btn" data-as aria-haspopup="dialog">{GRID}<span>All sites</span></button></div></div>')
+CORNER = r"""
+.head{position:sticky}.head>.ast-btn{position:absolute;top:50%;right:max(20px,env(safe-area-inset-right,0px));transform:translateY(-50%);z-index:3;margin:0}
+.head .in{padding-right:max(16px,calc(150px - (100vw - 1120px) / 2))}
+.head .rht{order:-1;margin:0 4px 0 -10px}
+.rhd .lft{display:inline-flex;align-items:center;gap:6px;justify-self:start;margin-left:-8px}
+.rhd .lft a.ci{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;color:var(--ink)}.rhd .lft a.ci:hover{background:var(--paper)}.rhd .lft a.ci svg{width:22px;height:22px;display:block}
+.rhd .lft .w{padding-left:4px}
+.rhd .r .ast-btn{margin:0 0 0 8px}
+.head .ast-btn,.rhd .ast-btn{color:var(--ink)}.head .ast-btn .asg,.rhd .ast-btn .asg{fill:currentColor}.head .ast-btn:hover,.rhd .ast-btn:hover{color:var(--ink);opacity:.75}
+@media (max-width:860px){.head>.ast-btn span,.rhd .ast-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.head .in{padding-right:58px}.ast-btn .asg{width:18px;height:18px}.head>.ast-btn{right:max(11px,env(safe-area-inset-right,0px))}}
+"""
+CORNER_JS = r"""<script>(function(){var D=document,t=D.querySelector('.head>.ast-btn'),r=D.querySelector('.rhd');if(!r||!t)return;
+var ci=r.querySelector('.ci'),w=r.querySelector('.w'),l=D.createElement('span');l.className='lft';w.parentNode.insertBefore(l,w);if(ci)l.appendChild(ci);l.appendChild(w);
+var c=t.cloneNode(true);c.tabIndex=-1;c.addEventListener('click',function(){t.click()});r.querySelector('.r').appendChild(c)})();</script>"""
+
+def apply(h, here_href="./", at='<div class="head">'):
+    trig = f'<button type="button" class="ast-btn" data-as aria-haspopup="dialog">{GRID}<span>All sites</span></button>'
     panel = (f'<div class="asp" hidden><div class="asbk"></div><div class="asd" role="dialog" aria-modal="true" aria-labelledby="ash">'
              f'<div class="ash"><h2 id="ash">All sites</h2><button type="button" class="asx" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4 4 20"/></svg></button></div>'
              f'<div class="asb"><div class="asl"><p class="ast1">{TITLE}</p></div><nav class="asr" aria-label="All sites">{body(here_href)}</nav></div></div></div>')
-    assert before in h, before
-    h = h.replace(before, bar + before, 1)
-    h = h.replace("</head>", FONTS + f"<style>{CSS}</style></head>", 1)
+    assert at in h, at
+    h = h.replace(at, at + trig, 1)
+    h = h.replace("</head>", FONTS + f"<style>{CSS}{CORNER}</style></head>", 1)
     i = h.rfind("</body>")
-    return h[:i] + panel + JS + h[i:]
+    return h[:i] + panel + JS + CORNER_JS + h[i:]
