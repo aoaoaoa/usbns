@@ -161,7 +161,9 @@ def make(block, css, pre, home):
     h = src.replace('</style>', CSS_COMMON + css.replace('/* /survey */\n', '') + CSS_EF + '/* colo */' + FOOTER_CSS + '/* /colo */\n/* /survey */\n</style>', 1)
     h = add_sections(h, pre, FORM)
     h = h.replace('</style>', SUBX_CSS + '</style>', 1).replace('<a href="#">About</a>', '<a href="#about">About</a>')
-    _n = h.index('</nav>', h.index('<nav aria-label="Site">')) + 6
+    if '<nav aria-label="Site">' in h:  # the Site nav (About) is gone: About lives in the footer; a marker keeps its place
+        _s = h.index('<nav aria-label="Site">'); h = h[:_s] + '<!-- sitenav -->' + h[h.index('</nav>', _s) + 6:]
+    _n = h.index('<!-- sitenav -->') + len('<!-- sitenav -->')
     h = h[:_n] + SUBX_BTN + h[_n:]
     h = h.replace('<section id="archive"', SUBX_SEC + '<section id="archive"', 1)
     # Two issues band sits one place lower: after Subscribe, before the archive
