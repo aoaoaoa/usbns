@@ -414,6 +414,7 @@ if __name__ == "__main__":
             h = labs_gate.gate(h, "A magazine that learns")
             assert "Recast as a system" not in h, "digitab plaintext leaked"
             os.makedirs(LD, exist_ok=True); open(os.path.join(LD, "index.html"), "w").write(h)
+            import icons; icons.apply(os.path.join(D, "..", "labs"))
     json.dump([x["slug"] for x in ANIMS], open(os.path.join(OUT, "anim_slugs.json"), "w"))
     open(os.path.join(OUT, "index.html"), "w").write(gallery())
     import shutil; shutil.copy(os.path.join(D, "vendor", "qrcode.min.js"), OUT)  # qrcodejs 1.0.0, MIT
