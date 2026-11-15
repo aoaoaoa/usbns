@@ -367,7 +367,7 @@ GCSS = '''.gw{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,72px) 16px 8
 .gc .tx{padding:14px 16px 16px;display:grid;gap:6px;align-content:start}.gc .cn{display:flex;gap:8px;align-items:baseline}.gc .cd{font:700 12px var(--ui);background:var(--ink);color:var(--paper);border-radius:999px;padding:2px 8px}.gc b{font:700 19px/1.2 var(--text)}
 .gc p{font:14px/1.45 var(--ui);color:var(--soft);margin:0}.gs{font:700 22px/1.2 var(--text);margin:44px 0 16px;padding-top:20px;border-top:1px solid var(--rule)}.fl+.gs{margin-top:8px}.gs small{display:block;font:500 13px var(--ui);color:var(--mute);margin-top:4px}.gc .tg{font:600 11px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}'''
 def gallery():
-    tags = sorted({t for x in IDEAS for t in x["tags"]}, key=lambda t: (t != "Everyone", t)) + ["Guided forms", "RFC / Open calls", "Animations", "Feedback", "Briefs"]
+    tags = ["Feedback", "Briefs"] + sorted({t for x in IDEAS for t in x["tags"]}, key=lambda t: (t != "Everyone", t)) + ["Guided forms", "RFC / Open calls", "Animations"]
     card = lambda x: (f'<li class="gc" data-t="{"|".join(x["tags"])}"><a href="{x.get("href", x["slug"] + "/")}"><img src="thumbs/{x["slug"]}.jpg" alt="" loading="lazy" width="800" height="500">'
                       f'<span class="tx"><span class="cn"><span class="cd">{x["code"]}</span><b>{x["name"]}</b></span><p>{x["blurb"]}</p><span class="tg">{" · ".join(x["tags"])} · {x["added"].strftime("%b %-d, %Y")}</span></span></a></li>')
     bcards = "".join(card(x) for x in BRIEFS); fcards = "".join(card(x) for x in FEEDBACK); rcards = "".join(card(x) for x in RFCS); gcards = "".join(card(x) for x in GFS); acards = "".join(card(x) for x in ANIMS)
@@ -378,9 +378,9 @@ def gallery():
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">'
             f'<title>Laboratory · The American Bahá’í</title><link rel="icon" href="../favicon.svg">{FONTS}<style>{b.CSS}{GCSS}</style></head><body><main class="gw">'
             f'<header class="gh"><p class="kk">The American Bahá’í · Laboratory</p><h1>Invitations, studies, tests, and research product sketches</h1></header>'
-            f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
+            f'<div class="fl" role="group" aria-label="Filter">{fl}</div><h2 class="gs" id="feedback">Feedback <small>A standing tab that asks readers about each new issue</small></h2><ul class="gg">{fcards}</ul><h2 class="gs" id="briefs">Briefs <small>Strategy documents set as pages</small></h2><ul class="gg">{bcards}</ul><h2 class="gs">Story invitations <small>Popups</small></h2><ul class="gg">{cards}</ul>'
             f'<h2 class="gs" id="guided-forms">Guided forms <small>The story form with the field guide and content guidelines built in</small></h2><ul class="gg">{gcards}</ul>'
-            f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul><h2 class="gs" id="animations">Animations <small>Motion for the calls to action: two live, four proposed</small></h2><ul class="gg">{acards}</ul><h2 class="gs" id="feedback">Feedback <small>A standing tab that asks readers about each new issue</small></h2><ul class="gg">{fcards}</ul><h2 class="gs" id="briefs">Briefs <small>Strategy documents set as pages</small></h2><ul class="gg">{bcards}</ul></main><script>{js}</script></body></html>')
+            f'<h2 class="gs" id="open-calls">RFC / Open Calls <small>Landing pages for a recurring call for content</small></h2><ul class="gg">{rcards}</ul><h2 class="gs" id="animations">Animations <small>Motion for the calls to action: two live, four proposed</small></h2><ul class="gg">{acards}</ul></main><script>{js}</script></body></html>')
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
