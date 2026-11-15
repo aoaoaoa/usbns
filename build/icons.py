@@ -16,7 +16,7 @@ RULES = [("/usbns/magazine/labs/", TAB, "TAB Labs"),
          ("/labs/audience/", AUDS, "Audiences"),
          ("/labs/digitab/", DIG, "TAB Brief")]
 
-STRIP = [r'\n?<!-- icons -->.*?<!-- /icons -->\n?',
+STRIP = [r'<!-- icons -->.*?<!-- /icons -->',
          r'<link rel="(?:icon|shortcut icon|apple-touch-icon|manifest|mask-icon)"[^>]*>\n?',
          r'<meta name="(?:application-name|apple-mobile-web-app-title|apple-mobile-web-app-capable|theme-color)"[^>]*>\n?']
 
