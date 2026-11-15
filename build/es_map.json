@@ -985,5 +985,16 @@
  "Field guide read.": "Guía de campo leída.",
  "Now the story itself, in four short steps.": "Ahora la historia, en cuatro pasos breves.",
  "Field guide": "Guía de campo",
- "Field guide: capturing the story where you are": "Guía de campo: captar la historia allí donde estés"
+ "Field guide: capturing the story where you are": "Guía de campo: captar la historia allí donde estés",
+ "Rather tell it?": "¿Prefiere contarla?",
+ "Record your story": "Grabe su historia",
+ "Record again": "Grabar de nuevo",
+ "Remove": "Quitar",
+ "Up to five minutes. Your browser will ask to use the microphone.": "Hasta cinco minutos. Su navegador le pedirá permiso para usar el micrófono.",
+ "or attach an audio file": "o adjunte un archivo de audio",
+ "Stop recording": "Detener la grabación",
+ "Recording": "Grabando",
+ "Recording saved. Listen back before you send.": "Grabación guardada. Escúchela antes de enviar.",
+ "The microphone could not be used. You can write your story, or attach an audio file.": "No se pudo usar el micrófono. Puede escribir su historia o adjuntar un archivo de audio.",
+ "Audio file attached.": "Archivo de audio adjunto."
 }

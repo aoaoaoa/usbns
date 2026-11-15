@@ -993,5 +993,16 @@
  "Field guide read.": "راهنمای میدانی خوانده شد.",
  "Now the story itself, in four short steps.": "اکنون خودِ داستان، در چهار گام کوتاه.",
  "Field guide": "راهنمای میدانی",
- "Field guide: capturing the story where you are": "راهنمای میدانی: ثبت داستان همان‌جا که هستید"
+ "Field guide: capturing the story where you are": "راهنمای میدانی: ثبت داستان همان‌جا که هستید",
+ "Rather tell it?": "ترجیح می‌دهید آن را بگویید؟",
+ "Record your story": "داستانتان را ضبط کنید",
+ "Record again": "ضبط دوباره",
+ "Remove": "حذف",
+ "Up to five minutes. Your browser will ask to use the microphone.": "حداکثر پنج دقیقه. مرورگر برای استفاده از میکروفون اجازه می‌خواهد.",
+ "or attach an audio file": "یا یک فایل صوتی پیوست کنید",
+ "Stop recording": "توقف ضبط",
+ "Recording": "در حال ضبط",
+ "Recording saved. Listen back before you send.": "ضبط ذخیره شد. پیش از ارسال آن را گوش کنید.",
+ "The microphone could not be used. You can write your story, or attach an audio file.": "استفاده از میکروفون ممکن نشد. می‌توانید داستان را بنویسید یا یک فایل صوتی پیوست کنید.",
+ "Audio file attached.": "فایل صوتی پیوست شد."
 }

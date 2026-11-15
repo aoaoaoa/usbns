@@ -993,5 +993,16 @@
  "Field guide read.": "已读完实地指南。",
  "Now the story itself, in four short steps.": "现在开始讲述故事，只需四个简短步骤。",
  "Field guide": "实地指南",
- "Field guide: capturing the story where you are": "实地指南：在你所在之处记录故事"
+ "Field guide: capturing the story where you are": "实地指南：在你所在之处记录故事",
+ "Rather tell it?": "想用说的吗？",
+ "Record your story": "录下您的故事",
+ "Record again": "重新录制",
+ "Remove": "删除",
+ "Up to five minutes. Your browser will ask to use the microphone.": "最长五分钟。浏览器会请求使用麦克风。",
+ "or attach an audio file": "或附上音频文件",
+ "Stop recording": "停止录音",
+ "Recording": "正在录音",
+ "Recording saved. Listen back before you send.": "录音已保存。发送前可以回放。",
+ "The microphone could not be used. You can write your story, or attach an audio file.": "无法使用麦克风。您可以写下故事，或附上音频文件。",
+ "Audio file attached.": "已附上音频文件。"
 }
