@@ -244,6 +244,8 @@ idea("R", "story-echoes", "Story echoes", "An ask at the end of each story, in i
 
 # discarded Nov 12, 2026: D any way you can (kept as D2's base), P print and post, I quote first, J next byline, K coming up, L photo first, M nominate, N in pictures, O young voices, Q dear editors, R story echoes
 IDEAS[:] = [x for x in IDEAS if x["code"] not in {"D","I","J","K","L","M","N","O","P","Q","R"}]
+# discarded Nov 15, 2026: A the map
+IDEAS[:] = [x for x in IDEAS if x["slug"] != "map"]
 # reset Nov 12, 2026: the remaining ideas lettered afresh in order (was A, C, D2, E, F, G, H)
 for _k, _x in enumerate(IDEAS): _x["code"] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[_k]
 
