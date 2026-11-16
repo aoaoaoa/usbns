@@ -260,7 +260,7 @@ def _key(h):  # a key beside Subscribe opens the members sign-in; 9 lets the rea
     dlg = ('<div class="mg" hidden><div class="mgb"></div><div class="mgc" role="dialog" aria-modal="true" aria-labelledby="mg-h">'
            '<button type="button" class="mgx" aria-label="Close">×</button>'
            '<p class="mgk" id="mg-h">The full issue</p>'
-           '<p class="mgl">Sign in with your Bahá’í ID number to read the mid-year letter and the departments.</p>'
+           '<p class="mgl">Sign in with your Bahá’í ID number to read the mid-year letter and more.</p>'
            '<form class="mgf" novalidate><label for="mg-id">Bahá’í ID number</label>'
            '<input id="mg-id" inputmode="numeric" autocomplete="off" placeholder="9" aria-describedby="mg-clue">'
            '<p id="mg-clue" class="mgclue" aria-live="polite"></p><button type="submit">Sign in</button></form></div></div>'
